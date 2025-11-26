@@ -1,74 +1,74 @@
 
-import { apiSlice } from "../ApiSliceComponent/jaiMaxApi"
+import { apiSlice } from "../ApiSliceComponent/karrivoApi"
 
 export const authApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
-        register:builder.mutation({
-            query:(credentials) => ({
-                url:"/Auth/register",
-                method:"POST",
-                body: {...credentials}
+        register: builder.mutation({
+            query: (credentials) => ({
+                url: "/Auth/register",
+                method: "POST",
+                body: { ...credentials }
             }),
         }),
-        verify:builder.mutation({
-            query:(data) => ({
-                url:"/Auth/isVerify",
-                method:"POST",
-                body:{...data}
+        verify: builder.mutation({
+            query: (data) => ({
+                url: "/Auth/isVerify",
+                method: "POST",
+                body: { ...data }
             })
         }),
-        login:builder.mutation({
-            query:(credentials) => ({
-                url:"/Auth/login",
-                method:"POST",
+        login: builder.mutation({
+            query: (credentials) => ({
+                url: "/Auth/login",
+                method: "POST",
                 body: credentials
             }),
-            
-          }),
-          forgot:builder.mutation({
-            query:(credentials) => ({
-                url:"/Auth/forgotPassword",
-                method:"POST",
+
+        }),
+        forgot: builder.mutation({
+            query: (credentials) => ({
+                url: "/Auth/forgotPassword",
+                method: "POST",
                 body: credentials
             })
-          }),
-          verifyOtp:builder.mutation({
-            query:(credentials) => ({
-                url:"/Auth/resetPassword",
-                method:"POST",
+        }),
+        verifyOtp: builder.mutation({
+            query: (credentials) => ({
+                url: "/Auth/resetPassword",
+                method: "POST",
                 body: credentials
             })
-          }),
-          changePwd:builder.mutation({
-            query:(credentials) => ({
-                url:"/Auth/changePassword",
-                method:"POST",
+        }),
+        changePwd: builder.mutation({
+            query: (credentials) => ({
+                url: "/Auth/changePassword",
+                method: "POST",
                 body: credentials
             })
-          }),
-          changePwdReq:builder.mutation({
-            query:(credentials) => ({
-                url:"/Auth/changePasswordReq",
-                method:"POST",
+        }),
+        changePwdReq: builder.mutation({
+            query: (credentials) => ({
+                url: "/Auth/changePasswordReq",
+                method: "POST",
                 body: credentials
             })
-          }),
-          verifyRecaptcha: builder.mutation({
-            query:(token) => ({
+        }),
+        verifyRecaptcha: builder.mutation({
+            query: (token) => ({
                 url: '/Auth/reCAPTCHAVerify',
                 method: 'POST',
-                body: token ,
+                body: token,
             })
-          }),
-         OTPresent: builder.mutation({
-            query:(data) => ({
+        }),
+        OTPresent: builder.mutation({
+            query: (data) => ({
                 url: '/Auth/resendOtp ',
                 method: 'POST',
-                body: data ,
+                body: data,
             })
-          })
-         
+        })
+
     }),
 })
 
-export const { useRegisterMutation, useVerifyMutation, useLoginMutation, useForgotMutation, useVerifyOtpMutation , useChangePwdMutation , useVerifyRecaptchaMutation , useChangePwdReqMutation, useOTPresentMutation } =  authApiSlice;
+export const { useRegisterMutation, useVerifyMutation, useLoginMutation, useForgotMutation, useVerifyOtpMutation, useChangePwdMutation, useVerifyRecaptchaMutation, useChangePwdReqMutation, useOTPresentMutation } = authApiSlice;

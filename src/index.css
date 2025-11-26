@@ -6,6 +6,10 @@
 }
 
 
+#root{
+ background-color:  "#062117",
+}
+
 
 @tailwind base;
 @tailwind components;
