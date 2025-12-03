@@ -1,571 +1,409 @@
-// import React, { useState } from "react";
-// import { ChevronLeft, ChevronRight } from "lucide-react";
-
-// const testimonials = [
-//   {
-//     quote: "The attention to detail and innovative features have completely transformed our workflow. This is exactly what we've been looking for.",
-//     name: "Sarah Chen",
-//     designation: "Product Manager at TechFlow",
-//     src: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3",
-//   },
-//   {
-//     quote: "Implementation was seamless and the results exceeded our expectations. The platform's flexibility is remarkable.",
-//     name: "Michael Rodriguez",
-//     designation: "CTO at InnovateSphere",
-//     src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3",
-//   },
-//   {
-//     quote: "This solution has significantly improved our team's productivity. The intuitive interface makes complex tasks simple.",
-//     name: "Emily Watson",
-//     designation: "Operations Director at CloudScale",
-//     src: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3",
-//   },
-//   {
-//     quote: "Outstanding support and robust features. It's rare to find a product that delivers on all its promises.",
-//     name: "James Kim",
-//     designation: "Engineering Lead at DataPro",
-//     src: "https://images.unsplash.com/photo-1636041293178-808a6762ab39?q=80&w=3464&auto=format&fit=crop&ixlib=rb-4.0.3",
-//   },
-//   {
-//     quote: "The scalability and performance have been game-changing for our organization. Highly recommend to any growing business.",
-//     name: "Lisa Thompson",
-//     designation: "VP of Technology at FutureNet",
-//     src: "https://images.unsplash.com/photo-1624561172888-ac93c696e10c?q=80&w=2592&auto=format&fit=crop&ixlib=rb-4.0.3",
-//   },
-// ];
-
-// const AnimatedTestimonials = () => {
-//   const [activeIndex, setActiveIndex] = useState(0);
-//   const [isAnimating, setIsAnimating] = useState(false);
-
-//   const handleNext = () => {
-//     if (isAnimating) return;
-//     setIsAnimating(true);
-//     setTimeout(() => {
-//       setActiveIndex((prev) => (prev + 1) % testimonials.length);
-//       setIsAnimating(false);
-//     }, 150);
-//   };
-
-//   const handlePrev = () => {
-//     if (isAnimating) return;
-//     setIsAnimating(true);
-//     setTimeout(() => {
-//       setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-//       setIsAnimating(false);
-//     }, 150);
-//   };
-
-//   const testimonial = testimonials[activeIndex];
-
-//   return (
-//     <div className="w-full min-h-screen flex  justify-center items-center px-4 py-20 text-white" 
-//       style={{ 
-//           background: 'linear-gradient(135deg, rgba(8,83,89,0.95) 0%, rgba(8,83,89,0.9) 100%)',
-//           WebkitBackdropFilter: 'blur(16px)' 
-//       }}
-//     >
-//       <div className="relative grid grid-cols-1 gap-20 md:grid-cols-2 max-w-6xl w-full">
-        
-//         {/* Image */}
-//         <div className="flex justify-center items-center">
-//           <div className="relative h-80 w-full max-w-sm">
-//             <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl blur-lg opacity-30 animate-pulse"></div>
-//             <img
-//               key={activeIndex}
-//               src={testimonial.src}
-//               alt={testimonial.name}
-//               className={`relative rounded-3xl object-cover object-center w-full h-full shadow-2xl transition-all duration-500 ease-in-out transform ${
-//                 isAnimating ? 'scale-95 opacity-70 rotate-1' : 'scale-100 opacity-100 rotate-0'
-//               } hover:scale-105 hover:shadow-3xl`}
-//               draggable={false}
-//             />
-//           </div>
-//         </div>
-
-//         {/* Text */}
-//         <div className="flex flex-col justify-between py-4">
-//           <div 
-//             className={`transition-all duration-300 ease-in-out transform ${
-//               isAnimating ? 'translate-y-4 opacity-60' : 'translate-y-0 opacity-100'
-//             }`}
-//           >
-//             <div className="mb-6">
-//               <h3 className="text-3xl font-bold text-white">{testimonial.name}</h3>
-//               <p className="text-sm text-neutral-300 mt-2">{testimonial.designation}</p>
-//             </div>
-//             <blockquote className="relative">
-//               <div className="absolute -left-4 -top-2 text-6xl text-white/20 font-serif">"</div>
-//               <p className="text-lg text-white leading-relaxed italic pl-6">
-//                 {testimonial.quote}
-//               </p>
-//             </blockquote>
-//           </div>
-
-//           {/* Arrows */}
-//           <div className="flex gap-4 pt-12 md:pt-8">
-//             <button
-//               onClick={handlePrev}
-//               disabled={isAnimating}
-//               className="group flex h-12 w-12 items-center justify-center rounded-full bg-white/10 shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out hover:scale-110 disabled:opacity-50 border border-white/20"
-//               aria-label="Previous testimonial"
-//             >
-//               <ChevronLeft className="h-5 w-5 text-white group-hover:text-blue-300 transition-colors" />
-//             </button>
-//             <button
-//               onClick={handleNext}
-//               disabled={isAnimating}
-//               className="group flex h-12 w-12 items-center justify-center rounded-full bg-white/10 shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out hover:scale-110 disabled:opacity-50 border border-white/20"
-//               aria-label="Next testimonial"
-//             >
-//               <ChevronRight className="h-5 w-5 text-white group-hover:text-blue-300 transition-colors" />
-//             </button>
-//           </div>
-
-//           {/* Dots */}
-//           <div className="flex gap-2 pt-6">
-//             {testimonials.map((_, index) => (
-//               <button
-//                 key={index}
-//                 onClick={() => {
-//                   if (!isAnimating && index !== activeIndex) {
-//                     setIsAnimating(true);
-//                     setTimeout(() => {
-//                       setActiveIndex(index);
-//                       setIsAnimating(false);
-//                     }, 150);
-//                   }
-//                 }}
-//                 className={`h-2 rounded-full transition-all duration-300 ${
-//                   index === activeIndex 
-//                     ? 'w-8 bg-blue-400' 
-//                     : 'w-2 bg-white/30 hover:bg-blue-300'
-//                 }`}
-//                 aria-label={`Go to testimonial ${index + 1}`}
-//               />
-//             ))}
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default AnimatedTestimonials;
-
-
-// import React, { useEffect, useState } from "react";
-// const testimonialsNew = [
-//   {
-//     quote:
-//       "The attention to detail and innovative features have completely transformed our workflow. This is exactly what we've been looking for.",
-//     name: "Michael R.",
-//     designation: "Crypto Investor (USA)",
-//     src: "https://plus.unsplash.com/premium_photo-1671656349322-41de944d259b?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
-//   },
-//   {
-//     quote:
-//       "I've been in the blockchain space for years, and Jaimax stands out for its clarity, transparency, and future potential. I'm excited to be part of its early growth phase.",
-//     name: "Elena F.",
-//     designation: "Blockchain Consultant (Germany)",
-//     src: "https://img.freepik.com/free-photo/lifestyle-people-emotions-casual-concept-confident-nice-smiling-asian-woman-cross-arms-chest-confident-ready-help-listening-coworkers-taking-part-conversation_1258-59335.jpg?semt=ais_hybrid&w=740",
-//   },
-//   {
-//     quote:
-//       "I love how easy it is to use the Jaimax app. The wallet setup was quick, and I feel confident managing my crypto in it. It's perfect for beginners and serious investors alike.",
-//     name: "Rohit Sharma",
-//     designation: "Pune",
-//     src: "https://plus.unsplash.com/premium_photo-1689977927774-401b12d137d6?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3",
-//   },
-//   {
-//     quote:
-//       "I've tried a few coins before, but Jaimax has the best experience so far. The team is active, updates are regular, and the app makes everything so convenient.",
-//     name: "Karthik Menon",
-//     designation: "Bangalore",
-//     src: "https://img.freepik.com/free-photo/closeup-young-hispanic-man-casuals-studio_662251-600.jpg?semt=ais_hybrid&w=740",
-//   },
-//   {
-//     quote:
-//       "Jaimax Coin gave me a fresh perspective on cryptocurrency. It's secure, user-friendly, and feels like something built for the future of India's digital economy.",
-//     name: "Ayesha Khan",
-//     designation: "Hyderabad",
-//     src: "https://media.gettyimages.com/id/1354842602/photo/portrait-of-a-young-businesswoman-working-on-a-laptop-in-an-office.jpg?s=612x612&w=0&k=20&c=kfP1g2712RiaxsDriIxFo363ARlaL2D591s-22CnIo8=",
-//   },
-// ];
-
-// const AnimatedTestimonials = ({ autoplay = true }) => {
-//   const [active, setActive] = useState(0);
-//   const [isHovered, setIsHovered] = useState(false);
-
-//   // --- DEBUGGING STEP 1: Add console logs to handlers ---
-//   const handleNext = () => {
-//     setActive((prev) => {
-//       const newActive = (prev + 1) % testimonialsNew.length;
-//       // console.log("handleNext: New active index is", newActive);
-//       return newActive;
-//     });
-//   };
-
-//   const handlePrev = () => {
-//     setActive((prev) => {
-//       const newActive = (prev - 1 + testimonialsNew.length) % testimonialsNew.length;
-//       // console.log("handlePrev: New active index is", newActive);
-//       return newActive;
-//     });
-//   };
-
-//   const handleDotClick = (index) => {
-//     // console.log("handleDotClick: Setting active index to", index);
-//     setActive(index);
-//   };
-
-//   useEffect(() => {
-//     if (autoplay && !isHovered) {
-//       const interval = setInterval(handleNext, 2500);
-//       return () => clearInterval(interval);
-//     }
-//   }, [autoplay, isHovered, active]);
-
-//   const isActive = (index) => index === active;
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-br from-yellow-900 via-green-900 to-indigo-900 flex items-center justify-center p-4">
-//       <div className="max-w-7xl w-full">
-//         {/* Header */}
-//         <div className="text-center mb-16">
-//           <h2 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-6">
-//             What Our Users Say
-//           </h2>
-//           <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-cyan-500 mx-auto rounded-full"></div>
-//         </div>
-
-//         <div
-//           className="relative"
-//           onMouseEnter={() => setIsHovered(true)}
-//           onMouseLeave={() => setIsHovered(false)}
-//         >
-//           {/* Main Content */}
-//           <div className="flex flex-col lg:flex-row gap-12 items-center">
-//             {/* Image Section */}
-//             {/* The blur div is rotated and might extend beyond its parent. Ensure it doesn't cover elements. */}
-//             <div className="relative w-full lg:w-1/3 h-[280px] lg:h-[350px]">
-//               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-3xl blur-3xl transform -rotate-6"></div>
-
-//               {testimonialsNew.map((t, i) => (
-//                 <div
-//                   key={t.src} // Using src as key, ensure unique srcs or consider index as a fallback for simplicity
-//                   className={`absolute inset-0 transition-all duration-700 transform ${isActive(i)
-//                       ? 'opacity-100 scale-100 z-10'
-//                       : 'opacity-0 scale-95 z-0'
-//                     }`}
-//                 >
-//                   <div className="relative h-full group">
-//                     <img
-//                       src={t.src}
-//                       alt={t.name}
-//                       className="w-full h-full object-cover rounded-3xl shadow-2xl transition-transform duration-500 group-hover:scale-105"
-//                       draggable={false}
-//                     />
-//                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent rounded-3xl"></div>
-
-//                     {/* Floating name badge */}
-//                     <div className={`absolute bottom-6 left-6 bg-white/10 backdrop-blur-md rounded-2xl px-6 py-3 border border-white/20 transition-all duration-500 ${isActive(i) ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-//                       }`}>
-//                       <p className="text-white font-semibold text-lg">{t.name}</p>
-//                       <p className="text-purple-200 text-sm">{t.designation}</p>
-//                     </div>
-//                   </div>
-//                 </div>
-//               ))}
-//             </div>
-
-//             {/* Text Section */}
-//             <div className="w-full lg:w-2/3 space-y-8">
-//               <div className="relative">
-//                 {/* Quote Icon - positioned absolutely, but should be behind text. */}
-//                 <div className="absolute -top-4 -left-4 text-6xl text-purple-400/30 font-serif">"</div>
-
-//                 {/* Quote Text */}
-//                 <div className="relative z-10"> {/* Ensure this has a z-index if quote icon is covering it */}
-//                   <p className="text-2xl lg:text-2xl text-white leading-relaxed font-light">
-//                     {testimonialsNew[active].quote.split(" ").map((word, i) => (
-//                       <span
-//                         key={i}
-//                         className="inline-block transition-all duration-300 hover:text-purple-300"
-//                         style={{
-//                           animationDelay: `${i * 0.02}s`,
-//                           animation: 'fadeInUp 0.6s ease-out forwards'
-//                         }}
-//                       >
-//                         {word}&nbsp;
-//                       </span>
-//                     ))}
-//                   </p>
-//                 </div>
-//               </div>
-
-//               {/* Star Rating */}
-//               <div className="flex gap-1">
-//                 {[...Array(5)].map((_, i) => (
-//                   <span key={i} className="text-yellow-400 text-2xl">★</span>
-//                 ))}
-//               </div>
-
-//               {/* Navigation Controls */}
-//               {/* --- POTENTIAL CULPRIT: Layering Issue Here --- */}
-//               <div className="flex items-center justify-between z-20 relative">
-//                 {/* Navigation Arrows */}
-//                 <div className="flex gap-4">
-//                   <button
-//                     onClick={handlePrev}
-//                     aria-label="Previous testimonial"
-//                     className="group flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
-//                   >
-//                     <svg
-//                       className="w-6 h-6 transform group-hover:-translate-x-1 transition-transform"
-//                       fill="none"
-//                       stroke="currentColor"
-//                       viewBox="0 0 24 24"
-//                     >
-//                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-//                     </svg>
-//                   </button>
-
-//                   <button
-//                     onClick={handleNext}
-//                     aria-label="Next testimonial"
-//                     className="group flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-110"
-//                   >
-//                     <svg
-//                       className="w-6 h-6 transform group-hover:translate-x-1 transition-transform"
-//                       fill="none"
-//                       stroke="currentColor"
-//                       viewBox="0 0 24 24"
-//                     >
-//                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-//                     </svg>
-//                   </button>
-//                 </div>
-
-//                 {/* Progress Dots */}
-//                 <div className="flex gap-3">
-//                   {testimonialsNew.map((_, i) => (
-//                     <button
-//                       key={i}
-//                       onClick={() => handleDotClick(i)}
-//                       aria-label={`Go to testimonial ${i + 1}`}
-//                       className={`w-3 h-3 rounded-full transition-all duration-300 ${isActive(i)
-//                           ? 'bg-gradient-to-r from-purple-500 to-pink-500 scale-125'
-//                           : 'bg-white/30 hover:bg-white/50'
-//                         }`}
-//                     />
-//                   ))}
-//                 </div>
-//               </div>
-
-//             </div>
-//           </div>
-
-//           {/* Background Decorations - These are often the culprits for covering things! */}
-//           {/* Ensure these elements are behind interactive elements or contained. */}
-//           <div className="absolute top-10 right-10 w-32 h-32 bg-purple-500/10 rounded-full blur-3xl animate-pulse -z-10"></div> {/* ADDED -z-10 */}
-//           <div className="absolute bottom-10 left-10 w-24 h-24 bg-pink-500/10 rounded-full blur-2xl animate-pulse -z-10" style={{ animationDelay: '1s' }}></div> {/* ADDED -z-10 */}
-//         </div>
-
-//         {/* Progress Bar */}
-//         <div className="mt-12 w-full bg-white/10 rounded-full h-2 overflow-hidden">
-//           <div
-//             className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-300"
-//             style={{ width: `${((active + 1) / testimonialsNew.length) * 100}%` }}
-//           ></div>
-//         </div>
-//       </div>
-
-//       <style jsx>{`
-//         @keyframes fadeInUp {
-//           from {
-//             opacity: 0;
-//             transform: translateY(10px);
-//           }
-//           to {
-//             opacity: 1;
-//             transform: translateY(0);
-//           }
-//         }
-//       `}</style>
-//     </div>
-//   );
-// };
-
-// export default AnimatedTestimonials;
-
-
-import React, { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import React, { useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import {
+  Navigation,
+  Pagination,
+  Autoplay,
+  EffectCoverflow,
+} from "swiper/modules";
+import { motion } from "framer-motion";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/effect-coverflow";
 
 const testimonials = [
   {
-    quote: "The attention to detail and innovative features have completely transformed our workflow. This is exactly what we've been looking for.",
-    name: "Sarah Chen",
-    designation: "Product Manager at TechFlow",
-    src: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=3560&auto=format&fit=crop&ixlib=rb-4.0.3",
+    id: 1,
+    name: "Alex Thompson",
+    date: "15 January, 2025",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop",
+    text: "This mentorship program completely transformed my career trajectory. My mentor provided invaluable guidance that helped me navigate complex challenges and develop skills I never thought possible. The personalized approach made all the difference in my professional growth.",
   },
   {
-    quote: "Implementation was seamless and the results exceeded our expectations. The platform's flexibility is remarkable.",
-    name: "Michael Rodriguez",
-    designation: "CTO at InnovateSphere",
-    src: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3",
+    id: 2,
+    name: "Sarah Mitchell",
+    date: "12 January, 2025",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop",
+    text: "I gained so much confidence through this mentorship experience. My mentor's expertise and encouragement helped me land my dream job. The practical advice and real-world insights were exactly what I needed to take the next step in my career.",
   },
   {
-    quote: "This solution has significantly improved our team's productivity. The intuitive interface makes complex tasks simple.",
-    name: "Emily Watson",
-    designation: "Operations Director at CloudScale",
-    src: "https://images.unsplash.com/photo-1623582854588-d60de57fa33f?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3",
+    id: 3,
+    name: "Michael Chen",
+    date: "10 January, 2025",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop",
+    text: "Working with my mentor was an incredible journey of self-discovery and professional development. The structured guidance and thoughtful feedback helped me identify my strengths and work on areas that needed improvement. Highly recommend this program!",
   },
   {
-    quote: "Outstanding support and robust features. It's rare to find a product that delivers on all its promises.",
-    name: "James Kim",
-    designation: "Engineering Lead at DataPro",
-    src: "https://images.unsplash.com/photo-1636041293178-808a6762ab39?q=80&w=3464&auto=format&fit=crop&ixlib=rb-4.0.3",
+    id: 4,
+    name: "Emma Rodriguez",
+    date: "8 January, 2025",
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop",
+    text: "The mentorship I received was beyond my expectations. My mentor took genuine interest in my goals and provided actionable strategies that led to tangible results. This experience has been instrumental in shaping my professional path forward.",
   },
   {
-    quote: "The scalability and performance have been game-changing for our organization. Highly recommend to any growing business.",
-    name: "Lisa Thompson",
-    designation: "VP of Technology at FutureNet",
-    src: "https://images.unsplash.com/photo-1624561172888-ac93c696e10c?q=80&w=2592&auto=format&fit=crop&ixlib=rb-4.0.3",
+    id: 5,
+    name: "David Kumar",
+    date: "5 January, 2025",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&h=400&fit=crop",
+    text: "As someone new to the industry, having a mentor made all the difference. The knowledge transfer, networking opportunities, and constant support helped me overcome imposter syndrome and build genuine confidence in my abilities.",
+  },
+  {
+    id: 6,
+    name: "Jennifer Lee",
+    date: "3 January, 2025",
+    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&h=400&fit=crop",
+    text: "This mentorship program exceeded all my expectations. The personalized attention and industry insights I gained were invaluable. My mentor helped me develop a clear career roadmap and provided the tools to achieve my professional goals.",
+  },
+  {
+    id: 7,
+    name: "Robert Williams",
+    date: "1 January, 2025",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop",
+    text: "I'm grateful for the wisdom and guidance my mentor shared throughout this journey. The practical advice on leadership, technical skills, and career advancement has been transformative. This program is worth every moment invested.",
+  },
+  {
+    id: 8,
+    name: "Lisa Anderson",
+    date: "28 December, 2024",
+    image: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop",
+    text: "The mentorship experience helped me transition into a new field with confidence. My mentor's patient guidance and industry connections opened doors I didn't know existed. This program truly invested in my success.",
+  },
+  {
+    id: 9,
+    name: "James Taylor",
+    date: "25 December, 2024",
+    image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=400&h=400&fit=crop",
+    text: "Having a dedicated mentor who genuinely cared about my growth was life-changing. The regular check-ins, constructive feedback, and encouragement kept me motivated and focused on achieving my career aspirations.",
+  },
+  {
+    id: 10,
+    name: "Maria Garcia",
+    date: "22 December, 2024",
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop",
+    text: "This mentorship program provided exactly what I needed at a crucial point in my career. The combination of technical guidance, soft skills development, and moral support helped me become a more well-rounded professional.",
   },
 ];
 
-const AnimatedTestimonials = () => {
+const TestimonialsSection = () => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isAnimating, setIsAnimating] = useState(false);
-
-  // Auto-rotate every 5 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!isAnimating) {
-        setIsAnimating(true);
-        setTimeout(() => {
-          setActiveIndex((prev) => (prev + 1) % testimonials.length);
-          setIsAnimating(false);
-        }, 150);
-      }
-    }, 2000);
-    return () => clearInterval(interval);
-  }, [isAnimating]);
-
-  const handleNext = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setTimeout(() => {
-      setActiveIndex((prev) => (prev + 1) % testimonials.length);
-      setIsAnimating(false);
-    }, 150);
-  };
-
-  const handlePrev = () => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setTimeout(() => {
-      setActiveIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-      setIsAnimating(false);
-    }, 150);
-  };
-
-  const testimonial = testimonials[activeIndex];
 
   return (
-    <div
-      className="w-full min-h-screen flex justify-center items-center px-4 py-20 text-white"
-      style={{
-        background: 'linear-gradient(135deg, rgba(8,83,89,0.95) 0%, rgba(8,83,89,0.9) 100%)',
-        WebkitBackdropFilter: 'blur(16px)'
-      }}
-    >
-      <div className="relative grid grid-cols-1 gap-20 md:grid-cols-2 max-w-6xl w-full">
+    <section className="py-0 bg-[#062117] relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <motion.div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="h-full w-full"
+            style={{
+              backgroundImage: `linear-gradient(rgba(77, 184, 168, 0.3) 1px, transparent 1px),
+                               linear-gradient(90deg, rgba(77, 184, 168, 0.3) 1px, transparent 1px)`,
+              backgroundSize: "50px 50px",
+            }}
+          ></div>
+        </div>
+      </motion.div>
 
-        {/* Image */}
-        <div className="flex justify-center items-center">
-          <div className="relative h-80 w-full max-w-sm">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl blur-lg opacity-30 animate-pulse"></div>
-            <img
-              key={activeIndex}
-              src={testimonial.src}
-              alt={testimonial.name}
-              className={`relative rounded-3xl object-cover object-center w-full h-full shadow-2xl transition-all duration-500 ease-in-out transform ${
-                isAnimating ? 'scale-95 opacity-70 rotate-1' : 'scale-100 opacity-100 rotate-0'
-              } hover:scale-105 hover:shadow-3xl`}
-              draggable={false}
-            />
+      {/* Main Content */}
+      <div className="relative z-10 py-16 md:py-20 lg:py-24">
+        <div className="container max-w-7xl mx-auto px-4">
+          {/* Header Section */}
+          <motion.div className="text-center mb-12 md:mb-16">
+            {/* Badge */}
+            <motion.div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 mb-4">
+              <span className="w-2 h-2 bg-gradient-to-r from-[#4db8a8] to-[#5ac8d8] rounded-full animate-pulse"></span>
+              <span className="text-white/90 text-sm font-medium">
+                Success Stories
+              </span>
+            </motion.div>
+
+            {/* Main Heading */}
+            <motion.h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-[#4db8a8] to-[#5ac8d8] bg-clip-text text-transparent leading-tight">
+              What Our Mentees Say
+            </motion.h2>
+
+            {/* Description */}
+            <motion.p className="text-base md:text-lg text-white/70 max-w-3xl mx-auto leading-relaxed">
+              Join thousands of mentees who have transformed their careers through our program.{" "}
+              <span className="bg-gradient-to-r from-[#4db8a8] to-[#5ac8d8] bg-clip-text text-transparent font-semibold">
+                Real experiences
+              </span>{" "}
+              from real professionals who achieved their goals with expert guidance.
+            </motion.p>
+          </motion.div>
+
+          {/* Carousel Section */}
+          <div className="relative">
+            <div className="relative" style={{ overflow: "visible" }}>
+              <Swiper
+                modules={[Navigation, Pagination, Autoplay, EffectCoverflow]}
+                effect="coverflow"
+                grabCursor={true}
+                centeredSlides={true}
+                slidesPerView={3}
+                loop={true}
+                speed={600}
+                coverflowEffect={{
+                  rotate: 0,
+                  stretch: 80,
+                  depth: 200,
+                  modifier: 1,
+                  slideShadows: false,
+                }}
+                autoplay={{
+                  delay: 4000,
+                  disableOnInteraction: false,
+                  pauseOnMouseEnter: true,
+                }}
+                navigation={{
+                  nextEl: ".owl-next",
+                  prevEl: ".owl-prev",
+                }}
+                pagination={{
+                  el: ".owl-dots",
+                  clickable: true,
+                  dynamicBullets: false,
+                }}
+                onSlideChange={(swiper) => {
+                  setActiveIndex(swiper.realIndex);
+                }}
+                onSwiper={(swiper) => {
+                  setActiveIndex(swiper.realIndex);
+                }}
+                className="!overflow-visible !py-8"
+                style={{
+                  paddingBottom: "80px",
+                }}
+                breakpoints={{
+                  320: {
+                    slidesPerView: 1,
+                    coverflowEffect: {
+                      rotate: 0,
+                      stretch: 0,
+                      depth: 0,
+                      modifier: 1,
+                    },
+                  },
+                  768: {
+                    slidesPerView: 2,
+                    coverflowEffect: {
+                      rotate: 0,
+                      stretch: 50,
+                      depth: 100,
+                      modifier: 1,
+                    },
+                  },
+                  1024: {
+                    slidesPerView: 3,
+                    coverflowEffect: {
+                      rotate: 0,
+                      stretch: 80,
+                      depth: 200,
+                      modifier: 1,
+                    },
+                  },
+                }}
+              >
+                {testimonials.map((testimonial) => (
+                  <SwiperSlide
+                    key={testimonial.id}
+                    style={{ width: "100%", maxWidth: "600px" }}
+                  >
+                    {({ isActive, isPrev, isNext }) => (
+                      <motion.div
+                        className={`
+                          transition-all duration-500
+                          ${!isActive && !isPrev && !isNext
+                            ? "invisible opacity-0"
+                            : "visible opacity-100"
+                          }
+                        `}
+                      >
+                        <TestimonialCard
+                          testimonial={testimonial}
+                          isActive={isActive}
+                        />
+                      </motion.div>
+                    )}
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </div>
+
+            {/* Navigation Buttons */}
+            <div className="absolute -bottom-8 left-0 right-0 flex justify-center items-center gap-4 md:gap-6 pointer-events-none z-[100]">
+              <motion.button
+                type="button"
+                role="presentation"
+                className="owl-prev pointer-events-auto bg-white/10 backdrop-blur-md hover:bg-gradient-to-r hover:from-[#4db8a8] hover:to-[#5ac8d8] text-white border border-white/20 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-110"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="m12 19-7-7 7-7" />
+                  <path d="M19 12H5" />
+                </svg>
+              </motion.button>
+              <motion.button
+                type="button"
+                role="presentation"
+                className="owl-next pointer-events-auto bg-white/10 backdrop-blur-md hover:bg-gradient-to-r hover:from-[#4db8a8] hover:to-[#5ac8d8] text-white border border-white/20 w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center shadow-xl transition-all duration-300 hover:scale-110"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>
+              </motion.button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const TestimonialCard = ({ testimonial, isActive }) => {
+  return (
+    <div
+      className={`
+        relative overflow-hidden
+        rounded-2xl 
+        transition-all duration-500 ease-out
+        group
+        ${isActive
+          ? "bg-white/90 backdrop-blur-xl border-2 border-transparent bg-gradient-to-r from-[#4db8a8] to-[#5ac8d8] p-[2px] scale-100 opacity-100"
+          : "bg-white/55 backdrop-blur-md border border-white/40 shadow-lg scale-95 opacity-75"
+        }
+        w-full max-w-[500px] sm:max-w-[420px] md:max-w-[460px] lg:min-w-[500px]
+        min-h-[120px] sm:min-h-[100px] md:min-h-[110px]
+      `}
+    >
+      <div className={`${isActive ? 'bg-white rounded-2xl' : ''} w-full h-full`}>
+        {/* Content Container */}
+        <div className="relative z-10 p-6 md:p-7">
+          {/* Header Section */}
+          <div className="flex items-start gap-4 mb-5">
+            {/* Profile Image */}
+            <div className="relative flex-shrink-0">
+              <img
+                src={testimonial.image}
+                className={`
+                  relative w-24 h-24 md:w-16 md:h-16
+                  rounded-full object-cover
+                  transition-all duration-500
+                  border-2
+                  ${isActive
+                    ? "border-transparent bg-gradient-to-r from-[#4db8a8] to-[#5ac8d8] p-[2px]"
+                    : "border-gray-200"
+                  }
+                `}
+                alt={testimonial.name}
+              />
+            </div>
+
+            {/* User Info */}
+            <div className="flex-grow min-w-0">
+              <h4
+                className={`
+                  text-base md:text-lg font-bold
+                  transition-colors duration-500
+                  truncate
+                  ${isActive ? "bg-gradient-to-r from-[#4db8a8] to-[#5ac8d8] bg-clip-text text-transparent" : "text-gray-700"}
+                `}
+              >
+                {testimonial.name}
+              </h4>
+              <p className="text-xs text-gray-500 mt-0.5">{testimonial.date}</p>
+            </div>
+          </div>
+
+          {/* Testimonial Text */}
+          <div className="relative mb-5">
+            {/* Quote Icon */}
+            <div
+              className={`
+                absolute -left-2 -top-2 w-8 h-8
+                transition-all duration-500
+                ${isActive ? "text-[#4db8a8]/30" : "text-gray-200"}
+              `}
+            >
+              <svg fill="currentColor" viewBox="0 0 32 32">
+                <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 5.088 3.072 8.064 6.624 8.064 3.36 0 5.856-2.688 5.856-5.856 0-3.168-2.208-5.472-5.088-5.472-.576 0-1.344.096-1.536.192.48-3.264 3.552-7.104 6.624-9.024L9.352 4zm16.512 0c-4.8 3.456-8.256 9.12-8.256 15.36 0 5.088 3.072 8.064 6.624 8.064 3.264 0 5.856-2.688 5.856-5.856 0-3.168-2.304-5.472-5.184-5.472-.576 0-1.248.096-1.44.192.48-3.264 3.456-7.104 6.528-9.024L25.864 4z" />
+              </svg>
+            </div>
+
+            <p
+              className={`
+                text-xs md:text-sm
+                leading-relaxed
+                pl-8
+                transition-all duration-500
+                ${isActive ? "text-gray-700" : "text-gray-600"}
+              `}
+            >
+              {testimonial.text}
+            </p>
           </div>
         </div>
 
-        {/* Text */}
-        <div className="flex flex-col justify-between py-4">
-          <div
-            className={`transition-all duration-300 ease-in-out transform ${
-              isAnimating ? 'translate-y-4 opacity-60' : 'translate-y-0 opacity-100'
-            }`}
-          >
-            <div className="mb-6">
-              <h3 className="text-3xl font-bold text-white">{testimonial.name}</h3>
-              <p className="text-sm text-neutral-300 mt-2">{testimonial.designation}</p>
-            </div>
-            <blockquote className="relative">
-              <div className="absolute -left-4 -top-2 text-6xl text-white/20 font-serif">"</div>
-              <p className="text-lg text-white leading-relaxed italic pl-6">
-                {testimonial.quote}
-              </p>
-            </blockquote>
-          </div>
+        {/* Hover Gradient Overlay */}
+        <div
+          className={`
+            absolute inset-0 opacity-0 group-hover:opacity-100 
+            transition-opacity duration-700
+            bg-gradient-to-br from-[#4db8a8]/5 via-transparent to-[#5ac8d8]/5
+            pointer-events-none
+          `}
+        />
 
-          {/* Arrows */}
-          <div className="flex gap-4 pt-12 md:pt-8">
-            <button
-              onClick={handlePrev}
-              disabled={isAnimating}
-              className="group flex h-12 w-12 items-center justify-center rounded-full bg-white/10 shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out hover:scale-110 disabled:opacity-50 border border-white/20"
-              aria-label="Previous testimonial"
-            >
-              <ChevronLeft className="h-5 w-5 text-white group-hover:text-blue-300 transition-colors" />
-            </button>
-            <button
-              onClick={handleNext}
-              disabled={isAnimating}
-              className="group flex h-12 w-12 items-center justify-center rounded-full bg-white/10 shadow-lg hover:shadow-xl transition-all duration-200 ease-in-out hover:scale-110 disabled:opacity-50 border border-white/20"
-              aria-label="Next testimonial"
-            >
-              <ChevronRight className="h-5 w-5 text-white group-hover:text-blue-300 transition-colors" />
-            </button>
-          </div>
+        {/* Shimmer Effect */}
+        <div
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000
+          bg-gradient-to-r from-transparent via-white/20 to-transparent
+          transform -skew-x-12 translate-x-[-200%] group-hover:translate-x-[200%]"
+          style={{ transition: "transform 1.5s ease-in-out" }}
+        />
 
-          {/* Dots */}
-          <div className="flex gap-2 pt-6">
-            {testimonials.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => {
-                  if (!isAnimating && index !== activeIndex) {
-                    setIsAnimating(true);
-                    setTimeout(() => {
-                      setActiveIndex(index);
-                      setIsAnimating(false);
-                    }, 150);
-                  }
-                }}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  index === activeIndex
-                    ? 'w-8 bg-blue-400'
-                    : 'w-2 bg-white/30 hover:bg-blue-300'
-                }`}
-                aria-label={`Go to testimonial ${index + 1}`}
-              />
-            ))}
-          </div>
+        {/* Corner Decoration */}
+        <div
+          className={`
+            absolute bottom-0 right-0 w-24 h-24
+            transition-opacity duration-500
+            ${isActive ? "opacity-100" : "opacity-0"}
+          `}
+        >
+          <svg className="w-full h-full text-[#4db8a8]/10" viewBox="0 0 100 100">
+            <circle cx="80" cy="80" r="40" fill="currentColor" />
+            <circle
+              cx="80"
+              cy="80"
+              r="25"
+              fill="currentColor"
+              className="opacity-60"
+            />
+          </svg>
         </div>
       </div>
     </div>
   );
 };
 
-export default AnimatedTestimonials;
+export default TestimonialsSection;

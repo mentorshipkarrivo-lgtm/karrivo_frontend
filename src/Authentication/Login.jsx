@@ -1,5 +1,15 @@
+
+
+
+
 // import React, { useState } from 'react';
-// import { Eye, EyeOff, User, Mail, Lock, Phone, ShieldCheck } from 'lucide-react';
+// import { Eye, EyeOff, User, Mail, Lock, Phone, ShieldCheck, Loader2 } from 'lucide-react';
+// import {
+//   useRegisterMutation,    
+//   useVerifyMutation,
+//   useLoginMutation,
+//   useOTPresentMutation
+// } from "../ApiSliceComponent/RegisterApiSlice"
 
 // const LoginPage = () => {
 //   const [isLogin, setIsLogin] = useState(true);
@@ -20,6 +30,11 @@
 //     otp: ''
 //   });
 
+//   // RTK Query hooks
+//   const [register, { isLoading: isRegistering }] = useRegisterMutation();
+//   const [verify, { isLoading: isVerifying }] = useVerifyMutation();
+//   const [login, { isLoading: isLoggingIn }] = useLoginMutation();
+//   const [resendOtp, { isLoading: isResending }] = useOTPresentMutation();
 //   const handleChange = (e) => {
 //     const { name, value } = e.target;
 //     // prevent non-numeric characters in phone/otp
@@ -27,31 +42,70 @@
 //     setFormData(prev => ({ ...prev, [name]: value }));
 //   };
 
-//   const handleSendOTP = () => {
+//   const handleSendOTP = async () => {
 //     const phone = (formData.phone || '').trim();
 //     if (phone.length !== 10) {
 //       alert('Please enter a valid 10-digit phone number.');
 //       return;
 //     }
-//     // TODO: call your Send OTP API here
-//     setOtpSent(true);
-//     setOtpVerified(false);
-//     console.log('Send OTP to:', phone);
+
+//     try {
+//       if (otpSent) {
+//         // Resend OTP
+//         const response = await resendOtp({
+//           phone: phone,
+//           email: formData.email,
+//           countryCode: "+91"
+//         }).unwrap();
+
+//         console.log('OTP Resent:', response);
+//         alert('OTP resent successfully!');
+//       } else {
+//         // Initial registration to send OTP
+//         const response = await register({
+//           name: formData.name,
+//           email: formData.email,
+//           phone: phone,
+//           password: formData.password,
+//           countryCode: "+91",
+//           role: 2 // or based on userType
+//         }).unwrap();
+
+//         console.log('Registration response:', response);
+//         setOtpSent(true);
+//         setOtpVerified(false);
+//         alert('OTP sent to your phone number!');
+//       }
+//     } catch (error) {
+//       console.error('Error sending OTP:', error);
+//       alert(error?.data?.message || 'Failed to send OTP. Please try again.');
+//     }
 //   };
 
-//   const handleVerifyOTP = () => {
+//   const handleVerifyOTP = async () => {
 //     const otp = (formData.otp || '').trim();
 //     if (otp.length !== 6) {
 //       alert('Please enter a valid 6-digit OTP.');
 //       return;
 //     }
-//     // TODO: call your Verify OTP API here
-//     setOtpVerified(true);
-//     console.log('Verify OTP:', otp);
+
+//     try {
+//       const response = await verify({
+//         email: formData.email,
+//         otpType: "register",
+//         otp:  Number(otp)
+//       }).unwrap();
+
+//       console.log('OTP Verified:', response);
+//       setOtpVerified(true);
+//       alert('Phone number verified successfully!');
+//     } catch (error) {
+//       console.error('Error verifying OTP:', error);
+//       alert(error?.data?.message || 'Invalid OTP. Please try again.');
+//     }
 //   };
 
-//   const handleSubmit = (e) => {
-//     e?.preventDefault?.();
+//   const handleSubmit = async () => {
 //     if (!isLogin) {
 //       // signup validations
 //       if (!formData.name.trim()) return alert('Please enter your name.');
@@ -61,30 +115,65 @@
 //       if (!formData.password) return alert('Please enter password.');
 //       if (formData.password.length < 8) return alert('Password must be at least 8 characters.');
 //       if (formData.password !== formData.confirmPassword) return alert('Passwords do not match.');
-//       // proceed with signup
-//       console.log('Sign Up payload:', formData);
-//       alert('Sign Up successful (mock).');
+
+//       // If OTP is verified, registration is already complete
+//       alert('Sign Up successful! You can now login.');
+
+//       // Reset form and switch to login
+//       setFormData({
+//         name: '',
+//         email: formData.email, // Keep email for convenience
+//         phone: '',
+//         password: '',
+//         confirmPassword: '',
+//         otp: ''
+//       });
+//       setOtpSent(false);
+//       setOtpVerified(false);
+//       setIsLogin(true);
+
 //     } else {
 //       // login validations
 //       if (!formData.email.trim()) return alert('Please enter your email/username.');
 //       if (!formData.password) return alert('Please enter password.');
-//       // proceed with login
-//       console.log('Login payload:', { email: formData.email, password: formData.password, userType });
-//       alert('Login successful (mock).');
+
+//       try {
+//         const response = await login({
+//           email: formData.email,
+//           password: formData.password,
+//           role: userType // 'mentee' or 'mentor'
+//         }).unwrap();
+
+//         console.log('Login successful:', response);
+
+//         // Store token if provided
+//         if (response.token) {
+//           localStorage.setItem('authToken', response.token);
+//         }
+
+//         // Store user data if provided
+//         if (response.user) {
+//           localStorage.setItem('userData', JSON.stringify(response.user));
+//         }
+
+//         alert('Login successful!');
+
+//         // Redirect to dashboard or home page
+//         // window.location.href = '/dashboard';
+
+//       } catch (error) {
+//         console.error('Login error:', error);
+//         alert(error?.data?.message || 'Login failed. Please check your credentials.');
+//       }
 //     }
 //   };
+
+//   const isLoading = isRegistering || isVerifying || isLoggingIn || isResending;
 
 //   return (
 //     <div className="min-h-screen flex flex-col lg:flex-row bg-slate-50">
 //       {/* LEFT - Welcome Panel */}
 //       <div className="w-full lg:w-1/3 bg-[#062117] text-white relative overflow-hidden min-h-[360px] lg:min-h-screen flex items-center justify-center p-8">
-//         {/* Optional decorative image from uploaded file (placed bottom-left, subtle) */}
-//         <img
-//           src="/mnt/data/4a4fee44-c82a-436f-8cc9-cff53b16a2c4.png"
-//           alt="decor"
-//           className="hidden md:block absolute -bottom-10 -left-10 w-56 opacity-10 pointer-events-none select-none"
-//         />
-
 //         {/* decorative circles */}
 //         <div className="absolute top-14 right-12 w-28 h-28 bg-white/10 rounded-full" />
 //         <div className="absolute bottom-28 left-16 w-20 h-20 bg-white/8 rounded-full" />
@@ -98,8 +187,21 @@
 //           </p>
 
 //           <button
-//             onClick={() => setIsLogin(!isLogin)}
-//             className="  px-8 py-2.5 rounded-full border-2 border-white text-white font-medium hover:bg-white hover:text-[#008FC4] transition"
+//             onClick={() => {
+//               setOtpSent(false);
+//               setOtpVerified(false);
+//               setFormData({
+//                 name: '',
+//                 email: '',
+//                 phone: '',
+//                 password: '',
+//                 confirmPassword: '',
+//                 otp: ''
+//               });
+//               setIsLogin(!isLogin);
+//             }}
+//             className="px-8 py-2.5 rounded-full border-2 border-white text-white font-medium hover:bg-white hover:text-[#008FC4] transition"
+//             disabled={isLoading}
 //           >
 //             {isLogin ? 'SIGN UP' : 'SIGN IN'}
 //           </button>
@@ -108,7 +210,7 @@
 
 //       {/* RIGHT - Form Panel */}
 //       <div className="w-full lg:w-2/3 flex items-center justify-center p-6 lg:p-12">
-//         <div className="w-full max-w-2xl bg-white rounded-2xl   p-8 md:p-12">
+//         <div className="w-full max-w-2xl bg-white rounded-2xl p-8 md:p-12">
 //           <h2 className="text-2xl md:text-3xl font-bold text-[#062117] text-center mb-6">
 //             {isLogin ? 'Log in' : 'Create Account'}
 //           </h2>
@@ -119,159 +221,178 @@
 //               <button
 //                 onClick={() => setUserType('mentee')}
 //                 className={`flex-1 pb-3 font-medium ${userType === 'mentee' ? 'text-[#062117] border-b-2 border-[#008FC4]' : 'text-gray-400'}`}
+//                 disabled={isLoading}
 //               >
 //                 I'm a mentee
 //               </button>
 //               <button
 //                 onClick={() => setUserType('mentor')}
 //                 className={`flex-1 pb-3 font-medium ${userType === 'mentor' ? 'text-[#062117] border-b-2 border-[#008FC4]' : 'text-gray-400'}`}
+//                 disabled={isLoading}
 //               >
 //                 I'm a mentor
 //               </button>
 //             </div>
 //           )}
 
-//           <form onSubmit={handleSubmit}>
-//             <div className="space-y-4">
-//               {/* Name - signup only */}
-//               {!isLogin && (
-//                 <div className="relative">
-//                   <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-//                   <input
-//                     name="name"
-//                     value={formData.name}
-//                     onChange={handleChange}
-//                     placeholder="Full name"
-//                     className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none"
-//                   />
-//                 </div>
-//               )}
-
-//               {/* Email */}
+//           <div className="space-y-4">
+//             {/* Name - signup only */}
+//             {!isLogin && (
 //               <div className="relative">
-//                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+//                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
 //                 <input
-//                   name="email"
-//                   type="email"
-//                   value={formData.email}
+//                   name="name"
+//                   value={formData.name}
 //                   onChange={handleChange}
-//                   placeholder={isLogin ? 'Email or username' : 'Email address'}
-//                   className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none"
+//                   placeholder="Full name"
+//                   disabled={isLoading || otpSent}
+//                   className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none disabled:opacity-50"
 //                 />
 //               </div>
+//             )}
 
-//               {/* PHONE + SEND OTP (SIGNUP ONLY) - inline button inside input */}
-//               {!isLogin && (
-//                 <>
+//             {/* Email */}
+//             <div className="relative">
+//               <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+//               <input
+//                 name="email"
+//                 type="email"
+//                 value={formData.email}
+//                 onChange={handleChange}
+//                 placeholder={isLogin ? 'Email or username' : 'Email address'}
+//                 disabled={isLoading || (!isLogin && otpSent)}
+//                 className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none disabled:opacity-50"
+//               />
+//             </div>
+
+//             {/* PHONE + SEND OTP (SIGNUP ONLY) */}
+//             {!isLogin && (
+//               <>
+//                 <div className="relative">
+//                   <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+//                   <input
+//                     name="phone"
+//                     value={formData.phone}
+//                     onChange={handleChange}
+//                     placeholder="Phone number (10 digits)"
+//                     inputMode="numeric"
+//                     disabled={isLoading || otpSent}
+//                     className="w-full pl-12 pr-28 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none disabled:opacity-50"
+//                   />
+
+//                   {!otpSent ? (
+//                     <button
+//                       type="button"
+//                       onClick={handleSendOTP}
+//                       disabled={isLoading || !formData.name || !formData.email || !formData.phone || !formData.password}
+//                       className="absolute right-3 top-1/2 -translate-y-1/2 bg-[#008FC4] text-white text-xs sm:text-sm px-3 py-1.5 rounded-md hover:bg-[#006f9e] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+//                     >
+//                       {isRegistering ? <Loader2 size={14} className="animate-spin" /> : null}
+//                       Send OTP
+//                     </button>
+//                   ) : (
+//                     <button
+//                       type="button"
+//                       onClick={handleSendOTP}
+//                       disabled={isResending}
+//                       className="absolute right-3 top-1/2 -translate-y-1/2 bg-white text-[#008FC4] border border-[#008FC4] text-xs sm:text-sm px-3 py-1.5 rounded-md hover:bg-[#f8feff] transition disabled:opacity-50 flex items-center gap-1"
+//                     >
+//                       {isResending ? <Loader2 size={14} className="animate-spin" /> : null}
+//                       Resend
+//                     </button>
+//                   )}
+//                 </div>
+
+//                 {/* OTP input with inline Verify */}
+//                 {otpSent && (
 //                   <div className="relative">
-//                     <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+//                     <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
 //                     <input
-//                       name="phone"
-//                       value={formData.phone}
+//                       name="otp"
+//                       value={formData.otp}
 //                       onChange={handleChange}
-//                       placeholder="Phone number (10 digits)"
+//                       placeholder="Enter 6-digit OTP"
 //                       inputMode="numeric"
-//                       className="w-full pl-12 pr-28 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none"
+//                       disabled={isLoading || otpVerified}
+//                       className="w-full pl-12 pr-28 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none disabled:opacity-50"
 //                     />
 
-//                     {!otpSent ? (
-//                       <button
-//                         type="button"
-//                         onClick={handleSendOTP}
-//                         className="absolute right-3 top-1/2 -translate-y-1/2 bg-[#008FC4] text-white text-xs sm:text-sm px-3 py-1.5 rounded-md hover:bg-[#006f9e] transition"
-//                       >
-//                         Send OTP
-//                       </button>
-//                     ) : (
-//                       <button
-//                         type="button"
-//                         onClick={handleSendOTP}
-//                         className="absolute right-3 top-1/2 -translate-y-1/2 bg-white text-[#008FC4] border border-[#008FC4] text-xs sm:text-sm px-3 py-1.5 rounded-md hover:bg-[#f8feff] transition"
-//                       >
-//                         Resend
-//                       </button>
-//                     )}
+//                     <button
+//                       type="button"
+//                       onClick={handleVerifyOTP}
+//                       disabled={isVerifying || otpVerified || !formData.otp}
+//                       className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs sm:text-sm px-3 py-1.5 rounded-md transition flex items-center gap-1 ${otpVerified
+//                           ? 'bg-green-500 text-white'
+//                           : 'bg-[#008FC4] text-white hover:bg-[#006f9e] disabled:opacity-50'
+//                         }`}
+//                     >
+//                       {isVerifying ? <Loader2 size={14} className="animate-spin" /> : null}
+//                       {otpVerified ? '✓ Verified' : 'Verify'}
+//                     </button>
 //                   </div>
+//                 )}
+//               </>
+//             )}
 
-//                   {/* OTP input with inline Verify */}
-//                   {otpSent && (
-//                     <div className="relative">
-//                       <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-//                       <input
-//                         name="otp"
-//                         value={formData.otp}
-//                         onChange={handleChange}
-//                         placeholder="Enter 6-digit OTP"
-//                         inputMode="numeric"
-//                         className="w-full pl-12 pr-28 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none"
-//                       />
+//             {/* Password */}
+//             <div className="relative">
+//               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+//               <input
+//                 name="password"
+//                 type={showPassword ? 'text' : 'password'}
+//                 value={formData.password}
+//                 onChange={handleChange}
+//                 placeholder="Password"
+//                 disabled={isLoading || (!isLogin && otpSent)}
+//                 className="w-full pl-12 pr-12 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none disabled:opacity-50"
+//               />
+//               <button
+//                 type="button"
+//                 onClick={() => setShowPassword(!showPassword)}
+//                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+//                 disabled={isLoading}
+//               >
+//                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+//               </button>
+//             </div>
 
-//                       <button
-//                         type="button"
-//                         onClick={handleVerifyOTP}
-//                         className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs sm:text-sm px-3 py-1.5 rounded-md transition ${otpVerified ? ' bg-[#0098cc] text-white' : 'bg-[#008FC4] text-white'
-//                           }`}
-//                       >
-//                         {otpVerified ? 'Verified' : 'Verify'}
-//                       </button>
-//                     </div>
-//                   )}
-//                 </>
-//               )}
-
-//               {/* Password */}
+//             {/* Confirm password (signup only) */}
+//             {!isLogin && (
 //               <div className="relative">
 //                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
 //                 <input
-//                   name="password"
-//                   type={showPassword ? 'text' : 'password'}
-//                   value={formData.password}
+//                   name="confirmPassword"
+//                   type={showConfirmPassword ? 'text' : 'password'}
+//                   value={formData.confirmPassword}
 //                   onChange={handleChange}
-//                   placeholder="Password"
-//                   className="w-full pl-12 pr-12 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none"
+//                   placeholder="Confirm password"
+//                   disabled={isLoading || otpSent}
+//                   className="w-full pl-12 pr-12 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none disabled:opacity-50"
 //                 />
 //                 <button
 //                   type="button"
-//                   onClick={() => setShowPassword(!showPassword)}
+//                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
 //                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
+//                   disabled={isLoading}
 //                 >
-//                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+//                   {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
 //                 </button>
 //               </div>
+//             )}
 
-//               {/* Confirm password (signup only) */}
-//               {!isLogin && (
-//                 <div className="relative">
-//                   <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-//                   <input
-//                     name="confirmPassword"
-//                     type={showConfirmPassword ? 'text' : 'password'}
-//                     value={formData.confirmPassword}
-//                     onChange={handleChange}
-//                     placeholder="Confirm password"
-//                     className="w-full pl-12 pr-12 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none"
-//                   />
-//                   <button
-//                     type="button"
-//                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-//                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
-//                   >
-//                     {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-//                   </button>
-//                 </div>
-//               )}
-
-//               {/* Submit */}
-//               <div>
-//                 <button
-//                   type="submit"
-//                   className="w-full py-3 rounded-full  bg-[#0098cc] text-white font-semibold hover:bg-[#0098cc] transition"
-//                 >
-//                   {isLogin ? 'SIGN IN' : 'SIGN UP'}
-//                 </button>
-//               </div>
+//             {/* Submit */}
+//             <div>
+//               <button
+//                 type="button"
+//                 onClick={handleSubmit}
+//                 disabled={isLoading}
+//                 className="w-full py-3 rounded-full bg-[#0098cc] text-white font-semibold hover:bg-[#007aa8] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+//               >
+//                 {isLoggingIn && <Loader2 size={18} className="animate-spin" />}
+//                 {isLogin ? 'SIGN IN' : 'SIGN UP'}
+//               </button>
 //             </div>
-//           </form>
+//           </div>
 
 //           {/* Footer: toggle & google sign-in (login only) */}
 //           <div className="mt-6 text-center">
@@ -279,7 +400,6 @@
 //               {isLogin ? "Don't have an account? " : 'Already have an account? '}
 //               <button
 //                 onClick={() => {
-//                   // reset OTP state when switching
 //                   setOtpSent(false);
 //                   setOtpVerified(false);
 //                   setFormData({
@@ -292,7 +412,8 @@
 //                   });
 //                   setIsLogin(!isLogin);
 //                 }}
-//                 className="text-[#008FC4] font-semibold ml-1 hover:underline"
+//                 disabled={isLoading}
+//                 className="text-[#008FC4] font-semibold ml-1 hover:underline disabled:opacity-50"
 //               >
 //                 {isLogin ? 'Sign Up' : 'Sign In'}
 //               </button>
@@ -311,7 +432,8 @@
 
 //                 <button
 //                   type="button"
-//                   className="w-full inline-flex items-center justify-center gap-3 border border-gray-200 py-2.5 rounded-full text-sm text-gray-700 hover:bg-gray-50 transition"
+//                   disabled={isLoading}
+//                   className="w-full inline-flex items-center justify-center gap-3 border border-gray-200 py-2.5 rounded-full text-sm text-gray-700 hover:bg-gray-50 transition disabled:opacity-50"
 //                 >
 //                   <svg className="w-4 h-4" viewBox="0 0 24 24">
 //                     <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -334,14 +456,13 @@
 
 
 
-
 import React, { useState } from 'react';
 import { Eye, EyeOff, User, Mail, Lock, Phone, ShieldCheck, Loader2 } from 'lucide-react';
-import { 
-  useRegisterMutation, 
-  useVerifyMutation, 
-  useLoginMutation, 
-  useOTPresentMutation 
+import {
+  useRegisterMutation,
+  useVerifyMutation,
+  useLoginMutation,
+  useOTPresentMutation
 } from "../ApiSliceComponent/RegisterApiSlice"
 
 const LoginPage = () => {
@@ -352,12 +473,12 @@ const LoginPage = () => {
 
   // OTP states (signup only)
   const [otpSent, setOtpSent] = useState(false);
-  const [otpVerified, setOtpVerified] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
+    countryCode: '+91',
     password: '',
     confirmPassword: '',
     otp: ''
@@ -384,55 +505,44 @@ const LoginPage = () => {
     }
 
     try {
-      if (otpSent) {
-        // Resend OTP
-        const response = await resendOtp({ 
-          phoneNumber: phone,
-          email: formData.email 
-        }).unwrap();
-        
-        console.log('OTP Resent:', response);
-        alert('OTP resent successfully!');
-      } else {
-        // Initial registration to send OTP
-        const response = await register({
-          name: formData.name,
-          email: formData.email,
-          phoneNumber: phone,
-          password: formData.password,
-          role: 'user' // or based on userType
-        }).unwrap();
-        
-        console.log('Registration response:', response);
-        setOtpSent(true);
-        setOtpVerified(false);
-        alert('OTP sent to your phone number!');
-      }
+      // Initial registration to send OTP
+      const response = await register({
+        name: formData.name,
+        email: formData.email,
+        phone: phone,
+        password: formData.password,
+        countryCode: formData.countryCode,
+        role: 2 // or based on userType
+      }).unwrap();
+
+      console.log('Registration response:', response);
+      setOtpSent(true);
+      alert('OTP sent to your phone number!');
     } catch (error) {
       console.error('Error sending OTP:', error);
       alert(error?.data?.message || 'Failed to send OTP. Please try again.');
     }
   };
 
-  const handleVerifyOTP = async () => {
-    const otp = (formData.otp || '').trim();
-    if (otp.length !== 6) {
-      alert('Please enter a valid 6-digit OTP.');
+  const handleResendOTP = async () => {
+    const phone = (formData.phone || '').trim();
+    if (phone.length !== 10) {
+      alert('Please enter a valid 10-digit phone number.');
       return;
     }
 
     try {
-      const response = await verify({
+      const response = await resendOtp({
+        phone: phone,
         email: formData.email,
-        otp: otp
+        countryCode: formData.countryCode
       }).unwrap();
-      
-      console.log('OTP Verified:', response);
-      setOtpVerified(true);
-      alert('Phone number verified successfully!');
+
+      console.log('OTP Resent:', response);
+      alert('OTP resent successfully!');
     } catch (error) {
-      console.error('Error verifying OTP:', error);
-      alert(error?.data?.message || 'Invalid OTP. Please try again.');
+      console.error('Error resending OTP:', error);
+      alert(error?.data?.message || 'Failed to resend OTP. Please try again.');
     }
   };
 
@@ -442,56 +552,70 @@ const LoginPage = () => {
       if (!formData.name.trim()) return alert('Please enter your name.');
       if (!formData.email.trim()) return alert('Please enter your email.');
       if (!formData.phone.trim()) return alert('Please enter your phone.');
-      if (!otpVerified) return alert('Please verify your phone OTP.');
       if (!formData.password) return alert('Please enter password.');
       if (formData.password.length < 8) return alert('Password must be at least 8 characters.');
       if (formData.password !== formData.confirmPassword) return alert('Passwords do not match.');
-      
-      // If OTP is verified, registration is already complete
-      alert('Sign Up successful! You can now login.');
-      
-      // Reset form and switch to login
-      setFormData({
-        name: '',
-        email: formData.email, // Keep email for convenience
-        phone: '',
-        password: '',
-        confirmPassword: '',
-        otp: ''
-      });
-      setOtpSent(false);
-      setOtpVerified(false);
-      setIsLogin(true);
-      
+      if (!otpSent) return alert('Please send OTP first.');
+      if (!formData.otp.trim()) return alert('Please enter OTP.');
+
+      try {
+        // Verify OTP first
+        const verifyResponse = await verify({
+          email: formData.email,
+          otpType: "register",
+          otp: Number(formData.otp)
+        }).unwrap();
+
+        console.log('OTP Verified:', verifyResponse);
+        alert('Sign Up successful! You can now login.');
+
+        // Reset form and switch to login
+        setFormData({
+          name: '',
+          email: formData.email, // Keep email for convenience
+          phone: '',
+          countryCode: '+91',
+          password: '',
+          confirmPassword: '',
+          otp: ''
+        });
+        setOtpSent(false);
+        setIsLogin(true);
+
+      } catch (error) {
+        console.error('Error verifying OTP:', error);
+        alert(error?.data?.message || 'Invalid OTP. Please try again.');
+      }
+
     } else {
       // login validations
       if (!formData.email.trim()) return alert('Please enter your email/username.');
       if (!formData.password) return alert('Please enter password.');
-      
+
       try {
         const response = await login({
           email: formData.email,
           password: formData.password,
           role: userType // 'mentee' or 'mentor'
         }).unwrap();
-        
+
         console.log('Login successful:', response);
-        
+
         // Store token if provided
         if (response.token) {
           localStorage.setItem('authToken', response.token);
         }
-        
+
         // Store user data if provided
         if (response.user) {
           localStorage.setItem('userData', JSON.stringify(response.user));
         }
-        
+
         alert('Login successful!');
-        
+
         // Redirect to dashboard or home page
         // window.location.href = '/dashboard';
-        
+
       } catch (error) {
         console.error('Login error:', error);
         alert(error?.data?.message || 'Login failed. Please check your credentials.');
@@ -520,11 +644,11 @@ const LoginPage = () => {
           <button
             onClick={() => {
               setOtpSent(false);
-              setOtpVerified(false);
               setFormData({
                 name: '',
                 email: '',
                 phone: '',
+                countryCode: '+91',
                 password: '',
                 confirmPassword: '',
                 otp: ''
@@ -576,7 +700,7 @@ const LoginPage = () => {
                   value={formData.name}
                   onChange={handleChange}
                   placeholder="Full name"
-                  disabled={isLoading || otpSent}
+                  disabled={isLoading}
                   className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none disabled:opacity-50"
                 />
               </div>
@@ -591,75 +715,80 @@ const LoginPage = () => {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder={isLogin ? 'Email or username' : 'Email address'}
-                disabled={isLoading || (!isLogin && otpSent)}
+                disabled={isLoading}
                 className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none disabled:opacity-50"
               />
             </div>
 
-            {/* PHONE + SEND OTP (SIGNUP ONLY) */}
+            {/* PHONE WITH COUNTRY CODE (SIGNUP ONLY) */}
             {!isLogin && (
               <>
-                <div className="relative">
-                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                  <input
-                    name="phone"
-                    value={formData.phone}
+                <div className="flex gap-2">
+                  <select
+                    name="countryCode"
+                    value={formData.countryCode}
                     onChange={handleChange}
-                    placeholder="Phone number (10 digits)"
-                    inputMode="numeric"
-                    disabled={isLoading || otpSent}
-                    className="w-full pl-12 pr-28 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none disabled:opacity-50"
-                  />
+                    disabled={isLoading}
+                    className="px-3 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none disabled:opacity-50"
+                  >
+                    <option value="+91">+91</option>
+                    <option value="+1">+1</option>
+                    <option value="+44">+44</option>
+                    <option value="+61">+61</option>
+                    <option value="+86">+86</option>
+                  </select>
 
-                  {!otpSent ? (
-                    <button
-                      type="button"
-                      onClick={handleSendOTP}
-                      disabled={isLoading || !formData.name || !formData.email || !formData.phone || !formData.password}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 bg-[#008FC4] text-white text-xs sm:text-sm px-3 py-1.5 rounded-md hover:bg-[#006f9e] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
-                    >
-                      {isRegistering ? <Loader2 size={14} className="animate-spin" /> : null}
-                      Send OTP
-                    </button>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={handleSendOTP}
-                      disabled={isResending}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 bg-white text-[#008FC4] border border-[#008FC4] text-xs sm:text-sm px-3 py-1.5 rounded-md hover:bg-[#f8feff] transition disabled:opacity-50 flex items-center gap-1"
-                    >
-                      {isResending ? <Loader2 size={14} className="animate-spin" /> : null}
-                      Resend
-                    </button>
-                  )}
+                  <div className="relative flex-1">
+                    <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <input
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="Phone number (10 digits)"
+                      inputMode="numeric"
+                      disabled={isLoading}
+                      className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none disabled:opacity-50"
+                    />
+                  </div>
                 </div>
 
-                {/* OTP input with inline Verify */}
+                {/* Send OTP Button */}
+                {!otpSent ? (
+                  <button
+                    type="button"
+                    onClick={handleSendOTP}
+                    disabled={isLoading || !formData.name || !formData.email || !formData.phone || !formData.password}
+                    className="w-full bg-[#008FC4] text-white py-3 rounded-lg hover:bg-[#006f9e] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {isRegistering ? <Loader2 size={18} className="animate-spin" /> : null}
+                    Send OTP
+                  </button>
+                ) : null}
+
+                {/* OTP input with Resend OTP button */}
                 {otpSent && (
-                  <div className="relative">
-                    <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                    <input
-                      name="otp"
-                      value={formData.otp}
-                      onChange={handleChange}
-                      placeholder="Enter 6-digit OTP"
-                      inputMode="numeric"
-                      disabled={isLoading || otpVerified}
-                      className="w-full pl-12 pr-28 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none disabled:opacity-50"
-                    />
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                      <input
+                        name="otp"
+                        value={formData.otp}
+                        onChange={handleChange}
+                        placeholder="Enter 6-digit OTP"
+                        inputMode="numeric"
+                        disabled={isLoading}
+                        className="w-full pl-12 pr-4 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none disabled:opacity-50"
+                      />
+                    </div>
 
                     <button
                       type="button"
-                      onClick={handleVerifyOTP}
-                      disabled={isVerifying || otpVerified || !formData.otp}
-                      className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs sm:text-sm px-3 py-1.5 rounded-md transition flex items-center gap-1 ${
-                        otpVerified 
-                          ? 'bg-green-500 text-white' 
-                          : 'bg-[#008FC4] text-white hover:bg-[#006f9e] disabled:opacity-50'
-                      }`}
+                      onClick={handleResendOTP}
+                      disabled={isResending}
+                      className="px-6 py-3 rounded-lg bg-white text-[#008FC4] border border-[#008FC4] hover:bg-[#f8feff] transition disabled:opacity-50 flex items-center gap-2 whitespace-nowrap"
                     >
-                      {isVerifying ? <Loader2 size={14} className="animate-spin" /> : null}
-                      {otpVerified ? '✓ Verified' : 'Verify'}
+                      {isResending ? <Loader2 size={18} className="animate-spin" /> : null}
+                      Resend OTP
                     </button>
                   </div>
                 )}
@@ -675,7 +804,7 @@ const LoginPage = () => {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Password"
-                disabled={isLoading || (!isLogin && otpSent)}
+                disabled={isLoading}
                 className="w-full pl-12 pr-12 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none disabled:opacity-50"
               />
               <button
@@ -698,7 +827,7 @@ const LoginPage = () => {
                   value={formData.confirmPassword}
                   onChange={handleChange}
                   placeholder="Confirm password"
-                  disabled={isLoading || otpSent}
+                  disabled={isLoading}
                   className="w-full pl-12 pr-12 py-3 rounded-lg bg-gray-100 focus:ring-2 focus:ring-[#008FC4] outline-none disabled:opacity-50"
                 />
                 <button
@@ -720,7 +849,7 @@ const LoginPage = () => {
                 disabled={isLoading}
                 className="w-full py-3 rounded-full bg-[#0098cc] text-white font-semibold hover:bg-[#007aa8] transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
-                {isLoggingIn && <Loader2 size={18} className="animate-spin" />}
+                {(isLoggingIn || isVerifying) && <Loader2 size={18} className="animate-spin" />}
                 {isLogin ? 'SIGN IN' : 'SIGN UP'}
               </button>
             </div>
@@ -733,11 +862,11 @@ const LoginPage = () => {
               <button
                 onClick={() => {
                   setOtpSent(false);
-                  setOtpVerified(false);
                   setFormData({
                     name: '',
                     email: '',
                     phone: '',
+                    countryCode: '+91',
                     password: '',
                     confirmPassword: '',
                     otp: ''

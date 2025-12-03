@@ -5,6 +5,8 @@ import Logo from "../assets/Images/logo.svg";
 import { Turn as Hamburger } from "hamburger-react";
 import { Sparkles, Hammer, LogIn } from "lucide-react";
 
+import KarrivoLogo from "../assets/KarivoLogo.jpg"
+
 const Navbar = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
@@ -24,7 +26,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className=" bg-[#062117] sticky top-0 z-[1000] w-full flex justify-center py-4">
+    <nav className="absolute top-0 left-0 z-[1000] w-full flex justify-center py-4">
       <div
         className="w-[80%] bg-[#f8f5f3]/95 backdrop-blur-md border border-gray-200/30 rounded-full shadow-lg"
         style={{
@@ -33,22 +35,20 @@ const Navbar = () => {
       >
         <div className="px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 lg:h-16">
-            {/* Logo with circular design */}
+            {/* Logo without text */}
             <NavLink
-              className="flex items-center gap-2 lg:gap-3 transition-transform duration-300 hover:scale-105"
+              className="flex items-center transition-transform duration-300 hover:scale-105"
               to="/"
               onClick={closeNavbar}
             >
-              <div className="w-9 h-9 lg:w-10 lg:h-10 bg-gradient-to-br from-[#ff7b6d] to-[#ff9a7b] rounded-full flex items-center justify-center shadow-lg">
+              <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-full flex items-center justify-center bg-transparent">
                 <img
-                  src={Logo}
-                  className="h-5 w-5 lg:h-6 lg:w-6 filter brightness-0 invert"
-                  alt="Logo Icon"
+                  src={KarrivoLogo}
+                  className="h-10 w-10 lg:h-12 lg:w-12"
+                  alt="Logo"
                 />
               </div>
-              <span className="text-lg lg:text-xl xl:text-[22px] font-semibold bg-[#0098cc] bg-clip-text text-transparent">
-                Karrivo.in
-              </span>
+
             </NavLink>
 
 
@@ -65,10 +65,15 @@ const Navbar = () => {
               </NavLink>
 
 
-              <button className="hidden xl:flex items-center gap-1.5 px-3 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors text-xs xl:text-sm">
-                Log in
-                <LogIn className="w-3.5 h-3.5" />
-              </button>
+
+              <NavLink to="/login" onClick={closeNavbar}>
+
+                <button className="hidden xl:flex items-center gap-1.5 px-3 py-2 text-gray-700 hover:text-gray-900 font-medium transition-colors text-xs xl:text-sm">
+                  Log in
+                  <LogIn className="w-3.5 h-3.5" />
+                </button>
+
+              </NavLink>
             </div>
 
             {/* Mobile menu button */}
