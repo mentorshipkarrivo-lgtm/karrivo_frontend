@@ -1,167 +1,3 @@
-// import React, { useState, useEffect } from "react";
-// import {
-//   Routes,
-//   Route,
-//   useLocation,
-//   Outlet,
-//   Navigate,
-//   useNavigate,
-// } from "react-router-dom";
-// import { ToastContainer } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
-
-// import ProtectedRoute from "./routes/PrivateRoute";
-// import LoginPage from "./Authentication/Login";
-
-// import Home from "./pages/home/Home"
-// import FindTopMentors from "./pages/topMentors/mentors";
-// // Authentication helper functions
-// const getAuthToken = () => {
-//   try {
-//     return localStorage.getItem("token");
-//   } catch (error) {
-//     console.error("Error accessing storage:", error);
-//     return null;
-//   }
-// };
-
-// const isValidToken = (token) => {
-//   if (!token) return false;
-
-//   try {
-//     return token.length > 0;
-
-//     // Uncomment below if you're using JWT:
-//     /*
-//     const payload = JSON.parse(atob(token.split('.')[1]));
-//     const currentTime = Date.now() / 1000;
-//     return payload.exp > currentTime;
-//     */
-//   } catch (error) {
-//     console.error("Invalid token:", error);
-//     return false;
-//   }
-// };
-
-// const isAuthenticated = () => {
-//   const token = getAuthToken();
-//   return isValidToken(token);
-// };
-
-// // Public Route Component - redirects authenticated users
-// const PublicRoute = () => {
-//   const userIsAuthenticated = isAuthenticated();
-
-//   console.log("PublicRoute - Is Authenticated:", userIsAuthenticated);
-
-//   if (userIsAuthenticated) {
-//     console.log("User is authenticated, redirecting to dashboard");
-//     return <Navigate to="/dashboard" replace />;
-//   }
-//   return <Outlet />;
-// };
-
-// // Dashboard placeholder component
-// const Dashboard = () => {
-//   const navigate = useNavigate();
-
-//   const handleLogout = () => {
-//     try {
-//       localStorage.removeItem("token");
-//       sessionStorage.removeItem("token");
-//     } catch (error) {
-//       console.error("Error during logout:", error);
-//     }
-//     navigate("/login", { replace: true });
-//   };
-
-//   return (
-//     <div className="min-h-screen flex items-center justify-center bg-gray-100">
-//       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full text-center">
-//         <h1 className="text-3xl font-bold text-gray-800 mb-4">
-//           Welcome to Dashboard
-//         </h1>
-//         <p className="text-gray-600 mb-6">
-//           You are successfully logged in!
-//         </p>
-//         <button
-//           onClick={handleLogout}
-//           className="w-full bg-red-500 text-white py-3 px-6 rounded-lg font-semibold hover:bg-red-600 transition"
-//         >
-//           Logout
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// // Main App Component
-// const App = () => {
-//   return (
-//     <>
-//       <ToastContainer
-//         position="top-right"
-//         autoClose={3000}
-//         hideProgressBar={false}
-//         newestOnTop={false}
-//         closeOnClick
-//         rtl={false}
-//         pauseOnFocusLoss
-//         draggable
-//         pauseOnHover
-//       />
-
-//       <Routes>
-//         {/* Protected Dashboard Route */}
-//         <Route element={<ProtectedRoute />}>
-//           <Route path="/dashboard" element={<Dashboard />} />
-//         </Route>
-
-//         {/* Public Auth Routes - Protected from logged-in users */}
-//         <Route element={<PublicRoute />}>
-//           <Route path="/login" element={<LoginPage />} />
-//           {/* <Route path="/register" element={<AuthContainer />} /> */}
-//           {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
-//         </Route>
-
-
-
-//         <Route element={<PublicRoute />}>
-//           <Route path="/top" element={<FindTopMentors />} />
-//           {/* <Route path="/register" element={<AuthContainer />} /> */}
-//           {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
-//         </Route>
-
-
-
-//         <Route element={<PublicRoute />}>
-//           <Route path="/" element={<Home />} />
-//           {/* <Route path="/register" element={<AuthContainer />} /> */}
-//           {/* <Route path="/forgot-password" element={<ForgotPassword />} /> */}
-//         </Route>
-
-//         {/* Root route - redirect based on auth status */}
-//         <Route
-//           path="/"
-//           element={
-//             isAuthenticated() ? (
-//               <Navigate to="/dashboard" replace />
-//             ) : (
-//               <Navigate to="/" replace />
-//             )
-//           }
-//         />
-
-//         <Route path="*" element={<Navigate to="/login" replace />} />
-//       </Routes>
-//     </>
-//   );
-// };
-
-// export default App;
-
-
-
 import React from "react";
 import {
   Routes,
@@ -182,13 +18,15 @@ import FindTopMentors from "./pages/topMentors/mentors";
 
 import Navbar from "./global/Navbar";
 import FooterLinks from "./pages/home/HomeFoot";
-import StartupMentorDiscovery from "./pages/home/startUpMentors";
-import ProductMentorDiscovery from "./pages/home/productMentors";
+import ProductMentorDiscovery  from "./pages/productMentors/ProductMentorDiscovery"
 import MarketingMentorDiscovery from "./pages/home/marketingMentors";
 import LeadershipMentorDiscovery from "./pages/home/LeaderShipMentor";
 import AIMentorDiscovery from "./pages/home/Aimentorship";
 import EngineeringMentors from "./pages/EngineeringMentors/engineeringMentors";
 import MenteeApplicationForm from "./pages/menteeApplication/MenteeApplicationForm";
+import MentorDashboard from "./components/MentorDashboard/MentorDashboard ";
+import StartupMentorDiscovery from './pages/startUpmentors/StartupMentorDiscovery';
+
 
 // Auth helpers
 const getAuthToken = () => {
@@ -212,19 +50,36 @@ const isValidToken = (token) => {
 
 const isAuthenticated = () => {
   const token = getAuthToken();
+  const userRole = localStorage.getItem("userRole");
+  console.log(token, "token for getAuth token");
+  console.log(userRole, "user role");
   return isValidToken(token);
 };
-
 // Public Route Wrapper
 const PublicRoute = () => {
   const userIsAuthenticated = isAuthenticated();
+  const userRole = localStorage.getItem("userRole");
 
   if (userIsAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    // Only redirect if we're actually on a public route that needs protection
+    const currentPath = window.location.pathname;
+
+    // Don't redirect if already on a dashboard
+    if (currentPath.includes('/dashboard')) {
+      return <Outlet />;
+    }
+
+    // Redirect based on role
+    if (userRole === "2") {
+      return <Navigate to="/mentor/dashboard" replace />;
+    } else if (userRole === "1") {
+      return <Navigate to="/mentee/dashboard" replace />;
+    }
+    return <Navigate to="/mentor/dashboard" replace />;
   }
+
   return <Outlet />;
 };
-
 // GLOBAL LAYOUT (Navbar + Footer)
 const MainLayout = () => {
   return (
@@ -241,7 +96,6 @@ const MainLayout = () => {
   );
 };
 
-// Dashboard
 const Dashboard = () => {
   const navigate = useNavigate();
 
@@ -281,6 +135,11 @@ const App = () => {
           <Route path="/login" element={<LoginPage />} />
         </Route>
 
+        {/* MENTOR DASHBOARD - NO NAVBAR + NO FOOTER (STANDALONE) */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/mentor/dashboard" element={<MentorDashboard />} />
+        </Route>
+
         {/* ALL OTHER PAGES WITH NAVBAR + FOOTER */}
         <Route element={<MainLayout />}>
 
@@ -289,24 +148,12 @@ const App = () => {
             <Route path="/" element={<Home />} />
             <Route path="/top" element={<FindTopMentors />} />
             <Route path="/engineering" element={<EngineeringMentors />} />
-            <Route path="/startup" element={<StartupMentorDiscovery />} />
+            <Route path="/startup" element={<  StartupMentorDiscovery />} />
             <Route path="/product" element={<ProductMentorDiscovery />} />
-
             <Route path="/marketing" element={<MarketingMentorDiscovery />} />
-
-
             <Route path="/leadership" element={<LeadershipMentorDiscovery />} />
-
             <Route path="/ai-mentors" element={<AIMentorDiscovery />} />
             <Route path="/mentee/apply" element={<MenteeApplicationForm />} />
-
-          </Route>
-
-
-
-          {/* PROTECTED DASHBOARD */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />
           </Route>
 
         </Route>
@@ -322,6 +169,3 @@ const App = () => {
 };
 
 export default App;
-
-
-
