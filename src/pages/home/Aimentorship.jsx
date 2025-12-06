@@ -1,7 +1,7 @@
-    import React, { useState } from 'react';
-    import { Search, Filter, Star, Briefcase, Package, Clock, MapPin, TrendingUp, Target, Users, Lightbulb } from 'lucide-react';
+import React, { useState } from 'react';
+    import { Search, Filter, Star, Zap, Cpu, Clock, MapPin, TrendingUp, Target, Users, Brain } from 'lucide-react';
 
-    const ProductMentorDiscovery = () => {
+    const AIMentorDiscovery = () => {
         const [selectedCategory, setSelectedCategory] = useState('All');
         const [selectedExperience, setSelectedExperience] = useState('All');
         const [searchQuery, setSearchQuery] = useState('');
@@ -11,13 +11,14 @@
 
         const categories = [
             'All',
-            'Product Strategy',
-            'Product Design & UX',
-            'Product Analytics',
-            'Product Leadership',
-            'Growth Product',
-            'B2B Product',
-            'B2C Product'
+            'Machine Learning',
+            'Deep Learning & Neural Networks',
+            'NLP & LLMs',
+            'Computer Vision',
+            'AI Strategy & Leadership',
+            'MLOps & AI Engineering',
+            'Generative AI',
+            'Robotics & Reinforcement Learning'
         ];
 
         const experienceLevels = ['All', '0-3 years', '3-7 years', '7-12 years', '12+ years'];
@@ -28,171 +29,179 @@
         const mentors = [
             {
                 id: 1,
-                name: 'Rahul Mehra',
-                title: 'VP of Product',
-                company: 'Zomato',
-                category: 'Product Strategy',
+                name: 'Dr. Arjun Krishnan',
+                title: 'AI Research Lead',
+                company: 'Google DeepMind',
+                category: 'Machine Learning',
                 experience: '12+ years',
                 rating: 4.9,
-                reviews: 245,
-                sessionsCompleted: 420,
-                expertise: ['Product Strategy', '0-1 Products', 'Roadmapping'],
+                reviews: 312,
+                sessionsCompleted: 520,
+                expertise: ['Transformers', 'Model Architecture', 'Research Papers'],
                 availability: 'Available',
-                hourlyRate: 2800,
+                hourlyRate: 3500,
                 image: 'https://randomuser.me/api/portraits/men/32.jpg',
                 nextAvailable: 'Today',
                 responseTime: '< 2 hours',
                 location: 'Bangalore, India',
                 languages: ['English', 'Hindi'],
-                productsLaunched: 15,
-                usersImpacted: '50M+'
+                modelsBuilt: 25,
+                papersPublished: '15+',
+                usersImpacted: '100M+'
             },
             {
                 id: 2,
-                name: 'Ananya Singh',
-                title: 'Senior Product Designer',
-                company: 'Figma',
-                category: 'Product Design & UX',
+                name: 'Meera Sharma',
+                title: 'Senior ML Engineer',
+                company: 'OpenAI',
+                category: 'NLP & LLMs',
                 experience: '7-12 years',
-                rating: 4.8,
-                reviews: 189,
-                sessionsCompleted: 310,
-                expertise: ['User Research', 'Design Systems', 'Prototyping'],
+                rating: 4.9,
+                reviews: 267,
+                sessionsCompleted: 445,
+                expertise: ['LLM Fine-tuning', 'Prompt Engineering', 'RAG Systems'],
                 availability: 'Available',
-                hourlyRate: 2200,
+                hourlyRate: 3200,
                 image: 'https://randomuser.me/api/portraits/women/44.jpg',
                 nextAvailable: 'Tomorrow',
                 responseTime: '< 1 hour',
                 location: 'Mumbai, India',
                 languages: ['English', 'Hindi'],
-                productsLaunched: 12,
-                usersImpacted: '20M+'
+                modelsBuilt: 18,
+                papersPublished: '8+',
+                usersImpacted: '50M+'
             },
             {
                 id: 3,
-                name: 'Karthik Reddy',
-                title: 'Head of Product Analytics',
-                company: 'PhonePe',
-                category: 'Product Analytics',
-                experience: '7-12 years',
+                name: 'Vikram Patel',
+                title: 'Head of Computer Vision',
+                company: 'Tesla AI',
+                category: 'Computer Vision',
+                experience: '12+ years',
                 rating: 5.0,
-                reviews: 167,
-                sessionsCompleted: 290,
-                expertise: ['Data Analysis', 'A/B Testing', 'Product Metrics'],
+                reviews: 289,
+                sessionsCompleted: 490,
+                expertise: ['Object Detection', 'Image Segmentation', 'Video Analysis'],
                 availability: 'Busy',
-                hourlyRate: 2400,
+                hourlyRate: 3800,
                 image: 'https://randomuser.me/api/portraits/men/52.jpg',
                 nextAvailable: '4 days',
                 responseTime: '< 3 hours',
                 location: 'Bangalore, India',
                 languages: ['English', 'Telugu'],
-                productsLaunched: 10,
-                usersImpacted: '100M+'
+                modelsBuilt: 30,
+                papersPublished: '20+',
+                usersImpacted: '200M+'
             },
             {
                 id: 4,
-                name: 'Priya Kapoor',
-                title: 'Director of Product',
-                company: 'Google',
-                category: 'Product Leadership',
+                name: 'Dr. Priya Reddy',
+                title: 'VP of AI Strategy',
+                company: 'Microsoft',
+                category: 'AI Strategy & Leadership',
                 experience: '12+ years',
                 rating: 4.9,
-                reviews: 298,
-                sessionsCompleted: 485,
-                expertise: ['Team Building', 'Stakeholder Management', 'Vision Setting'],
+                reviews: 334,
+                sessionsCompleted: 580,
+                expertise: ['AI Roadmap', 'Team Building', 'Enterprise AI'],
                 availability: 'Available',
-                hourlyRate: 3500,
+                hourlyRate: 4200,
                 image: 'https://randomuser.me/api/portraits/women/65.jpg',
                 nextAvailable: 'Today',
                 responseTime: '< 2 hours',
                 location: 'Hyderabad, India',
                 languages: ['English', 'Hindi'],
-                productsLaunched: 20,
+                modelsBuilt: 35,
+                papersPublished: '25+',
                 usersImpacted: '500M+'
             },
             {
                 id: 5,
-                name: 'Vivek Sharma',
-                title: 'Growth Product Lead',
-                company: 'CRED',
-                category: 'Growth Product',
+                name: 'Rahul Desai',
+                title: 'MLOps Lead',
+                company: 'Netflix',
+                category: 'MLOps & AI Engineering',
                 experience: '7-12 years',
                 rating: 4.8,
-                reviews: 176,
-                sessionsCompleted: 325,
-                expertise: ['Growth Strategy', 'User Acquisition', 'Retention'],
+                reviews: 223,
+                sessionsCompleted: 385,
+                expertise: ['Model Deployment', 'CI/CD for ML', 'Monitoring'],
                 availability: 'Available',
-                hourlyRate: 2600,
+                hourlyRate: 2800,
                 image: 'https://randomuser.me/api/portraits/men/67.jpg',
                 nextAvailable: 'Today',
                 responseTime: '< 1 hour',
                 location: 'Bangalore, India',
                 languages: ['English', 'Hindi'],
-                productsLaunched: 8,
-                usersImpacted: '10M+'
+                modelsBuilt: 22,
+                papersPublished: '5+',
+                usersImpacted: '80M+'
             },
             {
                 id: 6,
-                name: 'Sneha Patel',
-                title: 'Senior Product Manager',
-                company: 'Salesforce',
-                category: 'B2B Product',
+                name: 'Ananya Iyer',
+                title: 'Senior AI Researcher',
+                company: 'Meta AI',
+                category: 'Deep Learning & Neural Networks',
                 experience: '7-12 years',
-                rating: 4.7,
-                reviews: 154,
-                sessionsCompleted: 270,
-                expertise: ['Enterprise SaaS', 'B2B Strategy', 'Customer Success'],
+                rating: 4.8,
+                reviews: 245,
+                sessionsCompleted: 410,
+                expertise: ['Neural Architecture', 'Transfer Learning', 'Model Optimization'],
                 availability: 'Available',
-                hourlyRate: 2500,
+                hourlyRate: 3100,
                 image: 'https://randomuser.me/api/portraits/women/72.jpg',
                 nextAvailable: '2 days',
                 responseTime: '< 2 hours',
                 location: 'Pune, India',
                 languages: ['English', 'Gujarati'],
-                productsLaunched: 14,
-                usersImpacted: '5M+'
+                modelsBuilt: 20,
+                papersPublished: '12+',
+                usersImpacted: '150M+'
             },
             {
                 id: 7,
-                name: 'Arjun Nair',
-                title: 'Product Manager',
-                company: 'Swiggy',
-                category: 'B2C Product',
+                name: 'Karthik Menon',
+                title: 'Generative AI Engineer',
+                company: 'Anthropic',
+                category: 'Generative AI',
                 experience: '3-7 years',
-                rating: 4.6,
-                reviews: 132,
-                sessionsCompleted: 215,
-                expertise: ['Consumer Apps', 'User Journey', 'Feature Prioritization'],
+                rating: 4.7,
+                reviews: 198,
+                sessionsCompleted: 325,
+                expertise: ['Diffusion Models', 'GANs', 'Image Generation'],
                 availability: 'Available',
-                hourlyRate: 1800,
+                hourlyRate: 2600,
                 image: 'https://randomuser.me/api/portraits/men/45.jpg',
                 nextAvailable: 'Today',
                 responseTime: '< 1 hour',
                 location: 'Chennai, India',
                 languages: ['English', 'Tamil'],
-                productsLaunched: 6,
-                usersImpacted: '15M+'
+                modelsBuilt: 15,
+                papersPublished: '6+',
+                usersImpacted: '30M+'
             },
             {
                 id: 8,
-                name: 'Neha Gupta',
-                title: 'Chief Product Officer',
-                company: 'Razorpay',
-                category: 'Product Leadership',
+                name: 'Dr. Sneha Gupta',
+                title: 'Chief AI Officer',
+                company: 'NVIDIA',
+                category: 'AI Strategy & Leadership',
                 experience: '12+ years',
-                rating: 4.9,
-                reviews: 267,
-                sessionsCompleted: 450,
-                expertise: ['Product Vision', 'Portfolio Management', 'Innovation'],
+                rating: 5.0,
+                reviews: 356,
+                sessionsCompleted: 620,
+                expertise: ['AI Vision', 'Research Strategy', 'Innovation'],
                 availability: 'Busy',
-                hourlyRate: 4000,
+                hourlyRate: 4500,
                 image: 'https://randomuser.me/api/portraits/women/28.jpg',
                 nextAvailable: '5 days',
                 responseTime: '< 3 hours',
                 location: 'Bangalore, India',
                 languages: ['English', 'Hindi'],
-                productsLaunched: 25,
-                usersImpacted: '50M+'
+                modelsBuilt: 40,
+                papersPublished: '30+',
+                usersImpacted: '1B+'
             }
         ];
 
@@ -236,32 +245,32 @@
         });
 
         return (
-            <div className="min-h-screen bg-[#062117] py-8 px-4 pt-28">
+            <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 py-8 px-4 pt-28">
                 <div className="max-w-7xl mx-auto">
                     {/* Header */}
                     <div className="mb-8">
                         <div className="flex items-center gap-3 mb-3">
-                            <Package className="w-10 h-10 text-[#0098cc]" />
+                            <Brain className="w-10 h-10 text-cyan-400" />
                             <h1 className="text-3xl md:text-4xl font-bold text-white">
-                                Find Your Product Mentor
+                                Find Your AI Mentor
                             </h1>
                         </div>
-                        <p className="text-gray-400">Connect with experienced product leaders who've built products users love</p>
+                        <p className="text-gray-400">Connect with world-class AI experts and researchers who've pushed the boundaries of machine learning</p>
                     </div>
 
                     {/* Main Layout */}
                     <div className="flex flex-col lg:flex-row gap-6">
                         {/* Left Sidebar - Filters */}
                         <div className="lg:w-80 flex-shrink-0">
-                            <div className="bg-[#0a2d20] border border-[#0098cc]/20 rounded-2xl p-6 sticky top-6">
+                            <div className="bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-2xl p-6 sticky top-6">
                                 <div className="flex items-center justify-between mb-6">
                                     <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                                        <Filter className="w-5 h-5 text-[#0098cc]" />
+                                        <Filter className="w-5 h-5 text-cyan-400" />
                                         Filters
                                     </h2>
                                     <button
                                         onClick={clearAllFilters}
-                                        className="text-[#0098cc] text-sm hover:text-[#00b4e6] transition-colors"
+                                        className="text-cyan-400 text-sm hover:text-cyan-300 transition-colors"
                                     >
                                         Clear All
                                     </button>
@@ -279,7 +288,7 @@
                                             placeholder="Name, expertise, skill..."
                                             value={searchQuery}
                                             onChange={(e) => setSearchQuery(e.target.value)}
-                                            className="w-full pl-10 pr-4 py-2.5 bg-[#062117] border border-[#0098cc]/30 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-[#0098cc] transition-colors"
+                                            className="w-full pl-10 pr-4 py-2.5 bg-slate-950/50 border border-cyan-500/30 rounded-lg text-white text-sm placeholder-gray-500 focus:outline-none focus:border-cyan-400 transition-colors"
                                         />
                                     </div>
                                 </div>
@@ -287,7 +296,7 @@
                                 {/* Category Filter */}
                                 <div className="mb-6">
                                     <label className="text-gray-400 text-sm font-semibold mb-3 block">
-                                        Product Area
+                                        AI Specialization
                                     </label>
                                     <div className="space-y-2">
                                         {categories.map((category) => (
@@ -295,8 +304,8 @@
                                                 key={category}
                                                 onClick={() => setSelectedCategory(category)}
                                                 className={`w-full text-left px-4 py-2.5 rounded-lg font-medium text-sm transition-all ${selectedCategory === category
-                                                        ? 'bg-[#0098cc] text-white shadow-lg'
-                                                        : 'bg-[#062117] text-gray-400 hover:bg-[#062117]/50 hover:text-white'
+                                                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/20'
+                                                        : 'bg-slate-950/50 text-gray-400 hover:bg-slate-900/50 hover:text-white'
                                                     }`}
                                             >
                                                 {category}
@@ -316,8 +325,8 @@
                                                 key={level}
                                                 onClick={() => setSelectedExperience(level)}
                                                 className={`w-full text-left px-4 py-2.5 rounded-lg font-medium text-sm transition-all ${selectedExperience === level
-                                                        ? 'bg-[#0098cc] text-white shadow-lg'
-                                                        : 'bg-[#062117] text-gray-400 hover:bg-[#062117]/50 hover:text-white'
+                                                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/20'
+                                                        : 'bg-slate-950/50 text-gray-400 hover:bg-slate-900/50 hover:text-white'
                                                     }`}
                                             >
                                                 {level}
@@ -337,8 +346,8 @@
                                                 key={range}
                                                 onClick={() => setPriceRange(range)}
                                                 className={`w-full text-left px-4 py-2.5 rounded-lg font-medium text-sm transition-all ${priceRange === range
-                                                        ? 'bg-[#0098cc] text-white shadow-lg'
-                                                        : 'bg-[#062117] text-gray-400 hover:bg-[#062117]/50 hover:text-white'
+                                                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/20'
+                                                        : 'bg-slate-950/50 text-gray-400 hover:bg-slate-900/50 hover:text-white'
                                                     }`}
                                             >
                                                 {range}
@@ -358,8 +367,8 @@
                                                 key={option}
                                                 onClick={() => setSelectedAvailability(option)}
                                                 className={`w-full text-left px-4 py-2.5 rounded-lg font-medium text-sm transition-all ${selectedAvailability === option
-                                                        ? 'bg-[#0098cc] text-white shadow-lg'
-                                                        : 'bg-[#062117] text-gray-400 hover:bg-[#062117]/50 hover:text-white'
+                                                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg shadow-cyan-500/20'
+                                                        : 'bg-slate-950/50 text-gray-400 hover:bg-slate-900/50 hover:text-white'
                                                     }`}
                                             >
                                                 {option}
@@ -379,8 +388,8 @@
                                                 key={lang}
                                                 onClick={() => toggleLanguage(lang)}
                                                 className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${selectedLanguages.includes(lang)
-                                                        ? 'bg-[#0098cc] text-white'
-                                                        : 'bg-[#062117] text-gray-400 hover:bg-[#062117]/50'
+                                                        ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white'
+                                                        : 'bg-slate-950/50 text-gray-400 hover:bg-slate-900/50'
                                                     }`}
                                             >
                                                 {lang}
@@ -395,7 +404,7 @@
                         <div className="flex-1">
                             {/* Results Count */}
                             <div className="mb-6 text-gray-400">
-                                Showing <span className="text-[#0098cc] font-semibold">{filteredMentors.length}</span> mentors
+                                Showing <span className="text-cyan-400 font-semibold">{filteredMentors.length}</span> AI mentors
                             </div>
 
                             {/* Mentor Cards Grid */}
@@ -403,10 +412,10 @@
                                 {filteredMentors.map((mentor) => (
                                     <div
                                         key={mentor.id}
-                                        className="group bg-[#0a2d20] border border-[#0098cc]/20 rounded-2xl overflow-hidden hover:border-[#0098cc]/60 hover:shadow-2xl hover:shadow-[#0098cc]/10 transition-all duration-300 hover:-translate-y-1"
+                                        className="group bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-2xl overflow-hidden hover:border-cyan-400/60 hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-300 hover:-translate-y-1"
                                     >
                                         {/* Card Header */}
-                                        <div className="relative h-40 bg-gradient-to-br from-[#0098cc]/20 to-[#062117]">
+                                        <div className="relative h-40 bg-gradient-to-br from-cyan-600/20 via-blue-600/20 to-purple-600/20">
                                             <div className="absolute top-4 left-4">
                                                 <span className={`px-3 py-1 rounded-full text-xs font-bold ${mentor.availability === 'Available'
                                                         ? 'bg-green-500/20 text-green-400 border border-green-500/30'
@@ -419,7 +428,7 @@
                                                 <img
                                                     src={mentor.image}
                                                     alt={mentor.name}
-                                                    className="w-20 h-20 rounded-xl border-4 border-[#0a2d20] object-cover shadow-xl"
+                                                    className="w-20 h-20 rounded-xl border-4 border-slate-900 object-cover shadow-xl"
                                                 />
                                             </div>
                                         </div>
@@ -427,36 +436,43 @@
                                         {/* Card Content */}
                                         <div className="pt-14 px-6 pb-6">
                                             <h3 className="text-lg font-bold text-white mb-1">{mentor.name}</h3>
-                                            <p className="text-[#0098cc] text-sm font-semibold mb-1">{mentor.title}</p>
+                                            <p className="text-cyan-400 text-sm font-semibold mb-1">{mentor.title}</p>
                                             <p className="text-gray-400 text-xs mb-3 flex items-center gap-1">
-                                                <Briefcase className="w-3 h-3" />
+                                                <Cpu className="w-3 h-3" />
                                                 {mentor.company}
                                             </p>
 
                                             {/* Stats */}
-                                            <div className="flex items-center gap-4 mb-3 pb-3 border-b border-[#0098cc]/20">
+                                            <div className="flex items-center gap-4 mb-3 pb-3 border-b border-cyan-500/20">
                                                 <div className="flex items-center gap-1">
                                                     <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                                                     <span className="text-white font-bold text-sm">{mentor.rating}</span>
                                                     <span className="text-gray-400 text-xs">({mentor.reviews})</span>
                                                 </div>
                                                 <div className="flex items-center gap-1 text-gray-400 text-xs">
-                                                    <TrendingUp className="w-4 h-4 text-[#0098cc]" />
+                                                    <TrendingUp className="w-4 h-4 text-cyan-400" />
                                                     {mentor.sessionsCompleted} sessions
                                                 </div>
                                             </div>
 
-                                            {/* Product Impact */}
-                                            <div className="grid grid-cols-2 gap-2 mb-3">
-                                                <div className="bg-[#062117] rounded-lg px-3 py-2 border border-[#0098cc]/20">
-                                                    <div className="text-[#0098cc] text-xs font-semibold mb-1 flex items-center gap-1">
-                                                        <Lightbulb className="w-3 h-3" />
-                                                        Products
+                                            {/* AI Impact */}
+                                            <div className="grid grid-cols-3 gap-2 mb-3">
+                                                <div className="bg-slate-950/50 rounded-lg px-3 py-2 border border-cyan-500/20">
+                                                    <div className="text-cyan-400 text-xs font-semibold mb-1 flex items-center gap-1">
+                                                        <Zap className="w-3 h-3" />
+                                                        Models
                                                     </div>
-                                                    <div className="text-white text-sm font-bold">{mentor.productsLaunched} launched</div>
+                                                    <div className="text-white text-sm font-bold">{mentor.modelsBuilt}</div>
                                                 </div>
-                                                <div className="bg-[#062117] rounded-lg px-3 py-2 border border-[#0098cc]/20">
-                                                    <div className="text-[#0098cc] text-xs font-semibold mb-1 flex items-center gap-1">
+                                                <div className="bg-slate-950/50 rounded-lg px-3 py-2 border border-cyan-500/20">
+                                                    <div className="text-cyan-400 text-xs font-semibold mb-1 flex items-center gap-1">
+                                                        <Target className="w-3 h-3" />
+                                                        Papers
+                                                    </div>
+                                                    <div className="text-white text-sm font-bold">{mentor.papersPublished}</div>
+                                                </div>
+                                                <div className="bg-slate-950/50 rounded-lg px-3 py-2 border border-cyan-500/20">
+                                                    <div className="text-cyan-400 text-xs font-semibold mb-1 flex items-center gap-1">
                                                         <Users className="w-3 h-3" />
                                                         Impact
                                                     </div>
@@ -469,7 +485,7 @@
                                                 {mentor.expertise.map((skill, idx) => (
                                                     <span
                                                         key={idx}
-                                                        className="px-2 py-1 bg-[#0098cc]/10 text-[#0098cc] text-xs rounded-md border border-[#0098cc]/20"
+                                                        className="px-2 py-1 bg-cyan-500/10 text-cyan-400 text-xs rounded-md border border-cyan-500/20"
                                                     >
                                                         {skill}
                                                     </span>
@@ -489,12 +505,12 @@
                                             </div>
 
                                             {/* Price & CTA */}
-                                            <div className="flex items-center justify-between pt-3 border-t border-[#0098cc]/20">
+                                            <div className="flex items-center justify-between pt-3 border-t border-cyan-500/20">
                                                 <div>
                                                     <span className="text-xl font-bold text-white">₹{mentor.hourlyRate}</span>
                                                     <span className="text-gray-400 text-xs">/hour</span>
                                                 </div>
-                                                <button className="px-4 py-2 bg-gradient-to-r from-[#0098cc] to-[#00b4e6] text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-[#0098cc]/30 transition-all duration-300 transform hover:scale-105 text-sm">
+                                                <button className="px-4 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white font-semibold rounded-lg hover:shadow-lg hover:shadow-cyan-500/30 transition-all duration-300 transform hover:scale-105 text-sm">
                                                     Book Session
                                                 </button>
                                             </div>
@@ -505,15 +521,15 @@
 
                             {/* No Results */}
                             {filteredMentors.length === 0 && (
-                                <div className="text-center py-16 bg-[#0a2d20] border border-[#0098cc]/20 rounded-2xl">
-                                    <div className="w-16 h-16 bg-[#0098cc]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <Search className="w-8 h-8 text-[#0098cc]" />
+                                <div className="text-center py-16 bg-slate-900/50 backdrop-blur-sm border border-cyan-500/20 rounded-2xl">
+                                    <div className="w-16 h-16 bg-cyan-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <Search className="w-8 h-8 text-cyan-400" />
                                     </div>
                                     <h3 className="text-xl font-bold text-white mb-2">No mentors found</h3>
                                     <p className="text-gray-400 mb-4">Try adjusting your filters or search query</p>
                                     <button
                                         onClick={clearAllFilters}
-                                        className="px-6 py-2 bg-[#0098cc] text-white rounded-lg hover:bg-[#00b4e6] transition-colors"
+                                        className="px-6 py-2 bg-gradient-to-r from-cyan-500 to-blue-500 text-white rounded-lg hover:shadow-lg hover:shadow-cyan-500/30 transition-all"
                                     >
                                         Clear All Filters
                                     </button>
@@ -526,4 +542,4 @@
         );
     };
 
-    export default ProductMentorDiscovery;
+    export default AIMentorDiscovery;

@@ -464,12 +464,15 @@ import {
   useLoginMutation,
   useOTPresentMutation
 } from "../ApiSliceComponent/RegisterApiSlice"
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [userType, setUserType] = useState('mentee');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
+
 
   // OTP states (signup only)
   const [otpSent, setOtpSent] = useState(false);
@@ -879,7 +882,15 @@ const LoginPage = () => {
                 {isLogin ? 'Sign Up' : 'Sign In'}
               </button>
             </p>
+            {!isLogin && (
+              <div
+                onClick={() => navigate('/mentee/apply')}
+                className="w-full py-3 rounded-full text-[#008FC4] font-semibold cursor-pointer hover:text-[#006f99] flex items-center justify-center"
+              >
+                Register as Mentee
+              </div>
 
+            )}
             {isLogin && (
               <>
                 <div className="relative my-6">

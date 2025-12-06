@@ -286,7 +286,8 @@ import ContactSection from './HomeContact';
 import MentorGrid from './HomeContact';
 import FAQAccordion from './faqs';
 import MentoHero from './Scrollvelocity';
-import MentorDiscovery from './mentorCategory';
+import MenteeApplicationForm from '../menteeApplication/MenteeApplicationForm';
+import HeroSection from './HeroSection ';
 // Lazy loaded
 const Threads = React.lazy(() => import('../../global/Threads'));
 
@@ -539,10 +540,10 @@ const Home = () => {
       <MentorsSection />
       <AboutPage />
       <MentorGrid />
+      <HeroSection />
       <TestimonialsSection />
       <FAQAccordion />
       <MentoHero />
-      <MentorDiscovery/>
 
       <FindMentor />
 

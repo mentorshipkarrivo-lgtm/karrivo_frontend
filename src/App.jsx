@@ -182,11 +182,13 @@ import FindTopMentors from "./pages/topMentors/mentors";
 
 import Navbar from "./global/Navbar";
 import FooterLinks from "./pages/home/HomeFoot";
-import MentoHero from "./pages/home/Scrollvelocity";
-import MentorDiscovery from "./pages/home/mentorCategory";
 import StartupMentorDiscovery from "./pages/home/startUpMentors";
 import ProductMentorDiscovery from "./pages/home/productMentors";
 import MarketingMentorDiscovery from "./pages/home/marketingMentors";
+import LeadershipMentorDiscovery from "./pages/home/LeaderShipMentor";
+import AIMentorDiscovery from "./pages/home/Aimentorship";
+import EngineeringMentors from "./pages/EngineeringMentors/engineeringMentors";
+import MenteeApplicationForm from "./pages/menteeApplication/MenteeApplicationForm";
 
 // Auth helpers
 const getAuthToken = () => {
@@ -286,12 +288,17 @@ const App = () => {
           <Route element={<PublicRoute />}>
             <Route path="/" element={<Home />} />
             <Route path="/top" element={<FindTopMentors />} />
-            <Route path="/engineering" element={<MentorDiscovery />} />
+            <Route path="/engineering" element={<EngineeringMentors />} />
             <Route path="/startup" element={<StartupMentorDiscovery />} />
             <Route path="/product" element={<ProductMentorDiscovery />} />
-              <Route path="/leadership" element={<MarketingMentorDiscovery />} />
+
+            <Route path="/marketing" element={<MarketingMentorDiscovery />} />
 
 
+            <Route path="/leadership" element={<LeadershipMentorDiscovery />} />
+
+            <Route path="/ai-mentors" element={<AIMentorDiscovery />} />
+            <Route path="/mentee/apply" element={<MenteeApplicationForm />} />
 
           </Route>
 
