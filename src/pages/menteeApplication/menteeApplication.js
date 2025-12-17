@@ -6,7 +6,7 @@ export const menteeApiSlice = apiSlice.injectEndpoints({
         // Submit Mentee Application
         submitMenteeApplication: builder.mutation({
             query: (formData) => ({
-                url: "/mentee/apply",
+                url: "/Mentor/apply",
                 method: "POST",
                 body: formData,
             }),

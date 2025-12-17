@@ -148,7 +148,7 @@ export default function ContactSection() {
               <button
                 onClick={handleSubmit}
                 className="w-full py-4 rounded font-semibold text-black transition-all duration-300 hover:opacity-90 mt-6"
-                style={{ backgroundColor: '#D4FF00' }}
+                style={{ backgroundColor: '#0098cc' }}
               >
                 Send Message
               </button>

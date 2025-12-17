@@ -274,7 +274,7 @@ import { Search, ChevronRight, Star, Users, Award, TrendingUp } from 'lucide-rea
 import TestimonialsSection from './Testimonals'
 import ScrollVelocity from './Scrollvelocity';
 
-import MentorsSection from './MentorSection';
+import MentorsSection from './mentorsection/MentorSection';
 import FooterLinks from './HomeFoot';
 import FindMentor from './FindMentor';
 import Navbar from '../../global/Navbar';
@@ -330,13 +330,13 @@ const Home = () => {
 
   // Updated categories with routes
   const categories = [
+    { name: 'All Mentors', path: '/Allmentors' },
     { name: 'Engineering Mentors', path: '/engineering' },
     { name: 'Top Mentors', path: '/top' },
     { name: 'Startup Mentors', path: '/startup' },
     { name: 'Product Mentors', path: '/product' },
     { name: 'Marketing Mentors', path: '/marketing' },
     { name: 'Leadership Mentors', path: '/leadership' },
-    { name: 'Career Mentors ', path: '/career' },
     { name: 'AI Mentors', path: '/ai-mentors' }
   ];
 

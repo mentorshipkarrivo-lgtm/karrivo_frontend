@@ -18,14 +18,16 @@ import FindTopMentors from "./pages/topMentors/mentors";
 
 import Navbar from "./global/Navbar";
 import FooterLinks from "./pages/home/HomeFoot";
-import ProductMentorDiscovery  from "./pages/productMentors/ProductMentorDiscovery"
-import MarketingMentorDiscovery from "./pages/home/marketingMentors";
-import LeadershipMentorDiscovery from "./pages/home/LeaderShipMentor";
-import AIMentorDiscovery from "./pages/home/Aimentorship";
+import ProductMentorDiscovery from "./pages/productMentors/ProductMentorDiscovery"
+import MarketingMentorDiscovery from "./pages/marketingmentors/MarketingMentorDiscovery";
+import LeadershipMentorDiscovery from "./pages/leadershipmentors/LeadershipMentorDiscovery";
 import EngineeringMentors from "./pages/EngineeringMentors/engineeringMentors";
 import MenteeApplicationForm from "./pages/menteeApplication/MenteeApplicationForm";
 import MentorDashboard from "./components/MentorDashboard/MentorDashboard ";
 import StartupMentorDiscovery from './pages/startUpmentors/StartupMentorDiscovery';
+import AIMentorDiscovery from "./pages/aimentors/AIMentorDiscovery";
+import AllMentorsDiscovery from "./pages/allmentors/AllMentorsDiscovery";
+import MenteeDashboard    from "./pages/menteeDashboard/menteeDashboard"
 
 
 // Auth helpers
@@ -140,6 +142,13 @@ const App = () => {
           <Route path="/mentor/dashboard" element={<MentorDashboard />} />
         </Route>
 
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/mentee/dashboard" element={<MenteeDashboard />} />
+        </Route>
+
+
+
         {/* ALL OTHER PAGES WITH NAVBAR + FOOTER */}
         <Route element={<MainLayout />}>
 
@@ -154,7 +163,15 @@ const App = () => {
             <Route path="/leadership" element={<LeadershipMentorDiscovery />} />
             <Route path="/ai-mentors" element={<AIMentorDiscovery />} />
             <Route path="/mentee/apply" element={<MenteeApplicationForm />} />
+            <Route path="/Allmentors" element={<AllMentorsDiscovery />} />
+
+
+
+
+
           </Route>
+
+
 
         </Route>
 

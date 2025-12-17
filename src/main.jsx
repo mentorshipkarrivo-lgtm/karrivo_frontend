@@ -6,21 +6,27 @@ import { Provider } from "react-redux";
 // npm uninstall react-helmet-async
 
 import App from "./App.jsx";
-import { store }  from "./pages/services/store.js"
+import { store } from "./pages/services/store.js"
 import "./index.css";
-import  StateProvider  from "./context/StateContext.jsx"
+import StateProvider from "./context/StateContext.jsx"
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <StateProvider>
+    <GoogleOAuthProvider clientId="895349577404-431jvovnkhfvnktdej80bgffc4efc161.apps.googleusercontent.com">
+
+      <Provider store={store}>
+
+        <BrowserRouter>
+          <StateProvider>
             {/* <HelmetProvider> */}
-              <App />
+            <App />
             {/* </HelmetProvider> */}
-        </StateProvider>
-      </BrowserRouter>
-    </Provider>
+          </StateProvider>
+        </BrowserRouter>
+      </Provider>
+    </GoogleOAuthProvider >
   </React.StrictMode>
+
 );
 
- 

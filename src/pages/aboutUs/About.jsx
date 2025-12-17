@@ -79,9 +79,11 @@
 import React, { useRef, useEffect } from "react";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import DomeGallery from "./domeGallery"
+import { Navigate, useNavigate } from "react-router-dom";
 
 export default function AboutPage() {
     const sectionRef = useRef(null);
+    const usenavigate = useNavigate()
 
     // motion values
     const yRaw = useMotionValue(150);
@@ -162,6 +164,7 @@ export default function AboutPage() {
                     <button
                         className="px-8 py-4 rounded-lg text-white font-semibold text-lg transition-all hover:scale-105 hover:shadow-2xl"
                         style={{ backgroundColor: '#0098cc' }}
+                        onClick={() => usenavigate("/Allmentors")}
                     >
                         Browse all mentors
                     </button>
