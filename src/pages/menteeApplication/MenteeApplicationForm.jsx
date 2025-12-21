@@ -566,7 +566,7 @@ const MenteeApplicationForm = () => {
                     {/* Header */}
                     <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
                         <div className="flex items-center mb-2">
-                            <div className="text-3xl font-bold text-[#062117]">MentorHub</div>
+                            <div className="text-3xl font-bold text-[#062117]">MenteeHub</div>
                         </div>
                         <h1 className="text-2xl font-semibold text-gray-800">Mentee Application</h1>
                         <p className="text-gray-600 text-sm mt-1">Complete all sections to submit your application</p>
