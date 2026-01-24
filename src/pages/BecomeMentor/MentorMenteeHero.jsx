@@ -163,8 +163,10 @@
 
 import React from 'react';
 import { ArrowRight, Lightbulb, Star } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function MentorMenteeHero() {
+    const navigate = useNavigate()
     return (
         <div className="min-h-screen relative overflow-hidden" style={{ backgroundColor: '#062117' }}>
             {/* Decorative Lightbulb - Top Left */}
@@ -216,12 +218,11 @@ export default function MentorMenteeHero() {
                         <button
                             className="px-8 sm:px-10 py-3 sm:py-4 rounded-full text-white font-bold text-base sm:text-lg transition-all hover:opacity-90 hover:scale-105"
                             style={{ backgroundColor: '#0098cc' }}
+                            onClick={() => navigate("/login")}
                         >
                             Get Started
                         </button>
-                        <button className="text-white font-semibold text-base sm:text-lg hover:underline">
-                            Try for free
-                        </button>
+            
                     </div>
                 </div>
 

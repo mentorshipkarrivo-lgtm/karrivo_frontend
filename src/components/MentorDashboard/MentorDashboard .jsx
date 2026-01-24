@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Calendar, BookOpen, Users, FileText, Briefcase, MessageSquare, UserPlus, DollarSign, Gift, Star, HelpCircle, Menu, X, LogOut } from 'lucide-react';
+import { Home, Calendar, Bell, User, BookOpen, Users, FileText, Briefcase, MessageSquare, UserPlus, DollarSign, Gift, Star, HelpCircle, Menu, X, LogOut } from 'lucide-react';
+import { useNavigate } from "react-router-dom";
+import SessionsPage from './sessions/session';
 
 // Section Components (These would normally be in separate files)
 const DashboardSection = () => (
@@ -33,7 +35,7 @@ const DashboardSection = () => (
         <div className="h-64 flex items-end justify-between gap-4">
           {[5200, 4800, 7500, 4200, 8100, 3600].map((value, idx) => (
             <div key={idx} className="flex-1 flex flex-col items-center">
-              <div 
+              <div
                 className="w-full bg-[#0098cc] rounded-t-lg transition-all hover:bg-[#0098cc]/80"
                 style={{ height: `${(value / 8100) * 100}%` }}
               />
@@ -260,7 +262,7 @@ const Router = ({ currentRoute }) => {
   const routes = {
     'dashboard': DashboardSection,
     'bookings': BookingsSection,
-    'sessions': SessionsSection,
+    "Mentor-sessions": SessionsPage,
     'mentees': MenteesSection,
     'programs': ProgramsSection,
     'assignments': AssignmentsSection,
@@ -280,23 +282,134 @@ const Router = ({ currentRoute }) => {
 const navigationItems = [
   { id: 'dashboard', label: 'Dashboard', icon: Home, route: '/dashboard' },
   { id: 'bookings', label: 'Session Bookings', icon: Calendar, route: '/bookings' },
-  { id: 'sessions', label: 'My Sessions', icon: BookOpen, route: '/sessions' },
+  { id: 'Mentor-sessions', label: 'My Sessions', icon: BookOpen, route: '/Mentor-sessions' },
   { id: 'mentees', label: 'My Mentees', icon: Users, route: '/mentees' },
-  { id: 'programs', label: 'Training Programs', icon: FileText, badge: 'New', route: '/programs' },
-  { id: 'assignments', label: 'Assignments', icon: Briefcase, route: '/assignments' },
   { id: 'messages', label: 'Messages', icon: MessageSquare, route: '/messages' },
-  { id: 'connect', label: 'Connect Mentees', icon: UserPlus, route: '/connect' },
   { id: 'earnings', label: 'My Earnings', icon: DollarSign, route: '/earnings' },
-  { id: 'rewards', label: 'Rewards', icon: Gift, route: '/rewards' },
   { id: 'reviews', label: 'Reviews', icon: Star, route: '/reviews' },
   { id: 'support', label: 'Support Request', icon: HelpCircle, route: '/support' },
   { id: 'logout', label: 'Logout', icon: LogOut }
 ];
 
+
+// const getCookie = (name) => {
+//   const value = `; ${document.cookie}`;
+//   const parts = value.split(`; ${name}=`);
+//   if (parts.length === 2) return parts.pop().split(';').shift();
+//   return null;
+// };
+
+
+
+const ProfileDropdown = ({ onLogoutClick, isOpen, onClose }) => {
+  const navigate = useNavigate();
+
+  const [userinfo, setuserinfo] = useState(null)
+
+
+  useEffect(() => {
+    const userData = localStorage.getItem("userData");
+    console.log(userData, "userData (raw)");
+
+    if (userData) {
+      const parsedUser = JSON.parse(userData);
+      setuserinfo(parsedUser);
+      console.log(parsedUser.name, "name");
+    }
+  }, []);
+
+
+  // console.log(userinfo.name, "userinfo")
+
+
+  if (!isOpen) return null;
+
+
+
+
+  const handleProfileClick = () => {
+    navigate("/mentor-profile");
+    onClose?.();
+
+  };
+
+
+
+
+  return (
+    <div className="absolute right-0 top-full mt-2 w-72 bg-white border border-gray-200 rounded-xl shadow-lg z-50">
+      <div className="p-4 border-b border-gray-200">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-[#062117] rounded-full flex items-center justify-center text-white font-bold">
+            {userinfo?.name?.charAt(0)}
+          </div>
+          <div className="flex-1">
+            <p className="font-semibold text-[#062117]">{userinfo?.name}</p>
+            <p className="text-sm text-gray-500">{userinfo?.email}</p>
+          </div>
+        </div>
+      </div>
+      <div className="p-2">
+        <button
+          onClick={handleProfileClick}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
+        >
+          <User size={18} />
+          <span>View Profile</span>
+        </button>
+        <button
+          onClick={onLogoutClick}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-500 hover:bg-red-50 transition-colors"
+        >
+          <LogOut size={18} />
+          <span>Logout</span>
+        </button>
+      </div>
+    </div>
+  );
+};
+
+
 const MentorDashboard = () => {
   const [currentRoute, setCurrentRoute] = useState('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [userData, setUserData] = useState(null);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+
+  // const [mentorFulldata, setMentorFulldata] = useState(null)
+
+  // const [getMentorDetails, { data, isLoading, error }] = useGetMentorDetailsMutation();
+  // setMentorFulldata(data)
+
+  // const [email, setemail] = useState("")
+
+  // useEffect(() => {
+  //   const userData = localStorage.getItem("userData");
+  //   console.log(userData, "userData (raw)");
+
+  //   if (userData) {
+  //     try {
+  //       const parsedData = JSON.parse(userData);
+  //       setUserData(parsedData);
+  //       console.log(parsedData, "parsedData");
+  //       setemail(parsedData.email)
+  //     } catch (error) {
+  //       console.error("Error parsing user data:", error);
+  //     }
+  //   }
+  // }, []);
+
+
+
+  // useEffect(() => {
+  //   if (email) {
+  //     getMentorDetails(email);
+  //   }
+  // }, [email])
+
+
+
 
   // Handle browser back/forward buttons
   useEffect(() => {
@@ -306,7 +419,7 @@ const MentorDashboard = () => {
     };
 
     window.addEventListener('popstate', handlePopState);
-    
+
     // Set initial route from URL
     const initialPath = window.location.hash.slice(1) || 'dashboard';
     setCurrentRoute(initialPath);
@@ -317,14 +430,14 @@ const MentorDashboard = () => {
   const navigate = (route) => {
     setCurrentRoute(route);
     window.history.pushState(null, '', `#${route}`);
-  };
+  }
 
   const handleLogout = () => {
     // Remove token from localStorage
     localStorage.removeItem('token');
     localStorage.removeItem('authToken');
     localStorage.removeItem('user');
-    
+
     // Navigate to login or home page
     window.location.href = '/';
   };
@@ -332,7 +445,7 @@ const MentorDashboard = () => {
   const Header = () => (
     <header className="bg-[#062117] border-b border-[#0098cc]/20 px-6 py-4 flex items-center justify-between sticky top-0 z-40">
       <div className="flex items-center gap-4">
-        <button 
+        <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="lg:hidden text-white hover:text-[#0098cc] transition-colors"
         >
@@ -345,14 +458,37 @@ const MentorDashboard = () => {
           <h1 className="text-white text-xl font-bold">MentorHub</h1>
         </div>
       </div>
+
       <div className="flex items-center gap-4">
-        <input 
-          type="text" 
-          placeholder="Search..." 
-          className="hidden md:block bg-[#062117] border border-[#0098cc]/30 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-[#0098cc]"
+        <input
+          type="text"
+          placeholder="Search..."
+          className="hidden md:block bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 text-[#062117] placeholder-gray-400 focus:outline-none focus:border-[#062117]"
         />
-        <div className="w-10 h-10 bg-[#0098cc] rounded-full flex items-center justify-center text-white font-semibold">
-          JD
+        <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <Bell size={20} className="text-gray-600" />
+          <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        </button>
+        <div className="relative">
+          <button
+            onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+            className="w-10 h-10 bg-[#062117] rounded-full flex items-center justify-center text-white font-semibold hover:bg-[#062117]/90 transition-colors"
+          >
+            {userData?.name?.charAt(0) || 'U'}
+          </button>
+          <ProfileDropdown
+            userData={userData}
+            isOpen={isProfileDropdownOpen}
+            onClose={() => setIsProfileDropdownOpen(false)}
+            onProfileClick={() => {
+              navigate('profile');
+              setIsProfileDropdownOpen(false);
+            }}
+            onLogoutClick={() => {
+              setIsProfileDropdownOpen(false);
+              setIsLogoutModalOpen(true);
+            }}
+          />
         </div>
       </div>
     </header>
@@ -384,7 +520,7 @@ const MentorDashboard = () => {
                 className={`
                   w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all
                   ${isActive
-                    ? 'bg-[#0098cc] text-white' 
+                    ? 'bg-[#0098cc] text-white'
                     : 'text-gray-300 hover:bg-[#0098cc]/10 hover:text-white'}
                   ${item.id === 'logout' ? 'text-red-400 hover:text-red-300 hover:bg-red-500/10' : ''}
                 `}
@@ -400,19 +536,8 @@ const MentorDashboard = () => {
             );
           })}
         </nav>
-        
-        <div className="mt-8 pt-6 border-t border-[#0098cc]/20">
-          <h3 className="text-gray-400 text-xs uppercase mb-4 px-4">Configure</h3>
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-[#0098cc]/10 hover:text-white transition-all">
-            <Gift size={20} />
-            <span className="flex-1 text-left">Promotions</span>
-            <span className="bg-red-500 text-white text-xs px-2 py-1 rounded">New</span>
-          </button>
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-[#0098cc]/10 hover:text-white transition-all">
-            <FileText size={20} />
-            <span className="flex-1 text-left">Session Settings</span>
-          </button>
-        </div>
+
+ 
       </div>
     </aside>
   );
@@ -427,12 +552,12 @@ const MentorDashboard = () => {
         </main>
       </div>
       {isSidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 lg:hidden z-40"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
-      <LogoutModal 
+      <LogoutModal
         isOpen={isLogoutModalOpen}
         onClose={() => setIsLogoutModalOpen(false)}
         onConfirm={handleLogout}

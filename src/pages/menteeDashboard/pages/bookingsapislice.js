@@ -3,12 +3,10 @@ import { apiSlice } from "../../../ApiSliceComponent/karrivoApi";
 export const trialBookingApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
 
-    // 🔹 Get mentors list
+    // 🔹 Get mentors list - FIXED: Changed from "useGetMentorsQuery" to "getMentors"
     getMentors: builder.query({
-      query: () => ({
-        url: "/mentors",
-      }),
-      providesTags: ["Mentors"],
+      query: () => '/mentors',
+      transformResponse: (response) => response.data.data,
     }),
 
     // 🔹 Get available slots

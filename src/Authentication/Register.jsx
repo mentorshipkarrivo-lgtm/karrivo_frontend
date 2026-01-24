@@ -113,7 +113,7 @@ const RegisterPage = () => {
     }
   }, [formData.password, formData.countryPhoneCode]);
 
-  const handleChange = (e) => {
+  const   handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
 

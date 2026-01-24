@@ -11,18 +11,21 @@ export const allMentorsApiSlice = apiSlice.injectEndpoints({
             }),
             // Transform the response to handle the API structure
             transformResponse: (response) => {
-                // Handle the nested data structure from your API
-                if (response.success && response.data?.data && Array.isArray(response.data.data)) {
+                console.log('Raw API Response:', response); // Debug log
+                
+                // Your API structure: { success: 1, data: [...] }
+                if (response.success && response.data && Array.isArray(response.data)) {
                     return {
-                        mentors: response.data.data,
-                        total: response.data.total || response.data.data.length,
-                        page: response.data.page || 1,
-                        limit: response.data.limit || 20,
-                        totalPages: response.data.totalPages || 1,
+                        mentors: response.data,
+                        total: response.data.length,
+                        page: 1,
+                        limit: response.data.length,
+                        totalPages: 1,
                     };
                 }
-
+                
                 // Fallback for unexpected structure
+                console.warn('Unexpected API response structure:', response);
                 return {
                     mentors: [],
                     total: 0,

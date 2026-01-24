@@ -52,12 +52,12 @@ export default function ContactSection() {
               <p className="text-lg">HSR Layout, Sector 2,</p>
               <p className="text-lg">Bangalore, Karnataka 560102</p>
               <p className="text-lg">India</p>
-              <a href="#" className="inline-flex items-center gap-2 mt-2 hover:underline" style={{ color: '#0098cc' }}>
+              {/* <a href="#" className="inline-flex items-center gap-2 mt-2 hover:underline" style={{ color: '#0098cc' }}>
                 See on Google Map
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M3 13L13 3M13 3H3M13 3V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-              </a>
+              </a> */}
             </div>
 
 

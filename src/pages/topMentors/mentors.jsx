@@ -414,6 +414,7 @@ import { useNavigate } from 'react-router-dom';
 import { Award, X, Calendar, Users, Mail, Phone, MapPin, Clock, ChevronRight, CreditCard, Lock } from 'lucide-react';
 import MentorMenteePlatform from './MentorMentee';
 import { useFetchTopMentorsQuery, useBookSessionMutation } from '../home/mentorsection/mentorsectionapislice';
+import AllMentorsDiscovery from '../allmentors/AllMentorsDiscovery';
 
 export default function FindTopMentors() {
     const navigate = useNavigate();
@@ -519,7 +520,7 @@ export default function FindTopMentors() {
             </div>
 
             {/* Mentor Grid */}
-            <div className="py-8 sm:py-12 px-4 sm:px-6 max-w-7xl mx-auto">
+            {/* <div className="py-8 sm:py-12 px-4 sm:px-6 max-w-7xl mx-auto">
                 {isLoading ? (
                     <p className="text-white text-center">Loading mentors...</p>
                 ) : isError ? (
@@ -552,7 +553,9 @@ export default function FindTopMentors() {
                         ))}
                     </div>
                 )}
-            </div>
+            </div> */}
+
+            <AllMentorsDiscovery />
 
             <MentorMenteePlatform />
 

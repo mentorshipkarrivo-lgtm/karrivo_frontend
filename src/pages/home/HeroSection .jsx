@@ -52,7 +52,7 @@ const HeroSection = () => {
                     {/* Buttons */}
                     <div className="flex flex-wrap gap-4 mt-8">
                         <button
-                            onClick={() => navigate("/mentee/apply")}
+                            onClick={() => navigate("/login")}
                             className="px-8 py-4 bg-gradient-to-r from-[#0098cc] to-[#00b8f0] text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
                         >
                             Find Your Mentor
@@ -67,12 +67,6 @@ const HeroSection = () => {
                         </button>
                     </div>
 
-                    {/* Trust badges */}
-                    <div className="flex items-center gap-4 pt-4">
-                        <div className="text-gray-400 text-sm">
-                            <p className="font-semibold text-white">Join 10,000+ professionals</p>
-                        </div>
-                    </div>
                 </div>
 
                 {/* RIGHT SIDE IMAGE */}
