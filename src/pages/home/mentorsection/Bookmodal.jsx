@@ -7,6 +7,7 @@ import {
 } from "./mentorsectionapislice";
 import { useCreateZoomMeetingMutation } from "./zoomApiSlice";
 import { useNavigate } from "react-router-dom";
+import MenteePayment from "../../menteeDashboard/pages/payment/payment";
 
 const BookingModal = ({ mentor, isOpen, onClose }) => {
   const navigate = useNavigate();
@@ -25,13 +26,23 @@ const BookingModal = ({ mentor, isOpen, onClose }) => {
     phone: "",
     guests: "1",
     sessionType: "One-on-One",
-    paymentMethod: "upi",
-    transactionId: "",
-    transactionScreenshot: null,
+    // REMOVE: paymentMethod, transactionId, transactionScreenshot
     bookingId: "",
     userId: "",
     zoomMeetingId: ""
   });
+
+
+
+  const [paymentData, setPaymentData] = useState({
+    cardNumber: "",
+    cardName: "",
+    expiryDate: "",
+    cvv: "",
+  });
+
+  const [processingPayment, setProcessingPayment] = useState(false);
+  const [error, setError] = useState("");
 
   // API Hooks
   const [createBooking, { isLoading: isCreatingBooking }] = useCreateBookingMutation();
@@ -70,6 +81,22 @@ const BookingModal = ({ mentor, isOpen, onClose }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setBookingData({ ...bookingData, [name]: value });
+  };
+
+  const handlePaymentInputChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "cardNumber") {
+      const formatted = value.replace(/\s/g, "").replace(/(\d{4})/g, "$1 ").trim();
+      setPaymentData({ ...paymentData, [name]: formatted });
+    }
+    else if (name === "expiryDate") {
+      const formatted = value.replace(/\D/g, "").replace(/(\d{2})(\d{0,2})/, "$1/$2").substring(0, 5);
+      setPaymentData({ ...paymentData, [name]: formatted });
+    }
+    else {
+      setPaymentData({ ...paymentData, [name]: value });
+    }
   };
 
   const handleFileChange = (e) => {
@@ -229,19 +256,104 @@ const BookingModal = ({ mentor, isOpen, onClose }) => {
       const response = await createBooking(payload).unwrap();
 
       console.log("Booking created successfully:", response);
-      setBookingData(prev => ({
-        ...prev,
-        bookingId: response.bookingId || response._id || response.id,
-        zoomMeetingId: zoomMeeting.zoomMeetingId
-      }));
 
-      alert("Booking created successfully! Zoom meeting link will be sent to your email. Please proceed with payment.");
-      setShowPaymentForm(true);
+      // Navigate to payment page with all necessary data
+      navigate('/payment', {
+        state: {
+          bookingId: response.bookingId || response._id || response.id,
+          zoomMeetingId: zoomMeeting.zoomMeetingId,
+          bookingDetails: {
+            date: bookingData.date,
+            time: bookingData.time,
+            topic: bookingData.topic,
+            duration: bookingData.duration,
+            email: bookingData.email,
+            name: bookingData.name,
+            lastName: bookingData.lastName,
+            phone: bookingData.phone,
+            guests: bookingData.guests,
+            sessionType: bookingData.sessionType,
+          },
+          mentorDetails: {
+            fullName: mentor.fullName,
+            email: mentor.email,
+            _id: mentor._id,
+            profileImage: mentor.profileImage,
+            currentRole: mentor.currentRole
+          },
+          paymentAmount: calculateTotalAmount()
+        }
+      });
+
+      // Close the modal
+      onClose();
     } catch (error) {
       console.error("Booking creation failed:", error);
       alert(error?.message || error?.data?.message || "Failed to create booking. Please try again.");
     }
   };
+
+
+  const handlePaymentSuccess = () => {
+    setShowSuccessScreen(true);
+  };
+
+  // const handleBookingSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!bookingData.date || !bookingData.time || !bookingData.topic ||
+  //     !bookingData.email || !bookingData.name || !bookingData.lastName || !bookingData.phone) {
+  //     alert("Please fill in all required fields");
+  //     return;
+  //   }
+
+  //   try {
+  //     // Step 1: Create Zoom Meeting
+  //     console.log("Step 1: Creating Zoom meeting...");
+  //     const zoomMeeting = await createZoomMeetingForBooking(bookingData);
+
+  //     // Step 2: Create Booking with Zoom details
+  //     console.log("Step 2: Creating booking with Zoom meeting details...");
+  //     const payload = {
+  //       userId: bookingData.userId,
+  //       mentorId: mentor._id,
+  //       date: bookingData.date,
+  //       time: bookingData.time,
+  //       topic: bookingData.topic,
+  //       duration: Number(bookingData.duration),
+  //       email: bookingData.email,
+  //       menteeEmail: mentor.email,
+  //       name: bookingData.name,
+  //       lastName: bookingData.lastName,
+  //       phone: bookingData.phone,
+  //       guests: bookingData.guests,
+  //       sessionType: bookingData.sessionType,
+  //       zoomMeeting: {
+  //         meetingId: zoomMeeting.zoomMeetingId,
+  //         joinUrl: zoomMeeting.joinUrl,
+  //         startUrl: zoomMeeting.startUrl,
+  //         password: zoomMeeting.password,
+  //         topic: zoomMeeting.topic
+  //       }
+  //     };
+
+  //     console.log("Create booking payload:", payload);
+  //     const response = await createBooking(payload).unwrap();
+
+  //     console.log("Booking created successfully:", response);
+  //     setBookingData(prev => ({
+  //       ...prev,
+  //       bookingId: response.bookingId || response._id || response.id,
+  //       zoomMeetingId: zoomMeeting.zoomMeetingId
+  //     }));
+
+  //     alert("Booking created successfully! Zoom meeting link will be sent to your email. Please proceed with payment.");
+  //     setShowPaymentForm(true);
+  //   } catch (error) {
+  //     console.error("Booking creation failed:", error);
+  //     alert(error?.message || error?.data?.message || "Failed to create booking. Please try again.");
+  //   }
+  // };
 
   const handlePaymentSubmit = async (e) => {
     e.preventDefault();
@@ -300,9 +412,7 @@ const BookingModal = ({ mentor, isOpen, onClose }) => {
       phone: "",
       guests: "1",
       sessionType: "One-on-One",
-      paymentMethod: "upi",
-      transactionId: "",
-      transactionScreenshot: null,
+
       bookingId: "",
       userId: "",
       zoomMeetingId: ""
@@ -565,158 +675,27 @@ const BookingModal = ({ mentor, isOpen, onClose }) => {
                       </button>
                     </form>
                   ) : (
-                    // Payment Form (existing code remains the same)
-                    <form className="space-y-4 sm:space-y-6" onSubmit={handlePaymentSubmit}>
-                      <div className="flex items-center gap-2 sm:gap-3 mb-4">
-                        <button
-                          type="button"
-                          onClick={() => setShowPaymentForm(false)}
-                          className="text-[#0098cc] hover:text-[#007fa3] font-medium text-xs sm:text-sm flex items-center gap-1"
-                        >
-                          <ChevronRight className="w-4 h-4 rotate-180" />
-                          Back
-                        </button>
-                      </div>
-
-                      <div>
-                        <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-green-500 text-white flex items-center justify-center font-bold text-sm sm:text-base flex-shrink-0">
-                            3
-                          </div>
-                          <h3 className="text-base sm:text-lg font-semibold text-gray-800">Payment Details</h3>
-                        </div>
-
-                        {/* Booking Summary */}
-                        <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl p-4 sm:p-5 mb-6 border border-blue-100">
-                          <h4 className="font-semibold text-gray-800 mb-3 text-sm sm:text-base">Booking Summary</h4>
-                          <div className="space-y-2 text-xs sm:text-sm">
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Mentor</span>
-                              <span className="font-semibold text-gray-800">{mentor.fullName}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Date</span>
-                              <span className="font-semibold text-gray-800">{bookingData.date}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Time</span>
-                              <span className="font-semibold text-gray-800">{bookingData.time}</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Duration</span>
-                              <span className="font-semibold text-gray-800">{bookingData.duration} minutes</span>
-                            </div>
-                            <div className="flex justify-between">
-                              <span className="text-gray-600">Session Type</span>
-                              <span className="font-semibold text-gray-800">{bookingData.sessionType}</span>
-                            </div>
-                          </div>
-                          <div className="border-t border-blue-200 pt-3 mt-3">
-                            <div className="flex justify-between items-center">
-                              <span className="text-base font-bold text-gray-800">Total Amount</span>
-                              <span className="text-2xl font-bold text-[#0098cc]">₹{calculateTotalAmount()}</span>
-                            </div>
-                          </div>
-                        </div>
-                        {/* Payment Info */}
-                        <div className="space-y-4">
-                          <div>
-                            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
-                              Your Name
-                            </label>
-                            <input
-                              type="text"
-                              value={`${bookingData.name} ${bookingData.lastName}`}
-                              readOnly
-                              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-xs sm:text-sm bg-gray-50 text-gray-600"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
-                              Transaction ID / UTR Number <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                              type="text"
-                              name="transactionId"
-                              value={bookingData.transactionId}
-                              onChange={handleInputChange}
-                              placeholder="Enter transaction ID"
-                              className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0098cc] focus:border-transparent"
-                              required
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2">
-                              Upload Payment Screenshot <span className="text-red-500">*</span>
-                            </label>
-                            <div className="relative">
-                              <input
-                                type="file"
-                                id="transaction-screenshot"
-                                accept="image/jpeg,image/jpg,image/png,image/webp"
-                                onChange={handleFileChange}
-                                className="hidden"
-                                required
-                              />
-                              <label
-                                htmlFor="transaction-screenshot"
-                                className="flex items-center justify-center gap-2 w-full border-2 border-dashed border-gray-300 rounded-lg px-4 py-8 text-xs sm:text-sm hover:border-[#0098cc] hover:bg-[#0098cc]/5 transition cursor-pointer"
-                              >
-                                {bookingData.transactionScreenshot ? (
-                                  <div className="text-center">
-                                    <ImageIcon className="w-8 h-8 text-[#0098cc] mx-auto mb-2" />
-                                    <p className="text-[#0098cc] font-semibold mb-1">
-                                      {bookingData.transactionScreenshot.name}
-                                    </p>
-                                    <p className="text-gray-500 text-xs">
-                                      {(bookingData.transactionScreenshot.size / 1024).toFixed(2)} KB
-                                    </p>
-                                    <p className="text-[#0098cc] text-xs mt-2">Click to change</p>
-                                  </div>
-                                ) : (
-                                  <div className="text-center">
-                                    <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                                    <p className="text-gray-600 font-medium mb-1">
-                                      Click to upload screenshot
-                                    </p>
-                                    <p className="text-gray-500 text-xs">
-                                      JPG, PNG or WEBP (Max 5MB)
-                                    </p>
-                                  </div>
-                                )}
-                              </label>
-                            </div>
-                            <p className="text-xs text-gray-500 mt-2">
-                              Upload a screenshot of your payment confirmation for verification
-                            </p>
-                          </div>
-                        </div>
-
-                        {/* Razorpay Info */}
-                        <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-4 mt-6">
-                          <div className="flex items-start gap-3">
-                            <Lock className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
-                            <div>
-                              <p className="text-sm font-semibold text-gray-800 mb-1">Secure Payment via Razorpay</p>
-                              <p className="text-xs text-gray-600">
-                                You'll be redirected to Razorpay's secure payment gateway to complete your transaction.
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <button
-                        type="submit"
-                        disabled={isCompletingBooking}
-                        className="bg-[#0098cc] hover:bg-[#007fa3] text-white font-bold py-3 sm:py-3.5 rounded-lg w-full transition text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        <Lock className="w-5 h-5" />
-                        {isCompletingBooking ? "Processing..." : `Pay Now - ₹${calculateTotalAmount()}`}
-                      </button>
-                    </form>
+                    <MenteePayment
+                      bookingDetails={{
+                        date: bookingData.date,
+                        time: bookingData.time,
+                        topic: bookingData.topic,
+                        duration: bookingData.duration,
+                        email: bookingData.email,
+                        name: bookingData.name,
+                        lastName: bookingData.lastName,
+                        phone: bookingData.phone,
+                        guests: bookingData.guests,
+                        sessionType: bookingData.sessionType,
+                      }}
+                      mentorName={mentor.fullName}
+                      mentorEmail={mentor.email}
+                      mentorId={mentor._id}
+                      bookingId={bookingData.bookingId}
+                      paymentAmount={calculateTotalAmount()}
+                      onBack={() => setShowPaymentForm(false)}
+                      onSuccess={handlePaymentSuccess}
+                    />
                   )}
                 </div>
 

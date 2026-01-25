@@ -1,8 +1,7 @@
-import { apiSlice } from "../../../ApiSliceComponent/karrivoApi";
-
+import { apiSlice } from "../../../../ApiSliceComponent/karrivoApi";
 export const menteeBookingsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    
+
     // 🔹 Get mentee bookings - sends userId in body
     getMenteeBookings: builder.query({
       query: () => {
@@ -19,7 +18,7 @@ export const menteeBookingsApiSlice = apiSlice.injectEndpoints({
         }
 
         return {
-          url: '/bookings/mentee',
+          url: '/mentee/trailbookings/my-bookings',
           method: 'POST',
           body: { userId }
         };
@@ -48,9 +47,9 @@ export const menteeBookingsApiSlice = apiSlice.injectEndpoints({
       query: ({ bookingId, newDate, newTime }) => ({
         url: `/bookings/${bookingId}/reschedule`,
         method: 'POST',
-        body: { 
-          newDate, 
-          newTime 
+        body: {
+          newDate,
+          newTime
         }
       }),
       invalidatesTags: ['MenteeBookings'],

@@ -1367,11 +1367,11 @@ const MenteePayment = () => {
     console.log("Mentor ID:", mentorId);
 
     // Redirect if no booking details
-    if (!bookingDetails || !mentorId) {
-      console.log("❌ No booking details found, redirecting to home");
-      alert("No booking details found. Please start the booking process again.");
-      navigate("/");
-    }
+    // if (!bookingDetails || !mentorId) {
+    //   console.log("❌ No booking details found, redirecting to home");
+    //   alert("No booking details found. Please start the booking process again.");
+    //   navigate("/");
+    // }
   }, [bookingDetails, mentorId, navigate, location.state]);
 
   const handleInputChange = (e) => {

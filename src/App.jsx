@@ -269,7 +269,7 @@ import HelpSupport from "./pages/menteeDashboard/pages/help&support/help&support
 import BookingsSection from "./pages/menteeDashboard/pages/bookings";
 import TasksSection from "./pages/menteeDashboard/pages/TasksSection/TasksSection ";
 import GoalsSection from "./pages/menteeDashboard/pages/GoalsSection/GoalsSection ";
-// import MenteeBookingssessions from "./pages/menteeDashboard/pages/bookingsessions/bookingsessions";
+import MenteeBookingssessions from "./pages/menteeDashboard/pages/Bookings/bookingsessions";
 import LTMHomeSection from "./pages/menteeDashboard/pages/LTMHomeSection/LTMHomeSection";
 import MenteePayment from "./pages/menteeDashboard/pages/payment/payment"
 import UpcomingMeetings from "./pages/menteeDashboard/pages/upcomingMeteings/upcommongMeetings";
@@ -405,7 +405,7 @@ const App = () => {
             <Route path="dashboard" element={<DashboardSection />} />
             <Route path="profile" element={<MentorshipProfile />} />
             <Route path="bookings" element={<BookingsSection />} />
-            {/* <Route path="bookingsessions" element={<MenteeBookingssessions />} /> */}
+              <Route path="bookingsessions" element={<MenteeBookingssessions />} />
 
             <Route path="yourmeetings" element={<UpcomingMeetings />} />
             <Route path="support" element={<HelpSupport />} />
