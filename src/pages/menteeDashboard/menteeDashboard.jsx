@@ -127,7 +127,7 @@ const ProfileCompletionForm = ({ onComplete }) => {
                             <div>
                                 <label className="block text-xs font-medium mb-2">Current Status *</label>
                                 <div className="grid grid-cols-3 gap-3">
-                                    {['fresher', 'experienced', 'batch'].map(status => (
+                                    {['fresher', 'experienced'].map(status => (
                                         <button key={status} onClick={() => handleInputChange('status', status)} className={`p-3 border-2 rounded-lg ${formData.status === status ? 'border-blue-600 bg-blue-50' : 'border-gray-300'}`}>
                                             {status.charAt(0).toUpperCase() + status.slice(1)}
                                         </button>
@@ -230,25 +230,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, currentPath, onLogout }) => 
                         );
                     })}
                 </nav>
-                <div className="border-t pt-6">
-                    <h3 className="text-gray-400 text-xs uppercase mb-4 px-4">Long Term Mentorship</h3>
-                    <nav className="space-y-2">
-                        {ltmNavigationItems.map(item => {
-                            const Icon = item.icon;
-                            const isActive = currentPath === item.path;
-                            return (
-                                <button
-                                    key={item.id}
-                                    onClick={() => handleNavigation(item.path)}
-                                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${isActive ? 'bg-blue-50 text-blue-600' : 'text-gray-400 hover:bg-gray-100 hover:text-gray-700'}`}
-                                >
-                                    <Icon size={20} />
-                                    <span className="text-sm">{item.label}</span>
-                                </button>
-                            );
-                        })}
-                    </nav>
-                </div>
+              
                 <div className="mt-6 pt-6 border-t">
                     <button onClick={onLogout} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-red-500 hover:bg-red-50">
                         <LogOut size={20} />

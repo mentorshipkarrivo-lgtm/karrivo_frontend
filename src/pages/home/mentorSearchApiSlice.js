@@ -13,17 +13,7 @@ export const mentorSearchApiSlice = apiSlice.injectEndpoints({
           q: searchQuery.trim()
         }
       }),
-      providesTags: ["Mentors"],
-      // Transform response to ensure it's always an array
-      transformResponse: (response) => {
-        console.log('🔄 Transform Response:', response);
-        return Array.isArray(response) ? response : [];
-      },
-      // Handle errors gracefully
-      transformErrorResponse: (error) => {
-        console.error('❌ API Error:', error);
-        return error;
-      }
+      providesTags: ["Mentors"]
     }),
 
     // 👤 Get mentor by ID (for profile page)
@@ -34,7 +24,7 @@ export const mentorSearchApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: (result, error, mentorId) => [
         { type: "Mentors", id: mentorId }
-      ],
+      ]
     }),
 
     // 📋 Get all mentors (without search query)
@@ -43,10 +33,7 @@ export const mentorSearchApiSlice = apiSlice.injectEndpoints({
         url: "/mentors",
         method: "GET",
       }),
-      providesTags: ["Mentors"],
-      transformResponse: (response) => {
-        return Array.isArray(response) ? response : [];
-      },
+      providesTags: ["Mentors"]
     }),
 
   }),
@@ -54,8 +41,8 @@ export const mentorSearchApiSlice = apiSlice.injectEndpoints({
 
 // Export hooks for usage in components
 export const {
-  useSearchMentorsQuery,        // Auto-fetch on component mount
-  useLazySearchMentorsQuery,    // Manual trigger (better for search)
-  useGetMentorByIdQuery,         // Get single mentor
-  useGetAllMentorsQuery,         // Get all mentors
+  useSearchMentorsQuery,
+  useLazySearchMentorsQuery,
+  useGetMentorByIdQuery,
+  useGetAllMentorsQuery,
 } = mentorSearchApiSlice;
