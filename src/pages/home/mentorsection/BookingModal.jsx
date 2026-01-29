@@ -4,7 +4,7 @@ import { X, Clock, Calendar, MessageSquare, Users, ChevronRight, Award, MapPin, 
 import {
   useCreateBookingMutation,
   useCheckFreeSessionEligibilityQuery
-} from "./mentorsectionapislice";
+} from "./Mentorsectionapislice";
 import { useNavigate } from "react-router-dom";
 
 const BookingModal = ({ mentor, isOpen, onClose }) => {

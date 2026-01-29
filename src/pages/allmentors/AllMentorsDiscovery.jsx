@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { Search, Star, Loader2, GraduationCap } from 'lucide-react';
-import { useGetAllMentorsQuery } from './allmentors';
+import { useGetAllMentorsQuery } from './Allmentors';
 import { useNavigate } from 'react-router-dom';
 import ProfileModal from '../home/mentorsection/ProfileModal';
-import BookingModal from '../home/mentorsection/BookingModal';
+import BookingModal from '../home/mentorsection/Bookingmodal';
+import { motion } from "framer-motion";
+
 
 const AllMentorsDiscovery = () => {
     const [searchQuery, setSearchQuery] = useState('');

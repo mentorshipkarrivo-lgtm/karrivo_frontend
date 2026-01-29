@@ -4,7 +4,7 @@ import {
     useGetMentorSupportTicketsQuery, 
     useCreateMentorSupportTicketMutation, 
     useUpdateMentorSupportTicketMutation 
-} from './mentorSupportApiSlice';
+} from "./MentorSupportapislice";
 
 const MentorHelpSupport = () => {
     const [mentorId, setMentorId] = useState(null);

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Loader2, AlertCircle, ArrowLeft } from "lucide-react";
-import { useFetchMentorByIdQuery } from "./mentorsectionapislice";
+import { useFetchMentorByIdQuery } from "./Mentorsectionapislice";
 import BookingModal from "./BookingModal";
 
 const BookSessionPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const mentorId = searchParams.get("mentorId");
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch mentor data

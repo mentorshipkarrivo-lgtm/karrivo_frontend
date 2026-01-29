@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Filter, Star, Briefcase, Target, Clock, MapPin, TrendingUp, Users, Megaphone, Loader2 } from 'lucide-react';
-import { useGetMarketingMentorsQuery } from './marketingMentor';9
+import { useGetMarketingMentorsQuery } from './MarketingMentor';
 
 
 const MarketingMentorDiscovery = () => {
