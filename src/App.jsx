@@ -36,14 +36,14 @@ import BookSessionPage from "./pages/home/mentorsection/booksessionPage";
 import SearchResults from "./pages/home/SearchResults";
 
 // Mentee Dashboard
-import MenteeDashboard from "./pages/menteeDashboard/MenteeDashboard";
+import MenteeDashboard from "./pages/menteeDashboard/menteeDashboard";
 import DashboardSection from "./pages/menteeDashboard/pages/dashboard/Dashboardsection";
 import MentorshipProfile from "./pages/menteeDashboard/pages/profile/MentorshipProfile";
 import HelpSupport from "./pages/menteeDashboard/pages/help&support/HelpSupport"
 import BookingsSection from "./pages/menteeDashboard/pages/BookingsSection"
 import MenteeBookingssessions from "./pages/menteeDashboard/pages/Bookings/MenteeBookingssessions";
 import MenteePayment from "./pages/menteeDashboard/pages/payment/MenteePayment";
-import UpcomingMeetings    from "./pages/menteeDashboard/pages/upcomingMeteings/UpcomingMeetings"
+import UpcomingMeetings from "./pages/menteeDashboard/pages/upcomingMeteings/UpcomingMeetings"
 import MentorSessionBookings from "./components/MentorDashboard/sessions/MentorSessionBookings"
 import MentorHelpSupport from "./components/MentorDashboard/MentorSupport/MentorHelpSupport";
 
