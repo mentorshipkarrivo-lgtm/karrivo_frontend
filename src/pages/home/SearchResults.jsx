@@ -9,13 +9,13 @@ const SearchResults = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   const [triggerSearch, { data: response, isLoading, isError, error }] = useLazySearchMentorsQuery();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const query = params.get('q');
-    
+
     setSearchQuery(query || '');
     triggerSearch(query || '');
   }, [location.search, triggerSearch]);
@@ -24,7 +24,7 @@ const SearchResults = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    
+
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
     } else {
@@ -124,7 +124,7 @@ const SearchResults = () => {
         {!isLoading && !isError && mentorsList.length === 0 && (
           <div className="max-w-7xl mx-auto text-center py-20">
             <p className="text-white/70 text-lg">
-              {searchQuery 
+              {searchQuery
                 ? `No mentors found matching "${searchQuery}"`
                 : 'No mentors available at the moment'
               }
