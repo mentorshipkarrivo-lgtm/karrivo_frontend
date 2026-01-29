@@ -3,7 +3,7 @@ import { Search, Star, Loader2, GraduationCap } from 'lucide-react';
 import { useGetAllMentorsQuery } from './Allmentorsapislice';
 import { useNavigate } from 'react-router-dom';
 import ProfileModal from '../home/mentorsection/ProfileModal';
-import BookingModal from '../home/mentorsection/Bookingmodal';
+import BookingModal from '../home/mentorsection/BookingModal';
 import { motion } from "framer-motion";
 
 
