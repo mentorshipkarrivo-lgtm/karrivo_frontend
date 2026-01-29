@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TrendingUp, Users, Calendar, Star, MapPin, Phone, Mail, User } from 'lucide-react';
-import { useGetUserDetailsQuery } from "./mentorDashboardapislice";
+import { useGetUserDetailsQuery } from './MentorDashapislice';
 
 const MentorDashboardSection = () => {
   const [mentorId, setMentorId] = useState(null);
