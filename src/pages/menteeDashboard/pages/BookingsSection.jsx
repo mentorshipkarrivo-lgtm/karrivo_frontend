@@ -6,7 +6,7 @@ import {
     useGetSlotsQuery,
     useBookFreeTrialMutation,
     useBookPremiumTrialMutation,
-} from "./Bookingsapislice"
+} from "./Bookingsecapislice"
 
 
 
