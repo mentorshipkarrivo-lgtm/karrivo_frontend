@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Award, X, Calendar, Users, Mail, Phone, MapPin, Clock, ChevronRight, CreditCard, Lock } from 'lucide-react';
 import MentorMenteePlatform from './MentorMentee';
-import { useFetchTopMentorsQuery, useBookSessionMutation } from '../home/mentorsection/mentorsectionapislice';
+import { useFetchTopMentorsQuery, useBookSessionMutation } from "./Mentorsectionapislice"
 import AllMentorsDiscovery from '../allmentors/AllMentorsDiscovery';
 
 export default function FindTopMentors() {

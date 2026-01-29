@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Star, Loader2 } from "lucide-react";
-import { useFetchTopMentorsQuery } from "./Mentorsectionapislice";
+import { useFetchTopMentorsQuery } from "../../topMentors/Mentorsectionapislice";
 import { useNavigate } from "react-router-dom";
 
 const MentorsSection = () => {

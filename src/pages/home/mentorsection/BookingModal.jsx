@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, Clock, Calendar, MessageSquare, Users, ChevronRight, Award, MapPin, Video, Gift, AlertCircle, Mail, Phone } from "lucide-react";
-import {
-  useCreateBookingMutation,
-  useCheckFreeSessionEligibilityQuery
-} from "./Mentorsectionapislice";
+// import {
+//   useCreateBookingMutation,
+//   useCheckFreeSessionEligibilityQuery
+// } from "./Mentorsectionapislice";
+import { useCreateBookingMutation, useCheckFreeSessionEligibilityQuery } from "../../topMentors/Mentorsectionapislice";
 import { useNavigate } from "react-router-dom";
 
 const BookingModal = ({ mentor, isOpen, onClose }) => {

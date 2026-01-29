@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Star, X, Clock, Calendar, Loader2, MapPin } from "lucide-react";
-import { useFetchMentorByIdQuery } from "./Mentorsectionapislice"
+import { useFetchMentorByIdQuery } from "../../topMentors/Mentorsectionapislice"; 
 import BookingModal from "./BookingModal";
 
 const ProfileModal = () => {

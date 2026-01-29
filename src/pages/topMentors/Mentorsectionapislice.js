@@ -1,6 +1,4 @@
-
-
-import { apiSlice } from "../../../ApiSliceComponent/karrivoApi";
+import { apiSlice } from "../../ApiSliceComponent/karrivoApi";
 
 export const mentorSectionApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
