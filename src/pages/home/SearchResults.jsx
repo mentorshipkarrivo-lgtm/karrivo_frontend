@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Star, Loader2, Search, ArrowLeft, MapPin, Briefcase } from 'lucide-react';
-import { useLazySearchMentorsQuery } from './MentorSearchApiSlice';
+import { useLazySearchMentorsQuery } from "./MentorsecApiSlice"
 
 const SearchResults = () => {
   const navigate = useNavigate();
