@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Filter, Star, Briefcase, Award, Clock, MapPin, TrendingUp, Target, Users, Loader2 } from 'lucide-react';
-import { useGetLeadershipMentorsQuery } from './LeaderShipmentor';
+import { useGetLeadershipMentorsQuery } from "./leaderShipmentorapislice"
 
 const LeadershipMentorDiscovery = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');
