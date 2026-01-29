@@ -3,7 +3,7 @@ import { Search, Filter, Star, Briefcase, GraduationCap, Clock, MapPin, Trending
 import { useGetMentorsQuery } from "./EngineeringMentoraslice";
 import { useNavigate } from 'react-router-dom';
 import ProfileModal from '../home/mentorsection/ProfileModal';
-import BookingModal from '../home/mentorsection/Bookingmodal';
+import BookingModal from '../home/mentorsection/BookingModal';
 
 const EngineerMentors = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');

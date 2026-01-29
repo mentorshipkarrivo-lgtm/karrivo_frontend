@@ -113,10 +113,7 @@ const MentorsSection = () => {
                   {/* RATING */}
                   <div className="flex items-center justify-between mt-4 pb-3 border-b border-[#0098cc]/20">
                     <div className="flex items-center gap-2">
-                      <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                      <span className="text-sm font-semibold text-white">
-                        5.0
-                      </span>
+                    
                     </div>
                     <span className="text-sm text-gray-400">
                       {mentor.yearsOfExperience || 0}+ yrs exp

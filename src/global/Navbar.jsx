@@ -28,7 +28,7 @@ const Navbar = () => {
   return (
     <nav className="absolute top-0 left-0 z-[1000] w-full flex justify-center py-2 sm:py-3 md:py-4 px-2 sm:px-3 md:px-4">
       <div
-        className="w-full sm:w-[95%] md:w-[90%] lg:w-[85%] xl:w-[80%] bg-[#f8f5f3]/95 backdrop-blur-md border border-gray-200/30 rounded-2xl sm:rounded-3xl md:rounded-full shadow-lg"
+        className="w-full sm:w-[95%] md:w-[90%] lg:w-[85%] xl:w-[80%] bg-[#ffffff] backdrop-blur-md border border-gray-200/30 rounded-2xl sm:rounded-3xl md:rounded-full shadow-lg"
         style={{
           WebkitBackdropFilter: 'blur(12px)'
         }}

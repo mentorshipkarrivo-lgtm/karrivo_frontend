@@ -68,9 +68,7 @@ export default function MentorMenteeHero() {
                 <div className="relative max-w-6xl mx-auto">
                     {/* Happy Students - Top Left */}
                     <div className="absolute -top-4 sm:-top-2 md:top-0 lg:top-2 left-0 sm:left-4 md:left-6 lg:left-8 xl:left-0 flex items-center gap-2 sm:gap-2.5 md:gap-3 lg:gap-3.5 xl:gap-4 z-20">
-                        <div className="w-12 h-12 sm:w-13 sm:h-13 md:w-14 md:h-14 lg:w-15 lg:h-15 xl:w-16 xl:h-16 rounded-full flex items-center justify-center shadow-xl" style={{ backgroundColor: '#0098cc' }}>
-                            <span className="text-xl sm:text-2xl md:text-2xl lg:text-2xl xl:text-3xl">😊</span>
-                        </div>
+                    
                         <div>
                             <p className="text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-4xl font-bold text-white leading-none">600</p>
                             <p className="text-white/70 text-xs sm:text-xs md:text-sm lg:text-sm">Happy Student</p>
@@ -123,11 +121,11 @@ export default function MentorMenteeHero() {
                     <div className="absolute -top-2 sm:top-0 md:top-4 lg:top-8 xl:top-12 right-0 sm:right-4 md:right-6 lg:right-8 xl:right-0 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl lg:rounded-2xl p-3 sm:p-3.5 md:p-4 lg:p-5 shadow-2xl z-20 w-[160px] sm:w-[170px] md:w-[180px] lg:w-[190px] xl:w-[200px]">
                         <p className="text-white font-bold text-sm sm:text-sm md:text-base lg:text-base mb-1 sm:mb-1.5 md:mb-2 text-center leading-tight">5 Star Rating</p>
                         <p className="text-white/60 text-[10px] sm:text-[10px] md:text-xs lg:text-xs mb-2 sm:mb-2.5 md:mb-3 text-center leading-tight">Avg rating 4.8 makes us world best</p>
-                        <div className="flex gap-1 justify-center">
+                        {/* <div className="flex gap-1 justify-center">
                             {[...Array(5)].map((_, i) => (
                                 <Star key={i} className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-4.5 md:h-4.5 lg:w-5 lg:h-5 fill-yellow-400 text-yellow-400" />
                             ))}
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* 2.5M+ Students - Right Middle */}

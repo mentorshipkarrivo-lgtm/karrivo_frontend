@@ -31,7 +31,7 @@ import AIMentorDiscovery from "./pages/aimentors/AIMentorDiscovery";
 import AllMentorsDiscovery from "./pages/allmentors/AllMentorsDiscovery";
 import MentorProfile from "./components/MentorDashboard/mentorProfile/MentorProfile";
 import ProfileModal from "./pages/home/mentorsection/ProfileModal";
-import BookingModal from "./pages/home/mentorsection/Bookingmodal";
+import BookingModal from "./pages/home/mentorsection/BookingModal";
 
 
 import BookSessionPage from "./pages/home/mentorsection/BookSessionPage";
