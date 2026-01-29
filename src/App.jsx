@@ -17,7 +17,7 @@ import FindTopMentors from "./pages/topMentors/MentorsSection";
 
 import Navbar from "./global/Navbar";
 import FooterLinks from "./pages/home/HomeFoot";
-import ProductMentorDiscovery from "./pages/productMentors/ProductMentorDiscovery"
+import ProductMentorDiscovery from "./pages/productMentors/ProductMentorDiscovery";
 import MarketingMentorDiscovery from "./pages/marketingmentors/MarketingMentorDiscovery";
 import LeadershipMentorDiscovery from "./pages/leadershipmentors/LeadershipMentorDiscovery";
 import EngineeringMentors from "./pages/EngineeringMentors/EngineerMentors";

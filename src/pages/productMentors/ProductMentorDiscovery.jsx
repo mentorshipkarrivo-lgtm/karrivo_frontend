@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Search, Filter, Star, Briefcase, Package, Clock, MapPin, TrendingUp, Users, Lightbulb, Loader2 } from 'lucide-react';
-import { useGetProductMentorsQuery } from './ProductMentors';
+import { useGetProductMentorsQuery } from "./ProductMentors"
 
 const ProductMentorDiscovery = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');
