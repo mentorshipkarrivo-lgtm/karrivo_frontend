@@ -32,7 +32,7 @@ import AIMentorDiscovery from "./pages/aimentors/AIMentorDiscovery";
 import AllMentorsDiscovery from "./pages/allmentors/AllMentorsDiscovery";
 import MentorProfile from "./components/MentorDashboard/mentorProfile/Profile";
 import ProfileModal from "./pages/home/mentorsection/profileSection";
-// import BookingModal from "./pages/home/mentorsection/BookModal";
+import BookingModal from "./pages/home/mentorsection/BookModal";
 import BookSessionPage from "./pages/home/mentorsection/booksessionPage";
 import SearchResults from "./pages/home/SearchResults";
 
@@ -181,9 +181,9 @@ const App = () => {
 
         {/* BOOKING PAGES */}
         <Route path="/book-session" element={<BookSessionPage />} />
-        {/* <Route element={<ProtectedRoute />}>
+        <Route element={<ProtectedRoute />}>
           <Route path="/booking" element={<BookingModal />} />
-        </Route> */}
+        </Route>
 
         {/* MENTEE DASHBOARD - NESTED ROUTES */}
         <Route element={<ProtectedRoute />}>
