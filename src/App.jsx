@@ -38,7 +38,7 @@ import SearchResults from "./pages/home/SearchResults";
 
 // Mentee Dashboard
 import MenteeDashboard from "./pages/menteeDashboard/dashboard";
-import DashboardSection from "./pages/menteeDashboard/pages/dashboard/dashboardsesction";
+import DashboardSection from "./pages/menteeDashboard/pages/dashboard/Dashboardsection";
 import MentorshipProfile from "./pages/menteeDashboard/pages/profile/profilsection";
 import HelpSupport from "./pages/menteeDashboard/pages/help&support/help&supportsection";
 import BookingsSection from "./pages/menteeDashboard/pages/bookings";
