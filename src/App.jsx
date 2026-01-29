@@ -33,7 +33,7 @@ import AllMentorsDiscovery from "./pages/allmentors/AllMentorsDiscovery";
 import MentorProfile from "./components/MentorDashboard/mentorProfile/Profile";
 import ProfileModal from "./pages/home/mentorsection/profileSection";
 import BookingModal from "./pages/home/mentorsection/Modalbooking";
-import BookSessionPage from "./pages/home/mentorsection/BooksessionPage"
+import BookSessionPage from "./pages/home/mentorsection/Booksessions";
 import SearchResults from "./pages/home/SearchResults";
 
 // Mentee Dashboard
