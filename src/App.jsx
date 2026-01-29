@@ -27,7 +27,7 @@ import EngineeringMentors from "./pages/EngineeringMentors/mentorsengineering";
 import MenteeApplicationForm from "./pages/menteeApplication/MenteeApplicationForm";
 import MentorLayout from "./components/MentorDashboard/MentorLayout";
 import MentorDashboardSection from "./components/MentorDashboard/dashboard";
-import StartupMentorDiscovery from './pages/startUpmentors/StartupMentorDiscovery';
+import StartupMentorDiscovery from "./pages/startUpmentors/StartupMentor";
 import AIMentorDiscovery from "./pages/aimentors/AIMentorDiscovery";
 import AllMentorsDiscovery from "./pages/allmentors/AllMentorsDiscovery";
 import MentorProfile from "./components/MentorDashboard/mentorProfile/Profile";
