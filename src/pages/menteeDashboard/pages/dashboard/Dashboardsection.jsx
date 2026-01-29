@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { TrendingUp, Users, DollarSign, Calendar, Loader2, AlertCircle, User } from 'lucide-react';
-import { useGetMenteeDashboardQuery } from "./Dashboardapislice"
+import { useGetMenteeDashboardQuery } from "./dashboardsecapislice"
 
 const DashboardSection = () => {
     // Get userData from localStorage
