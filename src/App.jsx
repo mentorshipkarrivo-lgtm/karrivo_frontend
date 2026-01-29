@@ -42,7 +42,7 @@ import SearchResults from "./pages/home/SearchResults";
 
 
 // Mentee Dashboard
-import MenteeDashboard from "./pages/menteeDashboard/menteeDashboard";
+import MenteeDashboard from "./pages/menteeDashboard/MenteeDashboard";
 import DashboardSection from "./pages/menteeDashboard/pages/dashboard/Dashboardsection";
 import MentorshipProfile from "./pages/menteeDashboard/pages/profile/MentorshipProfile";
 import HelpSupport from "./pages/menteeDashboard/pages/help&support/HelpSupport"
