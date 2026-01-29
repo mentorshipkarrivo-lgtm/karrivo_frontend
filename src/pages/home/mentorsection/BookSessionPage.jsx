@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Loader2, AlertCircle, ArrowLeft } from "lucide-react";
-import { useFetchMentorByIdQuery } from "./Mentorsectionapislice";
+import { useFetchMentorByIdQuery } from "./Mentorapislice";
 import BookingModal from "./BookingModal";
 
 const BookSessionPage = () => {
