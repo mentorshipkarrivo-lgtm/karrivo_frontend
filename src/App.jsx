@@ -42,7 +42,7 @@ import DashboardSection from "./pages/menteeDashboard/pages/dashboard/dashboard"
 import MentorshipProfile from "./pages/menteeDashboard/pages/profile/profilsection";
 import HelpSupport from "./pages/menteeDashboard/pages/help&support/help&supportsection";
 import BookingsSection from "./pages/menteeDashboard/pages/bookings";
-import MenteeBookingssessions from "./pages/menteeDashboard/pages/Bookings/bookingsessions";
+import MenteeBookingssessions from "./pages/menteeDashboard/pages/Bookings/bookingSessions";
 import MenteePayment from "./pages/menteeDashboard/pages/payment/payment"
 import UpcomingMeetings from "./pages/menteeDashboard/pages/upcomingMeteings/upcommongMeetings";
 import MentorSessionBookings from "./components/MentorDashboard/sessions/sessionsPage";
