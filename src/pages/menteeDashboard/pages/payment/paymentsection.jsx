@@ -974,7 +974,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Tesseract from "tesseract.js";
-import { useAddTransactionMutation } from "./paymentapislice";
+import { useAddTransactionMutation } from "./Paymentapislice"
 import { useCompleteBookingMutation } from "../../../home/mentorsection/mentorsectionapislice";
 import { toast } from "./toat";
 import Loader from "../loader/loader";

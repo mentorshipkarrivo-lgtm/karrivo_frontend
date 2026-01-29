@@ -6,7 +6,7 @@ import {
     useGetSlotsQuery,
     useBookFreeTrialMutation,
     useBookPremiumTrialMutation,
-} from "./bookingsapislice";
+} from "./Bookingsapislice"
 import { skipToken } from "@reduxjs/toolkit/query";
 import { useNavigate } from "react-router-dom";
 

@@ -1,6 +1,9 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
+// Import the motion object to use motion.div, motion.button, etc.
+import { motion } from "framer-motion";
+
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,7 +15,7 @@ const MentoHero = () => {
     const text2Ref = useRef(null);
     const text3Ref = useRef(null);
     const videoRef = useRef(null);
-    const [ setVideoLoaded] = useState(false);
+    const [setVideoLoaded] = useState(false);
     const navigate = useNavigate()
 
 
@@ -195,15 +198,15 @@ const MentoHero = () => {
                                 transition={{ duration: 0.6, delay: 0.6 }}
                                 className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center mb-8 md:mb-12 px-2"
                             >
-                                <button className="group px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#0098cc] to-[#00b4e6] text-white font-bold rounded-xl md:rounded-2xl hover:shadow-2xl hover:shadow-[#0098cc]/30 transition-all duration-300 transform hover:scale-105 text-sm md:text-base" 
-                                 onClick={() => navigate("/login")}
+                                <button className="group px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-[#0098cc] to-[#00b4e6] text-white font-bold rounded-xl md:rounded-2xl hover:shadow-2xl hover:shadow-[#0098cc]/30 transition-all duration-300 transform hover:scale-105 text-sm md:text-base"
+                                    onClick={() => navigate("/login")}
                                 >
                                     Find a Mentor
                                     <span className="ml-2 group-hover:ml-3 transition-all duration-300">→</span>
                                 </button>
                                 <button
-                                onClick={() => navigate("/mentee/apply")}
-                                className="px-6 md:px-8 py-3 md:py-4 bg-[#0098cc]/10 backdrop-blur-xl border-2 border-[#0098cc]/40 text-white font-bold rounded-xl md:rounded-2xl hover:bg-[#0098cc]/20 hover:border-[#0098cc]/60 transition-all duration-300 text-sm md:text-base">
+                                    onClick={() => navigate("/mentee/apply")}
+                                    className="px-6 md:px-8 py-3 md:py-4 bg-[#0098cc]/10 backdrop-blur-xl border-2 border-[#0098cc]/40 text-white font-bold rounded-xl md:rounded-2xl hover:bg-[#0098cc]/20 hover:border-[#0098cc]/60 transition-all duration-300 text-sm md:text-base">
                                     Become a Mentor
                                 </button>
                             </motion.div>
@@ -215,7 +218,7 @@ const MentoHero = () => {
                                 transition={{ duration: 0.6, delay: 0.8 }}
                                 className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 px-2"
                             >
-                            
+
                             </motion.div>
 
                             {/* Additional Info */}

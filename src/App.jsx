@@ -16,14 +16,13 @@ import ProtectedRoute from "./routes/PrivateRoute";
 import LoginPage from "./Authentication/Login";
 
 import Home from "./pages/home/Home";
-import FindTopMentors from "./pages/topMentors/mentors";
-
+import FindTopMentors from "./pages/topMentors/MentorsSection";
 import Navbar from "./global/Navbar";
 import FooterLinks from "./pages/home/HomeFoot";
 import ProductMentorDiscovery from "./pages/productMentors/ProductMentorDiscovery"
 import MarketingMentorDiscovery from "./pages/marketingmentors/MarketingMentorDiscovery";
 import LeadershipMentorDiscovery from "./pages/leadershipmentors/LeadershipMentorDiscovery";
-import EngineeringMentors from "./pages/EngineeringMentors/mentorsengineering";
+import EngineeringMentors from "./pages/EngineeringMentors/Mentorsengineering"
 import MenteeApplicationForm from "./pages/menteeApplication/MenteeApplicationForm";
 import MentorLayout from "./components/MentorDashboard/MentorLayout";
 import MentorDashboardSection from "./components/MentorDashboard/dashboard";
@@ -31,7 +30,7 @@ import StartupMentorDiscovery from "./pages/startUpmentors/StartupMentor";
 import AIMentorDiscovery from "./pages/aimentors/AIMentorDiscovery";
 import AllMentorsDiscovery from "./pages/allmentors/AllMentorsDiscovery";
 import MentorProfile from "./components/MentorDashboard/mentorProfile/Profile";
-import ProfileModal from "./pages/home/mentorsection/profileSection";
+import ProfileModal from "./pages/home/mentorsection/ProfileSection"
 import BookingModal from "./pages/home/mentorsection/Modalbooking";
 import BookSessionPage from "./pages/home/mentorsection/Booksessions";
 import SearchResults from "./pages/home/SearchResults";
@@ -39,13 +38,13 @@ import SearchResults from "./pages/home/SearchResults";
 // Mentee Dashboard
 import MenteeDashboard from "./pages/menteeDashboard/dashboard";
 import DashboardSection from "./pages/menteeDashboard/pages/dashboard/Dashboardsection";
-import MentorshipProfile from "./pages/menteeDashboard/pages/profile/profilsection";
-import HelpSupport from "./pages/menteeDashboard/pages/help&support/help&supportsection";
-import BookingsSection from "./pages/menteeDashboard/pages/bookings";
+import MentorshipProfile from "./pages/menteeDashboard/pages/profile/Profilsection"
+import HelpSupport from "./pages/menteeDashboard/pages/help&support/Help&supportsection"
+import BookingsSection from "./pages/menteeDashboard/pages/Bookings"
 import MenteeBookingssessions from "./pages/menteeDashboard/pages/Bookings/bookingSessions";
-import MenteePayment from "./pages/menteeDashboard/pages/payment/paymentsection";
-import UpcomingMeetings from "./pages/menteeDashboard/pages/upcomingMeteings/upcomming";
-import MentorSessionBookings from "./components/MentorDashboard/sessions/sessionsPage";
+import MenteePayment from "./pages/menteeDashboard/pages/payment/Paymentsection"
+import UpcomingMeetings from "./pages/menteeDashboard/pages/upcomingMeteings/Upcomming"
+import MentorSessionBookings from "./components/MentorDashboard/sessions/SessionsPage"
 import MentorHelpSupport from "./components/MentorDashboard/MentorSupport/SupportMentor";
 
 // Import placeholder components for mentor dashboard routes (create these as needed)

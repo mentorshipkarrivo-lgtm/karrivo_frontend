@@ -3,24 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Search, ChevronRight, Star, Users, Award, TrendingUp } from 'lucide-react';
 import TestimonialsSection from './Testimonals';
-import ScrollVelocity from './Scrollvelocity';
 import MentorsSection from './mentorsection/MentorSection';
-import FooterLinks from './HomeFoot';
 import FindMentor from './FindMentor';
-import Navbar from '../../global/Navbar';
-import AboutPage from '../aboutUs/About';
-import MentorBlogGrid from '../topMentors/mentors';
-import FindTopMentors from '../topMentors/mentors';
+
 import MentorMenteeHero from '../BecomeMentor/MentorMenteeHero';
-import ContactSection from './HomeContact';
 import MentorGrid from './HomeContact';
 import FAQAccordion from './faqs';
 import MentoHero from './Scrollvelocity';
-import MenteeApplicationForm from '../menteeApplication/MenteeApplicationForm';
 import HeroSection from './HeroSection ';
 
-// Lazy loaded
-const Threads = React.lazy(() => import('../../global/Threads'));
 
 const Home = () => {
   const navigate = useNavigate();

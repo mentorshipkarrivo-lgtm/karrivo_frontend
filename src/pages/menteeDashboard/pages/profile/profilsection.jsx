@@ -1278,7 +1278,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Mail, X, Plus, Phone, Linkedin, Target, Heart, CheckCircle, Circle, Edit, Loader2, AlertCircle } from 'lucide-react';
-import { useManageUserProfileQuery, useSaveUserProfileMutation } from './profileApiSlice';
+import { useManageUserProfileQuery, useSaveUserProfileMutation } from "./Profileapislice";
 import { CiEdit } from "react-icons/ci";
 
 

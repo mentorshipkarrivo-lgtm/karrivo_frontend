@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Filter, Star, Briefcase, GraduationCap, Clock, MapPin, TrendingUp, Loader2 } from 'lucide-react';
-import { useGetMentorsQuery } from './engineeringMentoraslice';
+import { useGetMentorsQuery } from "./EngineeringMentoraslice";
 import { useNavigate } from 'react-router-dom';
 import ProfileModal from '../home/mentorsection/profileSection';
 import BookingModal from '../home/mentorsection/Modalbooking';

@@ -483,7 +483,7 @@
 
 import React, { useState } from 'react';
 import { MessageCircle, Plus, X, Clock, CheckCircle, AlertCircle, Search, Filter, ThumbsUp, ThumbsDown, MessageSquare } from 'lucide-react';
-import { useGetSupportTicketsQuery, useCreateSupportTicketMutation, useUpdateSupportTicketMutation } from "./help&supportapislice";
+import { useGetSupportTicketsQuery, useCreateSupportTicketMutation, useUpdateSupportTicketMutation } from "./Help&supportapislice"
 
 const HelpSupport = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
