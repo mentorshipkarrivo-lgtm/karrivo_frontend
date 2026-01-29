@@ -1,5 +1,5 @@
 // pages/contact/contactApiSlice.js
-import { apiSlice } from "../../ApiSliceComponent/karrivoApi";
+import { apiSlice } from "../../../ApiSliceComponent/karrivoApi";
 
 export const contactApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
