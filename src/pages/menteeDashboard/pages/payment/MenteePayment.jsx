@@ -974,11 +974,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Tesseract from "tesseract.js";
-import { useAddTransactionMutation } from "./Paymentapislice"
+import { useAddTransactionMutation } from "./Paymentsecapislice"
 import { useCompleteBookingMutation } from "../../../topMentors/Mentorsectionapislice";
 import { toast } from "./toat";
 import Loader from "../loader/loader";
 import { ArrowLeft, Calendar, Clock, Users, MessageSquare, Video, CheckCircle } from "lucide-react";
+
 
 const MenteePayment = () => {
   const navigate = useNavigate();
