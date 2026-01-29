@@ -228,7 +228,7 @@ const Home = () => {
         </div>
 
         {/* Threads Animation - RESPONSIVE */}
-        <div className="absolute bottom-0 left-0 right-0 h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px] pointer-events-none">
+        {/* <div className="absolute bottom-0 left-0 right-0 h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px] pointer-events-none">
           <div className="w-full h-full relative opacity-40">
             <Suspense fallback={<div>Loading...</div>}>
               <Threads
@@ -238,7 +238,7 @@ const Home = () => {
               />
             </Suspense>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Stats Section - RESPONSIVE */}

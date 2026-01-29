@@ -14,7 +14,7 @@ const topNavigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/mentee/dashboard' },
     { id: 'bookings', label: 'Trial Sessions', icon: Users, path: '/mentee/bookings' },
     { id: 'yourmeetings', label: 'Your Meetings', icon: Users, path: '/mentee/yourmeetings' },
-    { id: 'bookingsessions', label: 'Chat & Messages', icon: MessageSquare, path: '/mentee/bookingsessions' },
+    { id: 'bookingsessions', label: 'My Bookings', icon: MessageSquare, path: '/mentee/bookingsessions' },
     { id: 'profile', label: 'Profile Settings', icon: User, path: '/mentee/profile' },
     { id: 'support', label: 'Help & Support', icon: HelpCircle, path: '/mentee/support' },
 ];

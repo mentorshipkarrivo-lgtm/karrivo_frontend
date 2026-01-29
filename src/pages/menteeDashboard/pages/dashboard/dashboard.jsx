@@ -1,13 +1,14 @@
 // DashboardSection.jsx
 
 import React from 'react';
-import { TrendingUp, Users, DollarSign, Calendar, Loader2, AlertCircle } from 'lucide-react';
+import { TrendingUp, Users, DollarSign, Calendar, Loader2, AlertCircle, User } from 'lucide-react';
 import { useGetMenteeDashboardQuery } from './dashboardApiSlice';
 
 const DashboardSection = () => {
     // Get userData from localStorage
     const userData = JSON.parse(localStorage.getItem("userData"));
     const userId = userData?.username || userData?._id;
+    console.log(userId, "userid");
 
     // Fetch dashboard data
     const { data: dashboardResponse, isLoading, isError, error } = useGetMenteeDashboardQuery(userId);
@@ -38,8 +39,16 @@ const DashboardSection = () => {
 
         if (date.toDateString() === today.toDateString()) return 'Today';
         if (date.toDateString() === tomorrow.toDateString()) return 'Tomorrow';
-        
+
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    };
+
+    // Get initials from name
+    const getInitials = (name) => {
+        if (!name) return '?';
+        const nameParts = name.trim().split(' ');
+        if (nameParts.length === 1) return nameParts[0][0].toUpperCase();
+        return (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase();
     };
 
     // Loading state
@@ -78,103 +87,188 @@ const DashboardSection = () => {
                 <p className="text-gray-600">Here's what's happening with your mentorship today.</p>
             </div>
 
+            {/* Profile Completion Alert */}
+            {!dashboardData?.profileCompleted && (
+                <div className="mb-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
+                    <div className="flex items-center">
+                        <AlertCircle className="h-5 w-5 text-yellow-400 mr-3" />
+                        <p className="text-yellow-700">
+                            <span className="font-semibold">Complete your profile</span> to get better mentor recommendations!
+                        </p>
+                    </div>
+                </div>
+            )}
+
             {/* Stats Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-gray-500 text-sm">Total Sessions</h3>
-                        <Calendar className="w-5 h-5 text-blue-500" />
+                        <h3 className="text-gray-500 text-sm font-medium">Total Sessions</h3>
+                        <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <Calendar className="w-5 h-5 text-blue-600" />
+                        </div>
                     </div>
                     <p className="text-[#062117] text-3xl font-bold">
                         {dashboardData?.stats?.totalSessions || 0}
                     </p>
-                    <p className="text-green-500 text-sm mt-2">
-                        ↑ {dashboardData?.stats?.monthlyGrowth?.sessions || 0}% from last month
+                    <p className="text-sm mt-2 text-gray-500">
+                        {dashboardData?.stats?.monthlyGrowth?.sessions > 0 ? (
+                            <span className="text-green-600">
+                                ↑ {dashboardData?.stats?.monthlyGrowth?.sessions}% from last month
+                            </span>
+                        ) : (
+                            <span>No growth this month</span>
+                        )}
                     </p>
                 </div>
 
-                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
                     <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-gray-500 text-sm">Active Mentors</h3>
-                        <Users className="w-5 h-5 text-purple-500" />
+                        <h3 className="text-gray-500 text-sm font-medium">Active Mentors</h3>
+                        <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <Users className="w-5 h-5 text-purple-600" />
+                        </div>
                     </div>
                     <p className="text-[#062117] text-3xl font-bold">
                         {dashboardData?.stats?.activeMentors || 0}
                     </p>
-                    <p className="text-green-500 text-sm mt-2">
-                        ↑ {dashboardData?.stats?.monthlyGrowth?.mentors || 0} new mentors
+                    <p className="text-sm mt-2 text-gray-500">
+                        {dashboardData?.mentors?.length > 0 ? (
+                            <span className="text-green-600">
+                                {dashboardData.mentors.length} mentor{dashboardData.mentors.length > 1 ? 's' : ''} available
+                            </span>
+                        ) : (
+                            <span>No mentors yet</span>
+                        )}
                     </p>
-                </div>
-
-                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                    <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-gray-500 text-sm">Hours Learned</h3>
-                        <TrendingUp className="w-5 h-5 text-green-500" />
-                    </div>
-                    <p className="text-[#062117] text-3xl font-bold">
-                        {dashboardData?.stats?.hoursLearned || 0}
-                    </p>
-                    <p className="text-green-500 text-sm mt-2">
-                        ↑ {dashboardData?.stats?.monthlyGrowth?.hours || 0} hrs this month
-                    </p>
-                </div>
-
-                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                    <div className="flex items-center justify-between mb-2">
-                        <h3 className="text-gray-500 text-sm">Investment</h3>
-                        <DollarSign className="w-5 h-5 text-yellow-500" />
-                    </div>
-                    <p className="text-[#062117] text-3xl font-bold">
-                        ${dashboardData?.stats?.totalInvestment?.toLocaleString() || 0}
-                    </p>
-                    <p className="text-gray-500 text-sm mt-2">Total spent</p>
                 </div>
             </div>
 
-            {/* Upcoming Sessions & Recent Activity */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Available Mentors & Upcoming Sessions */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                {/* Available Mentors */}
+                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-[#062117] text-lg font-semibold">Available Mentors</h3>
+                        <span className="text-sm text-gray-500">
+                            {dashboardData?.mentors?.length || 0} mentor{dashboardData?.mentors?.length !== 1 ? 's' : ''}
+                        </span>
+                    </div>
+                    <div className="space-y-3">
+                        {dashboardData?.mentors && dashboardData.mentors.length > 0 ? (
+                            dashboardData.mentors.map((mentor) => (
+                                <div key={mentor.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                                    <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <span className="text-white font-bold text-lg">
+                                            {mentor.initials || getInitials(mentor.name)}
+                                        </span>
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <p className="font-semibold text-[#062117] truncate">{mentor.name}</p>
+                                        <p className="text-sm text-gray-500 truncate">{mentor.email}</p>
+                                        {mentor.city !== 'N/A' && mentor.country !== 'N/A' && (
+                                            <p className="text-xs text-gray-400">
+                                                {mentor.city}, {mentor.country}
+                                            </p>
+                                        )}
+                                    </div>
+                                 
+                                </div>
+                            ))
+                        ) : (
+                            <div className="text-center py-8">
+                                <User className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                <p className="text-gray-500">No mentors available yet</p>
+                                <p className="text-sm text-gray-400 mt-1">Check back later for updates</p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
                 {/* Upcoming Sessions */}
                 <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                    <h3 className="text-[#062117] text-lg font-semibold mb-4">Upcoming Sessions</h3>
-                    <div className="space-y-4">
-                        {dashboardData?.upcomingSessions?.length > 0 ? (
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-[#062117] text-lg font-semibold">Upcoming Sessions</h3>
+                        <span className="text-sm text-gray-500">
+                            {dashboardData?.upcomingSessions?.length || 0} session{dashboardData?.upcomingSessions?.length !== 1 ? 's' : ''}
+                        </span>
+                    </div>
+                    <div className="space-y-3">
+                        {dashboardData?.upcomingSessions && dashboardData.upcomingSessions.length > 0 ? (
                             dashboardData.upcomingSessions.map((session) => (
-                                <div key={session.id} className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                                        <span className="text-blue-600 font-bold">
+                                <div key={session.id} className="flex items-center gap-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
+                                    <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <span className="text-white font-bold">
                                             {session.mentorInitials}
                                         </span>
                                     </div>
-                                    <div className="flex-1">
-                                        <p className="font-semibold text-[#062117]">{session.title}</p>
-                                        <p className="text-sm text-gray-500">
-                                            {formatDate(session.date)}, {session.time}
+                                    <div className="flex-1 min-w-0">
+                                        <p className="font-semibold text-[#062117] truncate">{session.title}</p>
+                                        <p className="text-sm text-gray-600">
+                                            <Calendar className="inline w-4 h-4 mr-1" />
+                                            {formatDate(session.date)} at {session.time}
                                         </p>
                                     </div>
                                 </div>
                             ))
                         ) : (
-                            <p className="text-gray-500 text-center py-4">No upcoming sessions</p>
+                            <div className="text-center py-8">
+                                <Calendar className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                                <p className="text-gray-500">No upcoming sessions</p>
+                                <p className="text-sm text-gray-400 mt-1">Book a session with a mentor to get started</p>
+                            </div>
                         )}
                     </div>
                 </div>
+            </div>
 
-                {/* Recent Activity */}
-                <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-                    <h3 className="text-[#062117] text-lg font-semibold mb-4">Recent Activity</h3>
-                    <div className="space-y-4">
-                        {dashboardData?.recentActivity?.length > 0 ? (
-                            dashboardData.recentActivity.map((activity, i) => (
-                                <div key={i} className="flex items-center justify-between p-3 border-b border-gray-100 last:border-0">
+            {/* Recent Activity */}
+            <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                <h3 className="text-[#062117] text-lg font-semibold mb-4">Recent Activity</h3>
+                <div className="space-y-3">
+                    {dashboardData?.recentActivity && dashboardData.recentActivity.length > 0 ? (
+                        dashboardData.recentActivity.map((activity, i) => (
+                            <div key={i} className="flex items-center justify-between p-3 border-b border-gray-100 last:border-0 hover:bg-gray-50 rounded-lg transition-colors">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                                     <p className="text-gray-700">{activity.action}</p>
-                                    <p className="text-sm text-gray-400">
-                                        {formatTimeAgo(activity.timestamp)}
-                                    </p>
                                 </div>
-                            ))
-                        ) : (
-                            <p className="text-gray-500 text-center py-4">No recent activity</p>
-                        )}
+                                <p className="text-sm text-gray-400">
+                                    {formatTimeAgo(activity.timestamp)}
+                                </p>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="text-center py-8">
+                            <TrendingUp className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                            <p className="text-gray-500">No recent activity</p>
+                            <p className="text-sm text-gray-400 mt-1">Your activity will appear here</p>
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* User Info Summary */}
+            <div className="mt-6 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-100 rounded-xl p-6">
+                <h3 className="text-[#062117] text-lg font-semibold mb-4">Your Profile</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                        <p className="text-sm text-gray-500">Email</p>
+                        <p className="font-medium text-gray-700">{dashboardData?.user?.email || 'N/A'}</p>
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Phone</p>
+                        <p className="font-medium text-gray-700">{dashboardData?.user?.phone || 'N/A'}</p>
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Location</p>
+                        <p className="font-medium text-gray-700">
+                            {dashboardData?.user?.city}, {dashboardData?.user?.country}
+                        </p>
+                    </div>
+                    <div>
+                        <p className="text-sm text-gray-500">Role</p>
+                        <p className="font-medium text-gray-700">{dashboardData?.user?.role || 'Mentee'}</p>
                     </div>
                 </div>
             </div>
