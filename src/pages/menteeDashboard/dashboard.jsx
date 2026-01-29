@@ -9,7 +9,7 @@ const getCookie = (name) => {
     return null;
 };
 
-// 🔥 FIXED: Updated navigation items with correct paths matching App.jsx
+// 🔥 FIXED: Updated navigation items with correct paths matching App
 const topNavigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/mentee/dashboard' },
     { id: 'bookings', label: 'Trial Sessions', icon: Users, path: '/mentee/bookings' },

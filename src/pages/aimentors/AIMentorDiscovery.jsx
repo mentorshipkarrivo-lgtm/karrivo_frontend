@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Filter, Star, Zap, Cpu, Clock, MapPin, TrendingUp, Target, Users, Brain, Loader2 } from 'lucide-react';
-import { useGetAIMentorsQuery } from './aimentorship.jsx';
+import { useGetAIMentorsQuery } from './aimentorship';
 
 const AIMentorDiscovery = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');

@@ -12,41 +12,41 @@ import {
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import ProtectedRoute from "./routes/PrivateRoute.jsx";
-import LoginPage from "./Authentication/Login.jsx";
+import ProtectedRoute from "./routes/PrivateRoute";
+import LoginPage from "./Authentication/Login";
 
-import Home from "./pages/home/Home.jsx";
-import FindTopMentors from "./pages/topMentors/mentors.jsx";
+import Home from "./pages/home/Home";
+import FindTopMentors from "./pages/topMentors/mentors";
 
-import Navbar from "./global/Navbar.jsx";
-import FooterLinks from "./pages/home/HomeFoot.jsx";
-import ProductMentorDiscovery from "./pages/productMentors/ProductMentorDiscovery.jsx"
-import MarketingMentorDiscovery from "./pages/marketingmentors/MarketingMentorDiscovery.jsx";
-import LeadershipMentorDiscovery from "./pages/leadershipmentors/LeadershipMentorDiscovery.jsx";
-import EngineeringMentors from "./pages/EngineeringMentors/mentorsengineering.jsx";
-import MenteeApplicationForm from "./pages/menteeApplication/MenteeApplicationForm.jsx";
-import MentorLayout from "./components/MentorDashboard/MentorLayout.jsx";
-import MentorDashboardSection from "./components/MentorDashboard/dashboard.jsx";
-import StartupMentorDiscovery from './pages/startUpmentors/StartupMentorDiscovery.jsx';
-import AIMentorDiscovery from "./pages/aimentors/AIMentorDiscovery.jsx";
-import AllMentorsDiscovery from "./pages/allmentors/AllMentorsDiscovery.jsx";
-import MentorProfile from "./components/MentorDashboard/mentorProfile/Profile.jsx";
-import ProfileModal from "./pages/home/mentorsection/profileSection.jsx";
-import BookingModal from "./pages/home/mentorsection/Modalbooking.jsx";
-import BookSessionPage from "./pages/home/mentorsection/BooksessionPage.jsx"
-import SearchResults from "./pages/home/SearchResults.jsx";
+import Navbar from "./global/Navbar";
+import FooterLinks from "./pages/home/HomeFoot";
+import ProductMentorDiscovery from "./pages/productMentors/ProductMentorDiscovery"
+import MarketingMentorDiscovery from "./pages/marketingmentors/MarketingMentorDiscovery";
+import LeadershipMentorDiscovery from "./pages/leadershipmentors/LeadershipMentorDiscovery";
+import EngineeringMentors from "./pages/EngineeringMentors/mentorsengineering";
+import MenteeApplicationForm from "./pages/menteeApplication/MenteeApplicationForm";
+import MentorLayout from "./components/MentorDashboard/MentorLayout";
+import MentorDashboardSection from "./components/MentorDashboard/dashboard";
+import StartupMentorDiscovery from './pages/startUpmentors/StartupMentorDiscovery';
+import AIMentorDiscovery from "./pages/aimentors/AIMentorDiscovery";
+import AllMentorsDiscovery from "./pages/allmentors/AllMentorsDiscovery";
+import MentorProfile from "./components/MentorDashboard/mentorProfile/Profile";
+import ProfileModal from "./pages/home/mentorsection/profileSection";
+import BookingModal from "./pages/home/mentorsection/Modalbooking";
+import BookSessionPage from "./pages/home/mentorsection/BooksessionPage"
+import SearchResults from "./pages/home/SearchResults";
 
 // Mentee Dashboard
-import MenteeDashboard from "./pages/menteeDashboard/dashboard.jsx";
-import DashboardSection from "./pages/menteeDashboard/pages/dashboard/dashboardsesction.jsx";
-import MentorshipProfile from "./pages/menteeDashboard/pages/profile/profilsection.jsx";
-import HelpSupport from "./pages/menteeDashboard/pages/help&support/help&supportsection.jsx";
-import BookingsSection from "./pages/menteeDashboard/pages/bookings.jsx";
-import MenteeBookingssessions from "./pages/menteeDashboard/pages/Bookings/bookingSessions.jsx";
-import MenteePayment from "./pages/menteeDashboard/pages/payment/paymentsection.jsx";
-import UpcomingMeetings from "./pages/menteeDashboard/pages/upcomingMeteings/upcomming.jsx";
-import MentorSessionBookings from "./components/MentorDashboard/sessions/sessionsPage.jsx";
-import MentorHelpSupport from "./components/MentorDashboard/MentorSupport/SupportMentor.jsx";
+import MenteeDashboard from "./pages/menteeDashboard/dashboard";
+import DashboardSection from "./pages/menteeDashboard/pages/dashboard/dashboardsesction";
+import MentorshipProfile from "./pages/menteeDashboard/pages/profile/profilsection";
+import HelpSupport from "./pages/menteeDashboard/pages/help&support/help&supportsection";
+import BookingsSection from "./pages/menteeDashboard/pages/bookings";
+import MenteeBookingssessions from "./pages/menteeDashboard/pages/Bookings/bookingSessions";
+import MenteePayment from "./pages/menteeDashboard/pages/payment/paymentsection";
+import UpcomingMeetings from "./pages/menteeDashboard/pages/upcomingMeteings/upcomming";
+import MentorSessionBookings from "./components/MentorDashboard/sessions/sessionsPage";
+import MentorHelpSupport from "./components/MentorDashboard/MentorSupport/SupportMentor";
 
 // Import placeholder components for mentor dashboard routes (create these as needed)
 // import MenteesSection from "./components/MentorDashboard/mentees/MenteesSection";

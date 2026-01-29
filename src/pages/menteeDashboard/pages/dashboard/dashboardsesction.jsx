@@ -1,4 +1,4 @@
-// DashboardSection.jsx
+// DashboardSection
 
 import React from 'react';
 import { TrendingUp, Users, DollarSign, Calendar, Loader2, AlertCircle, User } from 'lucide-react';

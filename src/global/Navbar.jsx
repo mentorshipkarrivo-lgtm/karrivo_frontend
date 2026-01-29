@@ -1,4 +1,4 @@
-// Navbar.jsx
+// Navbar
 import { React, useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../assets/Images/logo.svg";

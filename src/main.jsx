@@ -5,10 +5,10 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 // npm uninstall react-helmet-async
 
-import App from "./App.jsx";
+import App from "./App";
 import { store } from "./pages/services/store.js"
 import "./index.css";
-import StateProvider from "./context/StateContext.jsx"
+import StateProvider from "./context/StateContext"
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 ReactDOM.createRoot(document.getElementById("root")).render(

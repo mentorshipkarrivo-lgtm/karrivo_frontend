@@ -1,5 +1,5 @@
 // ============================================
-// FILE: MentorLayout.jsx (Updated with Routes)
+// FILE: MentorLayout (Updated with Routes)
 // ============================================
 
 import React, { useState, useEffect } from 'react';

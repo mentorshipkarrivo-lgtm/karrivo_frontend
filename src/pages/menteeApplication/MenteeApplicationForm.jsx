@@ -1,7 +1,7 @@
-// MenteeApplicationForm.jsx
+// MenteeApplicationForm
 import React, { useState, useEffect } from 'react';
 import { Check, User, Briefcase, GraduationCap } from 'lucide-react';
-import { useSubmitMenteeApplicationMutation } from './menteeApplication.jsx';
+import { useSubmitMenteeApplicationMutation } from './menteeApplication';
 
 const MenteeApplicationForm = () => {
     // Load current step from localStorage

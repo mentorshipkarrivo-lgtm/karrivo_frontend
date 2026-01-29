@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Search, Filter, Star, Briefcase, GraduationCap, Clock, MapPin, TrendingUp, Loader2 } from 'lucide-react';
 import { useGetMentorsQuery } from './engineeringMentoraslice';
 import { useNavigate } from 'react-router-dom';
-import ProfileModal from '../home/mentorsection/profileSection.jsx';
-import BookingModal from '../home/mentorsection/Modalbooking.jsx';
+import ProfileModal from '../home/mentorsection/profileSection';
+import BookingModal from '../home/mentorsection/Modalbooking';
 
 const EngineeringMentors = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');
