@@ -9,7 +9,7 @@ import {
   useOTPresentMutation,
   useForgotMutation,
   useVerifyOtpMutation
-} from "../ApiSliceComponent/registerApiSlice.js";
+} from "../ApiSliceComponent/RegisterApiSlice";
 import { useNavigate, useLocation } from 'react-router-dom';
 import GoogleSignIn from './googleSignin';
 
