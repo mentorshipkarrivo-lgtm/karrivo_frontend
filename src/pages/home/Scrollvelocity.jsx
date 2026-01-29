@@ -1,6 +1,5 @@
 
 import React, { useRef, useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useNavigate } from 'react-router-dom';
@@ -13,26 +12,10 @@ const MentoHero = () => {
     const text2Ref = useRef(null);
     const text3Ref = useRef(null);
     const videoRef = useRef(null);
-    const [videoLoaded, setVideoLoaded] = useState(false);
+    const [ setVideoLoaded] = useState(false);
     const navigate = useNavigate()
 
-    // Mock mentor stats
-    const stats = {
-        activeMentors: 2500,
-        totalSessions: 45000,
-        successRate: 96,
-        studentsHelped: 12500
-    };
 
-    const formatNumber = (num) => {
-        if (num >= 1000000) {
-            return (num / 1000000).toFixed(1) + "M";
-        }
-        if (num >= 1000) {
-            return (num / 1000).toFixed(1) + "K";
-        }
-        return num?.toLocaleString() || "0";
-    };
 
     // GSAP Scroll Animations
     useEffect(() => {

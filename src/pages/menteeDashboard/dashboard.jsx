@@ -19,18 +19,6 @@ const topNavigationItems = [
     { id: 'support', label: 'Help & Support', icon: HelpCircle, path: '/mentee/support' },
 ];
 
-const ltmNavigationItems = [
-    { id: 'ltm-home', label: 'Mentorship Home', icon: Home, path: '/mentee/ltm-home' },
-    { id: 'sessions', label: 'Session History', icon: BookOpen, path: '/mentee/sessions' },
-    { id: 'tasks', label: 'Tasks & Assignments', icon: Briefcase, path: '/mentee/tasks' },
-    { id: 'goals', label: 'Goals & Milestones', icon: Target, path: '/mentee/goals' },
-    { id: 'subscription', label: 'Subscription Plan', icon: CreditCard, path: '/mentee/subscription' },
-    { id: 'achievements', label: 'Achievements', icon: Trophy, path: '/mentee/achievements' },
-    { id: 'linkedin', label: 'Profile Builder', icon: Linkedin, path: '/mentee/linkedin' },
-    { id: 'referrals', label: 'Refer & Earn', icon: UserPlus, path: '/mentee/referrals' },
-    { id: 'gift', label: 'Gift a Session', icon: Gift, path: '/mentee/gift' },
-];
-
 const menteeTypes = ['All Mentors', 'Engineering Mentors', 'Top Mentors', 'Startup Mentors', 'Product Mentors', 'Marketing Mentors', 'Leadership Mentors', 'AI Mentors'];
 
 const LogoutModal = ({ isOpen, onClose, onConfirm }) => {

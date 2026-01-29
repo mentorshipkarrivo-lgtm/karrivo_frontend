@@ -720,7 +720,6 @@
 
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
 import { Star, X, Clock, Calendar, Loader2, MapPin } from "lucide-react";
 import { useFetchMentorByIdQuery } from "./mentorsectionapislice";
 import BookingModal from "./BookModal";
@@ -985,7 +984,7 @@ const ProfileModal = () => {
               </p>
 
               <p className="text-center mt-4 text-sm">
-                 Lock in this price now!
+                Lock in this price now!
               </p>
             </div>
           </div>

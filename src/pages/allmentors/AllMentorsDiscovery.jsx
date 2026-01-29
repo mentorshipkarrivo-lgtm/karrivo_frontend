@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { Search, Star, Loader2, GraduationCap } from 'lucide-react';
 import { useGetAllMentorsQuery } from './allmentors';
 import { useNavigate } from 'react-router-dom';
@@ -8,8 +7,8 @@ import BookingModal from '../home/mentorsection/BookModal';
 
 const AllMentorsDiscovery = () => {
     const [searchQuery, setSearchQuery] = useState('');
-    const [selectedMentorId, setSelectedMentorId] = useState(null);
-    const [selectedMentor, setSelectedMentor] = useState(null);
+    const [selectedMentorId] = useState(null);
+    const [selectedMentor,] = useState(null);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const navigate = useNavigate();
@@ -32,7 +31,7 @@ const AllMentorsDiscovery = () => {
     // Filter mentors based on search query only (client-side filtering)
     const filteredMentors = mentors.filter(mentor => {
         if (!searchQuery.trim()) return true;
-        
+
         const searchLower = searchQuery.toLowerCase();
         return (
             mentor.fullName?.toLowerCase().includes(searchLower) ||
@@ -46,7 +45,7 @@ const AllMentorsDiscovery = () => {
     // 🔥 UPDATED: Handle Book Session with Login Check
     const handleBookSession = (mentor) => {
         console.log("Book session clicked for mentor:", mentor._id);
-        
+
         if (!isLoggedIn) {
             // User NOT logged in → Redirect to login WITH mentorId
             console.log("User not logged in, redirecting to login with mentorId:", mentor._id);
@@ -103,7 +102,7 @@ const AllMentorsDiscovery = () => {
             <div className="min-h-screen bg-[#062117] py-8 px-4 pt-28">
                 <div className="max-w-7xl mx-auto">
                     {/* Header */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.8 }}
@@ -119,7 +118,7 @@ const AllMentorsDiscovery = () => {
                     </motion.div>
 
                     {/* Search Bar */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}

@@ -12,8 +12,8 @@ const EngineeringMentors = () => {
     const [priceRange, setPriceRange] = useState('All');
     const [selectedAvailability, setSelectedAvailability] = useState('All');
     const [selectedLanguages, setSelectedLanguages] = useState([]);
-    const [selectedMentorId, setSelectedMentorId] = useState(null);
-    const [selectedMentor, setSelectedMentor] = useState(null);
+    const [selectedMentorId ] = useState(null);
+    const [selectedMentor] = useState(null);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
     const navigate = useNavigate();
