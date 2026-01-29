@@ -30,7 +30,7 @@ import StartupMentorDiscovery from "./pages/startUpmentors/StartupMentor";
 import AIMentorDiscovery from "./pages/aimentors/AIMentorDiscovery";
 import AllMentorsDiscovery from "./pages/allmentors/AllMentorsDiscovery";
 import MentorProfile from "./components/MentorDashboard/mentorProfile/Profile";
-import ProfileModal from "./pages/home/mentorsection/ProfileSection"
+import ProfileModal from "./pages/home/mentorsection/Profile";
 import BookingModal from "./pages/home/mentorsection/Modalbooking";
 import BookSessionPage from "./pages/home/mentorsection/Booksessions";
 import SearchResults from "./pages/home/SearchResults";
