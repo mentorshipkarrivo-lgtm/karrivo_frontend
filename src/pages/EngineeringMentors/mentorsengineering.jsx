@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Search, Filter, Star, Briefcase, GraduationCap, Clock, MapPin, TrendingUp, Loader2 } from 'lucide-react';
 import { useGetMentorsQuery } from './engineeringMentoraslice';
 import { useNavigate } from 'react-router-dom';
-import ProfileModal from '../home/mentorsection/profileSection';
-import BookingModal from '../home/mentorsection/BookModal';
+import ProfileModal from '../home/mentorsection/profileSection.jsx';
+import BookingModal from '../home/mentorsection/BookModal.jsx';
 
 const EngineeringMentors = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');
@@ -12,7 +12,7 @@ const EngineeringMentors = () => {
     const [priceRange, setPriceRange] = useState('All');
     const [selectedAvailability, setSelectedAvailability] = useState('All');
     const [selectedLanguages, setSelectedLanguages] = useState([]);
-    const [selectedMentorId ] = useState(null);
+    const [selectedMentorId] = useState(null);
     const [selectedMentor] = useState(null);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -55,7 +55,7 @@ const EngineeringMentors = () => {
     // 🔥 UPDATED: Handle Book Session with Login Check
     const handleBookSession = (mentor) => {
         console.log("Book session clicked for mentor:", mentor._id);
-        
+
         if (!isLoggedIn) {
             // User NOT logged in → Redirect to login WITH mentorId
             console.log("User not logged in, redirecting to login with mentorId:", mentor._id);
