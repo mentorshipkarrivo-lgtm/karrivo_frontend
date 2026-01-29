@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Star, User, Eye, Video, RefreshCw } from 'lucide-react';
-import { useGetMentorSessionBookingsQuery } from '../MentorDashboardapislice';
+import { useGetMentorSessionBookingsQuery } from '../MentorDashapislice';
 
 const MentorSessionBookings = () => {
     const [mentorId, setMentorId] = useState(null);
