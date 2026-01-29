@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { Loader2, AlertCircle, ArrowLeft } from "lucide-react";
 import { useFetchMentorByIdQuery } from "./mentorsectionapislice";
-import BookingModal from "./BookModal.jsx";
+import BookingModal from "./Modalbooking";
 
 const BookSessionPage = () => {
   const [searchParams] = useSearchParams();

@@ -722,7 +722,7 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Star, X, Clock, Calendar, Loader2, MapPin } from "lucide-react";
 import { useFetchMentorByIdQuery } from "./mentorsectionapislice";
-import BookingModal from "./BookModal";
+import BookingModal from "./Modalbooking";
 
 const ProfileModal = () => {
   const { mentorId } = useParams();
