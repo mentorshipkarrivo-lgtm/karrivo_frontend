@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import { Search, Filter, Star, Briefcase, GraduationCap, Clock, MapPin, TrendingUp, Loader2 } from 'lucide-react';
 import { useGetMentorsQuery } from "./EngineeringMentoraslice";
 import { useNavigate } from 'react-router-dom';
-import ProfileModal from '../home/mentorsection/profileSection';
-import BookingModal from '../home/mentorsection/Modalbooking';
+import ProfileModal from '../home/mentorsection/ProfileModal';
+import BookingModal from '../home/mentorsection/Bookingmodal';
 
-const EngineeringMentors = () => {
+const EngineerMentors = () => {
     const [selectedCategory, setSelectedCategory] = useState('All');
     const [selectedExperience, setSelectedExperience] = useState('All');
     const [searchQuery, setSearchQuery] = useState('');
@@ -476,4 +476,4 @@ const EngineeringMentors = () => {
     );
 };
 
-export default EngineeringMentors;
+export default EngineerMentors;

@@ -22,37 +22,30 @@ import FooterLinks from "./pages/home/HomeFoot";
 import ProductMentorDiscovery from "./pages/productMentors/ProductMentorDiscovery"
 import MarketingMentorDiscovery from "./pages/marketingmentors/MarketingMentorDiscovery";
 import LeadershipMentorDiscovery from "./pages/leadershipmentors/LeadershipMentorDiscovery";
-import EngineeringMentors from "./pages/EngineeringMentors/Mentorsengineering"
+import EngineerMentors from "./pages/EngineeringMentors/EngineerMentors";
 import MenteeApplicationForm from "./pages/menteeApplication/MenteeApplicationForm";
 import MentorLayout from "./components/MentorDashboard/MentorLayout";
-import MentorDashboardSection from "./components/MentorDashboard/dashboard";
-import StartupMentorDiscovery from "./pages/startUpmentors/StartupMentor";
+import MentorDashboardSection from "./components/MentorDashboard/MentorDashboardSection";
+import StartupMentorDiscovery from "./pages/startUpmentors/StartupMentorDiscovery";
 import AIMentorDiscovery from "./pages/aimentors/AIMentorDiscovery";
 import AllMentorsDiscovery from "./pages/allmentors/AllMentorsDiscovery";
-import MentorProfile from "./components/MentorDashboard/mentorProfile/Profile";
-import ProfileModal from "./pages/home/mentorsection/Profile";
-import BookingModal from "./pages/home/mentorsection/Modalbooking";
-import BookSessionPage from "./pages/home/mentorsection/Booksessions";
+import MentorProfile from "./components/MentorDashboard/mentorProfile/mentorProfile";
+import ProfileModal from "./pages/home/mentorsection/ProfileModal";
+import BookingModal from "./pages/home/mentorsection/Bookingmodal";
+import BookSessionPage from "./pages/home/mentorsection/booksessionPage";
 import SearchResults from "./pages/home/SearchResults";
 
 // Mentee Dashboard
-import MenteeDashboard from "./pages/menteeDashboard/dashboard";
+import MenteeDashboard from "./pages/menteeDashboard/menteeDashboard";
 import DashboardSection from "./pages/menteeDashboard/pages/dashboard/Dashboardsection";
-import MentorshipProfile from "./pages/menteeDashboard/pages/profile/Profilsection"
-import HelpSupport from "./pages/menteeDashboard/pages/help&support/Help&supportsection"
-import BookingsSection from "./pages/menteeDashboard/pages/Bookings"
-import MenteeBookingssessions from "./pages/menteeDashboard/pages/Bookings/bookingSessions";
-import MenteePayment from "./pages/menteeDashboard/pages/payment/Paymentsection"
-import UpcomingMeetings from "./pages/menteeDashboard/pages/upcomingMeteings/Upcomming"
-import MentorSessionBookings from "./components/MentorDashboard/sessions/SessionsPage"
-import MentorHelpSupport from "./components/MentorDashboard/MentorSupport/SupportMentor";
-
-// Import placeholder components for mentor dashboard routes (create these as needed)
-// import MenteesSection from "./components/MentorDashboard/mentees/MenteesSection";
-// import MessagesSection from "./components/MentorDashboard/messages/MessagesSection";
-// import EarningsSection from "./components/MentorDashboard/earnings/EarningsSection";
-// import ReviewsSection from "./components/MentorDashboard/reviews/ReviewsSection";
-// import SupportSection from "./components/MentorDashboard/support/SupportSection";
+import MentorshipProfile from "./pages/menteeDashboard/pages/profile/MentorshipProfile";
+import HelpSupport from "./pages/menteeDashboard/pages/help&support/HelpSupport"
+import BookingsSection from "./pages/menteeDashboard/pages/BookingsSection"
+import MenteeBookingssessions from "./pages/menteeDashboard/pages/Bookings/MenteeBookingssessions";
+import MenteePayment from "./pages/menteeDashboard/pages/payment/MenteePayment";
+import UpcomingMeetings    from "./pages/menteeDashboard/pages/upcomingMeteings/UpcomingMeetings"
+import MentorSessionBookings from "./components/MentorDashboard/sessions/MentorSessionBookings"
+import MentorHelpSupport from "./components/MentorDashboard/MentorSupport/MentorHelpSupport";
 
 // Auth helpers
 const getAuthToken = () => {
@@ -221,7 +214,7 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/search" element={<SearchResults />} />
           <Route path="/top" element={<FindTopMentors />} />
-          <Route path="/engineering" element={<EngineeringMentors />} />
+          <Route path="/engineering" element={<EngineerMentors />} />
           <Route path="/startup" element={<StartupMentorDiscovery />} />
           <Route path="/product" element={<ProductMentorDiscovery />} />
           <Route path="/marketing" element={<MarketingMentorDiscovery />} />
