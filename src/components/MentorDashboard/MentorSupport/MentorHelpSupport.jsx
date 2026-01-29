@@ -6,7 +6,6 @@ import {
     useUpdateMentorSupportTicketMutation 
 } from "./MentorSupportapislice"
 
-import 
 const MentorHelpSupport = () => {
     const [mentorId, setMentorId] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
