@@ -18,7 +18,7 @@ import LoginPage from "./Authentication/Login.jsx";
 import Home from "./pages/home/Home.jsx";
 import FindTopMentors from "./pages/topMentors/mentors.jsx";
 
-import Navbar from "./global/Navbar/.jsx";
+import Navbar from "./global/Navbar.jsx";
 import FooterLinks from "./pages/home/HomeFoot.jsx";
 import ProductMentorDiscovery from "./pages/productMentors/ProductMentorDiscovery.jsx"
 import MarketingMentorDiscovery from "./pages/marketingmentors/MarketingMentorDiscovery.jsx";
