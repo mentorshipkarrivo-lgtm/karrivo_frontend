@@ -6,7 +6,7 @@ import {
 import {
     useManageUserProfileQuery, useSaveUserProfileMutation, useUploadProfilePhotoMutation,
     useDeleteProfilePhotoMutation
-} from "./Profileapislice";
+} from "./Profilesecapislice"
 import { CiEdit, } from "react-icons/ci";
 
 
