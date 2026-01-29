@@ -29,14 +29,14 @@ import MentorDashboardSection from "./components/MentorDashboard/MentorDashboard
 import StartupMentorDiscovery from "./pages/startUpmentors/StartupMentorDiscovery";
 import AIMentorDiscovery from "./pages/aimentors/AIMentorDiscovery";
 import AllMentorsDiscovery from "./pages/allmentors/AllMentorsDiscovery";
-import MentorProfile from "./components/MentorDashboard/mentorProfile/mentorProfile";
+import MentorProfile from "./components/MentorDashboard/mentorProfile/MentorProfile";
 import ProfileModal from "./pages/home/mentorsection/ProfileModal";
 import BookingModal from "./pages/home/mentorsection/Bookingmodal";
 import BookSessionPage from "./pages/home/mentorsection/booksessionPage";
 import SearchResults from "./pages/home/SearchResults";
 
 // Mentee Dashboard
-import MenteeDashboard from "./pages/menteeDashboard/menteeDashboard";
+import MenteeDashboard from "./pages/menteeDashboard/MenteeDashboard";
 import DashboardSection from "./pages/menteeDashboard/pages/dashboard/Dashboardsection";
 import MentorshipProfile from "./pages/menteeDashboard/pages/profile/MentorshipProfile";
 import HelpSupport from "./pages/menteeDashboard/pages/help&support/HelpSupport"
