@@ -118,9 +118,10 @@ const TestimonialsSection = () => {
             </motion.div>
 
             {/* Main Heading */}
-            <motion.h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 bg-gradient-to-r from-[#4db8a8] to-[#5ac8d8] bg-clip-text text-transparent leading-tight">
+            <motion.h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-[#00b5ed] leading-tight">
               What Our Mentees Say
             </motion.h2>
+
 
             {/* Description */}
             <motion.p className="text-base md:text-lg text-white/70 max-w-3xl mx-auto leading-relaxed">

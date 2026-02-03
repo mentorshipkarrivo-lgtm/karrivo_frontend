@@ -1,4 +1,3 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 // Import the motion object to use motion.div, motion.button, etc.
@@ -118,13 +117,6 @@ const MentoHero = () => {
                 ></div>
             </div>
 
-            {/* Gradient blobs */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-0 left-1/4 w-[400px] h-[400px] md:w-[700px] md:h-[700px] bg-[#0098cc] rounded-full filter blur-[120px] md:blur-[180px] opacity-20 animate-pulse"></div>
-                <div className="absolute bottom-0 right-1/4 w-[350px] h-[350px] md:w-[650px] md:h-[650px] bg-[#0098cc] rounded-full filter blur-[100px] md:blur-[160px] opacity-15"></div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-[#0098cc] rounded-full filter blur-[100px] md:blur-[150px] opacity-10"></div>
-            </div>
-
             <div className="sticky top-0 h-screen w-full overflow-hidden">
                 <div className="h-full flex flex-col justify-between py-2 md:py-4">
                     {/* First scrolling text */}
@@ -154,13 +146,11 @@ const MentoHero = () => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.6 }}
-                                className="inline-flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-3 rounded-full bg-[#0098cc]/10 backdrop-blur-xl border border-[#0098cc]/40 mb-4 md:mb-6 shadow-lg shadow-[#0098cc]/10"
+                                className="inline-flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-3 rounded-full bg-[#0098cc]/10 backdrop-blur-xl border border-[#0098cc]/40 mb-4 md:mb-6 "
                             >
-                                <div className="w-2 h-2 rounded-full bg-[#0098cc] animate-pulse shadow-lg shadow-[#0098cc]/50"></div>
                                 <span className="text-white font-bold text-xs md:text-sm lg:text-base uppercase tracking-wider">
                                     Professional Mentorship Platform
                                 </span>
-                                <div className="w-2 h-2 rounded-full bg-[#0098cc] animate-pulse shadow-lg shadow-[#0098cc]/50"></div>
                             </motion.div>
 
                             {/* Main Heading */}
@@ -273,5 +263,3 @@ const MentoHero = () => {
 };
 
 export default MentoHero;
-
-

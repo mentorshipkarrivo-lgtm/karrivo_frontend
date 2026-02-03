@@ -56,7 +56,6 @@ const HeroSection = () => {
                             className="px-8 py-4 bg-gradient-to-r from-[#0098cc] to-[#00b8f0] text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center gap-2"
                         >
                             Find Your Mentor
-                            <span className="text-xl">→</span>
                         </button>
 
                         <button

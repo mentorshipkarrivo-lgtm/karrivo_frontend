@@ -14,7 +14,7 @@ const topNavigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home, path: '/mentee/dashboard' },
     { id: 'bookings', label: 'Trial Sessions', icon: Users, path: '/mentee/bookings' },
     { id: 'yourmeetings', label: 'Your Meetings', icon: Users, path: '/mentee/yourmeetings' },
-    { id: 'bookingsessions', label: 'Chat & Messages', icon: MessageSquare, path: '/mentee/bookingsessions' },
+    { id: 'bookingsessions', label: 'My Bookings', icon: MessageSquare, path: '/mentee/bookingsessions' },
     { id: 'profile', label: 'Profile Settings', icon: User, path: '/mentee/profile' },
     { id: 'support', label: 'Help & Support', icon: HelpCircle, path: '/mentee/support' },
 ];
@@ -184,10 +184,7 @@ const Header = ({ isSidebarOpen, setIsSidebarOpen, userData, isProfileDropdownOp
             </div>
         </div>
         <div className="flex items-center gap-4">
-            <button className="relative p-2 hover:bg-gray-100 rounded-lg">
-                <Bell size={20} />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
+         
             <div className="relative">
                 <button onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)} className="w-10 h-10 bg-[#062117] rounded-full flex items-center justify-center text-white">
                     {userData?.name?.charAt(0) || 'U'}

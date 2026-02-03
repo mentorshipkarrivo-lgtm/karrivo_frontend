@@ -143,10 +143,10 @@ const MenteeBookingssessions = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+          <h1 className="text-2xl md:text-2xl font-bold text-gray-900">
             My Bookings
           </h1>
-          <p className="text-gray-600">
+          <p className="text-xs sm:text-sm text-gray-600 mt-1">
             Manage your upcoming and past mentorship sessions
           </p>
         </div>
@@ -177,8 +177,9 @@ const MenteeBookingssessions = () => {
           <>
             {bookings.length === 0 ? (
               <div className="text-center py-16 bg-white rounded-2xl shadow-sm">
-                <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 text-lg mb-2">No bookings found</p>
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
+                </div>                <p className="text-gray-500 text-lg mb-2">No bookings found</p>
                 <p className="text-gray-400 text-sm">Book your first session to get started!</p>
               </div>
             ) : (

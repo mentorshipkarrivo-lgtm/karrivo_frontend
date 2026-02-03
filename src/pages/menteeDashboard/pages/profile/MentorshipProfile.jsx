@@ -861,7 +861,7 @@ const MentorshipProfile = () => {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
                 <div className="bg-white rounded-lg shadow-sm p-8 max-w-md w-full text-center">
-                    <AlertCircle className="text-red-500 h-16 w-16 mx-auto mb-4" />
+                    <AlertCircle className="text-[#c2410c] h-16 w-16 mx-auto mb-4" />
                     <h2 className="text-2xl font-bold text-gray-900 mb-2">Error Loading Profile</h2>
                     <p className="text-gray-600 mb-4">
                         {error?.data?.message || "Failed to load profile data. Please try again."}

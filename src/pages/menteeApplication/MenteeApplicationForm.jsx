@@ -522,12 +522,12 @@ const MenteeApplicationForm = () => {
                             Submit Another Application
                         </button>
 
-                        <button
+                        {/* <button
                             onClick={() => (window.location.href = "/dashboard")}
                             className="w-full py-2 bg-white border border-[#062117] text-[#062117] rounded-md font-semibold text-sm hover:bg-gray-50 transition"
                         >
                             Go to Dashboard
-                        </button>
+                        </button> */}
                     </div>
                 </div>
 

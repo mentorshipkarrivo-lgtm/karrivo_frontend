@@ -139,12 +139,13 @@ export default function BookingsSection() {
                     viewport={{ once: true }}
                     className="mb-8"
                 >
-                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+                    <h1 className="text-2xl md:text-2xl font-bold text-gray-900">
                         Recommended Mentors for you
                     </h1>
-                    <p className="text-gray-600">
+                    <p className="text-xs sm:text-sm text-gray-600 mt-1">
                         You still have free trial sessions available — Book now!
                     </p>
+
                 </motion.div>
 
                 {/* EMPTY STATE */}

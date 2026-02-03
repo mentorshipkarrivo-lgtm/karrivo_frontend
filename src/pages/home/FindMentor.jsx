@@ -37,7 +37,7 @@ export default function FindMentor() {
 
           {/* Sub Heading */}
           <span className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold 
-            bg-gradient-to-r from-[#4db8a8] via-[#5ac8d8] to-[#4db8a8] bg-clip-text text-transparent">
+            bg-[#0098cc] bg-clip-text text-transparent">
             Learn • Improve • Scale
           </span>
 
@@ -53,7 +53,7 @@ export default function FindMentor() {
                 transition-all duration-500 transform
                 hover:scale-105 hover:-translate-y-2
                 shadow-2xl border-0
-                bg-gradient-to-r from-[#4db8a8] to-[#5ac8d8]
+                bg-[#0098cc]
                 hover:from-[#5ac8d8] hover:to-[#4db8a8]
               "
               style={{
