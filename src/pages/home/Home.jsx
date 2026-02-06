@@ -656,7 +656,7 @@ const Home = () => {
 
   // Handle category navigation
   const handleCategoryClick = (path) => {
-   navigate(path);
+    navigate(path);
   };
 
   // Handle search input change
@@ -674,7 +674,7 @@ const Home = () => {
   return (
     <div className="outer-container">
       {/* Hero Section with Mentorloop Design */}
-      <div className="min-h-[85vh] sm:min-h-[90vh] md:min-h-screen  relative overflow-hidden pt-12 sm:pt-14 md:pt-16 lg:pt-14">
+      <div className="min-h-[85vh] sm:min-h-[90vh] md:min-h-screen  relative overflow-hidden pt-12 sm:pt-14 md:pt-16 ">
 
         {/* Background Image */}
         <div className="absolute inset-0 w-full h-full">
@@ -828,7 +828,7 @@ const Home = () => {
 
       {/* Components Section - Removed extra spacing for small screens */}
       <div className="space-y-0">
-        {/* <MentorMenteeHero /> */}
+        <MentorMenteeHero />
         <MentorsSection />
         <MentorGrid />
         <HeroSection />
