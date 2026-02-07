@@ -20,7 +20,7 @@ const GoogleSignIn = () => {
 
         try {
             // Send Google token to backend
-            const response = await fetch('http://localhost:3002/api/auth/signin', {
+            const response = await fetch('https://us-central1-karrivo-f64dd.cloudfunctions.net/api/auth/signin', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token: credentialResponse.credential })

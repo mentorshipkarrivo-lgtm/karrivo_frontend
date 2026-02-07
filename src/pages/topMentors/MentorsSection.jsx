@@ -11,13 +11,13 @@ export default function FindTopMentors() {
     const mentors = Array.isArray(data) ? data : [];
 
     const [selectedMentor, setSelectedMentor] = useState(null);
-    const [bookingData, setBookingData] = useState({ 
-        checkIn: '', 
-        checkOut: '', 
-        guests: 1, 
-        name: '', 
+    const [bookingData, setBookingData] = useState({
+        checkIn: '',
+        checkOut: '',
+        guests: 1,
+        name: '',
         lastName: '',
-        email: '', 
+        email: '',
         phone: '',
         sessionType: 'One-on-One'
     });
@@ -62,13 +62,13 @@ export default function FindTopMentors() {
             alert('Payment successful! Session booked.');
             setSelectedMentor(null);
             setShowPaymentForm(false);
-            setBookingData({ 
-                checkIn: '', 
-                checkOut: '', 
-                guests: 1, 
-                name: '', 
+            setBookingData({
+                checkIn: '',
+                checkOut: '',
+                guests: 1,
+                name: '',
                 lastName: '',
-                email: '', 
+                email: '',
                 phone: '',
                 sessionType: 'One-on-One'
             });
@@ -108,47 +108,10 @@ export default function FindTopMentors() {
                 </div>
             </div>
 
-            {/* Mentor Grid */}
-            {/* <div className="py-8 sm:py-12 px-4 sm:px-6 max-w-7xl mx-auto">
-                {isLoading ? (
-                    <p className="text-white text-center">Loading mentors...</p>
-                ) : isError ? (
-                    <p className="text-red-500 text-center">Failed to load mentors</p>
-                ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-                        {mentors.map((mentor) => (
-                            <div key={mentor._id} className="group bg-white rounded-xl sm:rounded-2xl overflow-hidden shadow hover:shadow-2xl transition-all">
-                                <div className="relative h-48 sm:h-60 overflow-hidden">
-                                    <img
-                                        src={mentor.profileImage || 'https://img.freepik.com/free-photo/confident-man_1098-16175.jpg?semt=ais_hybrid&w=740&q=80'}
-                                        alt={mentor.fullName}
-                                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition duration-500"
-                                    />
-                                    <div className="absolute bottom-3 right-3 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center bg-[#0098cc] shadow-lg">
-                                        <Award className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
-                                    </div>
-                                </div>
-                                <div className="p-3 sm:p-4 flex flex-col gap-2">
-                                    <h3 className="text-base sm:text-lg font-bold text-[#062117] truncate">{mentor.fullName}</h3>
-                                    <p className="text-[#062117]/70 text-xs sm:text-sm truncate">{mentor.currentRole}</p>
-                                    <button
-                                        onClick={() => handleViewDetails(mentor)}
-                                        className="mt-2 bg-[#0098cc] hover:bg-[#007fa3] text-white font-semibold py-2 rounded text-sm transition"
-                                    >
-                                        View Details
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div> */}
-
             <AllMentorsDiscovery />
 
             <MentorMenteePlatform />
 
-            {/* Modal */}
             {selectedMentor && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-3 sm:p-4 overflow-y-auto">
                     <div className="bg-white rounded-lg sm:rounded-xl w-full max-w-6xl my-4 sm:my-8 relative">
@@ -163,12 +126,9 @@ export default function FindTopMentors() {
                         </button>
 
                         <div className="flex flex-col lg:flex-row max-h-[85vh] overflow-hidden">
-                            {/* Left: Booking/Payment Form */}
                             <div className="flex-1 p-4 sm:p-6 lg:p-8 overflow-y-auto">
                                 {!showPaymentForm ? (
-                                    // Booking Form
                                     <form className="space-y-4 sm:space-y-6" onSubmit={handleBookingSubmit}>
-                                        {/* Section 1: Session Details */}
                                         <div>
                                             <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
                                                 <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-sm sm:text-base flex-shrink-0">
@@ -382,7 +342,7 @@ export default function FindTopMentors() {
                                                     <div className="flex justify-between">
                                                         <span className="text-gray-600">Duration</span>
                                                         <span className="font-semibold text-gray-800">
-                                                            {bookingData.checkIn && bookingData.checkOut 
+                                                            {bookingData.checkIn && bookingData.checkOut
                                                                 ? Math.max(1, Math.ceil((new Date(bookingData.checkOut) - new Date(bookingData.checkIn)) / (1000 * 60 * 60))) + ' hours'
                                                                 : '0 hours'
                                                             }
@@ -465,7 +425,7 @@ export default function FindTopMentors() {
                                         className="w-full h-full object-cover"
                                     />
                                 </div>
-                                
+
                                 <div className="p-4 sm:p-6">
                                     {!showMoreDetails ? (
                                         <>
@@ -476,7 +436,7 @@ export default function FindTopMentors() {
                                                     <div className="text-xs sm:text-sm text-gray-500">per hour</div>
                                                 </div>
                                             </div>
-                                            
+
                                             <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
                                                 <p className="text-sm sm:text-base text-gray-700 font-medium">{selectedMentor.currentRole}</p>
                                                 <p className="text-sm sm:text-base text-gray-600">{selectedMentor.companyName}</p>
@@ -514,7 +474,7 @@ export default function FindTopMentors() {
                                                     </li>
                                                 </ul>
                                             </div>
-                                            
+
                                             <button
                                                 className="text-[#0098cc] hover:text-[#007fa3] font-medium text-xs sm:text-sm flex items-center gap-1"
                                                 onClick={() => setShowMoreDetails(true)}
@@ -532,7 +492,7 @@ export default function FindTopMentors() {
                                                 <ChevronRight className="w-4 h-4 rotate-180" />
                                                 Back to Summary
                                             </button>
-                                            
+
                                             <div className="space-y-3 text-xs sm:text-sm">
                                                 <div className="pb-3 border-b border-gray-200">
                                                     <p className="font-semibold text-gray-700 mb-1">Email</p>
@@ -582,9 +542,9 @@ export default function FindTopMentors() {
                                                     </div>
                                                 )}
                                                 {selectedMentor.linkedinUrl && (
-                                                    <a 
-                                                        href={selectedMentor.linkedinUrl} 
-                                                        target="_blank" 
+                                                    <a
+                                                        href={selectedMentor.linkedinUrl}
+                                                        target="_blank"
                                                         rel="noopener noreferrer"
                                                         className="inline-flex items-center gap-1 text-[#0098cc] hover:text-[#007fa3] font-medium"
                                                     >
