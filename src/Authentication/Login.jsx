@@ -226,7 +226,6 @@ const LoginPage = () => {
           newPassword: ''
         });
         setOtpSent(false);
-        setIsLogin(true);
 
       } catch (error) {
         console.error('Error verifying OTP:', error);

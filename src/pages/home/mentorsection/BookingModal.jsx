@@ -397,9 +397,8 @@ const BookingModal = ({ mentor, isOpen, onClose }) => {
                               className="w-full border border-gray-300 rounded-lg pl-10 pr-3 py-2 sm:py-2.5 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#0098cc] focus:border-transparent bg-white appearance-none"
                               required
                             >
-                              <option value="30">30 min - {isFreeSession ? 'FREE' : `₹${mentor.hourlyRate / 2}`}</option>
-                              <option value="60">60 min - {isFreeSession ? 'FREE' : `₹${mentor.hourlyRate}`}</option>
-                              <option value="90">90 min - {isFreeSession ? 'FREE' : `₹${mentor.hourlyRate * 1.5}`}</option>
+                              <option value="30">30 min - FREE</option>
+
                             </select>
                           </div>
                         </div>
