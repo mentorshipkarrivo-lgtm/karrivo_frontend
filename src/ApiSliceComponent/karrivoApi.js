@@ -75,7 +75,6 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: import.meta.env.VITE_API_BASE_URL,
-  credentials: "include", // ✅ Re-enabled for cookies/sessions
   
   prepareHeaders: (headers, { getState }) => {
     // ❌ REMOVE THESE - They should NOT be set in client requests

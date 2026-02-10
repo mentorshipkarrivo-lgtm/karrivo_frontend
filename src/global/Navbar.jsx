@@ -59,7 +59,6 @@ const Navbar = () => {
                   type="button"
                   className="flex items-center gap-1.5 px-3 lg:px-4 xl:px-5 py-1.5 lg:py-2 bg-[#0098cc] text-white font-semibold rounded-full hover:shadow-lg transition-all duration-300 hover:scale-105 text-xs lg:text-sm whitespace-nowrap"
                 >
-                  <Sparkles className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
                   Book a Demo
                 </button>
               </NavLink>
