@@ -703,15 +703,21 @@ const Home = () => {
 
       <div className="relative min-h-screen overflow-hidden">
         {/* Background Image with Overlay */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: 'url(https://t4.ftcdn.net/jpg/04/93/39/27/360_F_493392745_TBWKcO8i8dt7YaO7wRQtbk50qjkSHuq4.jpg)',
-          }}
-        >
-          {/* Dark Overlay for better text readability */}
-          <div className="absolute inset-0 bg-[#062117"></div>
+        <div className="absolute inset-0">
+          {/* Background Image */}
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat filter blur-[2px] scale-105"
+            style={{
+              backgroundImage:
+                "url(https://t4.ftcdn.net/jpg/04/93/39/27/360_F_493392745_TBWKcO8i8dt7YaO7wRQtbk50qjkSHuq4.jpg)",
+            }}
+          ></div>
+
+          {/* Lighter Overlay */}
+          <div className="absolute inset-0 bg-[#062117]/30 backdrop-blur-sm"></div>
         </div>
+
+
 
         {/* Decorative Elements */}
         <div className="absolute top-20 left-10 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl"></div>
@@ -747,16 +753,16 @@ const Home = () => {
               Connect with Expert Mentors
             </h1>
 
-           <div
-  className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#0098cc]"
-  style={{ fontFamily: "'Inter', sans-serif" }}
->
-  Accelerate Your Growth in{' '}
-  <span className="inline-block min-w-[280px] text-left text-[#0098cc]">
-    {displayedText || 'Tech'}
-    <span className="animate-pulse">|</span>
-  </span>
-</div>
+            <div
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#0098cc]"
+              style={{ fontFamily: "'Inter', sans-serif" }}
+            >
+              Accelerate Your Growth in{' '}
+              <span className="inline-block min-w-[280px] text-left text-[#0098cc]">
+                {displayedText || 'Tech'}
+                <span className="animate-pulse">|</span>
+              </span>
+            </div>
 
           </motion.div>
 
