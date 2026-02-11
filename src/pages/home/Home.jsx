@@ -393,9 +393,9 @@
 //     navigate(`/search?q=${encodeURIComponent(link)}`);
 //   };
 
-//   const handleCategoryClick = (path) => {
-//     navigate(path);
-//   };
+// const handleCategoryClick = (path) => {
+//   navigate(path);
+// };
 
 //   const handleSearchInputChange = (e) => {
 //     setSearchQuery(e.target.value);
@@ -431,28 +431,28 @@
 //         {/* Content Container */}
 //         <div className="relative z-10">
 //           {/* Category Pills Navigation */}
-//           <nav className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-24 pb-8">
-//             <div className="max-w-6xl mx-auto">
-//               <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide justify-center">
-//                 {CATEGORIES.map((category) => (
-//                   <button
-//                     key={category.path}
-//                     onClick={() => handleCategoryClick(category.path)}
-//                     className="flex-shrink-0 bg-white/15 backdrop-blur-lg text-white hover:bg-white/25 font-medium px-5 py-2.5 rounded-full transition-all duration-300 text-sm border border-white/20 hover:border-white/40 hover:scale-105"
-//                     aria-label={`Navigate to ${category.name}`}
-//                   >
-//                     {category.name}
-//                   </button>
-//                 ))}
-//                 <button
-//                   className="flex-shrink-0 bg-white/15 backdrop-blur-lg p-2.5 hover:bg-white/25 rounded-full transition-all duration-300 border border-white/20"
-//                   aria-label="More categories"
-//                 >
-//                   <ChevronRight className="w-4 h-4 text-white" />
-//                 </button>
-//               </div>
-//             </div>
-//           </nav>
+// <nav className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-24 pb-8">
+//   <div className="max-w-6xl mx-auto">
+//     <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide justify-center">
+//       {CATEGORIES.map((category) => (
+//         <button
+//           key={category.path}
+//           onClick={() => handleCategoryClick(category.path)}
+//           className="flex-shrink-0 bg-white/15 backdrop-blur-lg text-white hover:bg-white/25 font-medium px-5 py-2.5 rounded-full transition-all duration-300 text-sm border border-white/20 hover:border-white/40 hover:scale-105"
+//           aria-label={`Navigate to ${category.name}`}
+//         >
+//           {category.name}
+//         </button>
+//       ))}
+//       <button
+//         className="flex-shrink-0 bg-white/15 backdrop-blur-lg p-2.5 hover:bg-white/25 rounded-full transition-all duration-300 border border-white/20"
+//         aria-label="More categories"
+//       >
+//         <ChevronRight className="w-4 h-4 text-white" />
+//       </button>
+//     </div>
+//   </div>
+// </nav>
 
 //           {/* Hero Content Card */}
 //           <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20">
@@ -564,6 +564,332 @@
 // </main>
 //     </div>
 //   );
+// // };
+
+// // export default Home;
+
+
+
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import { motion } from 'framer-motion';
+// import { Search, ArrowRight, Sparkles, TrendingUp, Users, Award } from 'lucide-react';
+
+
+
+// // Component imports
+// import TestimonialsSection from './Testimonals';
+// import MentorsSection from './mentorsection/MentorSection';
+// import FindMentor from './FindMentor';
+// import MentorMenteeHero from '../BecomeMentor/MentorMenteeHero';
+// import MentorGrid from './HomeContact';
+// import FAQAccordion from './faqs';
+// import MentoHero from './Scrollvelocity';
+// import HeroSection from './HeroSection ';
+
+// // ============================================================================
+// // CONFIGURATION CONSTANTS
+// // ============================================================================
+// const TYPING_CONFIG = {
+//   texts: ['ML & AI', 'Data Science', 'Web Development', 'Mobile Apps', 'Cloud Computing'],
+//   typingSpeed: 100,
+//   deletingSpeed: 50,
+//   pauseDuration: 1000,
+// };
+
+// const MENTOR_PROFILES = [
+//   'https://i.pravatar.cc/400?img=1',
+//   'https://i.pravatar.cc/400?img=2',
+//   'https://i.pravatar.cc/400?img=3',
+//   'https://i.pravatar.cc/400?img=4',
+//   'https://i.pravatar.cc/400?img=5',
+//   'https://i.pravatar.cc/400?img=6',
+//   'https://i.pravatar.cc/400?img=7',
+// ];
+
+// // const STATS = [
+// //   { icon: Users, value: '500+', label: 'Expert Mentors' },
+// //   { icon: Award, value: '10k+', label: 'Success Stories' },
+// //   { icon: TrendingUp, value: '95%', label: 'Career Growth' },
+// // ];
+
+// const QUICK_LINKS = [
+//   'Product Managers',
+//   'Software Engineers',
+//   'Data Scientists',
+//   'UX Designers',
+//   'Career Coaches'
+// ];
+
+// // ============================================================================
+// // CUSTOM HOOK FOR TYPING ANIMATION
+// // ============================================================================
+// const useTypingAnimation = (texts, config) => {
+//   const [displayedText, setDisplayedText] = useState('');
+//   const [currentIndex, setCurrentIndex] = useState(0);
+//   const [isDeleting, setIsDeleting] = useState(false);
+
+//   useEffect(() => {
+//     const currentText = texts[currentIndex];
+//     const { typingSpeed, deletingSpeed, pauseDuration } = config;
+
+//     const timer = setTimeout(() => {
+//       if (!isDeleting) {
+//         if (displayedText.length < currentText.length) {
+//           setDisplayedText(currentText.slice(0, displayedText.length + 1));
+//         } else {
+//           setTimeout(() => setIsDeleting(true), pauseDuration);
+//         }
+//       } else {
+//         if (displayedText.length > 0) {
+//           setDisplayedText(displayedText.slice(0, -1));
+//         } else {
+//           setIsDeleting(false);
+//           setCurrentIndex((prev) => (prev + 1) % texts.length);
+//         }
+//       }
+//     }, isDeleting ? deletingSpeed : typingSpeed);
+
+//     return () => clearTimeout(timer);
+//   }, [displayedText, isDeleting, currentIndex, texts, config]);
+
+//   return displayedText;
+// };
+
+// // ============================================================================
+// // HERO SECTION COMPONENT
+// // ============================================================================
+// const Home = () => {
+//   const navigate = useNavigate();
+//   const [searchQuery, setSearchQuery] = useState('');
+//   const displayedText = useTypingAnimation(TYPING_CONFIG.texts, TYPING_CONFIG);
+
+//   // ============================================================================
+//   // EVENT HANDLERS
+//   // ============================================================================
+//   const handleFindMentors = (e) => {
+//     e.preventDefault();
+//     if (searchQuery.trim()) {
+//       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+//     } else {
+//       navigate('/search');
+//     }
+//   };
+
+//   const handleQuickLinkClick = (link) => {
+//     navigate(`/search?q=${encodeURIComponent(link)}`);
+//   };
+
+//   const handleSearchInputChange = (e) => {
+//     setSearchQuery(e.target.value);
+//   };
+
+//   const handleKeyPress = (e) => {
+//     if (e.key === 'Enter') {
+//       handleFindMentors(e);
+//     }
+//   };
+
+//   // ============================================================================
+//   // RENDER
+//   // ============================================================================
+//   return (
+//     <>
+//       {/* Google Fonts */}
+//       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+//       <div className="relative min-h-screen overflow-hidden">
+//         {/* Background Image with Overlay */}
+//         <div className="absolute inset-0">
+//           {/* Background Image */}
+//           <div
+//             className="absolute inset-0 bg-cover bg-center bg-no-repeat filter blur-[2px] scale-105"
+//             style={{
+//               backgroundImage:
+//                 "url(https://t4.ftcdn.net/jpg/04/93/39/27/360_F_493392745_TBWKcO8i8dt7YaO7wRQtbk50qjkSHuq4.jpg)",
+//             }}
+//           ></div>
+
+//           {/* Lighter Overlay */}
+//           <div className="absolute inset-0 bg-[#062117]/30 backdrop-blur-sm"></div>
+//         </div>
+
+
+
+//         {/* Decorative Elements */}
+//         <div className="absolute top-20 left-10 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl"></div>
+//         <div className="absolute bottom-20 right-10 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl"></div>
+
+//         {/* Centered Content */}
+//         <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-16">
+
+//           {/* Trust Badge */}
+//           <motion.div
+//             initial={{ opacity: 0, y: -20 }}
+//             animate={{ opacity: 1, y: 0 }}
+//             transition={{ duration: 0.6 }}
+//             className="mb-6"
+//           >
+//             <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20" style={{ fontFamily: "'Inter', sans-serif" }}>
+//               {/* <Sparkles className="w-4 h-4 text-yellow-300" /> */}
+//               <span className="text-white/90 text-xs font-medium"></span>
+//             </div>
+//           </motion.div>
+
+//           {/* Main Heading */}
+//           <motion.div
+//             initial={{ opacity: 0, y: 20 }}
+//             animate={{ opacity: 1, y: 0 }}
+//             transition={{ duration: 0.6, delay: 0.1 }}
+//             className="text-center mb-5"
+//           >
+//             <h1
+//               className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 px-12 pt-8"
+//               style={{ fontFamily: "'Inter', sans-serif" }}
+//             >
+//               Connect with Expert Mentors
+//             </h1>
+
+//             <div
+//               className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#0098cc]"
+//               style={{ fontFamily: "'Inter', sans-serif" }}
+//             >
+//               Accelerate Your Growth in{' '}
+//               <span className="inline-block min-w-[280px] text-left text-[#0098cc]">
+//                 {displayedText || 'Tech'}
+//                 <span className="animate-pulse">|</span>
+//               </span>
+//             </div>
+
+//           </motion.div>
+
+//           {/* Subtitle */}
+//           <motion.p
+//             initial={{ opacity: 0, y: 20 }}
+//             animate={{ opacity: 1, y: 0 }}
+//             transition={{ duration: 0.6, delay: 0.2 }}
+//             className="text-white/80 text-base md:text-lg max-w-2xl text-center mb-8 leading-relaxed"
+//             style={{ fontFamily: "'Inter', sans-serif" }}
+//           >
+//             Get personalized 1-on-1 guidance from industry leaders. Learn new skills, launch projects, and land your dream career.
+//           </motion.p>
+
+//           {/* Search Bar */}
+//           <motion.div
+//             initial={{ opacity: 0, y: 20 }}
+//             animate={{ opacity: 1, y: 0 }}
+//             transition={{ duration: 0.6, delay: 0.3 }}
+//             className="w-full max-w-2xl mb-5"
+//           >
+//             <div className="relative">
+//               <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+//               <input
+//                 type="text"
+//                 placeholder="Search for mentors by skill, role, or company..."
+//                 value={searchQuery}
+//                 onChange={handleSearchInputChange}
+//                 onKeyPress={handleKeyPress}
+//                 className="w-full pl-14 pr-4 py-3.5 rounded-full bg-white/95 backdrop-blur-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-xl text-sm"
+//                 style={{ fontFamily: "'Inter', sans-serif" }}
+//               />
+//               <button
+//                 onClick={handleFindMentors}
+//                 className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#0098cc] text-white px-5 py-2 rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 flex items-center gap-2 shadow-lg text-sm font-semibold"
+//                 style={{ fontFamily: "'Inter', sans-serif" }}
+//               >
+//                 Find Mentors
+//                 <ArrowRight className="w-4 h-4" />
+//               </button>
+//             </div>
+//           </motion.div>
+
+//           {/* Quick Links */}
+//           <motion.div
+//             initial={{ opacity: 0, y: 20 }}
+//             animate={{ opacity: 1, y: 0 }}
+//             transition={{ duration: 0.6, delay: 0.4 }}
+//             className="flex flex-wrap items-center justify-center gap-2 mb-10"
+//           >
+//             <span className="text-white/70 text-xs mr-1" style={{ fontFamily: "'Inter', sans-serif" }}>Popular searches:</span>
+//             {QUICK_LINKS.map((link) => (
+//               <button
+//                 key={link}
+//                 onClick={() => handleQuickLinkClick(link)}
+//                 className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white/90 px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-300 border border-white/10 hover:border-white/30 hover:scale-105"
+//                 style={{ fontFamily: "'Inter', sans-serif" }}
+//               >
+//                 {link}
+//               </button>
+//             ))}
+//           </motion.div>
+
+//           {/* Mentor Photo Grid */}
+//           <motion.div
+//             initial={{ opacity: 0, scale: 0.9 }}
+//             animate={{ opacity: 1, scale: 1 }}
+//             transition={{ duration: 0.6, delay: 0.5 }}
+//             className="relative mb-10"
+//           >
+//             <div className="flex flex-col items-center gap-3">
+//               {/* Top Row - 4 photos */}
+//               <div className="flex gap-3">
+//                 {MENTOR_PROFILES.slice(0, 4).map((profile, index) => (
+//                   <motion.img
+//                     key={`top-${index}`}
+//                     src={profile}
+//                     alt={`Mentor ${index + 1}`}
+//                     className="w-12 h-12 rounded-full border-2 border-white/30 shadow-lg object-cover"
+//                     initial={{ opacity: 0, scale: 0 }}
+//                     animate={{ opacity: 1, scale: 1 }}
+//                     transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
+//                   />
+//                 ))}
+//               </div>
+//               {/* Bottom Row - 3 photos */}
+//               <div className="flex gap-3">
+//                 {MENTOR_PROFILES.slice(4, 7).map((profile, index) => (
+//                   <motion.img
+//                     key={`bottom-${index}`}
+//                     src={profile}
+//                     alt={`Mentor ${index + 5}`}
+//                     className="w-12 h-12 rounded-full border-2 border-white/30 shadow-lg object-cover"
+//                     initial={{ opacity: 0, scale: 0 }}
+//                     animate={{ opacity: 1, scale: 1 }}
+//                     transition={{ duration: 0.3, delay: 1 + index * 0.1 }}
+//                   />
+//                 ))}
+//               </div>
+//             </div>
+//             {/* Glow Effect */}
+//             <div className="absolute inset-0 bg-purple-500/20 blur-2xl rounded-full -z-10"></div>
+//           </motion.div>
+
+//         </div>
+
+
+
+
+//       </div>
+
+//       <main className="relative z-20 -mt-8">
+//         {/* Sections with proper spacing */}
+//         <div className="space-y-0">
+//           {/* <MentorMenteeHero /> */}
+//           <MentorsSection />
+//           <HeroSection />
+//           <TestimonialsSection />
+//           <FAQAccordion />
+//           <MentorGrid />
+
+//           <MentoHero />
+//           <FindMentor />
+//         </div>
+//       </main>
+//     </>
+//   );
 // };
 
 // export default Home;
@@ -576,9 +902,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, ArrowRight, Sparkles, TrendingUp, Users, Award } from 'lucide-react';
-
-
+import { Search, ArrowRight, Sparkles, ChevronRight, TrendingUp, Users, Award } from 'lucide-react';
 
 // Component imports
 import TestimonialsSection from './Testimonals';
@@ -610,11 +934,20 @@ const MENTOR_PROFILES = [
   'https://i.pravatar.cc/400?img=7',
 ];
 
-// const STATS = [
-//   { icon: Users, value: '500+', label: 'Expert Mentors' },
-//   { icon: Award, value: '10k+', label: 'Success Stories' },
-//   { icon: TrendingUp, value: '95%', label: 'Career Growth' },
-// ];
+
+
+
+const CATEGORIES = [
+  { name: 'All Mentors', path: '/Allmentors' },
+  { name: 'Engineering', path: '/engineering' },
+  { name: 'Top Mentors', path: '/top' },
+  { name: 'Startup', path: '/startup' },
+  { name: 'Product', path: '/product' },
+  { name: 'Marketing', path: '/marketing' },
+  { name: 'Leadership', path: '/leadership' },
+  { name: 'AI Mentors', path: '/ai-mentors' }
+];
+
 
 const QUICK_LINKS = [
   'Product Managers',
@@ -623,6 +956,7 @@ const QUICK_LINKS = [
   'UX Designers',
   'Career Coaches'
 ];
+
 
 // ============================================================================
 // CUSTOM HOOK FOR TYPING ANIMATION
@@ -667,16 +1001,24 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const displayedText = useTypingAnimation(TYPING_CONFIG.texts, TYPING_CONFIG);
 
+  // Check if search query is valid (length > 1)
+  const isSearchValid = searchQuery.trim().length > 1;
+
+  const handleCategoryClick = (path) => {
+    navigate(path);
+  };
   // ============================================================================
   // EVENT HANDLERS
   // ============================================================================
   const handleFindMentors = (e) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-    } else {
-      navigate('/search');
+
+    // Only proceed if search query length is greater than 1
+    if (!isSearchValid) {
+      return;
     }
+
+    navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
   };
 
   const handleQuickLinkClick = (link) => {
@@ -688,7 +1030,7 @@ const Home = () => {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && isSearchValid) {
       handleFindMentors(e);
     }
   };
@@ -704,7 +1046,6 @@ const Home = () => {
       <div className="relative min-h-screen overflow-hidden">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
-          {/* Background Image */}
           <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat filter blur-[2px] scale-105"
             style={{
@@ -712,32 +1053,39 @@ const Home = () => {
                 "url(https://t4.ftcdn.net/jpg/04/93/39/27/360_F_493392745_TBWKcO8i8dt7YaO7wRQtbk50qjkSHuq4.jpg)",
             }}
           ></div>
-
-          {/* Lighter Overlay */}
           <div className="absolute inset-0 bg-[#062117]/30 backdrop-blur-sm"></div>
         </div>
-
-
 
         {/* Decorative Elements */}
         <div className="absolute top-20 left-10 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl"></div>
         <div className="absolute bottom-20 right-10 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl"></div>
-
-        {/* Centered Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-16">
-
-          {/* Trust Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="mb-6"
-          >
-            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20" style={{ fontFamily: "'Inter', sans-serif" }}>
-              {/* <Sparkles className="w-4 h-4 text-yellow-300" /> */}
-              <span className="text-white/90 text-xs font-medium"></span>
+        <nav className="container mx-auto px-4 sm:px-6 lg:px-8  md:pt-24 pb-8">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide justify-center">
+              {CATEGORIES.map((category) => (
+                <button
+                  key={category.path}
+                  onClick={() => handleCategoryClick(category.path)}
+                  className="flex-shrink-0 bg-white/15 backdrop-blur-lg text-white hover:bg-white/25 font-medium px-5 py-2.5 rounded-full transition-all duration-300 text-sm border border-white/20 hover:border-white/40 hover:scale-105"
+                  aria-label={`Navigate to ${category.name}`}
+                >
+                  {category.name}
+                </button>
+              ))}
+              <button
+                className="flex-shrink-0 bg-white/15 backdrop-blur-lg p-2.5 hover:bg-white/25 rounded-full transition-all duration-300 border border-white/20"
+                aria-label="More categories"
+              >
+                <ChevronRight className="w-4 h-4 text-white" />
+              </button>
             </div>
-          </motion.div>
+          </div>
+        </nav>
+        {/* Centered Content */}
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen ">
+          {/* Trust Badge */}
+
+
 
           {/* Main Heading */}
           <motion.div
@@ -747,24 +1095,27 @@ const Home = () => {
             className="text-center mb-5"
           >
             <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 px-12 pt-8"
+              className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3  drop-shadow-lg"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
-              Connect with Expert Mentors
+              Connect with{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+                Expert Mentors
+              </span>
             </h1>
 
             <div
-              className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#0098cc]"
+              className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0098cc]"
               style={{ fontFamily: "'Inter', sans-serif" }}
             >
-              Accelerate Your Growth in{' '}
-              <span className="inline-block min-w-[280px] text-left text-[#0098cc]">
-                {displayedText || 'Tech'}
-                <span className="animate-pulse">|</span>
+              Accelerate Your Growth in{" "}
+              <span className="inline-block min-w-[280px] text-left text-transparent bg-clip-text bg-gradient-to-r from-[#00c6ff] to-[#0072ff]">
+                {displayedText || "Tech"}
+                <span className="animate-pulse text-white">|</span>
               </span>
             </div>
-
           </motion.div>
+
 
           {/* Subtitle */}
           <motion.p
@@ -797,13 +1148,23 @@ const Home = () => {
               />
               <button
                 onClick={handleFindMentors}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#0098cc] text-white px-5 py-2 rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 flex items-center gap-2 shadow-lg text-sm font-semibold"
+                disabled={!isSearchValid}
+                className={`absolute right-2 top-1/2 transform -translate-y-1/2 px-5 py-2 rounded-full transition-all duration-300 flex items-center gap-2 shadow-lg text-sm font-semibold ${isSearchValid
+                  ? 'bg-[#0098cc] text-white hover:bg-[#0087b8] cursor-pointer'
+                  : 'bg-gray-400 text-gray-200 cursor-not-allowed opacity-60'
+                  }`}
                 style={{ fontFamily: "'Inter', sans-serif" }}
               >
                 Find Mentors
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
+            {/* Validation message */}
+            {searchQuery.length > 0 && !isSearchValid && (
+              <p className="text-red-400 text-xs mt-2 ml-5" style={{ fontFamily: "'Inter', sans-serif" }}>
+                Please enter at least 2 characters to search
+              </p>
+            )}
           </motion.div>
 
           {/* Quick Links */}
@@ -866,24 +1227,16 @@ const Home = () => {
             {/* Glow Effect */}
             <div className="absolute inset-0 bg-purple-500/20 blur-2xl rounded-full -z-10"></div>
           </motion.div>
-
         </div>
-
-
-
-
       </div>
 
       <main className="relative z-20 -mt-8">
-        {/* Sections with proper spacing */}
         <div className="space-y-0">
-          {/* <MentorMenteeHero /> */}
           <MentorsSection />
           <HeroSection />
           <TestimonialsSection />
           <FAQAccordion />
           <MentorGrid />
-
           <MentoHero />
           <FindMentor />
         </div>
@@ -893,6 +1246,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
-

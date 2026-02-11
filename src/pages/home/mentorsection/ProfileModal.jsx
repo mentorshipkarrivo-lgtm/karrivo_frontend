@@ -70,13 +70,13 @@ const ProfileModal = () => {
         {/* MAIN CONTAINER */}
         <div className="max-w-7xl mx-auto px-6 py-10">
           {/* Back Button */}
-          <button
+          {/* <button
             onClick={handleClose}
             className="mb-6 flex items-center gap-2 text-[#7ee0c1] hover:text-white transition"
           >
             <X className="w-5 h-5" />
             <span>Back to Mentors</span>
-          </button>
+          </button> */}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* LEFT SIDE */}

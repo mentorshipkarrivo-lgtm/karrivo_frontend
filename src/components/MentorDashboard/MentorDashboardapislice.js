@@ -11,7 +11,7 @@ export const userApiSlice = apiSlice.injectEndpoints({
 
         // 🔹 Get mentor session bookings
         getMentorSessionBookings: builder.query({
-            query: (mentorId) => `/mentor/dashboard/mentor/${mentorId}/sessions`,
+            query: (mentorId) => `/sessions/mentor/${mentorId}`,
             providesTags: ["SessionBookings"],
         }),
 

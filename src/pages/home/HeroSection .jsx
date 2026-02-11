@@ -100,8 +100,11 @@
 
 
 import React from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 export default function HeroSection() {
+
+  const navigate = useNavigate()
   const profiles = [
     { id: 1, highlight: 'lime', image: 'https://i.pravatar.cc/300?img=1' },
     { id: 2, highlight: null, image: 'https://i.pravatar.cc/300?img=2' },
@@ -218,12 +221,15 @@ export default function HeroSection() {
           <button 
             className="px-6 py-3 rounded-full border-2 text-white font-medium hover:bg-gray-800 transition-colors"
             style={{ borderColor: '#0098cc' }}
+            onClick={() => navigate("/top")}
+
           >
             Browse mentors
           </button>
           <button 
             className="px-6 py-3 rounded-full font-medium transition-all hover:opacity-90"
             style={{ backgroundColor: '#0098cc', color: '#ffffff' }}
+            onClick={() => navigate("/login")}
           >
             Get started free
           </button>

@@ -267,8 +267,11 @@
 
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function MentoHero() {
+
+  const navigate = useNavigate()
   return (
     <div className="relative min-h-screen w-full overflow-hidden" style={{ backgroundColor: '#062117' }}>
       {/* Decorative curved lines */}
@@ -367,12 +370,14 @@ export default function MentoHero() {
           <button 
             className="px-8 py-4 rounded-full border-2 text-white font-semibold hover:bg-white/10 transition-all duration-300 text-sm sm:text-base"
             style={{ borderColor: '#0098cc' }}
+            onClick={() => navigate("/top")}
           >
             Browse mentors
           </button>
           <button 
             className="px-8 py-4 rounded-full font-semibold transition-all duration-300 hover:opacity-90 text-sm sm:text-base"
             style={{ backgroundColor: '#0098cc', color: 'white' }}
+           onClick={() => navigate("/login")}
           >
             Get started free
           </button>
