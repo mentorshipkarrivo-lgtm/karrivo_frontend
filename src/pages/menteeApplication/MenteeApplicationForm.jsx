@@ -299,7 +299,7 @@ const MenteeApplicationForm = () => {
     const renderInput = (label, name, type = 'text', required = false, placeholder = '', icon = null) => (
         <div className="mb-6">
             <label className="block text-sm font-semibold text-gray-700 mb-2">
-                {label} {required && <span className="text-red-500">*</span>}
+                {label} {required}
             </label>
             <div className="relative">
                 {icon && (
@@ -330,7 +330,7 @@ const MenteeApplicationForm = () => {
     const renderTextarea = (label, name, required = false, placeholder = '', rows = 4) => (
         <div className="mb-6">
             <label className="block text-sm font-semibold text-gray-700 mb-2">
-                {label} {required && <span className="text-red-500">*</span>}
+                {label} {required }
             </label>
             <textarea
                 name={name}
@@ -354,7 +354,7 @@ const MenteeApplicationForm = () => {
     const renderSelect = (label, name, options, required = false, placeholder = "Select an option") => (
         <div className="mb-6">
             <label className="block text-sm font-semibold text-gray-700 mb-2">
-                {label} {required && <span className="text-red-500">*</span>}
+                {label} {required }
             </label>
             <select
                 name={name}
@@ -402,7 +402,7 @@ const MenteeApplicationForm = () => {
                         Application Submitted!
                     </h2>
                     <p className="text-gray-600 mb-4 text-sm">
-                        Your mentee application has been successfully submitted. We'll review it and get back to you soon.
+                        Your mentor application has been successfully submitted. We'll review it and get back to you soon.
                     </p>
 
                     {/* Details */}
@@ -510,7 +510,7 @@ const MenteeApplicationForm = () => {
 
                                 <div>
                                     <h1 className="text-3xl font-bold bg-gradient-to-r from-[#062117] to-[#0098cc] bg-clip-text text-transparent">
-                                        Mentee Application
+                                        Mentor Application
                                     </h1>
                                     <p className="text-gray-600 text-sm mt-1">Join our mentorship program and accelerate your growth</p>
                                 </div>
@@ -530,10 +530,10 @@ const MenteeApplicationForm = () => {
                                             <div className="flex flex-col items-center flex-1">
                                                 <div
                                                     className={`w-14 h-14 rounded-xl flex items-center justify-center font-bold transition-all ${isCompleted
-                                                            ? 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white scale-105'
-                                                            : isCurrent
-                                                                ? 'bg-gradient-to-br from-[#0098cc] to-[#062117] text-white scale-110 ring-4 ring-blue-100'
-                                                                : 'bg-gray-100 text-gray-400'
+                                                        ? 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white scale-105'
+                                                        : isCurrent
+                                                            ? 'bg-gradient-to-br from-[#0098cc] to-[#062117] text-white scale-110 ring-4 ring-blue-100'
+                                                            : 'bg-gray-100 text-gray-400'
                                                         }`}
                                                 >
                                                     {isCompleted ? <Check size={24} strokeWidth={3} /> : <Icon size={24} />}
@@ -750,7 +750,7 @@ const MenteeApplicationForm = () => {
                                         {/* Current Role with Dropdown */}
                                         <div className="md:col-span-2 mb-2">
                                             <label className="block text-sm font-semibold text-gray-700 mb-2">
-                                                Current Role / Job Title <span className="text-red-500">*</span>
+                                                Current Role / Job Title
                                             </label>
                                             <select
                                                 name="currentRole"
@@ -813,7 +813,7 @@ const MenteeApplicationForm = () => {
 
                                         <div className="md:col-span-2">
                                             {renderTextarea(
-                                                'Why do you want to become a mentee?',
+                                                'Why do you want to become a mentor?',
                                                 'whyMentor',
                                                 false,
                                                 'Share your motivations and what you hope to gain from this mentorship experience...',
@@ -844,8 +844,8 @@ const MenteeApplicationForm = () => {
                                     onClick={handleBack}
                                     disabled={currentStep === 1 || isLoading}
                                     className={`px-8 py-3 rounded-xl font-semibold transition-all flex items-center gap-2 ${currentStep === 1 || isLoading
-                                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                                         }`}
                                 >
                                     ← Back

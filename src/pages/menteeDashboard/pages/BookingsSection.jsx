@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Star, Calendar, X, Clock, Check, Crown, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import Cookies from "js-cookie";
+
 import {
-    useGetMentorsQuery,
+    useGetMentorsMutation,
     useGetSlotsQuery,
     useBookFreeTrialMutation,
     useBookPremiumTrialMutation,
@@ -16,15 +18,23 @@ import { useNavigate } from "react-router-dom";
 export default function BookingsSection() {
     const navigate = useNavigate();
 
-    /* ================= API ================= */
-    const { data, isLoading, isError } = useGetMentorsQuery();
+    const [getMentors, { data, isLoading, isError }] = useGetMentorsMutation();
 
-    // ✅ FIX: extract mentors array correctly
+    useEffect(() => {
+        const cookieData = Cookies.get("userData");
+
+        if (cookieData) {
+            const userData = JSON.parse(cookieData);
+
+            console.log(userData.menteeType, "userData")
+
+            getMentors({ menteeType: userData.menteeType });
+        }
+    }, []);
     const mentorsList = Array.isArray(data?.mentors)
         ? data.mentors
         : [];
 
-    /* ================= STATE ================= */
     const [open, setOpen] = useState(false);
     const [selectedMentor, setSelectedMentor] = useState(null);
     const [trialType, setTrialType] = useState("FREE");

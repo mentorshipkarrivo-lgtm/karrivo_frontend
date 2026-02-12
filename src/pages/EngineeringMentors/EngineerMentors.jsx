@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Filter, Star, Briefcase, GraduationCap, Clock, MapPin, TrendingUp, Loader2 } from 'lucide-react';
-import { useGetMentorsQuery } from "./EngineeringMentorapislice";
+import { useGetEngineeringMentorsQuery } from "./EngineeringMentorapislice";
 import { useNavigate } from 'react-router-dom';
 import ProfileModal from '../home/mentorsection/ProfileModal';
 import BookingModal from '../home/mentorsection/BookingModal';
@@ -45,7 +45,7 @@ const EngineerMentors = () => {
         return filters;
     };
 
-    const { data: mentorsData, isLoading, isError, error, refetch } = useGetMentorsQuery(getFilters());
+    const { data: mentorsData, isLoading, isError, error, refetch } = useGetEngineeringMentorsQuery(getFilters());
 
     const mentors = mentorsData?.mentors || [];
 

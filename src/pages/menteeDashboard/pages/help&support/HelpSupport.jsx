@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MessageCircle, Plus, X, Clock, CheckCircle, AlertCircle, Search, Filter, ThumbsUp, ThumbsDown, MessageSquare } from 'lucide-react';
-import { useGetSupportTicketsQuery, useCreateSupportTicketMutation, useUpdateSupportTicketMutation } from"./Helpsupportapislice"
+import { useGetSupportTicketsQuery, useCreateSupportTicketMutation, useUpdateSupportTicketMutation } from "./Helpsupportapislice"
 
 const HelpSupport = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -9,8 +9,13 @@ const HelpSupport = () => {
     const [feedbackModal, setFeedbackModal] = useState({ isOpen: false, ticket: null });
     const [feedbackForm, setFeedbackForm] = useState({ status: '', remarks: '' });
 
-    const username = "Karrivo747IRNR";
+    const userData = localStorage.getItem("userData"); // returns string
 
+    // Parse it to object
+    const user = userData ? JSON.parse(userData) : null;
+
+    // Get username safely
+    const username = user?.username || null;
     const { data: ticketsData, isLoading, isError, error, refetch } = useGetSupportTicketsQuery(username);
     const [createTicket, { isLoading: isCreating }] = useCreateSupportTicketMutation();
     const [updateTicket, { isLoading: isUpdating }] = useUpdateSupportTicketMutation();

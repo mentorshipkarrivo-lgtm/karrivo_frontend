@@ -72,7 +72,7 @@ import { apiSlice } from "../../ApiSliceComponent/karrivoApi";
 export const mentorsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
 
-        getMentors: builder.query({
+        getEngineeringMentors: builder.query({
             query: (filters = {}) => {
                 const params = {};
 
@@ -152,7 +152,7 @@ export const mentorsApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-    useGetMentorsQuery,
+    useGetEngineeringMentorsQuery,
     useGetMentorByIdQuery,
     useBookSessionMutation,
     useGetMentorCategoriesQuery,
