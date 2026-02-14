@@ -1375,7 +1375,7 @@ const MenteeApplicationForm = () => {
                               
                                 <div>
                                     <h1 className="text-xl font-bold text-[#0098cc]">
-                                        Mentee Application
+                                        Mentor application
                                     </h1>
                                     <p className="text-gray-600 text-xs mt-0.5">Join our mentorship program</p>
                                 </div>
