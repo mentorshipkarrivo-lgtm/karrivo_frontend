@@ -1,586 +1,353 @@
-// import React, { useState, useEffect, Suspense } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { motion } from 'framer-motion';
-// import { Search, ChevronRight, Star, Users, Award, TrendingUp } from 'lucide-react';
-// import TestimonialsSection from './Testimonals';
-// import MentorsSection from './mentorsection/MentorSection';
-// import FindMentor from './FindMentor';
+// // import React, { useState, useEffect } from 'react';
+// // import { useNavigate } from 'react-router-dom';
+// // import { motion } from 'framer-motion';
+// // import { Search, ArrowRight, Sparkles, ChevronRight, TrendingUp, Users, Award } from 'lucide-react';
 
-// import MentorMenteeHero from '../BecomeMentor/MentorMenteeHero';
-// import MentorGrid from './HomeContact';
-// import FAQAccordion from './faqs';
-// import MentoHero from './Scrollvelocity';
-// import HeroSection from './HeroSection ';
-// import FloatingLines from "./floatingsection"
+// // // Component imports
+// // import TestimonialsSection from './Testimonals';
+// // import MentorsSection from './mentorsection/MentorSection';
+// // import FindMentor from './FindMentor';
+// // import MentorMenteeHero from '../BecomeMentor/MentorMenteeHero';
+// // import MentorGrid from './HomeContact';
+// // import FAQAccordion from './faqs';
+// // import MentoHero from './Scrollvelocity';
+// // import HeroSection from './HeroSection ';
 
+// // const TYPING_CONFIG = {
+// //   texts: ['ML & AI', 'Data Science', 'Web Development', 'Mobile Apps', 'Cloud Computing'],
+// //   typingSpeed: 100,
+// //   deletingSpeed: 50,
+// //   pauseDuration: 1000,
+// // };
 
-// const Home = () => {
-//   const navigate = useNavigate();
-//   const [displayedText, setDisplayedText] = useState('');
-//   const [currentIndex, setCurrentIndex] = useState(0);
-//   const [isDeleting, setIsDeleting] = useState(false);
-//   const [searchQuery, setSearchQuery] = useState('');
-
-//   const texts = ['ML & AI', 'Data Science', 'Web Development', 'Mobile Apps', 'Cloud Computing'];
-//   const typingSpeed = 100;
-//   const deletingSpeed = 50;
-//   const pauseDuration = 1000;
-
-//   const velocity = 12;
-
-//   // Typing animation effect
-//   useEffect(() => {
-//     const currentText = texts[currentIndex];
-
-//     const timer = setTimeout(() => {
-//       if (!isDeleting) {
-//         if (displayedText.length < currentText.length) {
-//           setDisplayedText(currentText.slice(0, displayedText.length + 1));
-//         } else {
-//           setTimeout(() => setIsDeleting(true), pauseDuration);
-//         }
-//       } else {
-//         if (displayedText.length > 0) {
-//           setDisplayedText(displayedText.slice(0, -1));
-//         } else {
-//           setIsDeleting(false);
-//           setCurrentIndex((prev) => (prev + 1) % texts.length);
-//         }
-//       }
-//     }, isDeleting ? deletingSpeed : typingSpeed);
-
-//     return () => clearTimeout(timer);
-//   }, [displayedText, isDeleting, currentIndex]);
-
-//   // Updated categories with routes
-//   const categories = [
-//     { name: 'All Mentors', path: '/Allmentors' },
-//     { name: 'Engineering Mentors', path: '/engineering' },
-//     { name: 'Top Mentors', path: '/top' },
-//     { name: 'Startup Mentors', path: '/startup' },
-//     { name: 'Product Mentors', path: '/product' },
-//     { name: 'Marketing Mentors', path: '/marketing' },
-//     { name: 'Leadership Mentors', path: '/leadership' },
-//     { name: 'AI Mentors', path: '/ai-mentors' }
-//   ];
-
-//   const quickLinks = [
-//     'Product Managers',
-//     'Career Coaches',
-//     'Software Engineers',
-//     'Leadership Mentors',
-//     'UX Designers',
-//     'Data Scientists',
-//     'Startup Founders'
-//   ];
-
-//   const handleFindMentors = (e) => {
-//     e.preventDefault();
-//     console.log('🔍 Find Mentors clicked with query:', searchQuery);
-
-//     if (searchQuery.trim()) {
-//       const searchUrl = `/search?q=${encodeURIComponent(searchQuery.trim())}`;
-//       navigate(searchUrl);
-//     } else {
-//       navigate('/search');
-//     }
-//   };
-
-//   // Handle quick link clicks
-//   const handleQuickLinkClick = (link) => {
-//     navigate(`/search?q=${encodeURIComponent(link)}`);
-//   };
-
-//   // Handle category navigation
-//   const handleCategoryClick = (path) => {
-//     navigate(path);
-//   };
-
-//   // Handle search input change
-//   const handleSearchInputChange = (e) => {
-//     setSearchQuery(e.target.value);
-//   };
-
-//   // Handle Enter key press in search input
-//   const handleKeyPress = (e) => {
-//     if (e.key === 'Enter') {
-//       handleFindMentors(e);
-//     }
-//   };
-
-//   return (
-//     <div className="outer-container">
-//       {/* Hero Section with Mentorloop Design */}
-//       <div className="min-h-[85vh] sm:min-h-[90vh] md:min-h-screen  relative overflow-hidden pt-12 sm:pt-14 md:pt-16 ">
-
-//         {/* Background Image */}
-//         <div className="absolute inset-0 w-full h-full">
-//           <img
-//             src="https://www.pldmentoring.com/static/images/blog/reverse-mentoring.jpg?ver=1768572751"
-//             alt="Mentoring background"
-//             className="w-full h-full object-cover"
-//           />
-//           {/* Dark overlay */}
-//         </div>
-
-//         {/* Floating Lines Background */}
-//         {/* <div className="absolute inset-0 w-full h-full opacity-40 pointer-events-none">
-//           <FloatingLines 
-//             linesGradient={[
-//               '#4db8a8',  // Teal/Turquoise
-//               '#5ac8d8',  // Light blue
-//               '#0098cc',  // Bright blue
-//               '#4db8a8',  // Teal (repeat for smooth gradient)
-//             ]}
-//             enabledWaves={["top", "middle", "bottom"]}
-//             lineCount={6}
-//             lineDistance={5}
-//             bendRadius={8}
-//             bendStrength={-0.3}
-//             interactive={true}
-//             parallax={true}
-//             parallaxStrength={0.15}
-//             animationSpeed={0.8}
-//             mixBlendMode="screen"
-//           />
-//         </div> */}
-
-//         {/* Top Navigation - RESPONSIVE with added top padding */}
-//         <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8 pt-4 sm:pt-5 md:pt-6 lg:pt-8 pb-2 sm:pb-3 md:pb-4 relative z-10">
-//           <div className="flex items-center justify-start sm:justify-center gap-1 sm:gap-1.5 md:gap-2 overflow-x-auto pb-2 scrollbar-hide">
-//             {categories.map((category, index) => (
-//               <button
-//                 key={index}
-//                 onClick={() => handleCategoryClick(category.path)}
-//                 className="whitespace-nowrap text-white/90 hover:text-white font-medium px-2 sm:px-2.5 md:px-3 py-1 sm:py-1.5 rounded-md md:rounded-lg hover:bg-white/10 transition-all duration-300 text-[10px] sm:text-xs md:text-sm flex-shrink-0"
-//               >
-//                 {category.name}
-//               </button>
-//             ))}
-//             <button className="p-1 sm:p-1.5 hover:bg-white/10 rounded-md md:rounded-lg transition-all duration-300 flex-shrink-0">
-//               <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 text-white" />
-//             </button>
-//           </div>
-//         </div>
-
-//         {/* Hero Content - RESPONSIVE */}
-//         <div className="container mx-auto px-4 sm:px-6 md:px-8 py-4 sm:py-6 md:py-8 lg:py-12 xl:py-16 relative z-10">
-//           <div className="max-w-4xl mx-auto text-center">
-//             {/* Main Heading with Animation - RESPONSIVE */}
-//             <motion.h1
-//               initial={{ opacity: 0, y: 30 }}
-//               animate={{ opacity: 1, y: 0 }}
-//               transition={{ duration: 1, ease: 'easeOut' }}
-//               className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold mb-2 sm:mb-3 md:mb-4 lg:mb-6 leading-tight px-2"
-//             >
-//               <span className="text-white">1-on-1 Mentorship in</span>
-//               <br />
-//               <span className="text-[#4db8a8] inline-block min-h-[1.2em]">
-//                 {displayedText}
-//                 <span className="animate-pulse ml-1">|</span>
-//               </span>
-//             </motion.h1>
-
-//             {/* Subtitle - RESPONSIVE */}
-//             <motion.p
-//               initial={{ opacity: 0, y: 20 }}
-//               animate={{ opacity: 1, y: 0 }}
-//               transition={{ duration: 0.8, delay: 0.2 }}
-//               className="text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-white/80 mb-4 sm:mb-6 md:mb-8 lg:mb-10 px-4"
-//             >
-//               Learn a new skill, launch a project, land your dream career.
-//             </motion.p>
-
-//             {/* Search Bar - RESPONSIVE */}
-//             <motion.div
-//               initial={{ opacity: 0, y: 20 }}
-//               animate={{ opacity: 1, y: 0 }}
-//               transition={{ duration: 0.8, delay: 0.4 }}
-//               className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 max-w-3xl mx-auto mb-4 sm:mb-6 md:mb-8 lg:mb-10 px-4"
-//             >
-//               <div className="relative flex-1 w-full">
-//                 <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-white/60 w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5" />
-//                 <input
-//                   type="text"
-//                   value={searchQuery}
-//                   onChange={handleSearchInputChange}
-//                   onKeyPress={handleKeyPress}
-//                   placeholder="Search by company, skills or role"
-//                   className="w-full bg-white/10 backdrop-blur-md border-2 border-white/30 rounded-full pl-9 sm:pl-10 md:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3 md:py-3.5 text-xs sm:text-sm md:text-base text-white placeholder-white/60 focus:outline-none focus:border-[#4db8a8] transition-all duration-300"
-//                 />
-//               </div>
-//               <button
-//                 type="button"
-//                 onClick={handleFindMentors}
-//                 className="w-full sm:w-auto bg-[#0098cc] text-white font-semibold px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-3.5 rounded-full transition-all duration-300 hover:shadow-lg hover:scale-105 whitespace-nowrap text-xs sm:text-sm md:text-base"
-//               >
-//                 Find mentors
-//               </button>
-//             </motion.div>
-
-//             {/* Quick Links - RESPONSIVE */}
-//             <motion.div
-//               initial={{ opacity: 0, y: 20 }}
-//               animate={{ opacity: 1, y: 0 }}
-//               transition={{ duration: 0.8, delay: 0.6 }}
-//               className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 px-4"
-//             >
-//               {quickLinks.map((link, index) => (
-//                 <button
-//                   key={index}
-//                   onClick={() => handleQuickLinkClick(link)}
-//                   className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white px-2.5 sm:px-3 md:px-4 py-1 sm:py-1.5 md:py-2 rounded-full text-[10px] sm:text-xs md:text-sm font-medium transition-all duration-300 hover:scale-105 border border-white/20"
-//                 >
-//                   {link}
-//                 </button>
-//               ))}
-//             </motion.div>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Stats Section - RESPONSIVE */}
-//       {/* <div className="bg-[#062117] py-6 sm:py-8 md:py-10 lg:py-12 xl:py-16">
-//         <div className="container mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
-//           <div className="max-w-6xl mx-auto">
-//             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
-//               {stats.map((stat, index) => (
-//                 <motion.div
-//                   key={index}
-//                   initial={{ opacity: 0, y: 20 }}
-//                   whileInView={{ opacity: 1, y: 0 }}
-//                   transition={{ duration: 0.5, delay: index * 0.1 }}
-//                   viewport={{ once: true }}
-//                   className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg sm:rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-5 lg:p-6 text-center hover:bg-gradient-to-br hover:from-[#4db8a8]/20 hover:to-[#5ac8d8]/20 hover:border-[#4db8a8]/50 transition-all duration-300 hover:scale-105 group"
-//                 >
-//                   <stat.icon className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 text-[#4db8a8] group-hover:text-[#5ac8d8] mx-auto mb-1.5 sm:mb-2 md:mb-3 transition-colors duration-300" />
-//                   <div className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl font-bold bg-gradient-to-r from-[#4db8a8] to-[#5ac8d8] bg-clip-text text-transparent mb-0.5 sm:mb-1 md:mb-2">{stat.value}</div>
-//                   <div className="text-white/70 text-[10px] sm:text-xs md:text-sm lg:text-base">{stat.label}</div>
-//                 </motion.div>
-//               ))}
-//             </div>
-//           </div>
-//         </div>
-//       </div> */}
-
-//       {/* Components Section - Removed extra spacing for small screens */}
-//       <div className="space-y-0">
-//         <MentorMenteeHero />
-//         <MentorsSection />
-//         <MentorGrid />
-//         <HeroSection />
-//         <TestimonialsSection />
-//         <FAQAccordion />
-//         <MentoHero />
-//         <FindMentor />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Home;
+// // const MENTOR_PROFILES = [
+// //   'https://i.pravatar.cc/400?img=1',
+// //   'https://i.pravatar.cc/400?img=2',
+// //   'https://i.pravatar.cc/400?img=3',
+// //   'https://i.pravatar.cc/400?img=4',
+// //   'https://i.pravatar.cc/400?img=5',
+// //   'https://i.pravatar.cc/400?img=6',
+// //   'https://i.pravatar.cc/400?img=7',
+// // ];
 
 
 
-// import React, { useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { motion } from 'framer-motion';
-// import { Search, ChevronRight } from 'lucide-react';
 
-// // Component imports
-// import TestimonialsSection from './Testimonals';
-// import MentorsSection from './mentorsection/MentorSection';
-// import FindMentor from './FindMentor';
-// import MentorMenteeHero from '../BecomeMentor/MentorMenteeHero';
-// import MentorGrid from './HomeContact';
-// import FAQAccordion from './faqs';
-// import MentoHero from './Scrollvelocity';
-// import HeroSection from './HeroSection ';
+// // const CATEGORIES = [
+// //   { name: 'All Mentors', path: '/Allmentors' },
+// //   { name: 'Engineering', path: '/engineering' },
+// //   { name: 'Top Mentors', path: '/top' },
+// //   { name: 'Startup', path: '/startup' },
+// //   { name: 'Product', path: '/product' },
+// //   { name: 'Marketing', path: '/marketing' },
+// //   { name: 'Leadership', path: '/leadership' },
+// //   { name: 'AI Mentors', path: '/ai-mentors' }
+// // ];
 
-// // ============================================================================
-// // CONFIGURATION CONSTANTS
-// // ============================================================================
 
-// const TYPING_CONFIG = {
-//   texts: ['ML & AI', 'Data Science', 'Web Development', 'Mobile Apps', 'Cloud Computing'],
-//   typingSpeed: 100,
-//   deletingSpeed: 50,
-//   pauseDuration: 1000,
-// };
+// // const QUICK_LINKS = [
+// //   'Product Managers',
+// //   'Software Engineers',
+// //   'Data Scientists',
+// //   'UX Designers',
+// //   'Career Coaches'
+// // ];
 
-// const CATEGORIES = [
-//   { name: 'All Mentors', path: '/Allmentors' },
-//   { name: 'Engineering', path: '/engineering' },
-//   { name: 'Top Mentors', path: '/top' },
-//   { name: 'Startup', path: '/startup' },
-//   { name: 'Product', path: '/product' },
-//   { name: 'Marketing', path: '/marketing' },
-//   { name: 'Leadership', path: '/leadership' },
-//   { name: 'AI Mentors', path: '/ai-mentors' }
-// ];
 
-// const QUICK_LINKS = [
-//   'Product Managers',
-//   'Career Coaches',
-//   'Software Engineers',
-//   'Leadership Mentors',
-//   'UX Designers',
-//   'Data Scientists',
-//   'Startup Founders'
-// ];
+// // // ============================================================================
+// // // CUSTOM HOOK FOR TYPING ANIMATION
+// // // ============================================================================
+// // const useTypingAnimation = (texts, config) => {
+// //   const [displayedText, setDisplayedText] = useState('');
+// //   const [currentIndex, setCurrentIndex] = useState(0);
+// //   const [isDeleting, setIsDeleting] = useState(false);
 
-// // ============================================================================
-// // CUSTOM HOOK FOR TYPING ANIMATION
-// // ============================================================================
+// //   useEffect(() => {
+// //     const currentText = texts[currentIndex];
+// //     const { typingSpeed, deletingSpeed, pauseDuration } = config;
 
-// const useTypingAnimation = (texts, config) => {
-//   const [displayedText, setDisplayedText] = useState('');
-//   const [currentIndex, setCurrentIndex] = useState(0);
-//   const [isDeleting, setIsDeleting] = useState(false);
+// //     const timer = setTimeout(() => {
+// //       if (!isDeleting) {
+// //         if (displayedText.length < currentText.length) {
+// //           setDisplayedText(currentText.slice(0, displayedText.length + 1));
+// //         } else {
+// //           setTimeout(() => setIsDeleting(true), pauseDuration);
+// //         }
+// //       } else {
+// //         if (displayedText.length > 0) {
+// //           setDisplayedText(displayedText.slice(0, -1));
+// //         } else {
+// //           setIsDeleting(false);
+// //           setCurrentIndex((prev) => (prev + 1) % texts.length);
+// //         }
+// //       }
+// //     }, isDeleting ? deletingSpeed : typingSpeed);
 
-//   useEffect(() => {
-//     const currentText = texts[currentIndex];
-//     const { typingSpeed, deletingSpeed, pauseDuration } = config;
+// //     return () => clearTimeout(timer);
+// //   }, [displayedText, isDeleting, currentIndex, texts, config]);
 
-//     const timer = setTimeout(() => {
-//       if (!isDeleting) {
-//         if (displayedText.length < currentText.length) {
-//           setDisplayedText(currentText.slice(0, displayedText.length + 1));
-//         } else {
-//           setTimeout(() => setIsDeleting(true), pauseDuration);
-//         }
-//       } else {
-//         if (displayedText.length > 0) {
-//           setDisplayedText(displayedText.slice(0, -1));
-//         } else {
-//           setIsDeleting(false);
-//           setCurrentIndex((prev) => (prev + 1) % texts.length);
-//         }
-//       }
-//     }, isDeleting ? deletingSpeed : typingSpeed);
+// //   return displayedText;
+// // };
 
-//     return () => clearTimeout(timer);
-//   }, [displayedText, isDeleting, currentIndex, texts, config]);
+// // // ============================================================================
+// // // HERO SECTION COMPONENT
+// // // ============================================================================
+// // const Home = () => {
+// //   const navigate = useNavigate();
+// //   const [searchQuery, setSearchQuery] = useState('');
+// //   const displayedText = useTypingAnimation(TYPING_CONFIG.texts, TYPING_CONFIG);
 
-//   return displayedText;
-// };
+// //   // Check if search query is valid (length > 1)
+// //   const isSearchValid = searchQuery.trim().length > 1;
 
-// // ============================================================================
-// // MAIN HOME COMPONENT
-// // ============================================================================
+// //   const handleCategoryClick = (path) => {
+// //     navigate(path);
+// //   };
+// //   // ============================================================================
+// //   // EVENT HANDLERS
+// //   // ============================================================================
+// //   const handleFindMentors = (e) => {
+// //     e.preventDefault();
 
-// const Home = () => {
-//   const navigate = useNavigate();
-//   const [searchQuery, setSearchQuery] = useState('');
-//   const displayedText = useTypingAnimation(TYPING_CONFIG.texts, TYPING_CONFIG);
+// //     // Only proceed if search query length is greater than 1
+// //     if (!isSearchValid) {
+// //       return;
+// //     }
 
-//   // ============================================================================
-//   // EVENT HANDLERS
-//   // ============================================================================
+// //     navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+// //   };
 
-//   const handleFindMentors = (e) => {
-//     e.preventDefault();
+// //   const handleQuickLinkClick = (link) => {
+// //     navigate(`/search?q=${encodeURIComponent(link)}`);
+// //   };
 
-//     if (searchQuery.trim()) {
-//       const searchUrl = `/search?q=${encodeURIComponent(searchQuery.trim())}`;
-//       navigate(searchUrl);
-//     } else {
-//       navigate('/search');
-//     }
-//   };
+// //   const handleSearchInputChange = (e) => {
+// //     setSearchQuery(e.target.value);
+// //   };
 
-//   const handleQuickLinkClick = (link) => {
-//     navigate(`/search?q=${encodeURIComponent(link)}`);
-//   };
+// //   const handleKeyPress = (e) => {
+// //     if (e.key === 'Enter' && isSearchValid) {
+// //       handleFindMentors(e);
+// //     }
+// //   };
 
-// const handleCategoryClick = (path) => {
-//   navigate(path);
-// };
+// //   // ============================================================================
+// //   // RENDER
+// //   // ============================================================================
+// //   return (
+// //     <>
+// //       {/* Google Fonts */}
+// //       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
-//   const handleSearchInputChange = (e) => {
-//     setSearchQuery(e.target.value);
-//   };
+// //       <div className="relative min-h-screen overflow-hidden">
+// //         {/* Background Image with Overlay */}
+// //         <div className="absolute inset-0">
+// //           <div
+// //             className="absolute inset-0 bg-cover bg-center bg-no-repeat filter blur-[2px] scale-105"
+// //             style={{
+// //               backgroundImage:
+// //                 "url(https://t4.ftcdn.net/jpg/04/93/39/27/360_F_493392745_TBWKcO8i8dt7YaO7wRQtbk50qjkSHuq4.jpg)",
+// //             }}
+// //           ></div>
+// //           <div className="absolute inset-0 bg-[#062117]/30 backdrop-blur-sm"></div>
+// //         </div>
 
-//   const handleKeyPress = (e) => {
-//     if (e.key === 'Enter') {
-//       handleFindMentors(e);
-//     }
-//   };
+// //         {/* Decorative Elements */}
+// //         <div className="absolute top-20 left-10 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl"></div>
+// //         <div className="absolute bottom-20 right-10 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl"></div>
+// //         <nav className="container mx-auto px-4 sm:px-6 lg:px-8  md:pt-24 pb-8">
+// //           <div className="max-w-6xl mx-auto">
+// //             <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide justify-center">
+// //               {CATEGORIES.map((category) => (
+// //                 <button
+// //                   key={category.path}
+// //                   onClick={() => handleCategoryClick(category.path)}
+// //                   className="flex-shrink-0 bg-white/15 backdrop-blur-lg text-white hover:bg-white/25 font-medium px-5 py-2.5 rounded-full transition-all duration-300 text-sm border border-white/20 hover:border-white/40 hover:scale-105"
+// //                   aria-label={`Navigate to ${category.name}`}
+// //                 >
+// //                   {category.name}
+// //                 </button>
+// //               ))}
+// //               <button
+// //                 className="flex-shrink-0 bg-white/15 backdrop-blur-lg p-2.5 hover:bg-white/25 rounded-full transition-all duration-300 border border-white/20"
+// //                 aria-label="More categories"
+// //               >
+// //                 <ChevronRight className="w-4 h-4 text-white" />
+// //               </button>
+// //             </div>
+// //           </div>
+// //         </nav>
+// //         {/* Centered Content */}
+// //         <div className="relative z-10 flex flex-col items-center justify-center min-h-screen ">
+// //           {/* Trust Badge */}
 
-//   // ============================================================================
-//   // RENDER
-//   // ============================================================================
 
-//   return (
-//     <div className="outer-container">
-//       {/* ====================================================================== */}
-//       {/* HERO SECTION - MODERN CARD DESIGN */}
-//       {/* ====================================================================== */}
-//       <section className="relative min-h-screen overflow-hidden">
-//         {/* Background Image with Overlay */}
-//         <div className="absolute inset-0 w-full h-full">
-//           <img
-//             src="https://www.pldmentoring.com/static/images/blog/reverse-mentoring.jpg?ver=1768572751"
-//             alt="Mentoring background"
-//             className="w-full h-full object-cover"
-//             loading="eager"
-//           />
-//           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/50 to-black/70" />
-//         </div>
 
-//         {/* Content Container */}
-//         <div className="relative z-10">
-//           {/* Category Pills Navigation */}
-// <nav className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20 md:pt-24 pb-8">
-//   <div className="max-w-6xl mx-auto">
-//     <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide justify-center">
-//       {CATEGORIES.map((category) => (
-//         <button
-//           key={category.path}
-//           onClick={() => handleCategoryClick(category.path)}
-//           className="flex-shrink-0 bg-white/15 backdrop-blur-lg text-white hover:bg-white/25 font-medium px-5 py-2.5 rounded-full transition-all duration-300 text-sm border border-white/20 hover:border-white/40 hover:scale-105"
-//           aria-label={`Navigate to ${category.name}`}
-//         >
-//           {category.name}
-//         </button>
-//       ))}
-//       <button
-//         className="flex-shrink-0 bg-white/15 backdrop-blur-lg p-2.5 hover:bg-white/25 rounded-full transition-all duration-300 border border-white/20"
-//         aria-label="More categories"
-//       >
-//         <ChevronRight className="w-4 h-4 text-white" />
-//       </button>
-//     </div>
-//   </div>
-// </nav>
+// //           {/* Main Heading */}
+// //           <motion.div
+// //             initial={{ opacity: 0, y: 20 }}
+// //             animate={{ opacity: 1, y: 0 }}
+// //             transition={{ duration: 0.6, delay: 0.1 }}
+// //             className="text-center mb-5"
+// //           >
+// //             <h1
+// //               className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3  drop-shadow-lg"
+// //               style={{ fontFamily: "'Inter', sans-serif" }}
+// //             >
+// //               Connect with{" "}
+// //               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+// //                 Expert Mentors
+// //               </span>
+// //             </h1>
 
-//           {/* Hero Content Card */}
-//           <div className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-20">
-//             <div className="max-w-5xl mx-auto">
-//               <motion.div
-//                 initial={{ opacity: 0, y: 40 }}
-//                 animate={{ opacity: 1, y: 0 }}
-//                 transition={{ duration: 0.8 }}
-//                 className=" rounded-3xl md:rounded-[2.5rem] p-8 md:p-12 lg:p-16  shadow-2xl"
-//               >
-//                 {/* Main Heading */}
-//                 <motion.div
-//                   initial={{ opacity: 0, y: 20 }}
-//                   animate={{ opacity: 1, y: 0 }}
-//                   transition={{ duration: 0.8, delay: 0.2 }}
-//                   className="text-center mb-8 md:mb-10"
-//                 >
-//                   <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4">
-//                     <span className="text-white block mb-2">1-on-1 Mentorship in</span>
-//                     <span className="text-[#4db8a8] inline-block min-h-[1.2em]">
-//                       {displayedText}
-//                       <span className="animate-pulse ml-1">|</span>
-//                     </span>
-//                   </h1>
-//                   <p className="text-lg sm:text-xl md:text-2xl text-white/90 max-w-3xl mx-auto font-light">
-//                     Learn a new skill, launch a project, land your dream career.
-//                   </p>
-//                 </motion.div>
+// //             <div
+// //               className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0098cc]"
+// //               style={{ fontFamily: "'Inter', sans-serif" }}
+// //             >
+// //               Accelerate Your Growth in{" "}
+// //               <span className="inline-block min-w-[280px] text-left text-transparent bg-clip-text bg-gradient-to-r from-[#00c6ff] to-[#0072ff]">
+// //                 {displayedText || "Tech"}
+// //                 <span className="animate-pulse text-white">|</span>
+// //               </span>
+// //             </div>
+// //           </motion.div>
 
-//                 {/* Search Bar Card */}
-//                 <motion.form
-//                   onSubmit={handleFindMentors}
-//                   initial={{ opacity: 0, y: 20 }}
-//                   animate={{ opacity: 1, y: 0 }}
-//                   transition={{ duration: 0.8, delay: 0.4 }}
-//                   className="mb-8"
-//                 >
-//                   <div className="bg-white rounded-2xl shadow-xl p-2 flex flex-col sm:flex-row gap-2">
-//                     <div className="relative flex-1">
-//                       <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
-//                       <input
-//                         type="text"
-//                         value={searchQuery}
-//                         onChange={handleSearchInputChange}
-//                         onKeyPress={handleKeyPress}
-//                         placeholder="Search by company, skills or role"
-//                         className="w-full pl-14 pr-4 py-4 text-base text-gray-900 placeholder-gray-400 focus:outline-none bg-transparent rounded-xl"
-//                         aria-label="Search for mentors"
-//                       />
-//                     </div>
-//                     <button
-//                       type="submit"
-//                       className="bg-[#0098cc] hover:bg-[#0098cc]/90 text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-[1.02] text-base whitespace-nowrap"
-//                       aria-label="Find mentors"
-//                     >
-//                       Find mentors
-//                     </button>
-//                   </div>
-//                 </motion.form>
 
-//                 {/* Quick Links - Improved Layout */}
-//                 <motion.div
-//                   initial={{ opacity: 0, y: 20 }}
-//                   animate={{ opacity: 1, y: 0 }}
-//                   transition={{ duration: 0.8, delay: 0.6 }}
-//                   className="space-y-3"
-//                 >
-//                   <p className="text-white/70 text-sm text-center">Popular searches:</p>
-//                   <div className="flex flex-wrap items-center justify-center gap-2">
-//                     {QUICK_LINKS.map((link) => (
-//                       <button
-//                         key={link}
-//                         onClick={() => handleQuickLinkClick(link)}
-//                         className="bg-white/15 hover:bg-white/25 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105 border border-white/20 hover:border-white/40"
-//                         aria-label={`Search for ${link}`}
-//                       >
-//                         {link}
-//                       </button>
-//                     ))}
-//                   </div>
-//                 </motion.div>
-//               </motion.div>
-//             </div>
-//           </div>
+// //           {/* Subtitle */}
+// //           <motion.p
+// //             initial={{ opacity: 0, y: 20 }}
+// //             animate={{ opacity: 1, y: 0 }}
+// //             transition={{ duration: 0.6, delay: 0.2 }}
+// //             className="text-white/80 text-base md:text-lg max-w-2xl text-center mb-8 leading-relaxed"
+// //             style={{ fontFamily: "'Inter', sans-serif" }}
+// //           >
+// //             Get personalized 1-on-1 guidance from industry leaders. Learn new skills, launch projects, and land your dream career.
+// //           </motion.p>
 
-//           {/* Decorative Elements */}
-//           <div className="absolute top-1/4 left-10 w-20 h-20 bg-[#4db8a8]/20 rounded-full blur-3xl" />
-//           <div className="absolute bottom-1/4 right-10 w-32 h-32 bg-[#5ac8d8]/20 rounded-full blur-3xl" />
-//           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 w-40 h-40 bg-[#0098cc]/10 rounded-full blur-3xl" />
-//         </div>
-//       </section>
+// //           {/* Search Bar */}
+// //           <motion.div
+// //             initial={{ opacity: 0, y: 20 }}
+// //             animate={{ opacity: 1, y: 0 }}
+// //             transition={{ duration: 0.6, delay: 0.3 }}
+// //             className="w-full max-w-2xl mb-5"
+// //           >
+// //             <div className="relative">
+// //               <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+// //               <input
+// //                 type="text"
+// //                 placeholder="Search for mentors by skill, role, or company..."
+// //                 value={searchQuery}
+// //                 onChange={handleSearchInputChange}
+// //                 onKeyPress={handleKeyPress}
+// //                 className="w-full pl-14 pr-4 py-3.5 rounded-full bg-white/95 backdrop-blur-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-xl text-sm"
+// //                 style={{ fontFamily: "'Inter', sans-serif" }}
+// //               />
+// //               <button
+// //                 onClick={handleFindMentors}
+// //                 disabled={!isSearchValid}
+// //                 className={`absolute right-2 top-1/2 transform -translate-y-1/2 px-5 py-2 rounded-full transition-all duration-300 flex items-center gap-2 shadow-lg text-sm font-semibold ${isSearchValid
+// //                   ? 'bg-[#0098cc] text-white hover:bg-[#0087b8] cursor-pointer'
+// //                   : 'bg-gray-400 text-gray-200 cursor-not-allowed opacity-60'
+// //                   }`}
+// //                 style={{ fontFamily: "'Inter', sans-serif" }}
+// //               >
+// //                 Find Mentors
+// //                 <ArrowRight className="w-4 h-4" />
+// //               </button>
+// //             </div>
+// //             {/* Validation message */}
+// //             {searchQuery.length > 0 && !isSearchValid && (
+// //               <p className="text-red-400 text-xs mt-2 ml-5" style={{ fontFamily: "'Inter', sans-serif" }}>
+// //                 Please enter at least 2 characters to search
+// //               </p>
+// //             )}
+// //           </motion.div>
 
-//       {/* ====================================================================== */}
-//       {/* MAIN CONTENT SECTIONS */}
-//       {/* ====================================================================== */}
-// <main className="relative z-20 -mt-8">
-//   {/* Sections with proper spacing */}
-//   <div className="space-y-0">
-//     {/* <MentorMenteeHero /> */}
-//     <MentorsSection />
-//     <HeroSection />
-//     <TestimonialsSection />
-//     <FAQAccordion />
-//     <MentorGrid />
+// //           {/* Quick Links */}
+// //           <motion.div
+// //             initial={{ opacity: 0, y: 20 }}
+// //             animate={{ opacity: 1, y: 0 }}
+// //             transition={{ duration: 0.6, delay: 0.4 }}
+// //             className="flex flex-wrap items-center justify-center gap-2 mb-10"
+// //           >
+// //             <span className="text-white/70 text-xs mr-1" style={{ fontFamily: "'Inter', sans-serif" }}>Popular searches:</span>
+// //             {QUICK_LINKS.map((link) => (
+// //               <button
+// //                 key={link}
+// //                 onClick={() => handleQuickLinkClick(link)}
+// //                 className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white/90 px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-300 border border-white/10 hover:border-white/30 hover:scale-105"
+// //                 style={{ fontFamily: "'Inter', sans-serif" }}
+// //               >
+// //                 {link}
+// //               </button>
+// //             ))}
+// //           </motion.div>
 
-//     <MentoHero />
-//     <FindMentor />
-//   </div>
-// </main>
-//     </div>
-//   );
+// //           {/* Mentor Photo Grid */}
+// //           <motion.div
+// //             initial={{ opacity: 0, scale: 0.9 }}
+// //             animate={{ opacity: 1, scale: 1 }}
+// //             transition={{ duration: 0.6, delay: 0.5 }}
+// //             className="relative mb-10"
+// //           >
+// //             <div className="flex flex-col items-center gap-3">
+// //               {/* Top Row - 4 photos */}
+// //               <div className="flex gap-3">
+// //                 {MENTOR_PROFILES.slice(0, 4).map((profile, index) => (
+// //                   <motion.img
+// //                     key={`top-${index}`}
+// //                     src={profile}
+// //                     alt={`Mentor ${index + 1}`}
+// //                     className="w-12 h-12 rounded-full border-2 border-white/30 shadow-lg object-cover"
+// //                     initial={{ opacity: 0, scale: 0 }}
+// //                     animate={{ opacity: 1, scale: 1 }}
+// //                     transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
+// //                   />
+// //                 ))}
+// //               </div>
+// //               {/* Bottom Row - 3 photos */}
+// //               <div className="flex gap-3">
+// //                 {MENTOR_PROFILES.slice(4, 7).map((profile, index) => (
+// //                   <motion.img
+// //                     key={`bottom-${index}`}
+// //                     src={profile}
+// //                     alt={`Mentor ${index + 5}`}
+// //                     className="w-12 h-12 rounded-full border-2 border-white/30 shadow-lg object-cover"
+// //                     initial={{ opacity: 0, scale: 0 }}
+// //                     animate={{ opacity: 1, scale: 1 }}
+// //                     transition={{ duration: 0.3, delay: 1 + index * 0.1 }}
+// //                   />
+// //                 ))}
+// //               </div>
+// //             </div>
+// //             {/* Glow Effect */}
+// //             <div className="absolute inset-0 bg-purple-500/20 blur-2xl rounded-full -z-10"></div>
+// //           </motion.div>
+// //         </div>
+// //       </div>
+
+// // <main className="relative z-20 -mt-8">
+// //   <div className="space-y-0">
+// //     <MentorsSection />
+// //     <HeroSection />
+// //     <TestimonialsSection />
+// //     <FAQAccordion />
+// //     <MentorGrid />
+// //     <MentoHero />
+// //     <FindMentor />
+// //   </div>
+// // </main>
+// //     </>
+// //   );
 // // };
 
 // // export default Home;
 
+// import React, { useState, useEffect } from "react";
+// import { useNavigate } from "react-router-dom";
+// import { motion } from "framer-motion";
+// import { Search, ArrowRight, ChevronRight } from "lucide-react";
 
-
-
-
-
-// import React, { useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { motion } from 'framer-motion';
-// import { Search, ArrowRight, Sparkles, TrendingUp, Users, Award } from 'lucide-react';
-
-
-
-// // Component imports
 // import TestimonialsSection from './Testimonals';
 // import MentorsSection from './mentorsection/MentorSection';
 // import FindMentor from './FindMentor';
@@ -590,45 +357,45 @@
 // import MentoHero from './Scrollvelocity';
 // import HeroSection from './HeroSection ';
 
-// // ============================================================================
-// // CONFIGURATION CONSTANTS
-// // ============================================================================
+
 // const TYPING_CONFIG = {
-//   texts: ['ML & AI', 'Data Science', 'Web Development', 'Mobile Apps', 'Cloud Computing'],
+//   texts: ["ML & AI", "Data Science", "Web Development", "Mobile Apps", "Cloud Computing"],
 //   typingSpeed: 100,
 //   deletingSpeed: 50,
 //   pauseDuration: 1000,
 // };
 
 // const MENTOR_PROFILES = [
-//   'https://i.pravatar.cc/400?img=1',
-//   'https://i.pravatar.cc/400?img=2',
-//   'https://i.pravatar.cc/400?img=3',
-//   'https://i.pravatar.cc/400?img=4',
-//   'https://i.pravatar.cc/400?img=5',
-//   'https://i.pravatar.cc/400?img=6',
-//   'https://i.pravatar.cc/400?img=7',
+//   "https://i.pravatar.cc/400?img=1",
+//   "https://i.pravatar.cc/400?img=2",
+//   "https://i.pravatar.cc/400?img=3",
+//   "https://i.pravatar.cc/400?img=4",
+//   "https://i.pravatar.cc/400?img=5",
+//   "https://i.pravatar.cc/400?img=6",
+//   "https://i.pravatar.cc/400?img=7",
 // ];
 
-// // const STATS = [
-// //   { icon: Users, value: '500+', label: 'Expert Mentors' },
-// //   { icon: Award, value: '10k+', label: 'Success Stories' },
-// //   { icon: TrendingUp, value: '95%', label: 'Career Growth' },
-// // ];
+// const CATEGORIES = [
+//   { name: "All Mentors", path: "/Allmentors" },
+//   { name: "Engineering", path: "/engineering" },
+//   { name: "Top Mentors", path: "/top" },
+//   { name: "Startup", path: "/startup" },
+//   { name: "Product", path: "/product" },
+//   { name: "Marketing", path: "/marketing" },
+//   { name: "Leadership", path: "/leadership" },
+//   { name: "AI Mentors", path: "/ai-mentors" },
+// ];
 
 // const QUICK_LINKS = [
-//   'Product Managers',
-//   'Software Engineers',
-//   'Data Scientists',
-//   'UX Designers',
-//   'Career Coaches'
+//   "Product Managers",
+//   "Software Engineers",
+//   "Data Scientists",
+//   "UX Designers",
+//   "Career Coaches",
 // ];
 
-// // ============================================================================
-// // CUSTOM HOOK FOR TYPING ANIMATION
-// // ============================================================================
 // const useTypingAnimation = (texts, config) => {
-//   const [displayedText, setDisplayedText] = useState('');
+//   const [displayedText, setDisplayedText] = useState("");
 //   const [currentIndex, setCurrentIndex] = useState(0);
 //   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -659,120 +426,94 @@
 //   return displayedText;
 // };
 
-// // ============================================================================
-// // HERO SECTION COMPONENT
-// // ============================================================================
 // const Home = () => {
 //   const navigate = useNavigate();
-//   const [searchQuery, setSearchQuery] = useState('');
+//   const [searchQuery, setSearchQuery] = useState("");
 //   const displayedText = useTypingAnimation(TYPING_CONFIG.texts, TYPING_CONFIG);
+//   const isSearchValid = searchQuery.trim().length > 1;
 
-//   // ============================================================================
-//   // EVENT HANDLERS
-//   // ============================================================================
+//   const handleCategoryClick = (path) => navigate(path);
+//   const handleQuickLinkClick = (link) => navigate(`/search?q=${encodeURIComponent(link)}`);
 //   const handleFindMentors = (e) => {
 //     e.preventDefault();
-//     if (searchQuery.trim()) {
-//       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
-//     } else {
-//       navigate('/search');
-//     }
+//     if (!isSearchValid) return;
+//     navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
 //   };
 
-//   const handleQuickLinkClick = (link) => {
-//     navigate(`/search?q=${encodeURIComponent(link)}`);
-//   };
-
-//   const handleSearchInputChange = (e) => {
-//     setSearchQuery(e.target.value);
-//   };
-
-//   const handleKeyPress = (e) => {
-//     if (e.key === 'Enter') {
-//       handleFindMentors(e);
-//     }
-//   };
-
-//   // ============================================================================
-//   // RENDER
-//   // ============================================================================
 //   return (
 //     <>
-//       {/* Google Fonts */}
-//       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+//       <link
+//         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+//         rel="stylesheet"
+//       />
 
-//       <div className="relative min-h-screen overflow-hidden">
-//         {/* Background Image with Overlay */}
-//         <div className="absolute inset-0">
-//           {/* Background Image */}
+//       <div className="relative min-h-screen bg-[#062117] overflow-hidden px-4 sm:px-6 lg:px-8">
+//         {/* Background */}
+//         {/* <div className="absolute inset-0">
 //           <div
-//             className="absolute inset-0 bg-cover bg-center bg-no-repeat filter blur-[2px] scale-105"
+//             className="absolute inset-0 bg-cover bg-center blur-sm md:blur-[2px] md:scale-105"
 //             style={{
 //               backgroundImage:
 //                 "url(https://t4.ftcdn.net/jpg/04/93/39/27/360_F_493392745_TBWKcO8i8dt7YaO7wRQtbk50qjkSHuq4.jpg)",
 //             }}
-//           ></div>
+//           />
+//           <div className="absolute inset-0 bg-[#062117]/30 backdrop-blur-sm" />
+//         </div> */}
 
-//           {/* Lighter Overlay */}
-//           <div className="absolute inset-0 bg-[#062117]/30 backdrop-blur-sm"></div>
-//         </div>
+//         {/* Decorative circles */}
+//         <div className="absolute top-20 left-4 w-36 h-36 bg-purple-500/20 rounded-full blur-3xl" />
+//         <div className="absolute bottom-20 right-4 w-48 h-48 bg-pink-500/20 rounded-full blur-3xl" />
 
+//         {/* Category Nav */}
+//         <nav className="relative z-10 pt-24 max-w-5xl mx-auto">
+//           <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide justify-start md:justify-center px-2">
+//             {CATEGORIES.map((cat) => (
+//               <button
+//                 key={cat.path}
+//                 onClick={() => handleCategoryClick(cat.path)}
+//                 className="flex-shrink-0 bg-white/15 backdrop-blur-lg text-white hover:bg-white/25 font-medium px-3 sm:px-4 py-2 rounded-full text-xs sm:text-sm md:text-base border border-white/20 hover:border-white/40 hover:scale-105 transition-all"
+//               >
+//                 {cat.name}
+//               </button>
+//             ))}
+//             <button className="flex-shrink-0 bg-white/15 backdrop-blur-lg p-2 hover:bg-white/25 rounded-full border border-white/20">
+//               <ChevronRight className="w-4 h-4 text-white" />
+//             </button>
+//           </div>
+//         </nav>
 
-
-//         {/* Decorative Elements */}
-//         <div className="absolute top-20 left-10 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl"></div>
-//         <div className="absolute bottom-20 right-10 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl"></div>
-
-//         {/* Centered Content */}
-//         <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-16">
-
-//           {/* Trust Badge */}
-//           <motion.div
-//             initial={{ opacity: 0, y: -20 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.6 }}
-//             className="mb-6"
-//           >
-//             <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full border border-white/20" style={{ fontFamily: "'Inter', sans-serif" }}>
-//               {/* <Sparkles className="w-4 h-4 text-yellow-300" /> */}
-//               <span className="text-white/90 text-xs font-medium"></span>
-//             </div>
-//           </motion.div>
-
-//           {/* Main Heading */}
-//           <motion.div
+//         {/* Hero */}
+//         <div className="relative z-10 flex flex-col items-center justify-center min-h-[calc(100vh-6rem)] text-center">
+//           <motion.h1
 //             initial={{ opacity: 0, y: 20 }}
 //             animate={{ opacity: 1, y: 0 }}
 //             transition={{ duration: 0.6, delay: 0.1 }}
-//             className="text-center mb-5"
+//             className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-5xl font-extrabold text-white mb-3 drop-shadow-lg"
 //           >
-//             <h1
-//               className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 px-12 pt-8"
-//               style={{ fontFamily: "'Inter', sans-serif" }}
-//             >
-//               Connect with Expert Mentors
-//             </h1>
+//             Connect with{" "}
+//             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+//               Expert Mentors
+//             </span>
+//           </motion.h1>
 
-//             <div
-//               className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#0098cc]"
-//               style={{ fontFamily: "'Inter', sans-serif" }}
-//             >
-//               Accelerate Your Growth in{' '}
-//               <span className="inline-block min-w-[280px] text-left text-[#0098cc]">
-//                 {displayedText || 'Tech'}
-//                 <span className="animate-pulse">|</span>
-//               </span>
-//             </div>
-
-//           </motion.div>
-
-//           {/* Subtitle */}
-//           <motion.p
+//           <motion.div
 //             initial={{ opacity: 0, y: 20 }}
 //             animate={{ opacity: 1, y: 0 }}
 //             transition={{ duration: 0.6, delay: 0.2 }}
-//             className="text-white/80 text-base md:text-lg max-w-2xl text-center mb-8 leading-relaxed"
-//             style={{ fontFamily: "'Inter', sans-serif" }}
+//             className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-black text-[#0098cc]"
+//           >
+//             Accelerate Your Growth in{" "}
+//             <span className="inline-block min-w-[140px] sm:min-w-[180px] md:min-w-[220px] text-left text-transparent bg-clip-text bg-gradient-to-r from-[#00c6ff] to-[#0072ff]">
+//               {displayedText || "Tech"}
+//               <span className="animate-pulse text-white">|</span>
+//             </span>
+//           </motion.div>
+
+//           <motion.p
+//             initial={{ opacity: 0, y: 20 }}
+//             animate={{ opacity: 1, y: 0 }}
+//             transition={{ duration: 0.6, delay: 0.3 }}
+//             className="text-white/80 text-sm sm:text-base md:text-base max-w-xl mt-3 mb-5 leading-relaxed"
 //           >
 //             Get personalized 1-on-1 guidance from industry leaders. Learn new skills, launch projects, and land your dream career.
 //           </motion.p>
@@ -781,109 +522,76 @@
 //           <motion.div
 //             initial={{ opacity: 0, y: 20 }}
 //             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.6, delay: 0.3 }}
-//             className="w-full max-w-2xl mb-5"
+//             transition={{ duration: 0.6, delay: 0.4 }}
+//             className="w-full max-w-xl mb-5 px-2"
 //           >
 //             <div className="relative">
-//               <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+//               <Search className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
 //               <input
 //                 type="text"
 //                 placeholder="Search for mentors by skill, role, or company..."
 //                 value={searchQuery}
-//                 onChange={handleSearchInputChange}
-//                 onKeyPress={handleKeyPress}
-//                 className="w-full pl-14 pr-4 py-3.5 rounded-full bg-white/95 backdrop-blur-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-xl text-sm"
-//                 style={{ fontFamily: "'Inter', sans-serif" }}
+//                 onChange={(e) => setSearchQuery(e.target.value)}
+//                 onKeyPress={(e) => e.key === "Enter" && isSearchValid && handleFindMentors(e)}
+//                 className="w-full pl-10 sm:pl-12 pr-4 py-2.5 sm:py-3 rounded-full bg-white/95 backdrop-blur-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-md text-sm sm:text-base transition-all"
 //               />
 //               <button
 //                 onClick={handleFindMentors}
-//                 className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#0098cc] text-white px-5 py-2 rounded-full hover:from-purple-700 hover:to-pink-700 transition-all duration-300 flex items-center gap-2 shadow-lg text-sm font-semibold"
-//                 style={{ fontFamily: "'Inter', sans-serif" }}
+//                 disabled={!isSearchValid}
+//                 className={`absolute right-2 top-1/2 transform -translate-y-1/2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full flex items-center gap-2 text-sm sm:text-base font-semibold shadow-md transition-all ${isSearchValid
+//                   ? "bg-[#0098cc] text-white hover:bg-[#0087b8] cursor-pointer"
+//                   : "bg-gray-400 text-gray-200 cursor-not-allowed opacity-60"
+//                   }`}
 //               >
-//                 Find Mentors
-//                 <ArrowRight className="w-4 h-4" />
+//                 Find Mentors <ArrowRight className="w-4 h-4" />
 //               </button>
 //             </div>
+//             {searchQuery.length > 0 && !isSearchValid && (
+//               <p className="text-red-400 text-xs mt-2 ml-2 sm:ml-3">Please enter at least 2 characters to search</p>
+//             )}
 //           </motion.div>
 
 //           {/* Quick Links */}
-//           <motion.div
-//             initial={{ opacity: 0, y: 20 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.6, delay: 0.4 }}
-//             className="flex flex-wrap items-center justify-center gap-2 mb-10"
-//           >
-//             <span className="text-white/70 text-xs mr-1" style={{ fontFamily: "'Inter', sans-serif" }}>Popular searches:</span>
+//           <motion.div className="flex flex-wrap items-center justify-center gap-2 mb-10 text-xs sm:text-sm">
+//             <span className="text-white/70 mr-1">Popular searches:</span>
 //             {QUICK_LINKS.map((link) => (
 //               <button
 //                 key={link}
 //                 onClick={() => handleQuickLinkClick(link)}
-//                 className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white/90 px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-300 border border-white/10 hover:border-white/30 hover:scale-105"
-//                 style={{ fontFamily: "'Inter', sans-serif" }}
+//                 className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white/90 px-3 sm:px-4 py-1 rounded-full font-medium transition-all border border-white/10 hover:border-white/30 hover:scale-105"
 //               >
 //                 {link}
 //               </button>
 //             ))}
 //           </motion.div>
 
-//           {/* Mentor Photo Grid */}
-//           <motion.div
-//             initial={{ opacity: 0, scale: 0.9 }}
-//             animate={{ opacity: 1, scale: 1 }}
-//             transition={{ duration: 0.6, delay: 0.5 }}
-//             className="relative mb-10"
-//           >
-//             <div className="flex flex-col items-center gap-3">
-//               {/* Top Row - 4 photos */}
-//               <div className="flex gap-3">
-//                 {MENTOR_PROFILES.slice(0, 4).map((profile, index) => (
-//                   <motion.img
-//                     key={`top-${index}`}
-//                     src={profile}
-//                     alt={`Mentor ${index + 1}`}
-//                     className="w-12 h-12 rounded-full border-2 border-white/30 shadow-lg object-cover"
-//                     initial={{ opacity: 0, scale: 0 }}
-//                     animate={{ opacity: 1, scale: 1 }}
-//                     transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
-//                   />
-//                 ))}
-//               </div>
-//               {/* Bottom Row - 3 photos */}
-//               <div className="flex gap-3">
-//                 {MENTOR_PROFILES.slice(4, 7).map((profile, index) => (
-//                   <motion.img
-//                     key={`bottom-${index}`}
-//                     src={profile}
-//                     alt={`Mentor ${index + 5}`}
-//                     className="w-12 h-12 rounded-full border-2 border-white/30 shadow-lg object-cover"
-//                     initial={{ opacity: 0, scale: 0 }}
-//                     animate={{ opacity: 1, scale: 1 }}
-//                     transition={{ duration: 0.3, delay: 1 + index * 0.1 }}
-//                   />
-//                 ))}
-//               </div>
-//             </div>
-//             {/* Glow Effect */}
-//             <div className="absolute inset-0 bg-purple-500/20 blur-2xl rounded-full -z-10"></div>
+//           {/* Mentor Grid */}
+//           <motion.div className="relative mb-10 flex flex-wrap justify-center gap-3">
+//             {MENTOR_PROFILES.map((profile, index) => (
+//               <motion.img
+//                 key={index}
+//                 src={profile}
+//                 alt={`Mentor ${index + 1}`}
+//                 className="w-10 h-10 sm:w-12 sm:h-12 md:w-12 md:h-12 rounded-full border-2 border-white/30 shadow-md object-cover"
+//                 initial={{ opacity: 0, scale: 0 }}
+//                 animate={{ opacity: 1, scale: 1 }}
+//                 transition={{ duration: 0.3, delay: 0.5 + index * 0.1 }}
+//               />
+//             ))}
+//             <div className="absolute inset-0 bg-purple-500/20 blur-2xl rounded-full -z-10" />
 //           </motion.div>
-
 //         </div>
-
-
 
 
 //       </div>
 
 //       <main className="relative z-20 -mt-8">
-//         {/* Sections with proper spacing */}
 //         <div className="space-y-0">
-//           {/* <MentorMenteeHero /> */}
 //           <MentorsSection />
 //           <HeroSection />
 //           <TestimonialsSection />
 //           <FAQAccordion />
 //           <MentorGrid />
-
 //           <MentoHero />
 //           <FindMentor />
 //         </div>
@@ -895,16 +603,11 @@
 // export default Home;
 
 
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Search, ArrowRight, Sparkles, TrendingUp } from "lucide-react";
 
-
-
-
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Search, ArrowRight, Sparkles, ChevronRight, TrendingUp, Users, Award } from 'lucide-react';
-
-// Component imports
 import TestimonialsSection from './Testimonals';
 import MentorsSection from './mentorsection/MentorSection';
 import FindMentor from './FindMentor';
@@ -914,55 +617,43 @@ import FAQAccordion from './faqs';
 import MentoHero from './Scrollvelocity';
 import HeroSection from './HeroSection ';
 
-// ============================================================================
-// CONFIGURATION CONSTANTS
-// ============================================================================
 const TYPING_CONFIG = {
-  texts: ['ML & AI', 'Data Science', 'Web Development', 'Mobile Apps', 'Cloud Computing'],
+  texts: ["ML & AI", "Data Science", "Web Development", "Mobile Apps", "Cloud Computing"],
   typingSpeed: 100,
   deletingSpeed: 50,
   pauseDuration: 1000,
 };
 
 const MENTOR_PROFILES = [
-  'https://i.pravatar.cc/400?img=1',
-  'https://i.pravatar.cc/400?img=2',
-  'https://i.pravatar.cc/400?img=3',
-  'https://i.pravatar.cc/400?img=4',
-  'https://i.pravatar.cc/400?img=5',
-  'https://i.pravatar.cc/400?img=6',
-  'https://i.pravatar.cc/400?img=7',
+  "https://i.pravatar.cc/400?img=1",
+  "https://i.pravatar.cc/400?img=2",
+  "https://i.pravatar.cc/400?img=3",
+  "https://i.pravatar.cc/400?img=4",
+  "https://i.pravatar.cc/400?img=5",
+  "https://i.pravatar.cc/400?img=6",
 ];
-
-
-
 
 const CATEGORIES = [
-  { name: 'All Mentors', path: '/Allmentors' },
-  { name: 'Engineering', path: '/engineering' },
-  { name: 'Top Mentors', path: '/top' },
-  { name: 'Startup', path: '/startup' },
-  { name: 'Product', path: '/product' },
-  { name: 'Marketing', path: '/marketing' },
-  { name: 'Leadership', path: '/leadership' },
-  { name: 'AI Mentors', path: '/ai-mentors' }
+  { name: "All Mentors", path: "/Allmentors" },
+  { name: "Engineering", path: "/engineering" },
+  { name: "Top Mentors", path: "/top" },
+  { name: "Startup", path: "/startup" },
+  { name: "Product", path: "/product" },
+  { name: "Marketing", path: "/marketing" },
+  { name: "Leadership", path: "/leadership" },
+  { name: "AI Mentors", path: "/ai-mentors" },
 ];
-
 
 const QUICK_LINKS = [
-  'Product Managers',
-  'Software Engineers',
-  'Data Scientists',
-  'UX Designers',
-  'Career Coaches'
+  "Product Managers",
+  "Software Engineers",
+  "Data Scientists",
+  "UX Designers",
+  "Career Coaches",
 ];
 
-
-// ============================================================================
-// CUSTOM HOOK FOR TYPING ANIMATION
-// ============================================================================
 const useTypingAnimation = (texts, config) => {
-  const [displayedText, setDisplayedText] = useState('');
+  const [displayedText, setDisplayedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -993,254 +684,207 @@ const useTypingAnimation = (texts, config) => {
   return displayedText;
 };
 
-// ============================================================================
-// HERO SECTION COMPONENT
-// ============================================================================
 const Home = () => {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const displayedText = useTypingAnimation(TYPING_CONFIG.texts, TYPING_CONFIG);
-
-  // Check if search query is valid (length > 1)
   const isSearchValid = searchQuery.trim().length > 1;
 
-  const handleCategoryClick = (path) => {
-    navigate(path);
-  };
-  // ============================================================================
-  // EVENT HANDLERS
-  // ============================================================================
+  const handleCategoryClick = (path) => navigate(path);
+  const handleQuickLinkClick = (link) => navigate(`/search?q=${encodeURIComponent(link)}`);
+
   const handleFindMentors = (e) => {
     e.preventDefault();
-
-    // Only proceed if search query length is greater than 1
-    if (!isSearchValid) {
-      return;
-    }
-
+    if (!isSearchValid) return;
     navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
   };
 
-  const handleQuickLinkClick = (link) => {
-    navigate(`/search?q=${encodeURIComponent(link)}`);
-  };
-
-  const handleSearchInputChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter' && isSearchValid) {
-      handleFindMentors(e);
-    }
-  };
-
-  // ============================================================================
-  // RENDER
-  // ============================================================================
   return (
     <>
-      {/* Google Fonts */}
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
-      <div className="relative min-h-screen overflow-hidden">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0">
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat filter blur-[2px] scale-105"
-            style={{
-              backgroundImage:
-                "url(https://t4.ftcdn.net/jpg/04/93/39/27/360_F_493392745_TBWKcO8i8dt7YaO7wRQtbk50qjkSHuq4.jpg)",
-            }}
-          ></div>
-          <div className="absolute inset-0 bg-[#062117]/30 backdrop-blur-sm"></div>
+      {/* Hero Section */}
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+        {/* Decorative Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+          <div className="absolute top-40 right-10 w-72 h-72 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+          <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-4000"></div>
         </div>
 
-        {/* Decorative Elements */}
-        <div className="absolute top-20 left-10 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl"></div>
-        <nav className="container mx-auto px-4 sm:px-6 lg:px-8  md:pt-24 pb-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide justify-center">
-              {CATEGORIES.map((category) => (
+        <div className="relative max-w-7xl mx-auto px-4 pt-12 sm:px-6 lg:px-8">
+          {/* Category Navigation */}
+          <div className="pt-8 pb-6">
+            <div className="flex flex-wrap justify-center gap-3">
+              {CATEGORIES.map((cat) => (
                 <button
-                  key={category.path}
-                  onClick={() => handleCategoryClick(category.path)}
-                  className="flex-shrink-0 bg-white/15 backdrop-blur-lg text-white hover:bg-white/25 font-medium px-5 py-2.5 rounded-full transition-all duration-300 text-sm border border-white/20 hover:border-white/40 hover:scale-105"
-                  aria-label={`Navigate to ${category.name}`}
+                  key={cat.name}
+                  className="px-4 py-2 rounded-full text-sm font-medium bg-white text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200 shadow-sm hover:shadow border border-gray-200 hover:border-indigo-300"
                 >
-                  {category.name}
+                  {cat.name}
                 </button>
               ))}
-              <button
-                className="flex-shrink-0 bg-white/15 backdrop-blur-lg p-2.5 hover:bg-white/25 rounded-full transition-all duration-300 border border-white/20"
-                aria-label="More categories"
-              >
-                <ChevronRight className="w-4 h-4 text-white" />
-              </button>
             </div>
           </div>
-        </nav>
-        {/* Centered Content */}
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-screen ">
-          {/* Trust Badge */}
+
+          {/* Main Content */}
+          <div className="pt-12 pb-20 text-center">
 
 
-
-          {/* Main Heading */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-center mb-5"
-          >
-            <h1
-              className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white mb-3  drop-shadow-lg"
-              style={{ fontFamily: "'Inter', sans-serif" }}
+            {/* Heading */}
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight"
             >
               Connect with{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
+              <span className="bg-[#0098cc] bg-clip-text text-transparent">
                 Expert Mentors
               </span>
-            </h1>
+            </motion.h1>
 
-            <div
-              className="text-3xl md:text-4xl lg:text-5xl font-black text-[#0098cc]"
-              style={{ fontFamily: "'Inter', sans-serif" }}
+            {/* Typing Animation Subtitle */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-xl sm:text-2xl text-gray-600 mb-4"
             >
               Accelerate Your Growth in{" "}
-              <span className="inline-block min-w-[280px] text-left text-transparent bg-clip-text bg-gradient-to-r from-[#00c6ff] to-[#0072ff]">
+              <span className="font-semibold text-[#0098cc]">
                 {displayedText || "Tech"}
-                <span className="animate-pulse text-white">|</span>
+                <span className="animate-pulse">|</span>
               </span>
-            </div>
-          </motion.div>
+            </motion.div>
 
+            {/* Description */}
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-base sm:text-lg text-gray-600 mb-10 max-w-2xl mx-auto"
+            >
+              Get personalized 1-on-1 guidance from industry leaders. Learn new skills, launch projects, and land your dream career.
+            </motion.p>
 
-          {/* Subtitle */}
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-white/80 text-base md:text-lg max-w-2xl text-center mb-8 leading-relaxed"
-            style={{ fontFamily: "'Inter', sans-serif" }}
-          >
-            Get personalized 1-on-1 guidance from industry leaders. Learn new skills, launch projects, and land your dream career.
-          </motion.p>
+            {/* Search Bar */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="max-w-2xl mx-auto mb-6"
+            >
+              <form onSubmit={handleFindMentors} className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search for mentors by skill, role, or industry..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-12 pr-32 py-4 rounded-full bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg text-base transition-all border-none"
+                />
+                <button
+                  type="submit"
+                  disabled={!isSearchValid}
+                  className={`absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2.5 rounded-full font-medium transition-all duration-200 flex items-center gap-2 ${isSearchValid
+                    ? "bg-[#0098cc] text-white hover:bg-[#0098cc] shadow-md border-none"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed border-none"
+                    }`}
+                >
+                  Find Mentors
+                  <ArrowRight className="w-4 h-4" />
+                </button>
 
-          {/* Search Bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="w-full max-w-2xl mb-5"
-          >
-            <div className="relative">
-              <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search for mentors by skill, role, or company..."
-                value={searchQuery}
-                onChange={handleSearchInputChange}
-                onKeyPress={handleKeyPress}
-                className="w-full pl-14 pr-4 py-3.5 rounded-full bg-white/95 backdrop-blur-md text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-400 shadow-xl text-sm"
-                style={{ fontFamily: "'Inter', sans-serif" }}
-              />
-              <button
-                onClick={handleFindMentors}
-                disabled={!isSearchValid}
-                className={`absolute right-2 top-1/2 transform -translate-y-1/2 px-5 py-2 rounded-full transition-all duration-300 flex items-center gap-2 shadow-lg text-sm font-semibold ${isSearchValid
-                  ? 'bg-[#0098cc] text-white hover:bg-[#0087b8] cursor-pointer'
-                  : 'bg-gray-400 text-gray-200 cursor-not-allowed opacity-60'
-                  }`}
-                style={{ fontFamily: "'Inter', sans-serif" }}
-              >
-                Find Mentors
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-            {/* Validation message */}
-            {searchQuery.length > 0 && !isSearchValid && (
-              <p className="text-red-400 text-xs mt-2 ml-5" style={{ fontFamily: "'Inter', sans-serif" }}>
-                Please enter at least 2 characters to search
-              </p>
-            )}
-          </motion.div>
+              </form>
 
-          {/* Quick Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="flex flex-wrap items-center justify-center gap-2 mb-10"
-          >
-            <span className="text-white/70 text-xs mr-1" style={{ fontFamily: "'Inter', sans-serif" }}>Popular searches:</span>
-            {QUICK_LINKS.map((link) => (
-              <button
-                key={link}
-                onClick={() => handleQuickLinkClick(link)}
-                className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white/90 px-4 py-1.5 rounded-full text-xs font-medium transition-all duration-300 border border-white/10 hover:border-white/30 hover:scale-105"
-                style={{ fontFamily: "'Inter', sans-serif" }}
-              >
-                {link}
-              </button>
-            ))}
-          </motion.div>
+              {searchQuery.length > 0 && !isSearchValid && (
+                <p className="text-sm text-red-500 mt-2 text-left ml-4">
+                  Please enter at least 2 characters to search
+                </p>
+              )}
+            </motion.div>
 
-          {/* Mentor Photo Grid */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            className="relative mb-10"
-          >
-            <div className="flex flex-col items-center gap-3">
-              {/* Top Row - 4 photos */}
-              <div className="flex gap-3">
-                {MENTOR_PROFILES.slice(0, 4).map((profile, index) => (
+            {/* Quick Links */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              className="flex flex-wrap items-center justify-center gap-2 mb-12"
+            >
+              <span className="text-sm text-gray-500">Popular searches:</span>
+              {QUICK_LINKS.map((link) => (
+                <button
+                  key={link}
+                  onClick={() => handleQuickLinkClick(link)}
+                  className="px-3 py-1.5 rounded-full text-sm font-medium bg-white text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200 shadow-sm border border-gray-200 hover:border-indigo-300"
+                >
+                  {link}
+                </button>
+              ))}
+            </motion.div>
+
+            {/* Mentor Avatars */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.6 }}
+              className="flex justify-center items-center gap-3"
+            >
+              <div className="flex -space-x-3">
+                {MENTOR_PROFILES.map((profile, index) => (
                   <motion.img
-                    key={`top-${index}`}
+                    key={index}
                     src={profile}
                     alt={`Mentor ${index + 1}`}
-                    className="w-12 h-12 rounded-full border-2 border-white/30 shadow-lg object-cover"
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
+                    transition={{ delay: 0.7 + index * 0.1 }}
+                    className="w-12 h-12 rounded-full border-4 border-white shadow-lg hover:scale-110 transition-transform cursor-pointer"
                   />
                 ))}
               </div>
-              {/* Bottom Row - 3 photos */}
-              <div className="flex gap-3">
-                {MENTOR_PROFILES.slice(4, 7).map((profile, index) => (
-                  <motion.img
-                    key={`bottom-${index}`}
-                    src={profile}
-                    alt={`Mentor ${index + 5}`}
-                    className="w-12 h-12 rounded-full border-2 border-white/30 shadow-lg object-cover"
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.3, delay: 1 + index * 0.1 }}
-                  />
-                ))}
+              <div className="ml-4 text-left">
+                <p className="text-sm font-semibold text-gray-900">10,000+ Expert Mentors</p>
+                <p className="text-xs text-gray-500">Ready to guide you</p>
               </div>
-            </div>
-            {/* Glow Effect */}
-            <div className="absolute inset-0 bg-purple-500/20 blur-2xl rounded-full -z-10"></div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
       </div>
 
-      <main className="relative z-20 -mt-8">
-        <div className="space-y-0">
-          <MentorsSection />
-          <HeroSection />
-          <TestimonialsSection />
-          <FAQAccordion />
-          <MentorGrid />
-          <MentoHero />
-          <FindMentor />
-        </div>
-      </main>
+      {/* Other Sections */}
+      <HeroSection />
+
+      <MentorsSection />
+      <TestimonialsSection />
+      <FAQAccordion />
+      <MentorGrid />
+      <MentoHero />
+            <FindMentor />
+
+
+      <style jsx>{`
+        @keyframes blob {
+          0%, 100% { transform: translate(0, 0) scale(1); }
+          33% { transform: translate(30px, -50px) scale(1.1); }
+          66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+        .animate-blob {
+          animation: blob 7s infinite;
+        }
+        .animation-delay-2000 {
+          animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+          animation-delay: 4s;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </>
   );
 };
