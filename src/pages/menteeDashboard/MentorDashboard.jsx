@@ -179,7 +179,6 @@ const Header = ({ isSidebarOpen, setIsSidebarOpen, userData, isProfileDropdownOp
                 {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
             <div className="flex items-center gap-2">
-                <div className="w-8 h-8 bg-[#062117] rounded-lg flex items-center justify-center text-white font-bold">M</div>
                 <h1 className="text-xl font-bold">MenteeHub</h1>
             </div>
         </div>
