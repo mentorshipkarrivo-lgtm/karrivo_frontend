@@ -311,7 +311,7 @@ const MentorHelpSupport = () => {
                     <div className="bg-[#062117] border border-[#0098cc]/30 rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-[#0098cc]/30 sticky top-0 bg-[#062117] rounded-t-lg z-10">
                             <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white flex items-center gap-2">
-                                <MessageCircle className="text-[#0098cc] w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" />
+                                {/* <MessageCircle className="text-[#0098cc] w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" /> */}
                                 Raise a Support Query
                             </h2>
                             <button onClick={() => setIsModalOpen(false)} disabled={isCreating} className="text-gray-400 hover:text-gray-300 transition-colors disabled:opacity-50 p-1">

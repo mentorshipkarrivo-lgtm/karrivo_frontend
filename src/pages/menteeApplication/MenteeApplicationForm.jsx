@@ -1091,6 +1091,9 @@ const MenteeApplicationForm = () => {
                 newErrors.areasOfInterest = 'Please select at least one area of interest';
             }
 
+            if (!formData.mentoringStyle || !formData.mentoringStyle.trim()) {
+                newErrors.mentoringStyle = 'Please select a mentoring style';
+            }
             if (formData.linkedinUrl && !formData.linkedinUrl.startsWith('https://www.linkedin.com/')) {
                 newErrors.linkedinUrl = 'LinkedIn URL must start with https://www.linkedin.com/';
             }
@@ -1209,9 +1212,8 @@ const MenteeApplicationForm = () => {
                     onChange={handleInputChange}
                     placeholder={placeholder}
                     disabled={isLoading}
-                    className={`w-full ${icon ? 'pl-9' : 'pl-3'} pr-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0098cc] focus:border-[#0098cc] transition-all disabled:bg-gray-50 disabled:cursor-not-allowed ${
-                        errors[name] ? 'border-red-400 bg-red-50' : 'border-gray-300 hover:border-gray-400'
-                    }`}
+                    className={`w-full ${icon ? 'pl-9' : 'pl-3'} pr-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0098cc] focus:border-[#0098cc] transition-all disabled:bg-gray-50 disabled:cursor-not-allowed ${errors[name] ? 'border-red-400 bg-red-50' : 'border-gray-300 hover:border-gray-400'
+                        }`}
                 />
             </div>
             {errors[name] && (
@@ -1235,9 +1237,8 @@ const MenteeApplicationForm = () => {
                 placeholder={placeholder}
                 rows={rows}
                 disabled={isLoading}
-                className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0098cc] focus:border-[#0098cc] transition-all disabled:bg-gray-50 disabled:cursor-not-allowed resize-none ${
-                    errors[name] ? 'border-red-400 bg-red-50' : 'border-gray-300 hover:border-gray-400'
-                }`}
+                className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0098cc] focus:border-[#0098cc] transition-all disabled:bg-gray-50 disabled:cursor-not-allowed resize-none ${errors[name] ? 'border-red-400 bg-red-50' : 'border-gray-300 hover:border-gray-400'
+                    }`}
             />
             {errors[name] && (
                 <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
@@ -1258,9 +1259,8 @@ const MenteeApplicationForm = () => {
                 value={formData[name] || ''}
                 onChange={handleInputChange}
                 disabled={isLoading}
-                className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0098cc] focus:border-[#0098cc] transition-all disabled:bg-gray-50 disabled:cursor-not-allowed appearance-none bg-white ${
-                    errors[name] ? 'border-red-400 bg-red-50' : 'border-gray-300 hover:border-gray-400'
-                }`}
+                className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0098cc] focus:border-[#0098cc] transition-all disabled:bg-gray-50 disabled:cursor-not-allowed appearance-none bg-white ${errors[name] ? 'border-red-400 bg-red-50' : 'border-gray-300 hover:border-gray-400'
+                    }`}
             >
                 <option value="">{placeholder}</option>
                 {options.map(opt => (
@@ -1372,7 +1372,7 @@ const MenteeApplicationForm = () => {
                         {/* Header */}
                         <div className="bg-white rounded-xl p-5 mb-5 shadow-sm border border-gray-100">
                             <div className="flex items-center gap-2.5">
-                              
+
                                 <div>
                                     <h1 className="text-xl font-bold text-[#0098cc]">
                                         Mentor application
@@ -1394,13 +1394,12 @@ const MenteeApplicationForm = () => {
                                         <React.Fragment key={step.number}>
                                             <div className="flex flex-col items-center flex-1">
                                                 <div
-                                                    className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold transition-all ${
-                                                        isCompleted
-                                                            ? 'bg-[#0098cc] text-white'
-                                                            : isCurrent
+                                                    className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold transition-all ${isCompleted
+                                                        ? 'bg-[#0098cc] text-white'
+                                                        : isCurrent
                                                             ? 'bg-[#0098cc] text-white ring-2 ring-blue-200'
                                                             : 'bg-gray-100 text-gray-400'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     {isCompleted ? <Check size={18} strokeWidth={3} /> : <Icon size={18} />}
                                                 </div>
@@ -1550,8 +1549,8 @@ const MenteeApplicationForm = () => {
                                         {renderSelect(
                                             'Preferred Mentoring Style',
                                             'mentoringStyle',
-                                            ['One-on-One', 'Group Sessions', 'Online', 'In-Person', 'Any'],
-                                            false,
+                                            [ "1-on-1", "Group Session", "Webinar"],
+                                            true,
                                             'Select your preferred style'
                                         )}
 
@@ -1616,9 +1615,8 @@ const MenteeApplicationForm = () => {
                                                 value={formData.currentRole || ''}
                                                 onChange={handleInputChange}
                                                 disabled={isLoading}
-                                                className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0098cc] focus:border-[#0098cc] transition-all disabled:bg-gray-50 disabled:cursor-not-allowed appearance-none bg-white ${
-                                                    errors.currentRole ? 'border-red-400 bg-red-50' : 'border-gray-300 hover:border-gray-400'
-                                                }`}
+                                                className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0098cc] focus:border-[#0098cc] transition-all disabled:bg-gray-50 disabled:cursor-not-allowed appearance-none bg-white ${errors.currentRole ? 'border-red-400 bg-red-50' : 'border-gray-300 hover:border-gray-400'
+                                                    }`}
                                             >
                                                 <option value="">Select your current role</option>
                                                 {suggestedRoles.map(role => (
@@ -1641,9 +1639,8 @@ const MenteeApplicationForm = () => {
                                                         onChange={handleInputChange}
                                                         placeholder="Please specify your role"
                                                         disabled={isLoading}
-                                                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0098cc] focus:border-[#0098cc] transition-all disabled:bg-gray-50 disabled:cursor-not-allowed ${
-                                                            errors.customRole ? 'border-red-400 bg-red-50' : 'border-gray-300 hover:border-gray-400'
-                                                        }`}
+                                                        className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0098cc] focus:border-[#0098cc] transition-all disabled:bg-gray-50 disabled:cursor-not-allowed ${errors.customRole ? 'border-red-400 bg-red-50' : 'border-gray-300 hover:border-gray-400'
+                                                            }`}
                                                     />
                                                     {errors.customRole && (
                                                         <p className="text-red-500 text-xs mt-1 flex items-center gap-1">
@@ -1703,11 +1700,10 @@ const MenteeApplicationForm = () => {
                                 <button
                                     onClick={handleBack}
                                     disabled={currentStep === 1 || isLoading}
-                                    className={`px-5 py-2 rounded-lg font-semibold text-sm transition-all flex items-center gap-1.5 ${
-                                        currentStep === 1 || isLoading
-                                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
+                                    className={`px-5 py-2 rounded-lg font-semibold text-sm transition-all flex items-center gap-1.5 ${currentStep === 1 || isLoading
+                                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                                        }`}
                                 >
                                     ← Back
                                 </button>

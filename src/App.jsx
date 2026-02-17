@@ -44,6 +44,13 @@ import MenteePayment from "./pages/menteeDashboard/pages/payment/MenteePayment"
 import UpcomingMeetings from "./pages/menteeDashboard/pages/upcomingMeteings/UpcomingMeetings";
 import MentorSessionBookings from "./components/MentorDashboard/sessions/MentorSessionBookings";
 import MentorHelpSupport from "./components/MentorDashboard/MentorSupport/MentorHelpSupport";
+import MentorshipHome from "./pages/LongTermMentorship/MentorshipHome/MentorshipHome";
+import Ltmhomesessions from "./pages/LongTermMentorship/ltmbooksessions/Ltmhomesessions";
+import Ltmupcommingsessions from "./pages/LongTermMentorship/ltmupcommingsessions/Ltmupcommingsessions";
+import Ltmsessionhistory from "./pages/LongTermMentorship/ltmsessionhistory/Ltmsessionhistory";
+import Subscriptionplan from "./pages/LongTermMentorship/subscriptionplan/Subscriptionplan";
+import Mymentor from "./pages/LongTermMentorship/mymentor/Mymentor";
+import Mymessages from "./pages/LongTermMentorship/messages/Mymessages";
 
 
 const getAuthToken = () => {
@@ -186,11 +193,14 @@ const App = () => {
                         <Route path="yourmeetings" element={<UpcomingMeetings />} />
                         <Route path="support" element={<HelpSupport />} />
                         <Route path="sessions" element={<BookingsSection />} />
-                        <Route path="subscription" element={<div className="p-6 text-center text-gray-600">Subscription Plan - Coming Soon</div>} />
-                        <Route path="achievements" element={<div className="p-6 text-center text-gray-600">Achievements - Coming Soon</div>} />
-                        <Route path="linkedin" element={<div className="p-6 text-center text-gray-600">Profile Builder - Coming Soon</div>} />
-                        <Route path="referrals" element={<div className="p-6 text-center text-gray-600">Refer & Earn - Coming Soon</div>} />
-                        <Route path="gift" element={<div className="p-6 text-center text-gray-600">Gift a Session - Coming Soon</div>} />
+                        {/* Mentorship Routes */}
+                        <Route path="/mentee/ltm-home" element={< MentorshipHome />} />
+                        <Route path="/mentee/book-session" element={< Ltmhomesessions />} />
+                        <Route path="/mentee/upcoming" element={<Ltmupcommingsessions />} />
+                        <Route path="/mentee/sessions" element={<Ltmsessionhistory />} />
+                        <Route path="/mentee/subscription" element={<Subscriptionplan />} />
+                        <Route path="/mentee/mentor" element={<Mymentor />} />
+                        <Route path="/mentee/messages" element={<Mymessages />} />
                     </Route>
                 </Route>
 

@@ -166,7 +166,7 @@ const HelpSupport = () => {
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
                         <div className="w-full sm:w-auto">
                             <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 flex items-center gap-2">
-                                <MessageCircle className="text-[#ea580c] w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" />
+                                {/* <MessageCircle className="text-[#ea580c] w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8" /> */}
                                 Help & Support
                             </h1>
                             <p className="text-gray-500 mt-1 text-xs sm:text-sm md:text-base">
@@ -382,7 +382,7 @@ const HelpSupport = () => {
                     <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
                         <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 sticky top-0 bg-white rounded-t-lg z-10">
                             <h2 className="text-lg sm:text-xl font-bold text-gray-900 flex items-center gap-2">
-                                <MessageCircle className="text-[#ea580c] w-5 h-5 sm:w-6 sm:h-6" />
+                                {/* <MessageCircle className="text-[#ea580c] w-5 h-5 sm:w-6 sm:h-6" /> */}
                                 Raise a Support Query
                             </h2>
                             <button onClick={() => setIsModalOpen(false)} disabled={isCreating} className="text-gray-400 hover:text-gray-600 transition-colors disabled:opacity-50 p-1">
