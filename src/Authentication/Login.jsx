@@ -438,7 +438,7 @@ const LoginPage = () => {
             )}
 
             <h2 className="text-xl lg:text-2xl font-bold text-[#062117] text-center mb-4">
-              {isForgotPassword ? 'Forgot Password' : (isLogin ? 'Log in' : 'Create Account')}
+              {isForgotPassword ? 'Forgot Password' : (isLogin ? 'Log in' : 'Create Account As Mentor')}
             </h2>
 
             {/* Role toggle */}
