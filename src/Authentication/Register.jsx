@@ -622,11 +622,11 @@ const RegisterPage = () => {
                         '--tw-ring-color': '#094e54'
                       }}
                     ></div>
-                    Creating Account...
+                    Create Account As Mentor
                   </>
                 ) : (
                   <>
-                    Create Account
+                    Create Account As Mentor
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
                   </>
                 )}

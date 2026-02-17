@@ -1405,690 +1405,1226 @@
 
 
 
+// import React, { useState, useEffect, useRef } from 'react';
+// import { useGetMentorDetailsMutation, useUpdateMentorDetailsMutation } from "./mentorprofileapi";
+// import { showToast } from '../../../utils/Toastprovider';
+
+// const GlobalStyles = () => (
+//   <style>{`
+//     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+//     * {
+//       margin: 0;
+//       padding: 0;
+//       box-sizing: border-box;
+//       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+//     }
+
+//     body {
+//       background: #FAFBFC;
+//       overflow-x: hidden;
+//     }
+
+//     .custom-input {
+//       transition: all 0.2s ease;
+//       border: 1px solid #D1D5DB;
+//       background: #FFFFFF;
+//       font-size: 14px;
+//       color: #111827;
+//     }
+    
+//     .custom-input:focus {
+//       outline: none;
+//       border-color: #2563EB;
+//       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+//     }
+
+//     .custom-input::placeholder {
+//       color: #9CA3AF;
+//     }
+
+//     @media (max-width: 640px) {
+//       .custom-input {
+//         font-size: 16px;
+//       }
+//     }
+//   `}</style>
+// );
+
+// const MentorProfile = () => {
+//   const [isEditing, setIsEditing] = useState(false);
+//   const [formData, setFormData] = useState({
+//     availability: [
+//       { day: 'Monday', slots: [] },
+//       { day: 'Tuesday', slots: [] },
+//       { day: 'Wednesday', slots: [] },
+//       { day: 'Thursday', slots: [] },
+//       { day: 'Friday', slots: [] },
+//       { day: 'Saturday', slots: [] },
+//       { day: 'Sunday', slots: [] }
+//     ]
+//   });
+//   const [email, setEmail] = useState("");
+//   const [files, setFiles] = useState({
+//     resume: null,
+//     portfolio: null,
+//     video: null
+//   });
+
+//   const resumeInputRef = useRef(null);
+//   const portfolioInputRef = useRef(null);
+//   const videoInputRef = useRef(null);
+
+//   const [getMentorDetails, { data, isLoading, error }] = useGetMentorDetailsMutation();
+//   const [updateMentorDetails, { isLoading: isUpdating }] = useUpdateMentorDetailsMutation();
+
+//   useEffect(() => {
+//     const userData = localStorage.getItem("userData");
+//     if (userData) {
+//       try {
+//         const parsedData = JSON.parse(userData);
+//         setEmail(parsedData.email);
+//       } catch (error) {
+//         console.error("Error parsing user data:", error);
+//       }
+//     }
+//   }, []);
+
+//   useEffect(() => {
+//     if (email) {
+//       getMentorDetails(email);
+//     }
+//   }, [email, getMentorDetails]);
+
+//   useEffect(() => {
+//     if (data?.data) {
+//       const initialAvailability = [
+//         { day: 'Monday', slots: [] },
+//         { day: 'Tuesday', slots: [] },
+//         { day: 'Wednesday', slots: [] },
+//         { day: 'Thursday', slots: [] },
+//         { day: 'Friday', slots: [] },
+//         { day: 'Saturday', slots: [] },
+//         { day: 'Sunday', slots: [] }
+//       ];
+
+//       const mergedAvailability = initialAvailability.map(defaultDay => {
+//         const existingDay = data.data.availability?.find(d => d.day === defaultDay.day);
+//         return existingDay ? { ...defaultDay, slots: existingDay.slots || [] } : defaultDay;
+//       });
+
+//       setFormData({
+//         ...data.data,
+//         availability: mergedAvailability
+//       });
+//     }
+//   }, [data]);
+
+//   const handleChange = (field, value) => {
+//     setFormData(prev => ({ ...prev, [field]: value }));
+//   };
+
+//   const handleFileChange = (field, event) => {
+//     const file = event.target.files[0];
+//     if (file) {
+//       setFiles(prev => ({ ...prev, [field]: file }));
+//     }
+//   };
+
+//   const handleRemoveFile = (field) => {
+//     setFiles(prev => ({ ...prev, [field]: null }));
+//     if (field === 'resume' && resumeInputRef.current) resumeInputRef.current.value = '';
+//     if (field === 'portfolio' && portfolioInputRef.current) portfolioInputRef.current.value = '';
+//     if (field === 'video' && videoInputRef.current) videoInputRef.current.value = '';
+//   };
+
+//   const handleSave = async () => {
+//     try {
+//       const dataToSend = { email, ...formData };
+//       await updateMentorDetails(dataToSend).unwrap();
+//       await getMentorDetails(email);
+      
+//       setIsEditing(false);
+//       setFiles({ resume: null, portfolio: null, video: null });
+//       showToast('Profile updated successfully!', 'success');
+//     } catch (err) {
+//       console.error('Failed to update profile:', err);
+//       showToast('Failed to update profile. Please try again.');
+//     }
+//   };
+
+//   const handleCancel = () => {
+//     if (data?.data) {
+//       const initialAvailability = [
+//         { day: 'Monday', slots: [] },
+//         { day: 'Tuesday', slots: [] },
+//         { day: 'Wednesday', slots: [] },
+//         { day: 'Thursday', slots: [] },
+//         { day: 'Friday', slots: [] },
+//         { day: 'Saturday', slots: [] },
+//         { day: 'Sunday', slots: [] }
+//       ];
+
+//       const mergedAvailability = initialAvailability.map(defaultDay => {
+//         const existingDay = data.data.availability?.find(d => d.day === defaultDay.day);
+//         return existingDay ? { ...defaultDay, slots: existingDay.slots || [] } : defaultDay;
+//       });
+
+//       setFormData({
+//         ...data.data,
+//         availability: mergedAvailability
+//       });
+//     }
+//     setFiles({ resume: null, portfolio: null, video: null });
+//     setIsEditing(false);
+//   };
+
+//   const handleAddTimeSlot = (dayIndex) => {
+//     const newSlot = { startTime: '09:00', endTime: '10:00', isBooked: false };
+//     setFormData(prev => {
+//       const newAvailability = [...prev.availability];
+//       newAvailability[dayIndex] = {
+//         ...newAvailability[dayIndex],
+//         slots: [...(newAvailability[dayIndex].slots || []), newSlot]
+//       };
+//       return { ...prev, availability: newAvailability };
+//     });
+//   };
+
+//   const handleRemoveTimeSlot = (dayIndex, slotIndex) => {
+//     setFormData(prev => {
+//       const newAvailability = [...prev.availability];
+//       newAvailability[dayIndex] = {
+//         ...newAvailability[dayIndex],
+//         slots: newAvailability[dayIndex].slots.filter((_, i) => i !== slotIndex)
+//       };
+//       return { ...prev, availability: newAvailability };
+//     });
+//   };
+
+//   const handleUpdateTimeSlot = (dayIndex, slotIndex, field, value) => {
+//     setFormData(prev => {
+//       const newAvailability = [...prev.availability];
+//       newAvailability[dayIndex].slots[slotIndex][field] = value;
+//       return { ...prev, availability: newAvailability };
+//     });
+//   };
+
+//   if (isLoading) {
+//     return (
+//       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+//         <GlobalStyles />
+//         <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+//           <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+//           <p className="text-lg font-medium text-gray-900">Loading profile...</p>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   if (error || !formData || Object.keys(formData).length === 0) {
+//     return (
+//       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+//         <GlobalStyles />
+//         <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+//           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+//             <span className="text-red-600 text-2xl">✕</span>
+//           </div>
+//           <h2 className="text-xl font-semibold text-gray-900 mb-2">Failed to load profile</h2>
+//           <p className="text-gray-600">Please try refreshing the page</p>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="min-h-screen bg-gray-50">
+//       <GlobalStyles />
+      
+//       {/* Header */}
+//       <div className="bg-white border-b border-gray-200">
+//         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+//           <div className="flex items-center justify-between">
+//             <div>
+//               <h1 className="text-2xl font-semibold text-gray-900">Mentor Profile</h1>
+//               <p className="text-sm text-gray-600 mt-1">Manage your professional information</p>
+//             </div>
+            
+//             {!isEditing ? (
+//               <button
+//                 onClick={() => setIsEditing(true)}
+//                 className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+//               >
+//                 Edit Profile
+//               </button>
+//             ) : (
+//               <div className="flex gap-3">
+//                 <button
+//                   onClick={handleSave}
+//                   disabled={isUpdating}
+//                   className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+//                 >
+//                   {isUpdating ? 'Saving...' : 'Save Changes'}
+//                 </button>
+//                 <button
+//                   onClick={handleCancel}
+//                   disabled={isUpdating}
+//                   className="bg-gray-200 text-gray-700 px-5 py-2.5 rounded-lg font-medium hover:bg-gray-300 transition-colors disabled:opacity-50"
+//                 >
+//                   Cancel
+//                 </button>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+
+//       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+//         {/* Basic Information */}
+//         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+//           <h2 className="text-lg font-semibold text-gray-900 mb-6">Basic Information</h2>
+          
+//           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+//               {isEditing ? (
+//                 <input
+//                   type="text"
+//                   value={formData.fullName || ''}
+//                   onChange={(e) => handleChange('fullName', e.target.value)}
+//                   className="custom-input w-full px-4 py-2.5 rounded-lg"
+//                   placeholder="Enter your full name"
+//                 />
+//               ) : (
+//                 <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.fullName || 'Not provided'}</p>
+//               )}
+//             </div>
+
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+//               <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.email || 'Not provided'}</p>
+//             </div>
+
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+//               {isEditing ? (
+//                 <input
+//                   type="text"
+//                   value={formData.phone || ''}
+//                   onChange={(e) => handleChange('phone', e.target.value)}
+//                   className="custom-input w-full px-4 py-2.5 rounded-lg"
+//                   placeholder="Enter phone number"
+//                 />
+//               ) : (
+//                 <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.phone || 'Not provided'}</p>
+//               )}
+//             </div>
+
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+//               {isEditing ? (
+//                 <input
+//                   type="text"
+//                   value={formData.location || ''}
+//                   onChange={(e) => handleChange('location', e.target.value)}
+//                   className="custom-input w-full px-4 py-2.5 rounded-lg"
+//                   placeholder="City, Country"
+//                 />
+//               ) : (
+//                 <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.location || 'Not provided'}</p>
+//               )}
+//             </div>
+
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-2">Current Role</label>
+//               {isEditing ? (
+//                 <input
+//                   type="text"
+//                   value={formData.currentRole || ''}
+//                   onChange={(e) => handleChange('currentRole', e.target.value)}
+//                   className="custom-input w-full px-4 py-2.5 rounded-lg"
+//                   placeholder="e.g., Senior Software Engineer"
+//                 />
+//               ) : (
+//                 <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.currentRole || 'Not provided'}</p>
+//               )}
+//             </div>
+
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-2">Company</label>
+//               {isEditing ? (
+//                 <input
+//                   type="text"
+//                   value={formData.companyName || ''}
+//                   onChange={(e) => handleChange('companyName', e.target.value)}
+//                   className="custom-input w-full px-4 py-2.5 rounded-lg"
+//                   placeholder="Company name"
+//                 />
+//               ) : (
+//                 <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.companyName || 'Not provided'}</p>
+//               )}
+//             </div>
+
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-2">Years of Experience</label>
+//               {isEditing ? (
+//                 <input
+//                   type="number"
+//                   value={formData.yearsOfExperience || ''}
+//                   onChange={(e) => handleChange('yearsOfExperience', e.target.value)}
+//                   className="custom-input w-full px-4 py-2.5 rounded-lg"
+//                   placeholder="0"
+//                 />
+//               ) : (
+//                 <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.yearsOfExperience || 'Not provided'}</p>
+//               )}
+//             </div>
+
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-2">Hourly Rate ($)</label>
+//               {isEditing ? (
+//                 <input
+//                   type="number"
+//                   value={formData.hourlyRate || ''}
+//                   onChange={(e) => handleChange('hourlyRate', e.target.value)}
+//                   className="custom-input w-full px-4 py-2.5 rounded-lg"
+//                   placeholder="0"
+//                 />
+//               ) : (
+//                 <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">${formData.hourlyRate || 'Not provided'}</p>
+//               )}
+//             </div>
+
+//             <div className="md:col-span-2">
+//               <label className="block text-sm font-medium text-gray-700 mb-2">LinkedIn URL</label>
+//               {isEditing ? (
+//                 <input
+//                   type="text"
+//                   value={formData.linkedinUrl || ''}
+//                   onChange={(e) => handleChange('linkedinUrl', e.target.value)}
+//                   className="custom-input w-full px-4 py-2.5 rounded-lg"
+//                   placeholder="https://linkedin.com/in/username"
+//                 />
+//               ) : (
+//                 <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.linkedinUrl || 'Not provided'}</p>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* Professional Background */}
+//         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+//           <h2 className="text-lg font-semibold text-gray-900 mb-6">Professional Background</h2>
+          
+//           <div className="space-y-6">
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-2">About Me</label>
+//               {isEditing ? (
+//                 <textarea
+//                   value={formData.whyMentor || ''}
+//                   onChange={(e) => handleChange('whyMentor', e.target.value)}
+//                   className="custom-input w-full px-4 py-3 rounded-lg resize-none"
+//                   rows={4}
+//                   placeholder="Share your professional journey and what motivates you to mentor..."
+//                 />
+//               ) : (
+//                 <p className="text-gray-700 px-4 py-3 bg-gray-50 rounded-lg leading-relaxed">{formData.whyMentor || 'Not provided'}</p>
+//               )}
+//             </div>
+
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-2">Core Skills</label>
+//               {isEditing ? (
+//                 <textarea
+//                   value={formData.currentSkills || ''}
+//                   onChange={(e) => handleChange('currentSkills', e.target.value)}
+//                   className="custom-input w-full px-4 py-3 rounded-lg resize-none"
+//                   rows={3}
+//                   placeholder="e.g., React, Node.js, Python, Machine Learning (comma-separated)"
+//                 />
+//               ) : (
+//                 <div className="px-4 py-3 bg-gray-50 rounded-lg">
+//                   {formData.currentSkills ? (
+//                     <div className="flex flex-wrap gap-2">
+//                       {formData.currentSkills.split(',').map((skill, idx) => (
+//                         <span key={idx} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm font-medium">
+//                           {skill.trim()}
+//                         </span>
+//                       ))}
+//                     </div>
+//                   ) : (
+//                     <p className="text-gray-500">Not provided</p>
+//                   )}
+//                 </div>
+//               )}
+//             </div>
+
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-2">Areas of Expertise</label>
+//               {isEditing ? (
+//                 <textarea
+//                   value={formData.areasOfInterest || ''}
+//                   onChange={(e) => handleChange('areasOfInterest', e.target.value)}
+//                   className="custom-input w-full px-4 py-3 rounded-lg resize-none"
+//                   rows={3}
+//                   placeholder="e.g., Web Development, Cloud Architecture, DevOps (comma-separated)"
+//                 />
+//               ) : (
+//                 <div className="px-4 py-3 bg-gray-50 rounded-lg">
+//                   {formData.areasOfInterest ? (
+//                     <div className="flex flex-wrap gap-2">
+//                       {formData.areasOfInterest.split(',').map((area, idx) => (
+//                         <span key={idx} className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md text-sm font-medium">
+//                           {area.trim()}
+//                         </span>
+//                       ))}
+//                     </div>
+//                   ) : (
+//                     <p className="text-gray-500">Not provided</p>
+//                   )}
+//                 </div>
+//               )}
+//             </div>
+
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-2">Mentoring Style</label>
+//               {isEditing ? (
+//                 <input
+//                   type="text"
+//                   value={formData.mentoringStyle || ''}
+//                   onChange={(e) => handleChange('mentoringStyle', e.target.value)}
+//                   className="custom-input w-full px-4 py-2.5 rounded-lg"
+//                   placeholder="e.g., Collaborative, Goal-oriented, Hands-on"
+//                 />
+//               ) : (
+//                 <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.mentoringStyle || 'Not provided'}</p>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* Education */}
+//         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+//           <h2 className="text-lg font-semibold text-gray-900 mb-6">Education</h2>
+          
+//           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-2">Highest Degree</label>
+//               {isEditing ? (
+//                 <input
+//                   type="text"
+//                   value={formData.highestDegree || ''}
+//                   onChange={(e) => handleChange('highestDegree', e.target.value)}
+//                   className="custom-input w-full px-4 py-2.5 rounded-lg"
+//                   placeholder="e.g., Bachelor's, Master's, PhD"
+//                 />
+//               ) : (
+//                 <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.highestDegree || 'Not provided'}</p>
+//               )}
+//             </div>
+
+//             <div>
+//               <label className="block text-sm font-medium text-gray-700 mb-2">Field of Study</label>
+//               {isEditing ? (
+//                 <input
+//                   type="text"
+//                   value={formData.fieldOfStudy || ''}
+//                   onChange={(e) => handleChange('fieldOfStudy', e.target.value)}
+//                   className="custom-input w-full px-4 py-2.5 rounded-lg"
+//                   placeholder="e.g., Computer Science"
+//                 />
+//               ) : (
+//                 <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.fieldOfStudy || 'Not provided'}</p>
+//               )}
+//             </div>
+
+//             <div className="md:col-span-2">
+//               <label className="block text-sm font-medium text-gray-700 mb-2">Institution</label>
+//               {isEditing ? (
+//                 <input
+//                   type="text"
+//                   value={formData.schoolName || ''}
+//                   onChange={(e) => handleChange('schoolName', e.target.value)}
+//                   className="custom-input w-full px-4 py-2.5 rounded-lg"
+//                   placeholder="University or College name"
+//                 />
+//               ) : (
+//                 <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.schoolName || 'Not provided'}</p>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* Documents */}
+//         <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
+//           <h2 className="text-lg font-semibold text-gray-900 mb-6">Documents & Media</h2>
+          
+//           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+//             {[
+//               { field: 'resume', title: 'Resume / CV', accept: '.pdf,.doc,.docx', ref: resumeInputRef },
+//               { field: 'portfolio', title: 'Portfolio', accept: '.pdf,.ppt,.pptx', ref: portfolioInputRef },
+//               { field: 'video', title: 'Video Introduction', accept: 'video/*', ref: videoInputRef }
+//             ].map((doc) => (
+//               <div key={doc.field}>
+//                 <label className="block text-sm font-medium text-gray-700 mb-2">{doc.title}</label>
+                
+//                 {isEditing ? (
+//                   <div className="space-y-3">
+//                     <input
+//                       ref={doc.ref}
+//                       type="file"
+//                       accept={doc.accept}
+//                       onChange={(e) => handleFileChange(doc.field, e)}
+//                       className="hidden"
+//                       id={`file-${doc.field}`}
+//                     />
+                    
+//                     {!files[doc.field] ? (
+//                       <label
+//                         htmlFor={`file-${doc.field}`}
+//                         className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors"
+//                       >
+//                         <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+//                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+//                         </svg>
+//                         <span className="text-sm text-gray-600">Upload file</span>
+//                       </label>
+//                     ) : (
+//                       <div className="flex items-center justify-between bg-blue-50 p-3 rounded-lg border border-blue-200">
+//                         <span className="text-sm text-gray-700 truncate flex-1">{files[doc.field].name}</span>
+//                         <button
+//                           onClick={() => handleRemoveFile(doc.field)}
+//                           className="ml-2 text-red-600 hover:text-red-700"
+//                         >
+//                           Remove
+//                         </button>
+//                       </div>
+//                     )}
+                    
+//                     <input
+//                       type="text"
+//                       value={formData[`${doc.field}Link`] || ''}
+//                       onChange={(e) => handleChange(`${doc.field}Link`, e.target.value)}
+//                       placeholder="Or paste a link"
+//                       className="custom-input w-full px-4 py-2.5 rounded-lg"
+//                     />
+//                   </div>
+//                 ) : (
+//                   <div className="px-4 py-2.5 bg-gray-50 rounded-lg">
+//                     {formData[`${doc.field}Link`] ? (
+//                       <a 
+//                         href={formData[`${doc.field}Link`]} 
+//                         target="_blank" 
+//                         rel="noopener noreferrer" 
+//                         className="text-blue-600 hover:underline text-sm"
+//                       >
+//                         View {doc.title}
+//                       </a>
+//                     ) : (
+//                       <p className="text-gray-500 text-sm">Not uploaded</p>
+//                     )}
+//                   </div>
+//                 )}
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+
+//         {/* Weekly Availability */}
+//         <div className="bg-white rounded-lg shadow-sm p-6">
+//           <h2 className="text-lg font-semibold text-gray-900 mb-2">Weekly Availability</h2>
+//           <p className="text-sm text-gray-600 mb-6">Set your available time slots for mentoring sessions</p>
+          
+//           <div className="space-y-4">
+//             {formData.availability && formData.availability.map((day, dayIdx) => (
+//               <div key={day.day} className="border border-gray-200 rounded-lg p-4">
+//                 <div className="flex items-center justify-between mb-3">
+//                   <h3 className="font-medium text-gray-900">{day.day}</h3>
+//                   {isEditing && (
+//                     <button
+//                       onClick={() => handleAddTimeSlot(dayIdx)}
+//                       className="bg-blue-600 text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+//                     >
+//                       + Add Slot
+//                     </button>
+//                   )}
+//                 </div>
+                
+//                 {!day.slots || day.slots.length === 0 ? (
+//                   <p className="text-sm text-gray-500">No time slots available</p>
+//                 ) : (
+//                   <div className="space-y-2">
+//                     {day.slots.map((slot, slotIdx) => (
+//                       <div key={slotIdx} className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg">
+//                         {isEditing ? (
+//                           <>
+//                             <input
+//                               type="time"
+//                               value={slot.startTime}
+//                               onChange={(e) => handleUpdateTimeSlot(dayIdx, slotIdx, 'startTime', e.target.value)}
+//                               className="custom-input px-3 py-2 rounded-md text-sm"
+//                             />
+//                             <span className="text-gray-500">to</span>
+//                             <input
+//                               type="time"
+//                               value={slot.endTime}
+//                               onChange={(e) => handleUpdateTimeSlot(dayIdx, slotIdx, 'endTime', e.target.value)}
+//                               className="custom-input px-3 py-2 rounded-md text-sm"
+//                             />
+//                             <button
+//                               onClick={() => handleRemoveTimeSlot(dayIdx, slotIdx)}
+//                               className="ml-auto text-red-600 hover:text-red-700 text-sm font-medium"
+//                             >
+//                               Remove
+//                             </button>
+//                           </>
+//                         ) : (
+//                           <span className="text-sm font-medium text-gray-700">
+//                             {slot.startTime} - {slot.endTime}
+//                           </span>
+//                         )}
+//                       </div>
+//                     ))}
+//                   </div>
+//                 )}
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default MentorProfile;
+
+
 import React, { useState, useEffect, useRef } from 'react';
+import {
+  MapPin, Star, Heart, Share2,
+  ChevronDown, ChevronUp, Pencil, Save, X, Plus,
+  Trash2, Loader2, Upload, Eye, CheckCircle
+} from 'lucide-react';
 import { useGetMentorDetailsMutation, useUpdateMentorDetailsMutation } from "./mentorprofileapi";
 import { showToast } from '../../../utils/Toastprovider';
 
-const GlobalStyles = () => (
-  <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
+const DARK  = '#062117';
+const CYAN  = '#0098cc';
 
-    body {
-      background: #FAFBFC;
-      overflow-x: hidden;
-    }
+const formatDate = (ds) => {
+  if (!ds) return 'N/A';
+  return new Date(ds).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+};
 
-    .custom-input {
-      transition: all 0.2s ease;
-      border: 1px solid #D1D5DB;
-      background: #FFFFFF;
-      font-size: 14px;
-      color: #111827;
-    }
-    
-    .custom-input:focus {
-      outline: none;
-      border-color: #2563EB;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-    }
+const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const TABS = ['Overview','Case Studies','Mentorship Topics','Experience'];
 
-    .custom-input::placeholder {
-      color: #9CA3AF;
-    }
+// ── Editable field ────────────────────────────────────────────
+const EditField = ({ value, onChange, placeholder, multiline, type = 'text', className = '' }) => {
+  const base = `w-full px-3 py-2 border border-gray-300 rounded-lg text-sm text-gray-800 bg-white
+    focus:outline-none focus:border-[#0098cc] focus:ring-1 focus:ring-[#0098cc]/20
+    transition-colors placeholder-gray-400 ${className}`;
+  return multiline
+    ? <textarea value={value} onChange={onChange} placeholder={placeholder} rows={4} className={`${base} resize-none`} />
+    : <input type={type} value={value} onChange={onChange} placeholder={placeholder} className={base} />;
+};
 
-    @media (max-width: 640px) {
-      .custom-input {
-        font-size: 16px;
-      }
-    }
-  `}</style>
+// ── Pill ──────────────────────────────────────────────────────
+const Pill = ({ label }) => (
+  <span className="px-2.5 py-1 border border-gray-300 rounded-full text-sm sm:text-base text-gray-700 bg-white">
+    {label}
+  </span>
 );
 
+// ── Button variants ───────────────────────────────────────────
+const BtnPrimary = ({ onClick, disabled, children, className = '' }) => (
+  <button onClick={onClick} disabled={disabled}
+    className={`flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-white text-sm sm:text-base font-semibold
+      transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+    style={{ background: CYAN }}>
+    {children}
+  </button>
+);
+
+const BtnOutline = ({ onClick, disabled, children, className = '' }) => (
+  <button onClick={onClick} disabled={disabled}
+    className={`flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl text-sm sm:text-base font-semibold
+      border-2 border-white/50 text-white hover:bg-white/10 transition-colors disabled:opacity-50 ${className}`}>
+    {children}
+  </button>
+);
+
+// ── Main Component ────────────────────────────────────────────
 const MentorProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    availability: [
-      { day: 'Monday', slots: [] },
-      { day: 'Tuesday', slots: [] },
-      { day: 'Wednesday', slots: [] },
-      { day: 'Thursday', slots: [] },
-      { day: 'Friday', slots: [] },
-      { day: 'Saturday', slots: [] },
-      { day: 'Sunday', slots: [] }
-    ]
-  });
-  const [email, setEmail] = useState("");
-  const [files, setFiles] = useState({
-    resume: null,
-    portfolio: null,
-    video: null
-  });
+  const [activeTab, setActiveTab] = useState('Overview');
+  const [showMore, setShowMore]   = useState(false);
+  const [liked, setLiked]         = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const resumeInputRef = useRef(null);
-  const portfolioInputRef = useRef(null);
-  const videoInputRef = useRef(null);
+  const [formData, setFormData] = useState({
+    availability: DAYS.map(d => ({ day: d, slots: [] }))
+  });
+  const [email, setEmail] = useState('');
+  const [files, setFiles] = useState({ resume: null, portfolio: null, video: null });
+
+  const resumeRef    = useRef(null);
+  const portfolioRef = useRef(null);
+  const videoRef     = useRef(null);
 
   const [getMentorDetails, { data, isLoading, error }] = useGetMentorDetailsMutation();
   const [updateMentorDetails, { isLoading: isUpdating }] = useUpdateMentorDetailsMutation();
 
   useEffect(() => {
-    const userData = localStorage.getItem("userData");
-    if (userData) {
-      try {
-        const parsedData = JSON.parse(userData);
-        setEmail(parsedData.email);
-      } catch (error) {
-        console.error("Error parsing user data:", error);
-      }
-    }
+    const ud = localStorage.getItem('userData');
+    if (ud) { try { setEmail(JSON.parse(ud).email); } catch {} }
   }, []);
 
-  useEffect(() => {
-    if (email) {
-      getMentorDetails(email);
-    }
-  }, [email, getMentorDetails]);
+  useEffect(() => { if (email) getMentorDetails(email); }, [email, getMentorDetails]);
 
   useEffect(() => {
     if (data?.data) {
-      const initialAvailability = [
-        { day: 'Monday', slots: [] },
-        { day: 'Tuesday', slots: [] },
-        { day: 'Wednesday', slots: [] },
-        { day: 'Thursday', slots: [] },
-        { day: 'Friday', slots: [] },
-        { day: 'Saturday', slots: [] },
-        { day: 'Sunday', slots: [] }
-      ];
-
-      const mergedAvailability = initialAvailability.map(defaultDay => {
-        const existingDay = data.data.availability?.find(d => d.day === defaultDay.day);
-        return existingDay ? { ...defaultDay, slots: existingDay.slots || [] } : defaultDay;
+      const merged = DAYS.map(d => {
+        const ex = data.data.availability?.find(a => a.day === d);
+        return { day: d, slots: ex?.slots || [] };
       });
-
-      setFormData({
-        ...data.data,
-        availability: mergedAvailability
-      });
+      setFormData({ ...data.data, availability: merged });
     }
   }, [data]);
 
-  const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleFileChange = (field, event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setFiles(prev => ({ ...prev, [field]: file }));
-    }
-  };
-
-  const handleRemoveFile = (field) => {
-    setFiles(prev => ({ ...prev, [field]: null }));
-    if (field === 'resume' && resumeInputRef.current) resumeInputRef.current.value = '';
-    if (field === 'portfolio' && portfolioInputRef.current) portfolioInputRef.current.value = '';
-    if (field === 'video' && videoInputRef.current) videoInputRef.current.value = '';
-  };
+  const set = (f, v) => setFormData(p => ({ ...p, [f]: v }));
 
   const handleSave = async () => {
     try {
-      const dataToSend = { email, ...formData };
-      await updateMentorDetails(dataToSend).unwrap();
+      await updateMentorDetails({ email, ...formData }).unwrap();
       await getMentorDetails(email);
-      
       setIsEditing(false);
       setFiles({ resume: null, portfolio: null, video: null });
       showToast('Profile updated successfully!', 'success');
-    } catch (err) {
-      console.error('Failed to update profile:', err);
-      showToast('Failed to update profile. Please try again.');
-    }
+    } catch { showToast('Failed to update profile.'); }
   };
 
   const handleCancel = () => {
     if (data?.data) {
-      const initialAvailability = [
-        { day: 'Monday', slots: [] },
-        { day: 'Tuesday', slots: [] },
-        { day: 'Wednesday', slots: [] },
-        { day: 'Thursday', slots: [] },
-        { day: 'Friday', slots: [] },
-        { day: 'Saturday', slots: [] },
-        { day: 'Sunday', slots: [] }
-      ];
-
-      const mergedAvailability = initialAvailability.map(defaultDay => {
-        const existingDay = data.data.availability?.find(d => d.day === defaultDay.day);
-        return existingDay ? { ...defaultDay, slots: existingDay.slots || [] } : defaultDay;
+      const merged = DAYS.map(d => {
+        const ex = data.data.availability?.find(a => a.day === d);
+        return { day: d, slots: ex?.slots || [] };
       });
-
-      setFormData({
-        ...data.data,
-        availability: mergedAvailability
-      });
+      setFormData({ ...data.data, availability: merged });
     }
     setFiles({ resume: null, portfolio: null, video: null });
     setIsEditing(false);
   };
 
-  const handleAddTimeSlot = (dayIndex) => {
-    const newSlot = { startTime: '09:00', endTime: '10:00', isBooked: false };
-    setFormData(prev => {
-      const newAvailability = [...prev.availability];
-      newAvailability[dayIndex] = {
-        ...newAvailability[dayIndex],
-        slots: [...(newAvailability[dayIndex].slots || []), newSlot]
-      };
-      return { ...prev, availability: newAvailability };
-    });
-  };
+  const addSlot    = (di)         => setFormData(p => { const a=[...p.availability]; a[di]={...a[di],slots:[...a[di].slots,{startTime:'09:00',endTime:'10:00',isBooked:false}]}; return{...p,availability:a}; });
+  const removeSlot = (di, si)     => setFormData(p => { const a=[...p.availability]; a[di].slots=a[di].slots.filter((_,i)=>i!==si); return{...p,availability:a}; });
+  const updateSlot = (di, si,f,v) => setFormData(p => { const a=[...p.availability]; a[di].slots[si][f]=v; return{...p,availability:a}; });
 
-  const handleRemoveTimeSlot = (dayIndex, slotIndex) => {
-    setFormData(prev => {
-      const newAvailability = [...prev.availability];
-      newAvailability[dayIndex] = {
-        ...newAvailability[dayIndex],
-        slots: newAvailability[dayIndex].slots.filter((_, i) => i !== slotIndex)
-      };
-      return { ...prev, availability: newAvailability };
-    });
-  };
+  const skills   = formData.currentSkills   ? formData.currentSkills.split(',').map(s=>s.trim()).filter(Boolean)   : [];
+  const areas    = formData.areasOfInterest ? formData.areasOfInterest.split(',').map(s=>s.trim()).filter(Boolean)  : [];
+  const bio      = formData.whyMentor || '';
+  const bioShort = bio.length > 150 ? bio.slice(0, 150) + '…' : bio;
 
-  const handleUpdateTimeSlot = (dayIndex, slotIndex, field, value) => {
-    setFormData(prev => {
-      const newAvailability = [...prev.availability];
-      newAvailability[dayIndex].slots[slotIndex][field] = value;
-      return { ...prev, availability: newAvailability };
-    });
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <GlobalStyles />
-        <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-          <div className="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-lg font-medium text-gray-900">Loading profile...</p>
-        </div>
+  // ── Loading ─────────────────────────────────────────────
+  if (isLoading) return (
+    <div className="flex-1 flex items-center justify-center bg-gray-100 p-6 min-h-[60vh]">
+      <div className="bg-white rounded-2xl shadow-sm p-10 text-center">
+        <Loader2 size={36} className="animate-spin mx-auto mb-4" style={{ color: CYAN }} />
+        <p className="text-gray-500 text-base">Loading profile…</p>
       </div>
-    );
-  }
+    </div>
+  );
 
-  if (error || !formData || Object.keys(formData).length === 0) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <GlobalStyles />
-        <div className="bg-white rounded-lg shadow-sm p-8 text-center">
-          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <span className="text-red-600 text-2xl">✕</span>
-          </div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Failed to load profile</h2>
-          <p className="text-gray-600">Please try refreshing the page</p>
-        </div>
+  if (error || !formData || Object.keys(formData).length < 2) return (
+    <div className="flex-1 flex items-center justify-center bg-gray-100 p-6 min-h-[60vh]">
+      <div className="bg-white rounded-2xl shadow-sm p-10 text-center">
+        <X size={36} className="text-red-400 mx-auto mb-4" />
+        <p className="text-gray-500 text-base">Failed to load profile. Please refresh.</p>
       </div>
-    );
-  }
+    </div>
+  );
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <GlobalStyles />
-      
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-semibold text-gray-900">Mentor Profile</h1>
-              <p className="text-sm text-gray-600 mt-1">Manage your professional information</p>
-            </div>
-            
-            {!isEditing ? (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-              >
-                Edit Profile
-              </button>
-            ) : (
-              <div className="flex gap-3">
-                <button
-                  onClick={handleSave}
-                  disabled={isUpdating}
-                  className="bg-blue-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {isUpdating ? 'Saving...' : 'Save Changes'}
-                </button>
-                <button
-                  onClick={handleCancel}
-                  disabled={isUpdating}
-                  className="bg-gray-200 text-gray-700 px-5 py-2.5 rounded-lg font-medium hover:bg-gray-300 transition-colors disabled:opacity-50"
-                >
-                  Cancel
-                </button>
-              </div>
-            )}
-          </div>
+    <div className="flex flex-col h-full bg-gray-100 overflow-auto min-h-screen">
+
+      {/* ══ BANNER ═══════════════════════════════════════════════ */}
+      <div className="relative h-36 sm:h-44 md:h-52 shrink-0 overflow-hidden" style={{ background: DARK }}>
+        {/* Decorative rings */}
+        {/* <div className="absolute inset-0 opacity-10">
+          {[[-20,5,220],[-5,55,130],[55,5,90],[75,38,170]].map(([t,l,s],i)=>(
+            <div key={i} className="absolute rounded-full border-2 border-white"
+              style={{ top:`${t}%`, left:`${l}%`, width:s, height:s }} />
+          ))}
+        </div> */}
+        {/* Accent circle */}
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 w-24 h-24 sm:w-32 sm:h-32 rounded-full opacity-80"
+         />
+
+        {/* Action buttons */}
+        <div className="absolute top-3 right-3 sm:top-4 sm:right-4 flex gap-2 z-10">
+          {!isEditing ? (
+            <BtnOutline onClick={() => setIsEditing(true)}>
+              <Pencil size={13} /> <span className="hidden sm:inline">Edit Profile</span><span className="sm:hidden">Edit</span>
+            </BtnOutline>
+          ) : (
+            <>
+              <BtnPrimary onClick={handleSave} disabled={isUpdating}>
+                {isUpdating ? <><Loader2 size={13} className="animate-spin"/>Saving…</> : <><Save size={13}/>Save</>}
+              </BtnPrimary>
+              <BtnOutline onClick={handleCancel} disabled={isUpdating}>
+                <X size={13}/> <span className="hidden sm:inline">Cancel</span>
+              </BtnOutline>
+            </>
+          )}
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Basic Information */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-6">Basic Information</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.fullName || ''}
-                  onChange={(e) => handleChange('fullName', e.target.value)}
-                  className="custom-input w-full px-4 py-2.5 rounded-lg"
-                  placeholder="Enter your full name"
-                />
-              ) : (
-                <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.fullName || 'Not provided'}</p>
-              )}
-            </div>
+      {/* ══ AVATAR ════════════════════════════════════════════════ */}
+      <div className="relative z-10 px-5 sm:px-6 -mt-12 sm:-mt-14 md:-mt-16 pointer-events-none">
+        <div className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-xl flex items-center justify-center">
+          <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-400">
+            {formData.fullName?.charAt(0)?.toUpperCase() || '?'}
+          </span>
+        </div>
+      </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-              <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.email || 'Not provided'}</p>
-            </div>
+      {/* ══ CONTENT: sidebar + main ═══════════════════════════════ */}
+      <div className="flex flex-col lg:flex-row flex-1 bg-white min-h-0 overflow-hidden">
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.phone || ''}
-                  onChange={(e) => handleChange('phone', e.target.value)}
-                  className="custom-input w-full px-4 py-2.5 rounded-lg"
-                  placeholder="Enter phone number"
-                />
-              ) : (
-                <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.phone || 'Not provided'}</p>
-              )}
-            </div>
+        {/* ── LEFT SIDEBAR ──────────────────────────────────────── */}
+        <aside className="w-full lg:w-72 xl:w-80 shrink-0 border-b lg:border-b-0 lg:border-r border-gray-100 px-5 sm:px-6 pt-4 pb-7 flex flex-col gap-4 overflow-visible lg:overflow-auto">
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.location || ''}
-                  onChange={(e) => handleChange('location', e.target.value)}
-                  className="custom-input w-full px-4 py-2.5 rounded-lg"
-                  placeholder="City, Country"
-                />
-              ) : (
-                <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.location || 'Not provided'}</p>
-              )}
-            </div>
+          {/* Name + Role */}
+          <div className="mt-1">
+            {isEditing ? (
+              <EditField value={formData.currentRole||''} onChange={e=>set('currentRole',e.target.value)}
+                placeholder="Current Role" className="text-sm mb-2 text-gray-500" />
+            ) : (
+              <p className="text-sm text-gray-500 mb-1">{formData.currentRole || 'Mentor'}</p>
+            )}
+            {isEditing ? (
+              <EditField value={formData.fullName||''} onChange={e=>set('fullName',e.target.value)}
+                placeholder="Full Name" className="text-base font-bold" />
+            ) : (
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-tight">
+                {formData.fullName || 'Your Name'}
+              </h1>
+            )}
+            <p className="text-sm text-gray-400 mt-1">Member since {formatDate(formData.createdAt)}</p>
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Current Role</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.currentRole || ''}
-                  onChange={(e) => handleChange('currentRole', e.target.value)}
-                  className="custom-input w-full px-4 py-2.5 rounded-lg"
-                  placeholder="e.g., Senior Software Engineer"
-                />
-              ) : (
-                <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.currentRole || 'Not provided'}</p>
-              )}
-            </div>
+          {/* Location */}
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <MapPin size={13} className="text-gray-400 shrink-0" />
+            {isEditing
+              ? <EditField value={formData.location||''} onChange={e=>set('location',e.target.value)} placeholder="City, Country" />
+              : <span>{formData.location || 'Not set'}</span>
+            }
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Company</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.companyName || ''}
-                  onChange={(e) => handleChange('companyName', e.target.value)}
-                  className="custom-input w-full px-4 py-2.5 rounded-lg"
-                  placeholder="Company name"
-                />
-              ) : (
-                <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.companyName || 'Not provided'}</p>
-              )}
-            </div>
+          {/* Rating */}
+          <div className="flex items-center gap-2">
+            <Star size={14} fill={CYAN} style={{ color: CYAN }} />
+            <span className="text-base font-semibold text-gray-700">
+              {formData.rating || '0.0'}
+              <span className="text-gray-400 font-normal ml-1 text-sm">({formData.reviewCount || 0} Review)</span>
+            </span>
+          </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Years of Experience</label>
-              {isEditing ? (
-                <input
-                  type="number"
-                  value={formData.yearsOfExperience || ''}
-                  onChange={(e) => handleChange('yearsOfExperience', e.target.value)}
-                  className="custom-input w-full px-4 py-2.5 rounded-lg"
-                  placeholder="0"
-                />
-              ) : (
-                <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.yearsOfExperience || 'Not provided'}</p>
-              )}
+          {/* Stats */}
+          <div className="space-y-2 text-sm">
+            <div className="flex items-center justify-between">
+              <span className="text-gray-500">Jobs Completed</span>
+              <span className="font-bold text-sm px-2.5 py-1 rounded-full text-white" style={{ background: CYAN }}>
+                {formData.completedBookings || 0}%
+              </span>
             </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Hourly Rate ($)</label>
-              {isEditing ? (
-                <input
-                  type="number"
-                  value={formData.hourlyRate || ''}
-                  onChange={(e) => handleChange('hourlyRate', e.target.value)}
-                  className="custom-input w-full px-4 py-2.5 rounded-lg"
-                  placeholder="0"
-                />
-              ) : (
-                <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">${formData.hourlyRate || 'Not provided'}</p>
-              )}
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">LinkedIn URL</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.linkedinUrl || ''}
-                  onChange={(e) => handleChange('linkedinUrl', e.target.value)}
-                  className="custom-input w-full px-4 py-2.5 rounded-lg"
-                  placeholder="https://linkedin.com/in/username"
-                />
-              ) : (
-                <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.linkedinUrl || 'Not provided'}</p>
-              )}
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-gray-500 shrink-0">Language:</span>
+              {isEditing
+                ? <EditField value={formData.language||''} onChange={e=>set('language',e.target.value)} placeholder="e.g. English" className="text-sm" />
+                : <span className="text-gray-700 text-right text-sm">{formData.language || 'Not set'}</span>
+              }
             </div>
           </div>
-        </div>
 
-        {/* Professional Background */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-6">Professional Background</h2>
-          
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">About Me</label>
-              {isEditing ? (
-                <textarea
-                  value={formData.whyMentor || ''}
-                  onChange={(e) => handleChange('whyMentor', e.target.value)}
-                  className="custom-input w-full px-4 py-3 rounded-lg resize-none"
-                  rows={4}
-                  placeholder="Share your professional journey and what motivates you to mentor..."
-                />
-              ) : (
-                <p className="text-gray-700 px-4 py-3 bg-gray-50 rounded-lg leading-relaxed">{formData.whyMentor || 'Not provided'}</p>
-              )}
+          {/* Bio snippet */}
+          <div className="text-sm text-gray-600 leading-relaxed">
+            {showMore ? bio : bioShort}
+            {bio.length > 150 && (
+              <button onClick={() => setShowMore(!showMore)}
+                className="flex items-center gap-1 mt-1 font-semibold text-xs"
+                style={{ color: CYAN }}>
+                {showMore ? <><ChevronUp size={11}/>Show less</> : <><ChevronDown size={11}/>Show more</>}
+              </button>
+            )}
+          </div>
+
+          {/* Price card */}
+          <div className="rounded-2xl px-4 py-3 text-white" style={{ background: DARK }}>
+            <div className="flex items-baseline gap-2 flex-wrap">
+              <span className="text-3xl font-bold">${formData.hourlyRate || '0.00'}</span>
+              {isEditing
+                ? <EditField value={formData.sessionDuration||''} onChange={e=>set('sessionDuration',e.target.value)}
+                    placeholder="e.g. 45-min Session"
+                    className="text-sm bg-white/10 border-white/20 text-white placeholder-white/40 w-32" />
+                : <span className="text-sm text-white/70">{formData.sessionDuration || '45-min Session'}</span>
+              }
             </div>
+          </div>
 
+          {/* Contact Me button */}
+          <button className="w-full py-2.5 rounded-2xl text-white font-bold text-base transition-colors hover:opacity-90"
+            style={{ background: CYAN }}>
+            Contact Me
+          </button>
+
+          {/* Like + Share */}
+          <div className="flex items-center gap-4">
+            <button onClick={() => setLiked(!liked)}
+              className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-red-400 transition-colors">
+              <Heart size={15} fill={liked ? '#f87171' : 'none'} className={liked ? 'text-red-400' : ''} />
+              <span>{liked ? 'Saved' : 'Save'}</span>
+            </button>
+            <button className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">
+              <Share2 size={15} />
+              <span>Share</span>
+            </button>
+          </div>
+
+          {/* Earnings stats */}
+          <div className="border-t border-gray-100 pt-3 space-y-2.5">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-500">Total Earning Amount:</span>
+              <span className="text-sm font-bold text-gray-800">${formData.totalEarnings || '0.00'}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-gray-500">Total Mentees:</span>
+              <span className="text-sm font-bold text-gray-800">{formData.totalMentees || 0}</span>
+            </div>
+          </div>
+
+          {/* LinkedIn */}
+          {isEditing && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Core Skills</label>
-              {isEditing ? (
-                <textarea
-                  value={formData.currentSkills || ''}
-                  onChange={(e) => handleChange('currentSkills', e.target.value)}
-                  className="custom-input w-full px-4 py-3 rounded-lg resize-none"
-                  rows={3}
-                  placeholder="e.g., React, Node.js, Python, Machine Learning (comma-separated)"
-                />
-              ) : (
-                <div className="px-4 py-3 bg-gray-50 rounded-lg">
-                  {formData.currentSkills ? (
-                    <div className="flex flex-wrap gap-2">
-                      {formData.currentSkills.split(',').map((skill, idx) => (
-                        <span key={idx} className="px-3 py-1 bg-blue-100 text-blue-700 rounded-md text-sm font-medium">
-                          {skill.trim()}
-                        </span>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-gray-500">Not provided</p>
-                  )}
+              <p className="text-sm text-gray-400 mb-1 font-medium">LinkedIn URL</p>
+              <EditField value={formData.linkedinUrl||''} onChange={e=>set('linkedinUrl',e.target.value)} placeholder="https://linkedin.com/in/..." />
+            </div>
+          )}
+          {!isEditing && formData.linkedinUrl && (
+            <a href={formData.linkedinUrl} target="_blank" rel="noopener noreferrer"
+              className="text-sm font-medium underline truncate block" style={{ color: CYAN }}>
+              {formData.linkedinUrl}
+            </a>
+          )}
+        </aside>
+
+        {/* ── RIGHT CONTENT ─────────────────────────────────────── */}
+        <div className="flex-1 flex flex-col min-w-0 overflow-auto w-full">
+
+          {/* Tab strip — scrollable on mobile */}
+          <div className="border-b border-gray-200 px-4 sm:px-6 sticky top-0 bg-white z-10 overflow-x-auto scrollbar-hide">
+            <div className="flex min-w-max">
+              {TABS.map(tab => (
+                <button key={tab} onClick={() => setActiveTab(tab)}
+                  className={`px-4 sm:px-5 py-3 text-sm sm:text-base font-semibold border-b-2 transition-colors whitespace-nowrap -mb-px ${
+                    activeTab === tab
+                      ? 'border-gray-900 text-gray-900'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  }`}>
+                  {tab}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Tab content */}
+          <div className="p-4 sm:p-5 lg:p-8 space-y-8 sm:space-y-10">
+
+            {/* ── OVERVIEW ──────────────────────────────────────── */}
+            {activeTab === 'Overview' && (
+              <>
+                <section>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
+                    About <span style={{ color: CYAN }}>{formData.fullName || 'Mentor'}</span>
+                  </h2>
+                  {isEditing
+                    ? <EditField value={formData.whyMentor||''} onChange={e=>set('whyMentor',e.target.value)}
+                        placeholder="Share your professional journey and mentoring goals…" multiline />
+                    : <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                        {formData.whyMentor || 'No bio provided.'}
+                      </p>
+                  }
+                </section>
+
+                <section>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">Mentorship Expertise</h2>
+                  {isEditing
+                    ? <EditField value={formData.currentSkills||''} onChange={e=>set('currentSkills',e.target.value)}
+                        placeholder="React, Node.js, Python… (comma-separated)" multiline />
+                    : skills.length > 0
+                      ? <div className="flex flex-wrap gap-2">
+                          {skills.map((s,i) => <Pill key={i} label={s} />)}
+                        </div>
+                      : <p className="text-sm text-gray-400 italic">No skills listed.</p>
+                  }
+                </section>
+
+                <section>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">Work History and Feedback</h2>
+                  <p className="text-sm sm:text-base text-gray-500 italic">
+                    {formData.completedBookings > 0
+                      ? `${formData.completedBookings} completed session${formData.completedBookings > 1 ? 's' : ''}`
+                      : 'Be the first to book a session with this mentor.'}
+                  </p>
+                </section>
+              </>
+            )}
+
+            {/* ── MENTORSHIP TOPICS ─────────────────────────────── */}
+            {activeTab === 'Mentorship Topics' && (
+              <section className="space-y-5">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">Areas of Interest</h2>
+                  {isEditing
+                    ? <EditField value={formData.areasOfInterest||''} onChange={e=>set('areasOfInterest',e.target.value)}
+                        placeholder="Web Development, Cloud, DevOps… (comma-separated)" multiline />
+                    : areas.length > 0
+                      ? <div className="flex flex-wrap gap-2">
+                          {areas.map((a,i) => <Pill key={i} label={a} />)}
+                        </div>
+                      : <p className="text-sm text-gray-400 italic">No topics listed.</p>
+                  }
                 </div>
-              )}
-            </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Areas of Expertise</label>
-              {isEditing ? (
-                <textarea
-                  value={formData.areasOfInterest || ''}
-                  onChange={(e) => handleChange('areasOfInterest', e.target.value)}
-                  className="custom-input w-full px-4 py-3 rounded-lg resize-none"
-                  rows={3}
-                  placeholder="e.g., Web Development, Cloud Architecture, DevOps (comma-separated)"
-                />
-              ) : (
-                <div className="px-4 py-3 bg-gray-50 rounded-lg">
-                  {formData.areasOfInterest ? (
-                    <div className="flex flex-wrap gap-2">
-                      {formData.areasOfInterest.split(',').map((area, idx) => (
-                        <span key={idx} className="px-3 py-1 bg-gray-200 text-gray-700 rounded-md text-sm font-medium">
-                          {area.trim()}
-                        </span>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-gray-500">Not provided</p>
-                  )}
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Mentoring Style</h2>
+                  {isEditing
+                    ? <EditField value={formData.mentoringStyle||''} onChange={e=>set('mentoringStyle',e.target.value)}
+                        placeholder="e.g., Collaborative, Goal-oriented, Hands-on" />
+                    : <p className="text-sm sm:text-base text-gray-700">
+                        {formData.mentoringStyle || <span className="italic text-gray-400">Not set</span>}
+                      </p>
+                  }
                 </div>
-              )}
-            </div>
+              </section>
+            )}
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Mentoring Style</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.mentoringStyle || ''}
-                  onChange={(e) => handleChange('mentoringStyle', e.target.value)}
-                  className="custom-input w-full px-4 py-2.5 rounded-lg"
-                  placeholder="e.g., Collaborative, Goal-oriented, Hands-on"
-                />
-              ) : (
-                <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.mentoringStyle || 'Not provided'}</p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Education */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-6">Education</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Highest Degree</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.highestDegree || ''}
-                  onChange={(e) => handleChange('highestDegree', e.target.value)}
-                  className="custom-input w-full px-4 py-2.5 rounded-lg"
-                  placeholder="e.g., Bachelor's, Master's, PhD"
-                />
-              ) : (
-                <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.highestDegree || 'Not provided'}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Field of Study</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.fieldOfStudy || ''}
-                  onChange={(e) => handleChange('fieldOfStudy', e.target.value)}
-                  className="custom-input w-full px-4 py-2.5 rounded-lg"
-                  placeholder="e.g., Computer Science"
-                />
-              ) : (
-                <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.fieldOfStudy || 'Not provided'}</p>
-              )}
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Institution</label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.schoolName || ''}
-                  onChange={(e) => handleChange('schoolName', e.target.value)}
-                  className="custom-input w-full px-4 py-2.5 rounded-lg"
-                  placeholder="University or College name"
-                />
-              ) : (
-                <p className="text-gray-900 px-4 py-2.5 bg-gray-50 rounded-lg">{formData.schoolName || 'Not provided'}</p>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Documents */}
-        <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-6">Documents & Media</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              { field: 'resume', title: 'Resume / CV', accept: '.pdf,.doc,.docx', ref: resumeInputRef },
-              { field: 'portfolio', title: 'Portfolio', accept: '.pdf,.ppt,.pptx', ref: portfolioInputRef },
-              { field: 'video', title: 'Video Introduction', accept: 'video/*', ref: videoInputRef }
-            ].map((doc) => (
-              <div key={doc.field}>
-                <label className="block text-sm font-medium text-gray-700 mb-2">{doc.title}</label>
-                
-                {isEditing ? (
-                  <div className="space-y-3">
-                    <input
-                      ref={doc.ref}
-                      type="file"
-                      accept={doc.accept}
-                      onChange={(e) => handleFileChange(doc.field, e)}
-                      className="hidden"
-                      id={`file-${doc.field}`}
-                    />
-                    
-                    {!files[doc.field] ? (
-                      <label
-                        htmlFor={`file-${doc.field}`}
-                        className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 hover:bg-blue-50 transition-colors"
-                      >
-                        <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                        <span className="text-sm text-gray-600">Upload file</span>
-                      </label>
-                    ) : (
-                      <div className="flex items-center justify-between bg-blue-50 p-3 rounded-lg border border-blue-200">
-                        <span className="text-sm text-gray-700 truncate flex-1">{files[doc.field].name}</span>
-                        <button
-                          onClick={() => handleRemoveFile(doc.field)}
-                          className="ml-2 text-red-600 hover:text-red-700"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    )}
-                    
-                    <input
-                      type="text"
-                      value={formData[`${doc.field}Link`] || ''}
-                      onChange={(e) => handleChange(`${doc.field}Link`, e.target.value)}
-                      placeholder="Or paste a link"
-                      className="custom-input w-full px-4 py-2.5 rounded-lg"
-                    />
-                  </div>
-                ) : (
-                  <div className="px-4 py-2.5 bg-gray-50 rounded-lg">
-                    {formData[`${doc.field}Link`] ? (
-                      <a 
-                        href={formData[`${doc.field}Link`]} 
-                        target="_blank" 
-                        rel="noopener noreferrer" 
-                        className="text-blue-600 hover:underline text-sm"
-                      >
-                        View {doc.title}
-                      </a>
-                    ) : (
-                      <p className="text-gray-500 text-sm">Not uploaded</p>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Weekly Availability */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-2">Weekly Availability</h2>
-          <p className="text-sm text-gray-600 mb-6">Set your available time slots for mentoring sessions</p>
-          
-          <div className="space-y-4">
-            {formData.availability && formData.availability.map((day, dayIdx) => (
-              <div key={day.day} className="border border-gray-200 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-medium text-gray-900">{day.day}</h3>
-                  {isEditing && (
-                    <button
-                      onClick={() => handleAddTimeSlot(dayIdx)}
-                      className="bg-blue-600 text-white px-3 py-1.5 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
-                    >
-                      + Add Slot
-                    </button>
-                  )}
-                </div>
-                
-                {!day.slots || day.slots.length === 0 ? (
-                  <p className="text-sm text-gray-500">No time slots available</p>
-                ) : (
-                  <div className="space-y-2">
-                    {day.slots.map((slot, slotIdx) => (
-                      <div key={slotIdx} className="flex items-center gap-3 bg-gray-50 p-3 rounded-lg">
-                        {isEditing ? (
-                          <>
-                            <input
-                              type="time"
-                              value={slot.startTime}
-                              onChange={(e) => handleUpdateTimeSlot(dayIdx, slotIdx, 'startTime', e.target.value)}
-                              className="custom-input px-3 py-2 rounded-md text-sm"
-                            />
-                            <span className="text-gray-500">to</span>
-                            <input
-                              type="time"
-                              value={slot.endTime}
-                              onChange={(e) => handleUpdateTimeSlot(dayIdx, slotIdx, 'endTime', e.target.value)}
-                              className="custom-input px-3 py-2 rounded-md text-sm"
-                            />
-                            <button
-                              onClick={() => handleRemoveTimeSlot(dayIdx, slotIdx)}
-                              className="ml-auto text-red-600 hover:text-red-700 text-sm font-medium"
-                            >
-                              Remove
-                            </button>
-                          </>
-                        ) : (
-                          <span className="text-sm font-medium text-gray-700">
-                            {slot.startTime} - {slot.endTime}
-                          </span>
-                        )}
+            {/* ── EXPERIENCE ────────────────────────────────────── */}
+            {activeTab === 'Experience' && (
+              <section className="space-y-7">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Professional Experience</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                    {[
+                      { label: 'Company',             field: 'companyName' },
+                      { label: 'Years of Experience', field: 'yearsOfExperience', type: 'number' },
+                      { label: 'Highest Degree',      field: 'highestDegree' },
+                      { label: 'Field of Study',      field: 'fieldOfStudy' },
+                      { label: 'Institution',         field: 'schoolName' },
+                    ].map(({ label, field, type }) => (
+                      <div key={field}>
+                        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5">{label}</p>
+                        {isEditing
+                          ? <EditField type={type||'text'} value={formData[field]||''} onChange={e=>set(field,e.target.value)} placeholder={label} />
+                          : <p className="text-sm sm:text-base font-medium text-gray-800 px-3 py-2.5 border border-gray-200 rounded-xl bg-gray-50">
+                              {formData[field] || '—'}
+                            </p>
+                        }
                       </div>
                     ))}
                   </div>
-                )}
-              </div>
-            ))}
+                </div>
+
+                {/* Weekly Availability */}
+                <div>
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-3">Weekly Availability</h3>
+                  <div className="space-y-2.5">
+                    {formData.availability?.map((day, di) => (
+                      <div key={day.day} className="border border-gray-200 rounded-2xl overflow-hidden">
+                        <div className="flex items-center justify-between px-4 sm:px-5 py-2.5 bg-gray-50 border-b border-gray-100">
+                          <span className="text-base sm:text-lg font-semibold text-gray-700">{day.day}</span>
+                          {isEditing && (
+                            <button onClick={() => addSlot(di)}
+                              className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1.5 rounded-lg text-white transition-colors hover:opacity-80"
+                              style={{ background: DARK }}>
+                              <Plus size={11} /> Add Slot
+                            </button>
+                          )}
+                        </div>
+                        <div className="px-4 sm:px-5 py-2.5 flex flex-wrap gap-2">
+                          {!day.slots?.length
+                            ? <span className="text-sm text-gray-400 italic">No slots set</span>
+                            : day.slots.map((slot, si) => (
+                              <div key={si} className="flex items-center gap-2 bg-white border border-gray-200 rounded-xl px-3 py-1.5">
+                                {isEditing ? (
+                                  <>
+                                    <input type="time" value={slot.startTime}
+                                      onChange={e=>updateSlot(di,si,'startTime',e.target.value)}
+                                      className="text-sm border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:border-[#0098cc]" />
+                                    <span className="text-gray-300 text-sm">→</span>
+                                    <input type="time" value={slot.endTime}
+                                      onChange={e=>updateSlot(di,si,'endTime',e.target.value)}
+                                      className="text-sm border border-gray-300 rounded-lg px-2 py-1 focus:outline-none focus:border-[#0098cc]" />
+                                    <button onClick={() => removeSlot(di,si)} className="text-red-400 hover:text-red-500 ml-1 transition-colors">
+                                      <Trash2 size={12} />
+                                    </button>
+                                  </>
+                                ) : (
+                                  <span className="text-sm font-medium text-gray-700">{slot.startTime} — {slot.endTime}</span>
+                                )}
+                              </div>
+                            ))
+                          }
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+            )}
+
+            {/* ── CASE STUDIES ──────────────────────────────────── */}
+            {activeTab === 'Case Studies' && (
+              <section>
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Case Studies</h2>
+                <div className="space-y-3.5">
+                  {[
+                    { label: 'Resume / CV', field: 'resumeLink', accept: '.pdf,.doc,.docx', ref: resumeRef },
+                    { label: 'Portfolio',   field: 'portfolioLink', accept: '.pdf,.ppt,.pptx', ref: portfolioRef },
+                    { label: 'Video Intro', field: 'videoLink', accept: 'video/*', ref: videoRef },
+                  ].map(({ label, field, accept, ref }) => (
+                    <div key={field} className="border border-gray-200 rounded-2xl p-3.5 sm:p-4">
+                      <div className="flex items-center justify-between mb-2.5">
+                        <p className="text-base sm:text-lg font-semibold text-gray-700">{label}</p>
+                        {!isEditing && formData[field] && (
+                          <a href={formData[field]} target="_blank" rel="noopener noreferrer"
+                            className="flex items-center gap-1.5 text-sm font-semibold px-3 py-1 rounded-full border transition-colors"
+                            style={{ borderColor: CYAN, color: CYAN }}>
+                            <Eye size={12} /> View
+                          </a>
+                        )}
+                        {!isEditing && !formData[field] && (
+                          <span className="text-sm text-gray-400 italic">Not uploaded</span>
+                        )}
+                      </div>
+                      {isEditing && (
+                        <div className="space-y-2">
+                          <input ref={ref} type="file" accept={accept} className="hidden" id={`f-${field}`}
+                            onChange={e => { const f=e.target.files[0]; if(f) setFiles(p=>({...p,[field.replace('Link','')]:f})); }} />
+                          <label htmlFor={`f-${field}`}
+                            className="flex items-center gap-2 px-3 py-2.5 border-2 border-dashed rounded-xl cursor-pointer text-sm text-gray-500 hover:border-[#0098cc] hover:text-[#0098cc] transition-colors">
+                            <Upload size={14} /> Upload file
+                          </label>
+                          <EditField value={formData[field]||''} onChange={e=>set(field,e.target.value)} placeholder="Or paste a URL…" />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
+
           </div>
         </div>
       </div>
@@ -2097,3 +2633,537 @@ const MentorProfile = () => {
 };
 
 export default MentorProfile;
+
+
+// import React, { useState, useEffect, useRef } from 'react';
+// import {
+//   MapPin, Star, Heart, Share2,
+//   ChevronDown, ChevronUp, Pencil, Save, X, Plus,
+//   Trash2, Loader2, Upload, Eye
+// } from 'lucide-react';
+// import { useGetMentorDetailsMutation, useUpdateMentorDetailsMutation } from "./mentorprofileapi";
+// import { showToast } from '../../../utils/Toastprovider';
+
+// const DARK  = '#062117';
+// const CYAN  = '#0098cc';
+
+// const formatDate = (ds) => {
+//   if (!ds) return 'N/A';
+//   return new Date(ds).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+// };
+
+// const DAYS = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+// const TABS = ['Overview','Case Studies','Mentorship Topics','Experience'];
+
+// // ── Editable field ────────────────────────────────────────────
+// const EditField = ({ value, onChange, placeholder, multiline, type = 'text', className = '' }) => {
+//   const base = `w-full px-3 py-1.5 border border-gray-300 rounded-md text-sm text-gray-800 bg-white
+//     focus:outline-none focus:border-[#0098cc] focus:ring-1 focus:ring-[#0098cc]/20
+//     transition-colors placeholder-gray-400 ${className}`;
+//   return multiline
+//     ? <textarea value={value} onChange={onChange} placeholder={placeholder} rows={4} className={`${base} resize-none`} />
+//     : <input type={type} value={value} onChange={onChange} placeholder={placeholder} className={base} />;
+// };
+
+// // ── Pill ──────────────────────────────────────────────────────
+// const Pill = ({ label }) => (
+//   <span className="px-2.5 py-0.5 border border-gray-300 rounded-full text-xs text-gray-600 bg-white">
+//     {label}
+//   </span>
+// );
+
+// // ── Button variants ───────────────────────────────────────────
+// const BtnPrimary = ({ onClick, disabled, children, className = '' }) => (
+//   <button onClick={onClick} disabled={disabled}
+//     className={`flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-lg text-white text-xs font-semibold
+//       transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+//     style={{ background: CYAN }}>
+//     {children}
+//   </button>
+// );
+
+// const BtnOutline = ({ onClick, disabled, children, className = '' }) => (
+//   <button onClick={onClick} disabled={disabled}
+//     className={`flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold
+//       border border-white/50 text-white hover:bg-white/10 transition-colors disabled:opacity-50 ${className}`}>
+//     {children}
+//   </button>
+// );
+
+// // ── Main Component ────────────────────────────────────────────
+// const MentorProfile = () => {
+//   const [isEditing, setIsEditing]   = useState(false);
+//   const [activeTab, setActiveTab]   = useState('Overview');
+//   const [showMore, setShowMore]     = useState(false);
+//   const [liked, setLiked]           = useState(false);
+
+//   const [formData, setFormData] = useState({
+//     availability: DAYS.map(d => ({ day: d, slots: [] }))
+//   });
+//   const [email, setEmail] = useState('');
+//   const [files, setFiles] = useState({ resume: null, portfolio: null, video: null });
+
+//   const resumeRef    = useRef(null);
+//   const portfolioRef = useRef(null);
+//   const videoRef     = useRef(null);
+
+//   const [getMentorDetails, { data, isLoading, error }] = useGetMentorDetailsMutation();
+//   const [updateMentorDetails, { isLoading: isUpdating }] = useUpdateMentorDetailsMutation();
+
+//   useEffect(() => {
+//     const ud = localStorage.getItem('userData');
+//     if (ud) { try { setEmail(JSON.parse(ud).email); } catch {} }
+//   }, []);
+
+//   useEffect(() => { if (email) getMentorDetails(email); }, [email, getMentorDetails]);
+
+//   useEffect(() => {
+//     if (data?.data) {
+//       const merged = DAYS.map(d => {
+//         const ex = data.data.availability?.find(a => a.day === d);
+//         return { day: d, slots: ex?.slots || [] };
+//       });
+//       setFormData({ ...data.data, availability: merged });
+//     }
+//   }, [data]);
+
+//   const set = (f, v) => setFormData(p => ({ ...p, [f]: v }));
+
+//   const handleSave = async () => {
+//     try {
+//       await updateMentorDetails({ email, ...formData }).unwrap();
+//       await getMentorDetails(email);
+//       setIsEditing(false);
+//       setFiles({ resume: null, portfolio: null, video: null });
+//       showToast('Profile updated successfully!', 'success');
+//     } catch { showToast('Failed to update profile.'); }
+//   };
+
+//   const handleCancel = () => {
+//     if (data?.data) {
+//       const merged = DAYS.map(d => {
+//         const ex = data.data.availability?.find(a => a.day === d);
+//         return { day: d, slots: ex?.slots || [] };
+//       });
+//       setFormData({ ...data.data, availability: merged });
+//     }
+//     setFiles({ resume: null, portfolio: null, video: null });
+//     setIsEditing(false);
+//   };
+
+//   const addSlot    = (di)         => setFormData(p => { const a=[...p.availability]; a[di]={...a[di],slots:[...a[di].slots,{startTime:'09:00',endTime:'10:00',isBooked:false}]}; return{...p,availability:a}; });
+//   const removeSlot = (di, si)     => setFormData(p => { const a=[...p.availability]; a[di].slots=a[di].slots.filter((_,i)=>i!==si); return{...p,availability:a}; });
+//   const updateSlot = (di, si,f,v) => setFormData(p => { const a=[...p.availability]; a[di].slots[si][f]=v; return{...p,availability:a}; });
+
+//   const skills   = formData.currentSkills   ? formData.currentSkills.split(',').map(s=>s.trim()).filter(Boolean) : [];
+//   const areas    = formData.areasOfInterest ? formData.areasOfInterest.split(',').map(s=>s.trim()).filter(Boolean) : [];
+//   const bio      = formData.whyMentor || '';
+//   const bioShort = bio.length > 150 ? bio.slice(0, 150) + '…' : bio;
+
+//   // ── Loading / Error ────────────────────────────────────────
+//   if (isLoading) return (
+//     <div className="flex-1 flex items-center justify-center bg-gray-50 p-6 min-h-[60vh]">
+//       <div className="bg-white rounded-xl shadow-sm p-10 text-center">
+//         <Loader2 size={30} className="animate-spin mx-auto mb-3" style={{ color: CYAN }} />
+//         <p className="text-gray-400 text-sm">Loading profile…</p>
+//       </div>
+//     </div>
+//   );
+
+//   if (error || !formData || Object.keys(formData).length < 2) return (
+//     <div className="flex-1 flex items-center justify-center bg-gray-50 p-6 min-h-[60vh]">
+//       <div className="bg-white rounded-xl shadow-sm p-10 text-center">
+//         <X size={30} className="text-red-400 mx-auto mb-3" />
+//         <p className="text-gray-400 text-sm">Failed to load profile. Please refresh.</p>
+//       </div>
+//     </div>
+//   );
+
+//   return (
+//     <div className="flex flex-col h-full bg-gray-100 overflow-auto min-h-screen">
+
+//       {/* ══ BANNER ════════════════════════════════════════════ */}
+//       <div className="relative h-32 sm:h-40 shrink-0 overflow-hidden" style={{ background: DARK }}>
+//         {/* <div className="absolute inset-0 opacity-10">
+//           {[[-20,5,220],[-5,55,130],[55,5,90],[75,38,170]].map(([t,l,s],i)=>(
+//             <div key={i} className="absolute rounded-full border-2 border-white"
+//               style={{ top:`${t}%`, left:`${l}%`, width:s, height:s }} />
+//           ))}
+//         </div> */}
+//         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/3 w-20 h-20 sm:w-24 sm:h-24 rounded-full opacity-80"
+//           />
+
+//         {/* Action buttons */}
+//         <div className="absolute top-3 right-3 flex gap-2 z-10">
+//           {!isEditing ? (
+//             <BtnOutline onClick={() => setIsEditing(true)}>
+//               <Pencil size={12} /> Edit Profile
+//             </BtnOutline>
+//           ) : (
+//             <>
+//               <BtnPrimary onClick={handleSave} disabled={isUpdating}>
+//                 {isUpdating ? <><Loader2 size={12} className="animate-spin"/>Saving…</> : <><Save size={12}/>Save</>}
+//               </BtnPrimary>
+//               <BtnOutline onClick={handleCancel} disabled={isUpdating}>
+//                 <X size={12}/> Cancel
+//               </BtnOutline>
+//             </>
+//           )}
+//         </div>
+//       </div>
+
+//       {/* ══ AVATAR ════════════════════════════════════════════ */}
+//       <div className="relative z-10 px-5 -mt-9 pointer-events-none">
+//         <div className="w-18 h-18 w-[72px] h-[72px] rounded-full border-4 border-white bg-gray-200 overflow-hidden shadow-lg flex items-center justify-center">
+//           <span className="text-xl font-bold text-gray-400">
+//             {formData.fullName?.charAt(0)?.toUpperCase() || '?'}
+//           </span>
+//         </div>
+//       </div>
+
+//       {/* ══ CONTENT ═══════════════════════════════════════════ */}
+//       <div className="flex flex-col lg:flex-row flex-1 bg-white min-h-0 overflow-hidden">
+
+//         {/* ── LEFT SIDEBAR ────────────────────────────────── */}
+//         <aside className="w-full lg:w-60 xl:w-64 shrink-0 border-b lg:border-b-0 lg:border-r border-gray-100
+//           px-4 pt-3 pb-6 flex flex-col gap-3 overflow-visible lg:overflow-auto">
+
+//           {/* Name + Role */}
+//           <div>
+//             {isEditing ? (
+//               <EditField value={formData.currentRole||''} onChange={e=>set('currentRole',e.target.value)}
+//                 placeholder="Current Role" className="text-xs mb-1" />
+//             ) : (
+//               <p className="text-xs text-gray-400 mb-0.5">{formData.currentRole || 'Mentor'}</p>
+//             )}
+//             {isEditing ? (
+//               <EditField value={formData.fullName||''} onChange={e=>set('fullName',e.target.value)}
+//                 placeholder="Full Name" className="font-bold" />
+//             ) : (
+//               <h1 className="text-lg font-bold text-gray-900 leading-snug">
+//                 {formData.fullName || 'Your Name'}
+//               </h1>
+//             )}
+//             <p className="text-xs text-gray-400 mt-0.5">Member since {formatDate(formData.createdAt)}</p>
+//           </div>
+
+//           {/* Location */}
+//           <div className="flex items-center gap-1.5 text-xs text-gray-500">
+//             <MapPin size={11} className="text-gray-400 shrink-0" />
+//             {isEditing
+//               ? <EditField value={formData.location||''} onChange={e=>set('location',e.target.value)} placeholder="City, Country" />
+//               : <span>{formData.location || 'Not set'}</span>
+//             }
+//           </div>
+
+//           {/* Rating */}
+//           <div className="flex items-center gap-1.5">
+//             <Star size={12} fill={CYAN} style={{ color: CYAN }} />
+//             <span className="text-sm font-semibold text-gray-700">
+//               {formData.rating || '0.0'}
+//               <span className="text-gray-400 font-normal text-xs ml-1">({formData.reviewCount || 0} reviews)</span>
+//             </span>
+//           </div>
+
+//           {/* Stats */}
+//           <div className="space-y-1.5 text-xs">
+//             <div className="flex items-center justify-between">
+//               <span className="text-gray-500">Jobs Completed</span>
+//               <span className="font-semibold text-xs px-2 py-0.5 rounded-full text-white" style={{ background: CYAN }}>
+//                 {formData.completedBookings || 0}%
+//               </span>
+//             </div>
+//             <div className="flex items-center justify-between gap-2">
+//               <span className="text-gray-500 shrink-0">Language:</span>
+//               {isEditing
+//                 ? <EditField value={formData.language||''} onChange={e=>set('language',e.target.value)} placeholder="e.g. English" />
+//                 : <span className="text-gray-700 text-right">{formData.language || 'Not set'}</span>
+//               }
+//             </div>
+//           </div>
+
+//           {/* Bio snippet */}
+//           <div className="text-xs text-gray-600 leading-relaxed">
+//             {showMore ? bio : bioShort}
+//             {bio.length > 150 && (
+//               <button onClick={() => setShowMore(!showMore)}
+//                 className="flex items-center gap-0.5 mt-1 font-semibold text-xs"
+//                 style={{ color: CYAN }}>
+//                 {showMore ? <><ChevronUp size={10}/>Show less</> : <><ChevronDown size={10}/>Show more</>}
+//               </button>
+//             )}
+//           </div>
+
+//           {/* Price card */}
+//           <div className="rounded-xl px-3.5 py-3 text-white" style={{ background: DARK }}>
+//             <div className="flex items-baseline gap-2 flex-wrap">
+//               <span className="text-2xl font-bold">${formData.hourlyRate || '0.00'}</span>
+//               {isEditing
+//                 ? <EditField value={formData.sessionDuration||''} onChange={e=>set('sessionDuration',e.target.value)}
+//                     placeholder="e.g. 45-min Session"
+//                     className="text-xs bg-white/10 border-white/20 text-white placeholder-white/40 w-28" />
+//                 : <span className="text-xs text-white/60">{formData.sessionDuration || '45-min Session'}</span>
+//               }
+//             </div>
+//           </div>
+
+//           {/* Contact Me */}
+//           <button className="w-full py-2 rounded-lg text-white font-semibold text-sm transition-colors hover:opacity-90"
+//             style={{ background: CYAN }}>
+//             Contact Me
+//           </button>
+
+//           {/* Like + Share */}
+//           <div className="flex items-center gap-4">
+//             <button onClick={() => setLiked(!liked)}
+//               className="flex items-center gap-1 text-xs text-gray-500 hover:text-red-400 transition-colors">
+//               <Heart size={12} fill={liked ? '#f87171' : 'none'} className={liked ? 'text-red-400' : ''} />
+//               {liked ? 'Saved' : 'Save'}
+//             </button>
+//             <button className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors">
+//               <Share2 size={12} />
+//               Share
+//             </button>
+//           </div>
+
+//           {/* Earnings */}
+//           <div className="border-t border-gray-100 pt-2.5 space-y-1.5">
+//             <div className="flex items-center justify-between">
+//               <span className="text-xs text-gray-500">Total Earnings:</span>
+//               <span className="text-xs font-semibold text-gray-800">${formData.totalEarnings || '0.00'}</span>
+//             </div>
+//             <div className="flex items-center justify-between">
+//               <span className="text-xs text-gray-500">Total Mentees:</span>
+//               <span className="text-xs font-semibold text-gray-800">{formData.totalMentees || 0}</span>
+//             </div>
+//           </div>
+
+//           {/* LinkedIn */}
+//           {isEditing && (
+//             <div>
+//               <p className="text-xs text-gray-400 mb-1 font-medium">LinkedIn URL</p>
+//               <EditField value={formData.linkedinUrl||''} onChange={e=>set('linkedinUrl',e.target.value)} placeholder="https://linkedin.com/in/..." />
+//             </div>
+//           )}
+//           {!isEditing && formData.linkedinUrl && (
+//             <a href={formData.linkedinUrl} target="_blank" rel="noopener noreferrer"
+//               className="text-xs font-medium underline truncate block" style={{ color: CYAN }}>
+//               {formData.linkedinUrl}
+//             </a>
+//           )}
+//         </aside>
+
+//         {/* ── RIGHT CONTENT ──────────────────────────────────── */}
+//         <div className="flex-1 flex flex-col min-w-0 overflow-auto w-full">
+
+//           {/* Tab strip */}
+//           <div className="border-b border-gray-200 px-4 sm:px-6 sticky top-0 bg-white z-10 overflow-x-auto scrollbar-hide">
+//             <div className="flex min-w-max">
+//               {TABS.map(tab => (
+//                 <button key={tab} onClick={() => setActiveTab(tab)}
+//                   className={`px-4 py-2.5 text-xs font-semibold border-b-2 transition-colors whitespace-nowrap -mb-px ${
+//                     activeTab === tab
+//                       ? 'border-gray-900 text-gray-900'
+//                       : 'border-transparent text-gray-400 hover:text-gray-600 hover:border-gray-300'
+//                   }`}>
+//                   {tab}
+//                 </button>
+//               ))}
+//             </div>
+//           </div>
+
+//           {/* Tab content */}
+//           <div className="p-4 sm:p-5 lg:p-7 space-y-6">
+
+//             {/* ── OVERVIEW ────────────────────────────────── */}
+//             {activeTab === 'Overview' && (
+//               <>
+//                 <section>
+//                   <h2 className="text-sm font-bold text-gray-900 mb-2">
+//                     About <span style={{ color: CYAN }}>{formData.fullName || 'Mentor'}</span>
+//                   </h2>
+//                   {isEditing
+//                     ? <EditField value={formData.whyMentor||''} onChange={e=>set('whyMentor',e.target.value)}
+//                         placeholder="Share your professional journey and mentoring goals…" multiline />
+//                     : <p className="text-sm text-gray-600 leading-relaxed">
+//                         {formData.whyMentor || 'No bio provided.'}
+//                       </p>
+//                   }
+//                 </section>
+
+//                 <section>
+//                   <h2 className="text-sm font-bold text-gray-900 mb-2">Mentorship Expertise</h2>
+//                   {isEditing
+//                     ? <EditField value={formData.currentSkills||''} onChange={e=>set('currentSkills',e.target.value)}
+//                         placeholder="React, Node.js, Python… (comma-separated)" multiline />
+//                     : skills.length > 0
+//                       ? <div className="flex flex-wrap gap-1.5">
+//                           {skills.map((s,i) => <Pill key={i} label={s} />)}
+//                         </div>
+//                       : <p className="text-xs text-gray-400 italic">No skills listed.</p>
+//                   }
+//                 </section>
+
+//                 <section>
+//                   <h2 className="text-sm font-bold text-gray-900 mb-2">Work History and Feedback</h2>
+//                   <p className="text-xs text-gray-500 italic">
+//                     {formData.completedBookings > 0
+//                       ? `${formData.completedBookings} completed session${formData.completedBookings > 1 ? 's' : ''}`
+//                       : 'Be the first to book a session with this mentor.'}
+//                   </p>
+//                 </section>
+//               </>
+//             )}
+
+//             {/* ── MENTORSHIP TOPICS ───────────────────────── */}
+//             {activeTab === 'Mentorship Topics' && (
+//               <section className="space-y-4">
+//                 <div>
+//                   <h2 className="text-sm font-bold text-gray-900 mb-2">Areas of Interest</h2>
+//                   {isEditing
+//                     ? <EditField value={formData.areasOfInterest||''} onChange={e=>set('areasOfInterest',e.target.value)}
+//                         placeholder="Web Development, Cloud, DevOps… (comma-separated)" multiline />
+//                     : areas.length > 0
+//                       ? <div className="flex flex-wrap gap-1.5">
+//                           {areas.map((a,i) => <Pill key={i} label={a} />)}
+//                         </div>
+//                       : <p className="text-xs text-gray-400 italic">No topics listed.</p>
+//                   }
+//                 </div>
+
+//                 <div>
+//                   <h2 className="text-sm font-bold text-gray-900 mb-1.5">Mentoring Style</h2>
+//                   {isEditing
+//                     ? <EditField value={formData.mentoringStyle||''} onChange={e=>set('mentoringStyle',e.target.value)}
+//                         placeholder="e.g., Collaborative, Goal-oriented, Hands-on" />
+//                     : <p className="text-sm text-gray-700">
+//                         {formData.mentoringStyle || <span className="italic text-gray-400">Not set</span>}
+//                       </p>
+//                   }
+//                 </div>
+//               </section>
+//             )}
+
+//             {/* ── EXPERIENCE ──────────────────────────────── */}
+//             {activeTab === 'Experience' && (
+//               <section className="space-y-5">
+//                 <div>
+//                   <h2 className="text-sm font-bold text-gray-900 mb-3">Professional Experience</h2>
+//                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+//                     {[
+//                       { label: 'Company',             field: 'companyName' },
+//                       { label: 'Years of Experience', field: 'yearsOfExperience', type: 'number' },
+//                       { label: 'Highest Degree',      field: 'highestDegree' },
+//                       { label: 'Field of Study',      field: 'fieldOfStudy' },
+//                       { label: 'Institution',         field: 'schoolName' },
+//                     ].map(({ label, field, type }) => (
+//                       <div key={field}>
+//                         <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">{label}</p>
+//                         {isEditing
+//                           ? <EditField type={type||'text'} value={formData[field]||''} onChange={e=>set(field,e.target.value)} placeholder={label} />
+//                           : <p className="text-sm text-gray-800 px-3 py-2 border border-gray-200 rounded-lg bg-gray-50">
+//                               {formData[field] || '—'}
+//                             </p>
+//                         }
+//                       </div>
+//                     ))}
+//                   </div>
+//                 </div>
+
+//                 {/* Weekly Availability */}
+//                 <div>
+//                   <h3 className="text-sm font-bold text-gray-800 mb-2.5">Weekly Availability</h3>
+//                   <div className="space-y-2">
+//                     {formData.availability?.map((day, di) => (
+//                       <div key={day.day} className="border border-gray-200 rounded-lg overflow-hidden">
+//                         <div className="flex items-center justify-between px-3 py-2 bg-gray-50 border-b border-gray-100">
+//                           <span className="text-xs font-semibold text-gray-700">{day.day}</span>
+//                           {isEditing && (
+//                             <button onClick={() => addSlot(di)}
+//                               className="flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded text-white transition-colors hover:opacity-80"
+//                               style={{ background: DARK }}>
+//                               <Plus size={10} /> Add Slot
+//                             </button>
+//                           )}
+//                         </div>
+//                         <div className="px-3 py-2 flex flex-wrap gap-1.5">
+//                           {!day.slots?.length
+//                             ? <span className="text-xs text-gray-400 italic">No slots set</span>
+//                             : day.slots.map((slot, si) => (
+//                               <div key={si} className="flex items-center gap-1.5 bg-white border border-gray-200 rounded-lg px-2 py-1">
+//                                 {isEditing ? (
+//                                   <>
+//                                     <input type="time" value={slot.startTime}
+//                                       onChange={e=>updateSlot(di,si,'startTime',e.target.value)}
+//                                       className="text-xs border border-gray-300 rounded px-1.5 py-0.5 focus:outline-none focus:border-[#0098cc]" />
+//                                     <span className="text-gray-300 text-xs">→</span>
+//                                     <input type="time" value={slot.endTime}
+//                                       onChange={e=>updateSlot(di,si,'endTime',e.target.value)}
+//                                       className="text-xs border border-gray-300 rounded px-1.5 py-0.5 focus:outline-none focus:border-[#0098cc]" />
+//                                     <button onClick={() => removeSlot(di,si)} className="text-red-400 hover:text-red-500 ml-0.5">
+//                                       <Trash2 size={10} />
+//                                     </button>
+//                                   </>
+//                                 ) : (
+//                                   <span className="text-xs font-medium text-gray-700">{slot.startTime} — {slot.endTime}</span>
+//                                 )}
+//                               </div>
+//                             ))
+//                           }
+//                         </div>
+//                       </div>
+//                     ))}
+//                   </div>
+//                 </div>
+//               </section>
+//             )}
+
+//             {/* ── CASE STUDIES ────────────────────────────── */}
+//             {activeTab === 'Case Studies' && (
+//               <section>
+//                 <h2 className="text-sm font-bold text-gray-900 mb-3">Case Studies</h2>
+//                 <div className="space-y-2.5">
+//                   {[
+//                     { label: 'Resume / CV', field: 'resumeLink', accept: '.pdf,.doc,.docx', ref: resumeRef },
+//                     { label: 'Portfolio',   field: 'portfolioLink', accept: '.pdf,.ppt,.pptx', ref: portfolioRef },
+//                     { label: 'Video Intro', field: 'videoLink', accept: 'video/*', ref: videoRef },
+//                   ].map(({ label, field, accept, ref }) => (
+//                     <div key={field} className="border border-gray-200 rounded-xl p-3">
+//                       <div className="flex items-center justify-between mb-2">
+//                         <p className="text-sm font-semibold text-gray-700">{label}</p>
+//                         {!isEditing && formData[field] && (
+//                           <a href={formData[field]} target="_blank" rel="noopener noreferrer"
+//                             className="flex items-center gap-1 text-xs font-semibold px-2.5 py-0.5 rounded-full border transition-colors"
+//                             style={{ borderColor: CYAN, color: CYAN }}>
+//                             <Eye size={10} /> View
+//                           </a>
+//                         )}
+//                         {!isEditing && !formData[field] && (
+//                           <span className="text-xs text-gray-400 italic">Not uploaded</span>
+//                         )}
+//                       </div>
+//                       {isEditing && (
+//                         <div className="space-y-1.5">
+//                           <input ref={ref} type="file" accept={accept} className="hidden" id={`f-${field}`}
+//                             onChange={e => { const f=e.target.files[0]; if(f) setFiles(p=>({...p,[field.replace('Link','')]:f})); }} />
+//                           <label htmlFor={`f-${field}`}
+//                             className="flex items-center gap-1.5 px-3 py-2 border-2 border-dashed rounded-lg cursor-pointer text-xs text-gray-500 hover:border-[#0098cc] hover:text-[#0098cc] transition-colors">
+//                             <Upload size={12} /> Upload file
+//                           </label>
+//                           <EditField value={formData[field]||''} onChange={e=>set(field,e.target.value)} placeholder="Or paste a URL…" />
+//                         </div>
+//                       )}
+//                     </div>
+//                   ))}
+//                 </div>
+//               </section>
+//             )}
+
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default MentorProfile;

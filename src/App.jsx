@@ -51,6 +51,8 @@ import Ltmsessionhistory from "./pages/LongTermMentorship/ltmsessionhistory/Ltms
 import Subscriptionplan from "./pages/LongTermMentorship/subscriptionplan/Subscriptionplan";
 import Mymentor from "./pages/LongTermMentorship/mymentor/Mymentor";
 import Mymessages from "./pages/LongTermMentorship/messages/Mymessages";
+import Myearnings from "./components/MentorDashboard/MyEarnings/Myearnings";
+import Reviews from "./components/MentorDashboard/Reviews/Reviews";
 
 
 const getAuthToken = () => {
@@ -159,6 +161,9 @@ const App = () => {
                         <Route index element={<Navigate to="/mentor/dashboard" replace />} />
                         <Route path="dashboard" element={<MentorDashboardSection />} />
                         <Route path="dashboard/sessions" element={<MentorSessionBookings />} />
+                        <Route path="dashboard/earnings" element={<Myearnings />} />
+                        <Route path="dashboard/reviews" element={<Reviews />} />
+
                         {/* Uncomment these when you create the components */}
                         {/* <Route path="dashboard/mentees" element={<MenteesSection />} /> */}
                         {/* <Route path="dashboard/messages" element={<MessagesSection />} /> */}
@@ -172,6 +177,17 @@ const App = () => {
                 <Route element={<ProtectedRoute />}>
                     <Route path="/mentor-profile" element={<MentorProfile />} />
                 </Route>
+
+
+                {/* <Route element={<ProtectedRoute />}>
+                    <Route path="/mentor-dashboard/earnings" element={<Myearnings />} />
+                </Route> */}
+
+
+                {/* 
+                <Route element={<ProtectedRoute />}>
+                    <Route path="/mentor-dashboard/reviews" element={<Reviews />} />
+                </Route> */}
 
                 {/* PUBLIC MENTOR PROFILE */}
                 <Route path="/mentor-profile/:mentorId" element={<ProfileModal />} />
