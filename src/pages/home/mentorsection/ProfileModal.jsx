@@ -788,7 +788,7 @@ const ProfileModal = () => {
                     <Calendar className="w-6 h-6 text-[#7ee0c1]" />
                     Weekly Availability
                   </h2>
-                  <button
+                  {/* <button
                     type="button"
                     onClick={() => setShowAvailEditor((v) => !v)}
                     style={{
@@ -803,7 +803,7 @@ const ProfileModal = () => {
                   >
                     <Plus size={15} />
                     {showAvailEditor ? "Cancel Edit" : "Manage Slots"}
-                  </button>
+                  </button> */}
                 </div>
 
                 {/* ── Slot Editor ─────────────────────────────────────────── */}

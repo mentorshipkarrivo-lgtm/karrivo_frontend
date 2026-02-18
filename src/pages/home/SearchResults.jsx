@@ -416,16 +416,27 @@ const SearchResults = () => {
                   ? mentor.currentSkills.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean)
                   : [];
 
+                // Always exactly 3 skill slots — pad with null if fewer
+                const displaySkills = [
+                  skillsArray[0] || null,
+                  skillsArray[1] || null,
+                  skillsArray[2] || null,
+                ];
+
+                const initials = mentor.fullName
+                  ? mentor.fullName.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()
+                  : "?";
+
                 return (
                   <motion.div
                     key={mentor._id || index}
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.05 }}
-                    className="bg-[#0a2d20] border border-[#0098cc]/20 rounded-2xl shadow-lg hover:border-[#0098cc]/60 hover:shadow-2xl hover:shadow-[#0098cc]/10 transition-all duration-300 hover:-translate-y-1 h-[520px] flex flex-col overflow-hidden"
+                    className="bg-[#0a2d20] border border-[#0098cc]/20 rounded-2xl hover:border-[#0098cc]/60 transition-all duration-300 hover:-translate-y-1 flex flex-col overflow-hidden"
                   >
-                    {/* Profile Image */}
-                    <div className="h-44 w-full shrink-0 relative bg-gradient-to-br from-[#0098cc]/20 to-[#062117]">
+                    {/* ── IMAGE — fixed height, no overflow ── */}
+                    <div className="h-40 w-full shrink-0 bg-gradient-to-br from-[#0098cc]/15 to-[#062117] flex items-center justify-center overflow-hidden">
                       {mentor.profileImage ? (
                         <img
                           src={mentor.profileImage}
@@ -433,86 +444,82 @@ const SearchResults = () => {
                           className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <div className="w-24 h-24 rounded-full bg-[#0098cc] text-white flex items-center justify-center text-3xl font-bold">
-                            {mentor.fullName?.charAt(0)?.toUpperCase() || '?'}
-                          </div>
+                        <div className="w-20 h-20 rounded-full bg-[#0098cc]/20 border-2 border-[#0098cc]/40 flex items-center justify-center">
+                          <span className="text-2xl font-bold text-[#0098cc]">{initials}</span>
                         </div>
                       )}
                     </div>
 
-                    {/* Card Content */}
-                    <div className="p-5 flex flex-col flex-grow">
-                      {/* Name */}
-                      <h3 className="text-white font-bold text-lg line-clamp-1">
-                        {mentor.fullName || 'Unknown Mentor'}
+                    {/* ── CARD BODY — all rows fixed height ── */}
+                    <div className="p-5 flex flex-col flex-1">
+
+                      {/* Row 1: Name — 1 line, fixed */}
+                      <h3 className="text-white font-bold text-base leading-snug line-clamp-1">
+                        {mentor.fullName || "Unknown Mentor"}
                       </h3>
 
-                      {/* Role */}
-                      <p className="text-[#0098cc] text-sm font-semibold mt-1 line-clamp-1">
-                        {mentor.currentRole || 'Role not specified'}
+                      {/* Row 2: Role — 1 line, fixed */}
+                      <p className="text-[#0098cc] text-sm font-medium mt-1 line-clamp-1">
+                        {mentor.currentRole || "Role not specified"}
                       </p>
 
-                      {/* Company */}
-                      {mentor.companyName && (
-                        <p className="text-gray-400 text-xs mt-1 line-clamp-1">
-                          at {mentor.companyName}
-                        </p>
-                      )}
+                      {/* Row 3: Company — 1 line, always present (empty space if none) */}
+                      <p className="text-gray-400 text-xs mt-0.5 line-clamp-1 h-4">
+                        {mentor.companyName ? `at ${mentor.companyName}` : ""}
+                      </p>
 
-                      {/* Location */}
-                      {mentor.location && (
-                        <div className="flex items-start gap-1 mt-1">
-                          <MapPin className="w-3 h-3 text-gray-500 mt-0.5 flex-shrink-0" />
-                          <p className="text-gray-500 text-xs line-clamp-1">
-                            {mentor.location}
-                          </p>
-                        </div>
-                      )}
-
-                      {/* Skills */}
-                      <div className="flex flex-wrap gap-2 mt-3">
-                        {skillsArray.slice(0, 3).map((skill, i) => (
-                          <span
-                            key={i}
-                            className="text-xs px-2 py-1 bg-[#0098cc]/10 text-[#0098cc] rounded-md border border-[#0098cc]/20 line-clamp-1"
-                          >
-                            {skill}
-                          </span>
-                        ))}
-                        {skillsArray.length > 3 && (
-                          <span className="text-xs px-2 py-1 bg-gray-700/50 text-gray-400 rounded-md">
-                            +{skillsArray.length - 3}
-                          </span>
-                        )}
+                      {/* Row 4: Location — 1 line, always present (empty space if none) */}
+                      <div className="flex items-center gap-1 mt-0.5 h-4">
+                        {mentor.location ? (
+                          <>
+                            <MapPin className="w-3 h-3 text-gray-500 shrink-0" />
+                            <p className="text-gray-500 text-xs line-clamp-1">{mentor.location}</p>
+                          </>
+                        ) : null}
                       </div>
 
-                      {/* Rating */}
-                      <div className="flex items-center justify-between mt-4 pb-3 border-b border-[#0098cc]/20">
-                        <div className="flex items-center gap-2">
-                          <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                          <span className="text-sm font-semibold text-white">5.0</span>
+                      {/* Row 5: Skills — always 3 equal slots */}
+                      <div className="flex gap-1.5 mt-3">
+                        {displaySkills.map((skill, i) => (
+                          <div key={i} className="flex-1 min-w-0">
+                            {skill ? (
+                              <span className="block text-center text-xs px-1.5 py-1 bg-[#0098cc]/10 text-[#0098cc] rounded border border-[#0098cc]/20 truncate">
+                                {skill}
+                              </span>
+                            ) : (
+                              <span className="block h-[26px]" /> /* placeholder keeps height */
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Row 6: Rating + Experience — fixed */}
+                      <div className="flex items-center justify-between mt-4 pt-3 border-t border-[#0098cc]/20">
+                        <div className="flex items-center gap-1.5">
+                          <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
+                          <span className="text-xs font-semibold text-white">5.0</span>
                         </div>
-                        <span className="text-sm text-gray-400">
+                        <span className="text-xs text-gray-400">
                           {mentor.yearsOfExperience || 0}+ yrs exp
                         </span>
                       </div>
 
-                      {/* Action Buttons */}
-                      <div className="mt-auto pt-4 flex flex-col gap-2">
+                      {/* Row 7: Buttons — always at bottom */}
+                      <div className="mt-4 flex flex-col gap-2">
                         <button
                           onClick={() => handleViewProfile(mentor)}
-                          className="w-full border-2 border-[#0098cc] text-[#0098cc] font-semibold py-2 rounded-lg transition-all hover:bg-[#0098cc] hover:text-white"
+                          className="w-full border border-[#0098cc] text-[#0098cc] text-sm font-semibold py-2 rounded-lg transition-all hover:bg-[#0098cc] hover:text-white"
                         >
                           View Profile
                         </button>
                         <button
                           onClick={() => handleBookSession(mentor)}
-                          className="w-full bg-[#0098cc] hover:bg-[#007fa3] text-white font-semibold py-2 rounded-lg transition-all"
+                          className="w-full bg-[#0098cc] hover:bg-[#007fa3] text-white text-sm font-semibold py-2 rounded-lg transition-all"
                         >
                           Book Session
                         </button>
                       </div>
+
                     </div>
                   </motion.div>
                 );
