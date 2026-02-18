@@ -4,9 +4,9 @@ export const trialBookingApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
 
     // 🔹 Get mentors list - FIXED: Changed from "useGetMentorsQuery" to "getMentors"
-    getMentors: builder.mutation({
+    getMentorsList: builder.mutation({
       query: (userData) => ({
-        url: "/Mentor/get-mentor-details",
+        url: "/Mentor/get-mentor-details-for-mentees",
         method: "POST",
         body: userData,
       }),
@@ -43,7 +43,7 @@ export const trialBookingApiSlice = apiSlice.injectEndpoints({
 });
 
 export const {
-  useGetMentorsMutation,
+  useGetMentorsListMutation,
   useGetSlotsQuery,
   useBookFreeTrialMutation,
   useBookPremiumTrialMutation,

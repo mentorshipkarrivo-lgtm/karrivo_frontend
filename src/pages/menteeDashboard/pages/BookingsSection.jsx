@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import Cookies from "js-cookie";
 
 import {
-    useGetMentorsMutation,
+    useGetMentorsListMutation,
     useGetSlotsQuery,
     useBookFreeTrialMutation,
     useBookPremiumTrialMutation,
@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 export default function BookingsSection() {
     const navigate = useNavigate();
 
-    const [getMentors, { data, isLoading, isError }] = useGetMentorsMutation();
+    const [getMentors, { data, isLoading, isError }] = useGetMentorsListMutation();
 
     useEffect(() => {
         const cookieData = Cookies.get("userData");
