@@ -933,11 +933,11 @@ const CATEGORIES = [
 ];
 
 const QUICK_LINKS = [
-  "Product Managers",
-  "Software Engineers",
-  "Data Scientists",
-  "UX Designers",
-  "Career Coaches",
+  "Engineering",
+  "Startup",
+  "Product",
+  "Leadership",
+  "AI Mentors",
 ];
 
 const useTypingAnimation = (texts, config) => {
@@ -1074,11 +1074,10 @@ const Home = () => {
                 <button
                   type="submit"
                   disabled={!isSearchValid}
-                  className={`absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2.5 rounded-full font-medium transition-all duration-200 flex items-center gap-2 ${
-                    isSearchValid
-                      ? "bg-[#0098cc] text-white hover:bg-[#0098cc] shadow-md border-none"
-                      : "bg-gray-200 text-gray-400 cursor-not-allowed border-none"
-                  }`}
+                  className={`absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2.5 rounded-full font-medium transition-all duration-200 flex items-center gap-2 ${isSearchValid
+                    ? "bg-[#0098cc] text-white hover:bg-[#0098cc] shadow-md border-none"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed border-none"
+                    }`}
                 >
                   Find Mentors
                   <ArrowRight className="w-4 h-4" />
