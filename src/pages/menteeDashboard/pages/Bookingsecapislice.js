@@ -10,7 +10,7 @@ export const trialBookingApiSlice = apiSlice.injectEndpoints({
         method: "POST",
         body: userData,
       }),
-      transformResponse: (response) => response.data.data,
+      transformResponse: (response) => response.data,
     }),
 
     // 🔹 Get available slots
