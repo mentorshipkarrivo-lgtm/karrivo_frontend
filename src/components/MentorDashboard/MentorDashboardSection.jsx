@@ -221,9 +221,8 @@ const StatCard = ({ label, value, icon: Icon, iconColor, sub, subColor }) => (
 const TabBtn = ({ label, active, onClick }) => (
   <button
     onClick={onClick}
-    className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-all ${
-      active ? 'bg-[#0098cc] text-white shadow-sm' : 'text-white/50 hover:bg-white/10'
-    }`}
+    className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-all ${active ? 'bg-[#0098cc] text-white shadow-sm' : 'text-white/50 hover:bg-white/10'
+      }`}
   >
     {label}
   </button>
@@ -279,7 +278,7 @@ const MentorDashboardSection = () => {
 
   useEffect(() => {
     if (user?.mentorId) {
-      try { localStorage.setItem('mentorId', user.mentorId); } catch (e) {}
+      try { localStorage.setItem('mentorId', user.mentorId); } catch (e) { }
     }
   }, [user]);
 
@@ -336,7 +335,7 @@ const MentorDashboardSection = () => {
         </div>
 
         {/* Mentor ID box */}
-        <div className="flex items-center gap-2 border border-white/10 rounded-xl px-3 sm:px-4 py-2">
+        {/* <div className="flex items-center gap-2 border border-white/10 rounded-xl px-3 sm:px-4 py-2">
           <div>
             <p className="text-white/40 text-[9px] sm:text-[10px] font-medium uppercase tracking-wider">Mentor ID</p>
             <p className="text-white font-bold text-xs sm:text-sm font-mono">{user?.mentorId || '—'}</p>
@@ -351,7 +350,7 @@ const MentorDashboardSection = () => {
           >
             {copied ? <><Check size={11} /> <span className="hidden sm:inline">Copied</span></> : <><Copy size={11} /> <span className="hidden sm:inline">Copy</span></>}
           </button>
-        </div>
+        </div> */}
       </div>
 
       {/* ══ BODY ════════════════════════════════════════════════ */}
@@ -368,9 +367,8 @@ const MentorDashboardSection = () => {
 
         {/* ── LEFT PANEL ─────────────────────────────────────── */}
         {/* On mobile: collapsible. On xl+: always visible fixed-width sidebar */}
-        <div className={`xl:w-80 xl:shrink-0 flex flex-col bg-[#062117] border border-white/10 rounded-2xl overflow-hidden ${
-          isPanelOpen ? 'flex' : 'hidden xl:flex'
-        }`}>
+        <div className={`xl:w-80 xl:shrink-0 flex flex-col bg-[#062117] border border-white/10 rounded-2xl overflow-hidden ${isPanelOpen ? 'flex' : 'hidden xl:flex'
+          }`}>
 
           {/* Tab strip */}
           <div className="flex gap-1 p-2 border-b border-white/10">
@@ -393,9 +391,8 @@ const MentorDashboardSection = () => {
                 </div>
 
                 <div className="bg-[#031610] rounded-xl px-4 py-3 border border-white/10 flex items-center gap-2.5">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                    user?.isVerified ? 'bg-emerald-500/10' : 'bg-amber-500/10'
-                  }`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${user?.isVerified ? 'bg-emerald-500/10' : 'bg-amber-500/10'
+                    }`}>
                     {user?.isVerified
                       ? <CheckCircle2 size={16} className="text-emerald-500" />
                       : <CircleAlert size={16} className="text-amber-500" />

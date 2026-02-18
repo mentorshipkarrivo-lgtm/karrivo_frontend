@@ -42,7 +42,7 @@ const LoginPage = () => {
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
     const userRole = localStorage.getItem("userRole");
-    
+
     if (authToken) {
       if (mentorId) {
         navigate(`/book-session?mentorId=${mentorId}`, { replace: true });
@@ -438,7 +438,7 @@ const LoginPage = () => {
             )}
 
             <h2 className="text-xl lg:text-2xl font-bold text-[#062117] text-center mb-4">
-              {isForgotPassword ? 'Forgot Password' : (isLogin ? 'Log in' : 'Create Account As Mentor')}
+              {isForgotPassword ? 'Forgot Password' : (isLogin ? 'Log in' : 'Create Account As Mentee')}
             </h2>
 
             {/* Role toggle */}
@@ -757,12 +757,12 @@ const LoginPage = () => {
                 {!isLogin && (
                   <div
                     onClick={() => navigate('/mentee/apply')}
-                    className="w-full py-2 rounded-full text-[#008FC4] font-semibold cursor-pointer hover:text-[#006f99] flex items-center justify-center text-sm"
+                    className="w-full py-2 rounded-full text-[#008FC4] font-semibold cursor-pointer hover:text-[#006f99] flex items-center justify-center text-base"
                   >
-                    Register as Mentor
+                    Join as a Mentor? Register Here
                   </div>
                 )}
-{/* 
+                {/* 
                 {isLogin && (
                   <>
                     <div className="relative my-4">
