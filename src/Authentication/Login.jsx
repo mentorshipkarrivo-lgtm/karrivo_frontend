@@ -1301,7 +1301,7 @@ const LoginPage = () => {
                     className="w-full py-2 rounded-full text-[#008FC4] font-semibold cursor-pointer hover:text-[#006f99] flex items-center justify-center text-base">
                     Join as a Mentor? Register Here
                   </div>
-                )}Recommended Mentors for you
+                )}
 
               </div>
             )}
