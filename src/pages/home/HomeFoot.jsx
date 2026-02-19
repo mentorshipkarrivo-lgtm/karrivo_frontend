@@ -13,9 +13,8 @@ export default function FooterLinks() {
           </p>
           <div className="mb-6">
             <h3 className="text-sm font-semibold mb-2">Contact</h3>
-            <a href="mailto:contact@karrivo.com" className="text-gray-400 hover:text-white">
-              contact@karrivo.com
-            </a>
+            <a href="wecare.karrivo@gmail.com " className="text-gray-400 hover:text-white">
+              wecare.karrivo@gmail.com            </a>
           </div>
           {/* Social Icons */}
           <div className="flex gap-4">

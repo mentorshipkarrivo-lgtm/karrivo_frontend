@@ -305,7 +305,7 @@ export default function MentoHero() {
       {/* Main Content */}
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-16 sm:py-20 lg:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center min-h-[70vh]">
-          
+
           {/* Left Column - Small intro text */}
           <div className="lg:col-span-3">
             <div className="space-y-2">
@@ -313,7 +313,7 @@ export default function MentoHero() {
                 We are <span className="font-semibold">GrowthMentor</span>,
               </p>
               <p className="text-white text-sm sm:text-base">
-                a <span style={{ color: '#0098cc' }}>mentorship platform</span>, connecting
+                a <span style={{ color: '#0098cc' }}>Karrivo mentorship platform</span>, connecting
               </p>
               <p className="text-white text-sm sm:text-base">
                 and empowering professionals
@@ -335,9 +335,9 @@ export default function MentoHero() {
             <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold text-white leading-tight relative inline-block">
               mentorship.
               {/* Curved underline */}
-              <svg 
-                className="absolute -bottom-4 left-0 w-full" 
-                height="30" 
+              <svg
+                className="absolute -bottom-4 left-0 w-full"
+                height="30"
                 viewBox="0 0 400 30"
                 preserveAspectRatio="none"
               >
@@ -367,17 +367,17 @@ export default function MentoHero() {
 
         {/* Bottom CTA Section */}
         <div className="mt-16 lg:mt-24 flex flex-col sm:flex-row items-center justify-center gap-6">
-          <button 
+          <button
             className="px-8 py-4 rounded-full border-2 text-white font-semibold hover:bg-white/10 transition-all duration-300 text-sm sm:text-base"
             style={{ borderColor: '#0098cc' }}
             onClick={() => navigate("/top")}
           >
             Browse mentors
           </button>
-          <button 
+          <button
             className="px-8 py-4 rounded-full font-semibold transition-all duration-300 hover:opacity-90 text-sm sm:text-base"
             style={{ backgroundColor: '#0098cc', color: 'white' }}
-           onClick={() => navigate("/login")}
+            onClick={() => navigate("/login")}
           >
             Get started free
           </button>
@@ -385,15 +385,15 @@ export default function MentoHero() {
       </div>
 
       {/* Additional decorative elements */}
-      <div 
+      <div
         className="absolute bottom-10 right-20 w-3 h-3 rounded-full opacity-60"
         style={{ backgroundColor: '#0098cc' }}
       ></div>
-      <div 
+      <div
         className="absolute top-1/3 left-10 w-2 h-2 rounded-full opacity-60"
         style={{ backgroundColor: '#0098cc' }}
       ></div>
-      <div 
+      <div
         className="absolute bottom-1/4 right-1/4 w-2 h-2 rounded-full opacity-60"
         style={{ backgroundColor: '#0098cc' }}
       ></div>
