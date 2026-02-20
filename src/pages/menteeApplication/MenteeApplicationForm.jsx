@@ -997,7 +997,7 @@ const MenteeApplicationForm = () => {
         if (section === 2) {
             if (areasOfInterest.length === 0) newErrors.areasOfInterest = 'Please select at least one area of interest';
             if (!formData.mentoringStyle?.trim()) newErrors.mentoringStyle = 'Please select a mentoring style';
-            if (!formData.mentorCategory?.trim()) newErrors.mentorCategory = 'Please select a mentor category'; // ← NEW validation
+            // if (!formData.mentorCategory?.trim()) newErrors.mentorCategory = 'Please select a mentor category'; // ← NEW validation
             if (formData.linkedinUrl && !formData.linkedinUrl.startsWith('https://www.linkedin.com/')) {
                 newErrors.linkedinUrl = 'LinkedIn URL must start with https://www.linkedin.com/';
             }
@@ -1169,7 +1169,7 @@ const MenteeApplicationForm = () => {
                             { label: 'Application ID', val: <span className="font-mono font-bold text-emerald-600">{submissionResponse?.applicationId}</span> },
                             { label: 'Name', val: submissionResponse?.name },
                             { label: 'Email', val: <span className="truncate max-w-[180px] inline-block">{submissionResponse?.email}</span> },
-                            { label: 'Category', val: submissionResponse?.mentorCategory || formData.mentorCategory || '—' },
+                            // { label: 'Category', val: submissionResponse?.mentorCategory || formData.mentorCategory || '—' },
                             { label: 'Submitted', val: new Date(submissionResponse?.submittedAt).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" }) },
                         ].map(({ label, val }, i, arr) => (
                             <div key={label} className={`flex justify-between items-center ${i < arr.length - 1 ? 'pb-1.5 border-b border-gray-200' : ''}`}>
@@ -1360,13 +1360,13 @@ const MenteeApplicationForm = () => {
                                                 true,
                                                 'Select your preferred style'
                                             )}
-                                            {renderSelect(
+                                            {/* {renderSelect(
                                                 'Mentor Category',
                                                 'mentorCategory',
                                                 MENTOR_CATEGORIES,
                                                 true,
                                                 'Select a mentor category'
-                                            )}
+                                            )} */}
                                         </div>
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

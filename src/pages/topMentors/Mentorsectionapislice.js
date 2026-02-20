@@ -1,15 +1,363 @@
+// // import { apiSlice } from "../../ApiSliceComponent/karrivoApi";
+
+// // export const mentorSectionApiSlice = apiSlice.injectEndpoints({
+// //     endpoints: (builder) => ({
+
+// //         // Check Free Session Eligibility
+// //         checkFreeSessionEligibility: builder.query({
+// //             query: (userId) => ({
+// //                 url: '/mentee/trailbookings/check-free-session',
+// //                 method: 'POST',
+// //                 body: { userId }
+// //             }),
+// //             transformResponse: (response) => response,
+// //             providesTags: ['FreeSession'],
+// //         }),
+
+// //         // Fetch Top Mentors
+// //         fetchTopMentors: builder.query({
+// //             query: ({ limit = 4 }) => `/Mentor/topmentors?limit=${limit}`,
+// //             transformResponse: (response) => response.data,
+// //             providesTags: (result = []) =>
+// //                 result.length
+// //                     ? result.map((mentor) => ({
+// //                         type: "TopMentors",
+// //                         id: mentor._id,
+// //                     }))
+// //                     : [{ type: "TopMentors", id: "LIST" }],
+// //         }),
+
+// //         // Fetch Mentor By ID
+// //         fetchMentorById: builder.query({
+// //             query: (mentorId) => `/Mentor/view/${mentorId}`,
+// //             transformResponse: (response) => response.data,
+// //             providesTags: (result, error, mentorId) => [
+// //                 { type: "Mentor", id: mentorId }
+// //             ],
+// //         }),
+
+// //         // Fetch Mentor Availability
+// //         fetchMentorAvailability: builder.query({
+// //             query: ({ mentorId, date }) => ({
+// //                 url: `/Mentor/${mentorId}/availability`,
+// //                 params: { date },
+// //             }),
+// //             transformResponse: (response) => response.data,
+// //         }),
+
+// //         // Create Initial Booking (handles both free and paid)
+// //         createBooking: builder.mutation({
+// //             query: (bookingData) => ({
+// //                 url: '/mentee/trailbookings/bookings_session',
+// //                 method: 'POST',
+// //                 body: bookingData,
+// //             }),
+// //             transformResponse: (response) => response,
+// //             invalidatesTags: [
+// //                 { type: "Booking", id: "LIST" },
+// //                 'FreeSession'
+// //             ],
+// //         }),
+
+// //         // Complete Booking with Payment (only for paid bookings)
+// //         completeBooking: builder.mutation({
+// //             query: ({ bookingId, ...paymentDetails }) => ({
+// //                 url: `/mentee/trailbookings/bookings/${bookingId}/complete`,
+// //                 method: 'POST',
+// //                 body: paymentDetails,
+// //             }),
+// //             transformResponse: (response) => response,
+// //             invalidatesTags: (result, error, { bookingId }) => [
+// //                 { type: "Booking", id: bookingId },
+// //                 { type: "Booking", id: "LIST" },
+// //             ],
+// //         }),
+
+// //         // Fetch User Bookings
+// //         fetchUserBookings: builder.query({
+// //             query: ({ userId }) => ({
+// //                 url: '/mentee/trailbookings/my-bookings',
+// //                 method: 'POST',
+// //                 body: { userId }
+// //             }),
+// //             transformResponse: (response) => response,
+// //             providesTags: (result = {}) => {
+// //                 const bookings = result.data || [];
+// //                 return bookings.length
+// //                     ? [
+// //                         ...bookings.map((booking) => ({
+// //                             type: "Booking",
+// //                             id: booking._id,
+// //                         })),
+// //                         { type: "Booking", id: "LIST" },
+// //                     ]
+// //                     : [{ type: "Booking", id: "LIST" }];
+// //             },
+// //         }),
+
+// //         // Cancel Booking
+// //         cancelBooking: builder.mutation({
+// //             query: ({ bookingId, reason }) => ({
+// //                 url: `/mentee/trailbookings/bookings/${bookingId}/cancel`,
+// //                 method: 'POST',
+// //                 body: { reason },
+// //             }),
+// //             transformResponse: (response) => response,
+// //             invalidatesTags: (result, error, { bookingId }) => [
+// //                 { type: "Booking", id: bookingId },
+// //                 { type: "Booking", id: "LIST" },
+// //                 'FreeSession'
+// //             ],
+// //         }),
+
+// //         // Verify Payment
+// //         verifyPayment: builder.mutation({
+// //             query: (paymentData) => ({
+// //                 url: '/Mentor/payments/verify',
+// //                 method: 'POST',
+// //                 body: paymentData,
+// //             }),
+// //             transformResponse: (response) => response.data,
+// //         }),
+
+// //         // Fetch Mentor Reviews
+// //         fetchMentorReviews: builder.query({
+// //             query: ({ mentorId, page = 1, limit = 5 }) => ({
+// //                 url: `/Mentor/${mentorId}/reviews`,
+// //                 params: { page, limit },
+// //             }),
+// //             transformResponse: (response) => response.data,
+// //             providesTags: (result, error, { mentorId }) => [
+// //                 { type: "Review", id: mentorId }
+// //             ],
+// //         }),
+
+// //         // Submit Review
+// //         submitReview: builder.mutation({
+// //             query: ({ bookingId, rating, comment }) => ({
+// //                 url: '/Mentor/reviews',
+// //                 method: 'POST',
+// //                 body: { bookingId, rating, comment },
+// //             }),
+// //             transformResponse: (response) => response.data,
+// //             invalidatesTags: (result, error, { bookingId }) => [
+// //                 { type: "Review", id: "LIST" },
+// //                 { type: "Booking", id: bookingId },
+// //             ],
+// //         }),
+
+
+// //         // Legacy - Book Session (keeping for backwards compatibility)
+// //         bookSession: builder.mutation({
+// //             query: (data) => ({
+// //                 url: '/Mentor/book-session',
+// //                 method: 'POST',
+// //                 body: data,
+// //             }),
+// //             transformResponse: (response) => response.data,
+// //         }),
+
+// //     }),
+// // });
+
+// // export const {
+// //     useCheckFreeSessionEligibilityQuery,
+// //     useFetchTopMentorsQuery,
+// //     useFetchMentorByIdQuery,
+// //     useFetchMentorAvailabilityQuery,
+// //     useCreateBookingMutation,
+// //     useCompleteBookingMutation,
+// //     useVerifyPaymentMutation,
+// //     useFetchUserBookingsQuery,
+// //     useCancelBookingMutation,
+// //     useFetchMentorReviewsQuery,
+// //     useSubmitReviewMutation,
+// //     useBookSessionMutation
+// // } = mentorSectionApiSlice;
+
+
+
+
+// import { apiSlice } from "../../ApiSliceComponent/karrivoApi";
+
+// export const mentorSectionApiSlice = apiSlice.injectEndpoints({
+//     endpoints: (builder) => ({
+
+//         // ✅ Check Free Session Eligibility (from SessionBooking schema)
+//         checkFreeSessionEligibility: builder.query({
+//             query: (userId) => ({
+//                 url: '/mentee/trailbookings/check-free-session',
+//                 method: 'POST',
+//                 body: { userId }
+//             }),
+//             // response shape: { success, hasFreeSession, freeSessionUsed, message, usedSessionDetails }
+//             transformResponse: (response) => response,
+//             providesTags: ['FreeSession'],
+//         }),
+
+//         // Fetch Top Mentors
+//         fetchTopMentors: builder.query({
+//             query: ({ limit = 4 }) => `/Mentor/topmentors?limit=${limit}`,
+//             transformResponse: (response) => response.data,
+//             providesTags: (result = []) =>
+//                 result.length
+//                     ? result.map((mentor) => ({ type: "TopMentors", id: mentor._id }))
+//                     : [{ type: "TopMentors", id: "LIST" }],
+//         }),
+
+//         // Fetch Mentor By ID
+//         fetchMentorById: builder.query({
+//             query: (mentorId) => `/Mentor/view/${mentorId}`,
+//             transformResponse: (response) => response.data,
+//             providesTags: (result, error, mentorId) => [{ type: "Mentor", id: mentorId }],
+//         }),
+
+//         // Fetch Mentor Availability
+//         fetchMentorAvailability: builder.query({
+//             query: ({ mentorId, date }) => ({
+//                 url: `/Mentor/${mentorId}/availability`,
+//                 params: { date },
+//             }),
+//             transformResponse: (response) => response.data,
+//         }),
+
+//         // ✅ Create Booking (free or paid, decided by backend)
+//         createBooking: builder.mutation({
+//             query: (bookingData) => ({
+//                 url: '/mentee/trailbookings/bookings_session',
+//                 method: 'POST',
+//                 body: bookingData,
+//             }),
+//             // response shape: { success, isFreeSession, requiresPayment, message, bookingId, data, zoomMeeting }
+//             transformResponse: (response) => response,
+//             invalidatesTags: [
+//                 { type: "Booking", id: "LIST" },
+//                 'FreeSession'
+//             ],
+//         }),
+
+//         // Complete Booking with Payment
+//         completeBooking: builder.mutation({
+//             query: ({ bookingId, ...paymentDetails }) => ({
+//                 url: `/mentee/trailbookings/bookings/${bookingId}/complete`,
+//                 method: 'POST',
+//                 body: paymentDetails,
+//             }),
+//             transformResponse: (response) => response,
+//             invalidatesTags: (result, error, { bookingId }) => [
+//                 { type: "Booking", id: bookingId },
+//                 { type: "Booking", id: "LIST" },
+//             ],
+//         }),
+
+//         // Fetch User Bookings
+//         fetchUserBookings: builder.query({
+//             query: ({ userId }) => ({
+//                 url: '/mentee/trailbookings/my-bookings',
+//                 method: 'POST',
+//                 body: { userId }
+//             }),
+//             transformResponse: (response) => response,
+//             providesTags: (result = {}) => {
+//                 const bookings = result.data || [];
+//                 return bookings.length
+//                     ? [
+//                         ...bookings.map((booking) => ({ type: "Booking", id: booking._id })),
+//                         { type: "Booking", id: "LIST" },
+//                     ]
+//                     : [{ type: "Booking", id: "LIST" }];
+//             },
+//         }),
+
+//         // Cancel Booking
+//         cancelBooking: builder.mutation({
+//             query: ({ bookingId, reason }) => ({
+//                 url: `/mentee/trailbookings/bookings/${bookingId}/cancel`,
+//                 method: 'POST',
+//                 body: { reason },
+//             }),
+//             transformResponse: (response) => response,
+//             invalidatesTags: (result, error, { bookingId }) => [
+//                 { type: "Booking", id: bookingId },
+//                 { type: "Booking", id: "LIST" },
+//                 'FreeSession'
+//             ],
+//         }),
+
+//         // Verify Payment
+//         verifyPayment: builder.mutation({
+//             query: (paymentData) => ({
+//                 url: '/Mentor/payments/verify',
+//                 method: 'POST',
+//                 body: paymentData,
+//             }),
+//             transformResponse: (response) => response.data,
+//         }),
+
+//         // Fetch Mentor Reviews
+//         fetchMentorReviews: builder.query({
+//             query: ({ mentorId, page = 1, limit = 5 }) => ({
+//                 url: `/Mentor/${mentorId}/reviews`,
+//                 params: { page, limit },
+//             }),
+//             transformResponse: (response) => response.data,
+//             providesTags: (result, error, { mentorId }) => [{ type: "Review", id: mentorId }],
+//         }),
+
+//         // Submit Review
+//         submitReview: builder.mutation({
+//             query: ({ bookingId, rating, comment }) => ({
+//                 url: '/Mentor/reviews',
+//                 method: 'POST',
+//                 body: { bookingId, rating, comment },
+//             }),
+//             transformResponse: (response) => response.data,
+//             invalidatesTags: (result, error, { bookingId }) => [
+//                 { type: "Review", id: "LIST" },
+//                 { type: "Booking", id: bookingId },
+//             ],
+//         }),
+
+//         // Legacy
+//         bookSession: builder.mutation({
+//             query: (data) => ({
+//                 url: '/Mentor/book-session',
+//                 method: 'POST',
+//                 body: data,
+//             }),
+//             transformResponse: (response) => response.data,
+//         }),
+//     }),
+// });
+
+// export const {
+//     useCheckFreeSessionEligibilityQuery,
+//     useFetchTopMentorsQuery,
+//     useFetchMentorByIdQuery,
+//     useFetchMentorAvailabilityQuery,
+//     useCreateBookingMutation,
+//     useCompleteBookingMutation,
+//     useVerifyPaymentMutation,
+//     useFetchUserBookingsQuery,
+//     useCancelBookingMutation,
+//     useFetchMentorReviewsQuery,
+//     useSubmitReviewMutation,
+//     useBookSessionMutation
+// } = mentorSectionApiSlice;
+
 import { apiSlice } from "../../ApiSliceComponent/karrivoApi";
 
 export const mentorSectionApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
 
-        // Check Free Session Eligibility
+        // ✅ Check Free Session Eligibility (from SessionBooking schema)
         checkFreeSessionEligibility: builder.query({
-            query: (userId) => ({
+            query: ({ userId, username, mentorUserId }) => ({
                 url: '/mentee/trailbookings/check-free-session',
                 method: 'POST',
-                body: { userId }
+                body: { userId, username, mentorUserId }
             }),
+            // response shape: { success, hasFreeSession, freeSessionUsed, message, usedSessionDetails }
             transformResponse: (response) => response,
             providesTags: ['FreeSession'],
         }),
@@ -20,10 +368,7 @@ export const mentorSectionApiSlice = apiSlice.injectEndpoints({
             transformResponse: (response) => response.data,
             providesTags: (result = []) =>
                 result.length
-                    ? result.map((mentor) => ({
-                        type: "TopMentors",
-                        id: mentor._id,
-                    }))
+                    ? result.map((mentor) => ({ type: "TopMentors", id: mentor._id }))
                     : [{ type: "TopMentors", id: "LIST" }],
         }),
 
@@ -31,9 +376,7 @@ export const mentorSectionApiSlice = apiSlice.injectEndpoints({
         fetchMentorById: builder.query({
             query: (mentorId) => `/Mentor/view/${mentorId}`,
             transformResponse: (response) => response.data,
-            providesTags: (result, error, mentorId) => [
-                { type: "Mentor", id: mentorId }
-            ],
+            providesTags: (result, error, mentorId) => [{ type: "Mentor", id: mentorId }],
         }),
 
         // Fetch Mentor Availability
@@ -45,13 +388,14 @@ export const mentorSectionApiSlice = apiSlice.injectEndpoints({
             transformResponse: (response) => response.data,
         }),
 
-        // Create Initial Booking (handles both free and paid)
+        // ✅ Create Booking (free or paid, decided by backend)
         createBooking: builder.mutation({
             query: (bookingData) => ({
                 url: '/mentee/trailbookings/bookings_session',
                 method: 'POST',
                 body: bookingData,
             }),
+            // response shape: { success, isFreeSession, requiresPayment, message, bookingId, data, zoomMeeting }
             transformResponse: (response) => response,
             invalidatesTags: [
                 { type: "Booking", id: "LIST" },
@@ -59,7 +403,7 @@ export const mentorSectionApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
-        // Complete Booking with Payment (only for paid bookings)
+        // Complete Booking with Payment
         completeBooking: builder.mutation({
             query: ({ bookingId, ...paymentDetails }) => ({
                 url: `/mentee/trailbookings/bookings/${bookingId}/complete`,
@@ -85,10 +429,7 @@ export const mentorSectionApiSlice = apiSlice.injectEndpoints({
                 const bookings = result.data || [];
                 return bookings.length
                     ? [
-                        ...bookings.map((booking) => ({
-                            type: "Booking",
-                            id: booking._id,
-                        })),
+                        ...bookings.map((booking) => ({ type: "Booking", id: booking._id })),
                         { type: "Booking", id: "LIST" },
                     ]
                     : [{ type: "Booking", id: "LIST" }];
@@ -127,9 +468,7 @@ export const mentorSectionApiSlice = apiSlice.injectEndpoints({
                 params: { page, limit },
             }),
             transformResponse: (response) => response.data,
-            providesTags: (result, error, { mentorId }) => [
-                { type: "Review", id: mentorId }
-            ],
+            providesTags: (result, error, { mentorId }) => [{ type: "Review", id: mentorId }],
         }),
 
         // Submit Review
@@ -146,8 +485,7 @@ export const mentorSectionApiSlice = apiSlice.injectEndpoints({
             ],
         }),
 
-
-        // Legacy - Book Session (keeping for backwards compatibility)
+        // Legacy
         bookSession: builder.mutation({
             query: (data) => ({
                 url: '/Mentor/book-session',
@@ -156,7 +494,6 @@ export const mentorSectionApiSlice = apiSlice.injectEndpoints({
             }),
             transformResponse: (response) => response.data,
         }),
-
     }),
 });
 
@@ -174,5 +511,4 @@ export const {
     useSubmitReviewMutation,
     useBookSessionMutation
 } = mentorSectionApiSlice;
-
 

@@ -237,20 +237,42 @@ const WeeklyAvailability = ({ availability, isEditing, addSlot, removeSlot, upda
                       <Clock size={12} color={CYAN} />
                       {isEditing ? (
                         <>
-                          <input type="time" value={slot.startTime}
-                            onChange={e => updateSlot(di, si, 'startTime', e.target.value)}
-                            style={{ fontFamily: FONT, fontSize: 13, border: '1px solid #d1dde3', borderRadius: 6, padding: '4px 8px', outline: 'none', color: '#0f2030', background: '#fff' }} />
+                          <input
+                            type="time"
+                            value={slot.startTime}
+                            min="06:00"
+                            max="23:00"
+                            onChange={e => {
+                              const start = e.target.value;
+                              // Auto-calculate endTime = startTime + 30 min
+                              const [h, m] = start.split(':').map(Number);
+                              const total = h * 60 + m + 30;
+                              const endH = String(Math.floor(total / 60)).padStart(2, '0');
+                              const endM = String(total % 60).padStart(2, '0');
+                              const end = `${endH}:${endM}`;
+                              updateSlot(di, si, 'startTime', start);
+                              updateSlot(di, si, 'endTime', end);
+                            }}
+                            style={{ fontFamily: FONT, fontSize: 13, border: '1px solid #d1dde3', borderRadius: 6, padding: '4px 8px', outline: 'none', color: '#0f2030', background: '#fff' }}
+                          />
                           <span style={{ color: CYAN, fontWeight: 700 }}>→</span>
-                          <input type="time" value={slot.endTime}
-                            onChange={e => updateSlot(di, si, 'endTime', e.target.value)}
-                            style={{ fontFamily: FONT, fontSize: 13, border: '1px solid #d1dde3', borderRadius: 6, padding: '4px 8px', outline: 'none', color: '#0f2030', background: '#fff' }} />
+                          {/* endTime is read-only — always 30 min after start */}
+                          <span style={{
+                            fontFamily: FONT, fontSize: 13, fontWeight: 600, color: '#1e3a4a',
+                            padding: '4px 10px', background: '#f0f5f8', borderRadius: 6,
+                            border: '1px solid #e2eef3', minWidth: 58, textAlign: 'center'
+                          }}>
+                            {slot.endTime}
+                          </span>
                           <button onClick={() => removeSlot(di, si)} style={{
                             background: '#fff0f0', border: '1px solid #fca5a5', color: '#ef4444',
                             borderRadius: 5, padding: '4px 6px', cursor: 'pointer', display: 'flex', alignItems: 'center',
                           }}><Trash2 size={11} /></button>
                         </>
                       ) : (
-                        <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 600, color: '#1e3a4a' }}>{slot.startTime} — {slot.endTime}</span>
+                        <span style={{ fontFamily: FONT, fontSize: 13, fontWeight: 600, color: '#1e3a4a' }}>
+                          {slot.startTime} — {slot.endTime}
+                        </span>
                       )}
                     </div>
                   ))}
@@ -344,14 +366,25 @@ const MentorProfile = () => {
     setIsEditing(false);
   };
 
+  // const addSlot = (di) => setFormData(p => {
+  //   const a = [...p.availability];
+  //   a[di] = {
+  //     ...a[di],
+  //     slots: [...(a[di].slots || []), { startTime: '09:00', endTime: '09:30', isBooked: false }]
+  //   };
+  //   return { ...p, availability: a };
+  // }); 
+
   const addSlot = (di) => setFormData(p => {
     const a = [...p.availability];
     a[di] = {
       ...a[di],
-      slots: [...(a[di].slots || []), { startTime: '09:00', endTime: '09:30', isBooked: false }]
+      slots: [...(a[di].slots || []), { startTime: '06:00', endTime: '06:30', isBooked: false }]
     };
     return { ...p, availability: a };
-  }); const removeSlot = (di, si) => setFormData(p => { const a = [...p.availability]; a[di].slots = a[di].slots.filter((_, i) => i !== si); return { ...p, availability: a }; });
+  });
+
+  const removeSlot = (di, si) => setFormData(p => { const a = [...p.availability]; a[di].slots = a[di].slots.filter((_, i) => i !== si); return { ...p, availability: a }; });
   const updateSlot = (di, si, f, v) => setFormData(p => { const a = [...p.availability]; a[di].slots[si][f] = v; return { ...p, availability: a }; });
 
   const skills = formData.currentSkills ? formData.currentSkills.split(',').map(s => s.trim()).filter(Boolean) : [];
