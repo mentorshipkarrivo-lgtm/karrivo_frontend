@@ -1163,7 +1163,7 @@ export default function BookingsSection() {
                 <table className="w-full min-w-[900px]">
                   <thead className="bg-gray-50 border-b border-gray-200">
                     <tr>
-                      {["Mentor", "Role & Company", "Experience", "Areas of Interest", "Style", "Rate", "Status", "Actions"].map((h) => (
+                      {["Mentor", "Role & Company", "Experience", "Areas of Interest", "Style", "Rate", "Actions"].map((h) => (
                         <th
                           key={h}
                           className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider whitespace-nowrap"
@@ -1273,12 +1273,12 @@ export default function BookingsSection() {
                           </td>
 
                           {/* STATUS */}
-                          <td className="px-6 py-4 whitespace-nowrap">
+                          {/* <td className="px-6 py-4 whitespace-nowrap">
                             <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold capitalize ${statusStyle(mentor.status)}`}>
                               <span className={`w-1.5 h-1.5 rounded-full ${statusDot(mentor.status)} ${mentor.status === "approved" ? "animate-pulse" : ""}`} />
                               {mentor.status || "—"}
                             </span>
-                          </td>
+                          </td> */}
 
                           {/* ACTIONS */}
                           <td className="px-6 py-4 whitespace-nowrap">
