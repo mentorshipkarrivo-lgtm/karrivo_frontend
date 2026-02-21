@@ -16,17 +16,19 @@ export const supportApiSlice = apiSlice.injectEndpoints({
         }),
 
         // Create a new support ticket
+        // Update createSupportTicket mutation body:
         createSupportTicket: builder.mutation({
             query: (ticketData) => ({
                 url: "mentee/support/create-ticket",
                 method: "POST",
                 body: {
                     username: ticketData.username,
+                    name: ticketData.name,        // ← add this line
                     subject: ticketData.subject,
                     category: ticketData.category,
                     priority: ticketData.priority,
                     description: ticketData.description,
-                    status: "pending", // Default status
+                    status: "pending",
                     createdAt: new Date().toISOString(),
                 },
                 headers: {

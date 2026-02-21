@@ -53,6 +53,7 @@ import Mymentor from "./pages/LongTermMentorship/mymentor/Mymentor";
 import Mymessages from "./pages/LongTermMentorship/messages/Mymessages";
 import Myearnings from "./components/MentorDashboard/MyEarnings/Myearnings";
 import Reviews from "./components/MentorDashboard/Reviews/Reviews";
+import ResetPassword from "./Authentication/ResetPassword";
 
 
 const getAuthToken = () => {
@@ -148,6 +149,13 @@ const App = () => {
                 {/* LOGIN PAGE - NO NAVBAR + NO FOOTER */}
                 <Route element={<PublicRoute />}>
                     <Route path="/login" element={<LoginPage />} />
+                </Route>
+
+
+                <Route element={<PublicRoute />}>
+
+
+                    <Route path="/reset-password" element={<ResetPassword />} />
                 </Route>
 
                 {/* 🔥 PAYMENT PAGE - STANDALONE (NO NAVBAR/FOOTER) */}

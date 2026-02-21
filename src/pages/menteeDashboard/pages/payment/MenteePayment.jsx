@@ -1007,8 +1007,8 @@ const MenteePayment = () => {
   }, [bookingId, paymentAmount, navigate]);
 
   const defaultFormData = {
-    upiId: "jaimaxcoin2024@upi",
-    secondUpiId: "Vyapar.174327728615@hdfcbank",
+    upiId: "karrivo2024@upi",
+    secondUpiId: "exmaple.174327728615@sbi",
     transactionId: "",
     screenshot: null,
     amount: paymentAmount || "",

@@ -290,7 +290,7 @@ import {
     Calendar, User, Video, RefreshCw, Loader2, TriangleAlert,
     CalendarX, Clock, BadgeCheck, CircleDot, CircleX, CircleCheck
 } from 'lucide-react';
-import { useGetMentorSessionBookingsQuery } from '../MentorDashboardapislice';
+import { useGetMentorSessionsQuery } from '../MentorDashboardapislice';
 
 // ── Status badge ──────────────────────────────────────────────
 const StatusBadge = ({ status }) => {
@@ -424,7 +424,7 @@ const MentorSessionBookings = () => {
     }, []);
 
     const { data: sessionsData, isLoading, isError, error, refetch } =
-        useGetMentorSessionBookingsQuery(mentorId, { skip: !mentorId });
+        useGetMentorSessionsQuery(mentorId, { skip: !mentorId });
 
     const sessions = sessionsData?.data || [];
     const totalSessions = sessionsData?.count || 0;
