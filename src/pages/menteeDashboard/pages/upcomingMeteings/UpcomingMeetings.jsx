@@ -368,6 +368,7 @@ import {
     ExternalLink, 
     MessageSquare 
 } from 'lucide-react';
+import Loader from '../../../../global/Loader';
 
 const UpcomingMeetings = () => {
     const [copiedMeetingId, setCopiedMeetingId] = useState(null);
@@ -464,8 +465,7 @@ const UpcomingMeetings = () => {
         return (
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
                 <div className="flex flex-col items-center justify-center space-y-4">
-                    <div className="w-12 h-12 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
-                    <p className="text-gray-600 text-sm sm:text-base">Loading upcoming meetings...</p>
+                     <Loader />
                 </div>
             </div>
         );

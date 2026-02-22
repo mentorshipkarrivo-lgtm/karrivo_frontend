@@ -291,6 +291,7 @@ import {
     CalendarX, Clock, BadgeCheck, CircleDot, CircleX, CircleCheck
 } from 'lucide-react';
 import { useGetMentorSessionsQuery } from '../MentorDashboardapislice';
+import Loader from '../../../global/Loader';
 
 // ── Status badge ──────────────────────────────────────────────
 const StatusBadge = ({ status }) => {
@@ -438,8 +439,7 @@ const MentorSessionBookings = () => {
     if (isLoading) return (
         <div className="flex-1 flex items-center justify-center min-h-[300px] bg-[#031610]">
             <div className="flex flex-col items-center gap-3">
-                <Loader2 size={32} className="animate-spin text-[#0098cc]" />
-                <p className="text-white/50 text-sm">Loading session bookings…</p>
+               <Loader />
             </div>
         </div>
     );

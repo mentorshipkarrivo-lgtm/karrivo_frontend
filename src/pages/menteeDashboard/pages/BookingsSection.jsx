@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Cookies from "js-cookie";
 import { useGetMentorsListMutation } from "./Bookingsecapislice";
 import { useNavigate, useParams } from "react-router-dom";
+import Loader from "../../../global/Loader";
 // ─── helpers ──────────────────────────────────────────────────────────────────
 const getInitials = (name = "") =>
   name.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
@@ -458,8 +459,7 @@ export default function BookingsSection() {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-10 h-10 animate-spin text-indigo-600" />
-          <p className="text-sm text-gray-400 animate-pulse">Loading mentors…</p>
+         <Loader />
         </div>
       </div>
     );
@@ -525,7 +525,7 @@ export default function BookingsSection() {
             { icon: Users, label: "Total Mentors", value: mentorsList.length, bg: "bg-indigo-50", icon_color: "text-indigo-600" },
             { icon: Award, label: "Approved", value: approvedCount, bg: "bg-green-50", icon_color: "text-green-600" },
             { icon: TrendingUp, label: "Currently Active", value: activeCount, bg: "bg-blue-50", icon_color: "text-blue-600" },
-            { icon: Star, label: "Filtered Results", value: filtered.length, bg: "bg-purple-50", icon_color: "text-purple-600" },
+            // { icon: Star, label: "Filtered Results", value: filtered.length, bg: "bg-purple-50", icon_color: "text-purple-600" },
           ].map((s, i) => (
             <motion.div
               key={s.label}

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Calendar, Clock, Video, DollarSign, User, Mail, Phone, CheckCircle, XCircle, AlertCircle, RefreshCw, X, ChevronRight, Tag, FileText, Eye } from "lucide-react";
 import { useGetMenteeBookingsQuery, useCancelBookingMutation, useRescheduleBookingMutation } from "./Bookingsecapislice"
+import Loader from "../../../../global/Loader";
 
 
 const MenteeBookingssessions = () => {
@@ -155,8 +156,7 @@ const MenteeBookingssessions = () => {
         {isLoading && (
           <div className="flex items-center justify-center py-16">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#f97818] mx-auto"></div>
-              <p className="mt-4 text-gray-600">Loading your bookings...</p>
+              <Loader/>
             </div>
           </div>
         )}
@@ -382,7 +382,7 @@ const MenteeBookingssessions = () => {
 
                   <div className="space-y-3">
                     <div className="flex items-start gap-3">
-                      <DollarSign className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                      {/* <DollarSign className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" /> */}
                       <div>
                         <p className="text-xs text-gray-500 mb-0.5">Amount Paid</p>
                         <p className="font-bold text-gray-900 text-xl">

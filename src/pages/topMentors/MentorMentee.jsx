@@ -1,7 +1,12 @@
 import React from 'react';
 import { Phone, ArrowRight, Users, Target, TrendingUp } from 'lucide-react';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 export default function MentorMenteePlatform() {
+  
+ const navigate = useNavigate()
+
+
   return (
     <div className="min-h-screen py-16 px-6" style={{ backgroundColor: '#f5f5f5' }}>
       <div className="max-w-7xl mx-auto">
@@ -23,6 +28,7 @@ export default function MentorMenteePlatform() {
               <button 
                 className="px-8 py-4 rounded-lg text-white font-semibold transition-all hover:scale-105 hover:shadow-lg"
                 style={{ backgroundColor: '#0098cc' }}
+                onClick={() => navigate("/")}
               >
                 Browse Mentors
               </button>
@@ -141,6 +147,7 @@ export default function MentorMenteePlatform() {
               <button 
                 className="px-8 py-4 rounded-lg text-white font-semibold transition-all hover:scale-105 hover:shadow-lg inline-flex items-center gap-2"
                 style={{ backgroundColor: '#0098cc' }}
+                onClick={() => navigate("/mentee/apply")}
               >
                 Apply as Mentor
                 <ArrowRight className="w-5 h-5" />

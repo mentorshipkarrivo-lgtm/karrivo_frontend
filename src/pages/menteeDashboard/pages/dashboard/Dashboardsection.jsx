@@ -500,6 +500,7 @@ import {
 } from 'lucide-react';
 import { useGetMenteeDashboardQuery } from "./dashboardsecapislice";
 import { useNavigate } from 'react-router-dom';
+import Loader from '../../../../global/Loader';
 
 const DashboardSection = () => {
     const userData = JSON.parse(localStorage.getItem("userData") || "{}");
@@ -567,8 +568,7 @@ const DashboardSection = () => {
         return (
             <div className="flex items-center justify-center min-h-screen bg-gray-50">
                 <div className="text-center">
-                    <Loader2 className="animate-spin h-10 w-10 text-blue-500 mx-auto mb-3" />
-                    <p className="text-gray-500 text-sm">Loading dashboard…</p>
+                    <Loader/>
                 </div>
             </div>
         );

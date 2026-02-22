@@ -617,6 +617,7 @@ import {
   useCreateMentorSupportTicketMutation,
   useUpdateMentorSupportTicketMutation
 } from "./MentorSupportapislice";
+import Loader from '../../../global/Loader';
 
 // ── Status badge ──────────────────────────────────────────────
 const StatusBadge = ({ status }) => {
@@ -771,8 +772,7 @@ const MentorHelpSupport = () => {
   if (isLoading) return (
     <div className="flex-1 flex items-center justify-center bg-[#031610] min-h-[300px]">
       <div className="flex flex-col items-center gap-3">
-        <Loader2 size={32} className="animate-spin text-[#0098cc]" />
-        <p className="text-white/50 text-sm">Loading support tickets…</p>
+       <Loader />
       </div>
     </div>
   );

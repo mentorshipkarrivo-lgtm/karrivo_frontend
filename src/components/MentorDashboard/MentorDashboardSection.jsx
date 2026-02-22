@@ -375,6 +375,7 @@ import {
 } from 'lucide-react';
 import { useGetUserDetailsQuery, useGetMentorSessionBookingsQuery } from './MentorDashboardapislice';
 import { useNavigate } from 'react-router-dom';
+import Loader from '../../global/Loader';
 
 // ── Helpers ───────────────────────────────────────────────────
 const formatDate = (dateString) => {
@@ -663,8 +664,7 @@ const MentorDashboardSection = () => {
   if (isLoading) return (
     <div className="flex-1 flex items-center justify-center min-h-[300px] bg-[#031610]">
       <div className="flex flex-col items-center gap-3">
-        <Loader2 size={32} className="animate-spin text-white" />
-        <p className="text-white/70 text-sm">Loading dashboard…</p>
+        <Loader />
       </div>
     </div>
   );
