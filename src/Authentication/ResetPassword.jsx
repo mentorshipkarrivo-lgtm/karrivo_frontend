@@ -101,7 +101,7 @@ const ResetPassword = () => {
                                     <ArrowLeft size={14} /> Back to Login
                                 </button>
 
-                                <h1 className="text-2xl font-extrabold text-[#062117] mb-1">Forgot Password?</h1>
+                                <h1 className="text-2xl font-extrabold text-[#062117] mb-1">Reset Password?</h1>
                                 <p className="text-gray-500 text-sm mb-7">
                                     Enter your registered email and we'll send you a one-time password.
                                 </p>
