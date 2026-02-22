@@ -453,7 +453,7 @@ const MenteeBookingssessions = () => {
                       </a>
                     )}
 
-                    <button
+                    {/* <button
                       onClick={() => {
                         setShowDetailsModal(false);
                         setShowRescheduleModal(true);
@@ -462,9 +462,9 @@ const MenteeBookingssessions = () => {
                     >
                       <RefreshCw className="w-5 h-5" />
                       Reschedule
-                    </button>
+                    </button> */}
 
-                    <button
+                    {/* <button
                       onClick={() => {
                         setShowDetailsModal(false);
                         setShowCancelModal(true);
@@ -473,7 +473,7 @@ const MenteeBookingssessions = () => {
                     >
                       <XCircle className="w-5 h-5" />
                       Cancel Booking
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               )}
@@ -541,7 +541,7 @@ const MenteeBookingssessions = () => {
       )}
 
       {/* Reschedule Modal */}
-      {showRescheduleModal && selectedBooking && (
+      {/* {showRescheduleModal && selectedBooking && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-[60] p-4">
           <div className="bg-white rounded-2xl max-w-md w-full p-6">
             <div className="flex items-center justify-between mb-6">
@@ -614,7 +614,7 @@ const MenteeBookingssessions = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
