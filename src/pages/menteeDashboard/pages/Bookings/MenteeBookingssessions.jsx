@@ -453,27 +453,6 @@ const MenteeBookingssessions = () => {
                       </a>
                     )}
 
-                    {/* <button
-                      onClick={() => {
-                        setShowDetailsModal(false);
-                        setShowRescheduleModal(true);
-                      }}
-                      className="flex items-center gap-2 bg-white border-2 border-[#f97818] text-[#f97818] hover:bg-[#f97818] hover:text-white px-6 py-3 rounded-lg font-semibold transition-colors"
-                    >
-                      <RefreshCw className="w-5 h-5" />
-                      Reschedule
-                    </button> */}
-
-                    {/* <button
-                      onClick={() => {
-                        setShowDetailsModal(false);
-                        setShowCancelModal(true);
-                      }}
-                      className="flex items-center gap-2 bg-white border-2 border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-lg font-semibold transition-colors"
-                    >
-                      <XCircle className="w-5 h-5" />
-                      Cancel Booking
-                    </button> */}
                   </div>
                 </div>
               )}

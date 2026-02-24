@@ -172,16 +172,10 @@ const App = () => {
                         <Route path="dashboard/earnings" element={<Myearnings />} />
                         <Route path="dashboard/reviews" element={<Reviews />} />
 
-                        {/* Uncomment these when you create the components */}
-                        {/* <Route path="dashboard/mentees" element={<MenteesSection />} /> */}
-                        {/* <Route path="dashboard/messages" element={<MessagesSection />} /> */}
-                        {/* <Route path="dashboard/earnings" element={<EarningsSection />} /> */}
-                        {/* <Route path="dashboard/reviews" element={<ReviewsSection />} /> */}
-                        {/* <Route path="dashboard/support" element={<SupportSection />} /> */}
                     </Route>
                 </Route>
 
-                {/* MENTOR PROFILE - STANDALONE */}
+                {/* MENTOR PROFILE - STANDALONE */}``
                 <Route element={<ProtectedRoute />}>
                     <Route path="/mentor-profile" element={<MentorProfile />} />
                 </Route>

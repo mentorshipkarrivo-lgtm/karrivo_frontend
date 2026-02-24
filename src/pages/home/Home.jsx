@@ -20,13 +20,14 @@ const TYPING_CONFIG = {
 };
 
 const MENTOR_PROFILES = [
-  "https://i.pravatar.cc/400?img=1",
-  "https://i.pravatar.cc/400?img=2",
-  "https://i.pravatar.cc/400?img=3",
-  "https://i.pravatar.cc/400?img=4",
-  "https://i.pravatar.cc/400?img=5",
-  "https://i.pravatar.cc/400?img=6",
+  "https://randomuser.me/api/portraits/men/75.jpg",
+  "https://randomuser.me/api/portraits/women/75.jpg",
+  "https://randomuser.me/api/portraits/men/78.jpg",
+  "https://randomuser.me/api/portraits/women/78.jpg",
+  "https://randomuser.me/api/portraits/men/79.jpg",
+  "https://randomuser.me/api/portraits/women/79.jpg",
 ];
+
 
 const CATEGORIES = [
   { name: "All Mentors", path: "/Allmentors" },

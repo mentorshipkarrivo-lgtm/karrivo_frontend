@@ -4,12 +4,7 @@ export default function Myearnings() {
   return (
     <div className="h-[80vh] flex items-center justify-center px-6">
       <div className="text-center space-y-6">
-        
-        {/* Animated Loader */}
-        {/* <div className="flex justify-center">
-          <div className="w-14 h-14 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div>
-        </div> */}
-
+    
         {/* Heading */}
         <h1 className="text-3xl md:text-4xl font-bold text-gray-800">
           My Earnings
