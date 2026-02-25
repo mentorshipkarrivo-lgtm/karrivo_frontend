@@ -482,12 +482,16 @@ const saveProfileData = (data) => {
 
 // ✅ Clear all auth + profile data on logout
 const clearAllData = () => {
+    // Clear all localStorage
+    localStorage.clear();
+
+    // Clear all cookies
+    document.cookie.split(';').forEach(cookie => {
+        const name = cookie.split('=')[0].trim();
+        document.cookie = `${name}=; path=/; max-age=0`;
+    });
+
     sessionStorage.clear();
-    localStorage.removeItem('profileData');
-    localStorage.removeItem('userData');
-    localStorage.removeItem('authToken');
-    document.cookie = 'userData=; path=/; max-age=0';
-    document.cookie = 'profileData=; path=/; max-age=0';
 };
 
 /* ── Modals & Dropdowns ───────────────────────────────────────────────────── */
@@ -770,12 +774,32 @@ const MenteeDashboard = () => {
         setUserData(merged);
     };
 
+
+    useEffect(() => {
+        const localUser = localStorage.getItem('userData');
+        const cookieUser = getCookie('userData');
+        if (localUser) {
+            try { setUserData(JSON.parse(localUser)); } catch { }
+        } else if (cookieUser) {
+            try { setUserData(JSON.parse(decodeURIComponent(cookieUser))); } catch { }
+        }
+
+        // ✅ Only show onboarding if user data EXISTS but profile is not complete
+        const hasUser = localUser || cookieUser;
+        if (hasUser) {
+            setShowOnboarding(!isProfileAlreadyCompleted());
+        } else {
+            setShowOnboarding(false); // no user = logging out, don't show
+        }
+    }, []);
+
     // ✅ On logout: clear everything so onboarding shows again on next login
     const handleLogout = () => {
+        setShowOnboarding(false);        // ← hide form instantly
+        setIsLogoutModalOpen(false);
         clearAllData();
         setTimeout(() => window.location.href = '/login', 100);
     };
-
     return (
         <>
             <div className="h-screen bg-white flex overflow-hidden">
