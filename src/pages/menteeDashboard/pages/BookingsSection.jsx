@@ -28,15 +28,15 @@ const statusStyle = (status) =>
   status === "approved"
     ? "bg-green-100 text-green-700"
     : status === "pending"
-    ? "bg-yellow-100 text-yellow-700"
-    : "bg-gray-100 text-gray-500";
+      ? "bg-yellow-100 text-yellow-700"
+      : "bg-gray-100 text-gray-500";
 
 const statusDot = (status) =>
   status === "approved"
     ? "bg-green-500"
     : status === "pending"
-    ? "bg-yellow-500"
-    : "bg-gray-400";
+      ? "bg-yellow-500"
+      : "bg-gray-400";
 
 const menteeTypes = [
   "All Mentors", "Engineering Mentors", "Top Mentors", "Startup Mentors",
@@ -74,6 +74,10 @@ function EditPreferencesModal({ isOpen, onClose, onUpdate, initialData }) {
 
   const handleUpdate = () => {
     const updated = { ...formData, profileCompleted: true };
+
+
+    localStorage.setItem('profileData', JSON.stringify(updated));
+
     // Update cookies
     const profileCookie = encodeURIComponent(JSON.stringify(updated));
     document.cookie = `profileData=${profileCookie}; path=/; max-age=31536000`;
@@ -83,7 +87,7 @@ function EditPreferencesModal({ isOpen, onClose, onUpdate, initialData }) {
         const existing = JSON.parse(userDataCookie);
         const merged = { ...existing, ...updated };
         document.cookie = `userData=${encodeURIComponent(JSON.stringify(merged))}; path=/; max-age=86400`;
-      } catch {}
+      } catch { }
     }
     onUpdate(updated);
     onClose();
@@ -125,7 +129,7 @@ function EditPreferencesModal({ isOpen, onClose, onUpdate, initialData }) {
           <div className="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-               
+
                 <div>
                   <h2 className="text-white font-bold text-base">Update Preferences</h2>
                   <p className="text-indigo-200 text-xs mt-0.5">Refine your mentor recommendations</p>
@@ -144,13 +148,12 @@ function EditPreferencesModal({ isOpen, onClose, onUpdate, initialData }) {
               {steps.map((step, i) => (
                 <React.Fragment key={step.num}>
                   <div className="flex items-center gap-1.5">
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${
-                      currentStep > step.num
-                        ? "bg-white text-indigo-600"
-                        : currentStep === step.num
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 ${currentStep > step.num
+                      ? "bg-white text-indigo-600"
+                      : currentStep === step.num
                         ? "bg-white text-indigo-600 ring-2 ring-white/40"
                         : "bg-white/20 text-white/60"
-                    }`}>
+                      }`}>
                       {currentStep > step.num ? <CheckCircle2 className="w-3.5 h-3.5" /> : step.num}
                     </div>
                     <span className={`text-xs font-medium ${currentStep >= step.num ? "text-white" : "text-white/50"}`}>
@@ -222,11 +225,10 @@ function EditPreferencesModal({ isOpen, onClose, onUpdate, initialData }) {
                         <button
                           key={s}
                           onClick={() => set("status", s)}
-                          className={`p-3.5 rounded-xl border-2 text-sm font-medium transition-all duration-200 ${
-                            formData.status === s
-                              ? "border-indigo-500 bg-indigo-50 text-indigo-700"
-                              : "border-gray-200 text-gray-600 hover:border-gray-300"
-                          }`}
+                          className={`p-3.5 rounded-xl border-2 text-sm font-medium transition-all duration-200 ${formData.status === s
+                            ? "border-indigo-500 bg-indigo-50 text-indigo-700"
+                            : "border-gray-200 text-gray-600 hover:border-gray-300"
+                            }`}
                         >
                           {s.charAt(0).toUpperCase() + s.slice(1)}
                         </button>
@@ -267,11 +269,10 @@ function EditPreferencesModal({ isOpen, onClose, onUpdate, initialData }) {
                       <button
                         key={type}
                         onClick={() => set("menteeType", type)}
-                        className={`p-2.5 rounded-xl border-2 text-left transition-all duration-200 ${
-                          formData.menteeType === type
-                            ? "border-indigo-500 bg-indigo-50"
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
+                        className={`p-2.5 rounded-xl border-2 text-left transition-all duration-200 ${formData.menteeType === type
+                          ? "border-indigo-500 bg-indigo-50"
+                          : "border-gray-200 hover:border-gray-300"
+                          }`}
                       >
                         <span className={`text-xs font-semibold ${formData.menteeType === type ? "text-indigo-700" : "text-gray-700"}`}>
                           {type}
@@ -308,7 +309,7 @@ function EditPreferencesModal({ isOpen, onClose, onUpdate, initialData }) {
                 disabled={!ok3}
                 className="flex items-center gap-1.5 px-5 py-2 rounded-lg text-sm bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all font-medium shadow-md"
               >
-                 Update & Refresh
+                Update & Refresh
               </button>
             )}
           </div>
@@ -399,39 +400,68 @@ export default function BookingsSection() {
     getMentors({ menteeType: type || "All Mentors" });
   };
 
+  // useEffect(() => {
+  //   const cookieData = Cookies.get("userData");
+  //   if (cookieData) {
+  //     try {
+  //       const parsed = JSON.parse(cookieData);
+  //       setUserData(parsed);
+  //       fetchMentors(parsed.menteeType);
+  //     } catch {}
+  //   }
+
+  //   // Load existing profile data to pre-fill the form
+  //   const profileCookieData = Cookies.get("profileData");
+  //   if (profileCookieData) {
+  //     try {
+  //       const parsed = JSON.parse(decodeURIComponent(profileCookieData));
+  //       setProfileData(parsed);
+  //     } catch {}
+  //   }
+  // }, []);
+
+
+
   useEffect(() => {
+    // Load profile data first
+    const profileCookieData = Cookies.get("profileData");
+    const profileLocalData = localStorage.getItem("profileData");
+    const rawProfile = profileLocalData || (profileCookieData ? decodeURIComponent(profileCookieData) : null); let parsedProfile = null;
+    if (profileCookieData) {
+      try {
+        parsedProfile = JSON.parse(decodeURIComponent(profileCookieData));
+        setProfileData(parsedProfile);
+      } catch { }
+    }
+
+    // Load user data
     const cookieData = Cookies.get("userData");
     if (cookieData) {
       try {
         const parsed = JSON.parse(cookieData);
         setUserData(parsed);
-        fetchMentors(parsed.menteeType);
-      } catch {}
+      } catch { }
     }
 
-    // Load existing profile data to pre-fill the form
-    const profileCookieData = Cookies.get("profileData");
-    if (profileCookieData) {
-      try {
-        const parsed = JSON.parse(decodeURIComponent(profileCookieData));
-        setProfileData(parsed);
-      } catch {}
-    }
+    // ✅ Use menteeType from profileData first, fallback to userData
+    const menteeType = parsedProfile?.menteeType || JSON.parse(cookieData || '{}')?.menteeType || "All Mentors";
+    fetchMentors(menteeType);
   }, []);
+
 
   const handlePreferencesUpdate = (updated) => {
     setProfileData(updated);
-    // Refresh mentors list with new menteeType
+    localStorage.setItem('profileData', JSON.stringify(updated)); // ✅ persist
     fetchMentors(updated.menteeType);
   };
 
   const mentorsList = Array.isArray(data)
     ? data
     : Array.isArray(data?.mentors)
-    ? data.mentors
-    : Array.isArray(data?.data)
-    ? data.data
-    : [];
+      ? data.mentors
+      : Array.isArray(data?.data)
+        ? data.data
+        : [];
 
   const filtered = mentorsList.filter((m) => {
     const q = search.toLowerCase();
@@ -459,7 +489,7 @@ export default function BookingsSection() {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <div className="flex flex-col items-center gap-3">
-         <Loader />
+          <Loader />
         </div>
       </div>
     );
@@ -566,11 +596,10 @@ export default function BookingsSection() {
               <button
                 key={f}
                 onClick={() => setFilterStatus(f)}
-                className={`px-4 py-2.5 rounded-lg text-xs font-semibold capitalize transition-all border whitespace-nowrap ${
-                  filterStatus === f
-                    ? "bg-indigo-600 border-indigo-600 text-white shadow-sm"
-                    : "bg-white border-gray-200 text-gray-600 hover:border-indigo-300 hover:text-indigo-600"
-                }`}
+                className={`px-4 py-2.5 rounded-lg text-xs font-semibold capitalize transition-all border whitespace-nowrap ${filterStatus === f
+                  ? "bg-indigo-600 border-indigo-600 text-white shadow-sm"
+                  : "bg-white border-gray-200 text-gray-600 hover:border-indigo-300 hover:text-indigo-600"
+                  }`}
               >
                 {f === "all" ? "All Mentors" : f}
               </button>
