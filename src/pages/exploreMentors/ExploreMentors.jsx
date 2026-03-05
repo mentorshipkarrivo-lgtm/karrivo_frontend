@@ -2690,9 +2690,11 @@ const DAY_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satu
 const fmtINR = (n) => `₹${Number(n ?? 0).toLocaleString("en-IN")}`;
 
 const PLANS = [
-    { key: "sixMonths", label: "6 Mon" },
-    { key: "threeMonths", label: "3 Mon" },
-    { key: "oneMonth", label: "1 Mon" },
+  
+    { key: "oneMonth", label: "1 Month plan" },
+        { key: "threeMonths", label: "3 Month plan " },
+
+      { key: "sixMonths", label: "6 Month plan " },
 ];
 
 const DOMAIN_CHIPS = [
