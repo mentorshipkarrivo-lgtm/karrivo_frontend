@@ -302,7 +302,7 @@ export default function Mymessages() {
               ))
             ) : displayInbox.length === 0 ? (
               <div style={{ textAlign: "center", padding: "40px 20px", color: "#b0b8cc", fontSize: 13 }}>
-                <div style={{ fontSize: 28, marginBottom: 10 }}>✓</div>
+                {/* <div style={{ fontSize: 28, marginBottom: 10 }}>✓</div> */}
                 {sideTab === "Unread" ? "All caught up!" : "No conversations yet"}
               </div>
             ) : (
@@ -360,7 +360,7 @@ export default function Mymessages() {
 
         <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
           {!activeSessionId ? (
-            <EmptyState icon="💬" title="Select a conversation" subtitle="Click a session on the left to start messaging" />
+            <EmptyState  title="Select a conversation" subtitle="Click a session on the left to start messaging" />
           ) : (
             <>
               <div style={{ padding: "14px 20px", borderBottom: "1px solid #eef0f7", display: "flex", alignItems: "center", gap: 12, background: "#fff", flexShrink: 0 }}>
