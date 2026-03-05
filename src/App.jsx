@@ -54,6 +54,8 @@ import Mymessages from "./pages/LongTermMentorship/messages/Mymessages";
 import Myearnings from "./components/MentorDashboard/MyEarnings/Myearnings";
 import Reviews from "./components/MentorDashboard/Reviews/Reviews";
 import ResetPassword from "./Authentication/ResetPassword";
+import MentorMessages from "./components/MentorDashboard/mentorMessages/MentorMessages";
+import MentorAvailability from "./components/MentorDashboard/mentorLtmAvialibility/MentorLtmAvialibility";
 
 
 const getAuthToken = () => {
@@ -169,6 +171,8 @@ const App = () => {
                         <Route index element={<Navigate to="/mentor/dashboard" replace />} />
                         <Route path="dashboard" element={<MentorDashboardSection />} />
                         <Route path="dashboard/sessions" element={<MentorSessionBookings />} />
+                        <Route path="dashboard/messages" element={<MentorMessages />} />
+                        <Route path="dashboard/Manage_Availability" element={<MentorAvailability />} />
                         <Route path="dashboard/earnings" element={<Myearnings />} />
                         <Route path="dashboard/reviews" element={<Reviews />} />
 
@@ -208,7 +212,7 @@ const App = () => {
                         <Route path="profile" element={<MentorshipProfile />} />
                         <Route path="bookings" element={<BookingsSection />} />
                         <Route path="bookingsessions" element={<MenteeBookingssessions />} />
-                        <Route path="yourmeetings" element={<UpcomingMeetings />} />
+                        <Route path="messages" element={<Mymessages />} />
                         <Route path="support" element={<HelpSupport />} />
                         <Route path="sessions" element={<BookingsSection />} />
                         {/* Mentorship Routes */}

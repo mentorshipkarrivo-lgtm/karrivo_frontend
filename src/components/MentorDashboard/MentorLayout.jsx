@@ -6,6 +6,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 const navigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home, route: '/mentor/dashboard' },
     { id: 'sessions', label: 'My Sessions', icon: BookOpen, route: '/mentor/dashboard/sessions' },
+    { id: 'messages', label: 'My Messages', icon: DollarSign, route: '/mentor/dashboard/messages' },
+    { id: 'Manage Availability', label: 'Manage Availability', icon: DollarSign, route: '/mentor/dashboard/Manage_Availability' },
     { id: 'earnings', label: 'My Earnings', icon: DollarSign, route: '/mentor/dashboard/earnings' },
     { id: 'reviews', label: 'Reviews', icon: Star, route: '/mentor/dashboard/reviews' },
     { id: 'support', label: 'Support Request', icon: HelpCircle, route: '/mentor-dashboard/support' },
@@ -171,8 +173,8 @@ const MentorLayout = ({ children }) => {
                             }}
                             title={collapsed ? item.label : ''}
                             className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg transition-all ${isActive
-                                    ? 'bg-[#0098cc] text-white'
-                                    : 'text-white/70 hover:bg-[#0098cc]/10 hover:text-white'
+                                ? 'bg-[#0098cc] text-white'
+                                : 'text-white/70 hover:bg-[#0098cc]/10 hover:text-white'
                                 } ${collapsed ? 'justify-center' : ''}`}
                         >
                             <Icon size={18} className="shrink-0" />
