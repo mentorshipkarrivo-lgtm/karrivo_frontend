@@ -56,7 +56,7 @@ import Reviews from "./components/MentorDashboard/Reviews/Reviews";
 import ResetPassword from "./Authentication/ResetPassword";
 import MentorMessages from "./components/MentorDashboard/mentorMessages/MentorMessages";
 import MentorAvailability from "./components/MentorDashboard/mentorLtmAvialibility/MentorLtmAvialibility";
-
+import ExploreMentors from "./pages/exploreMentors/ExploreMentors";
 
 const getAuthToken = () => {
     try {
@@ -185,6 +185,10 @@ const App = () => {
                 </Route>
 
 
+                <Route path="/explore-mentors" element={< ExploreMentors />} />
+
+
+
                 {/* <Route element={<ProtectedRoute />}>
                     <Route path="/mentor-dashboard/earnings" element={<Myearnings />} />
                 </Route> */}
@@ -231,10 +235,6 @@ const App = () => {
                     <Route path="/mentor-dashboard" element={<MentorLayout><Outlet /></MentorLayout>}>
                         <Route index element={<MentorDashboardSection />} />
                         <Route path="sessions" element={<MentorSessionBookings />} />
-                        {/* <Route path="mentees" element={<MenteesSection />} />
-            <Route path="messages" element={<MessagesSection />} />
-            <Route path="earnings" element={<EarningsSection />} />
-            <Route path="reviews" element={<ReviewsSection />} /> */ }
                         <Route path="support" element={<MentorHelpSupport />} />
                     </Route>
                 </Route>

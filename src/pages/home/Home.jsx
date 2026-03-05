@@ -250,8 +250,8 @@ const Home = () => {
 
       {/* Other Sections */}
       <HeroSection />
-      <MentorsSection />
-      <StepsSection/>
+      {/* <MentorsSection /> */}
+      <StepsSection />
       <TestimonialsSection />
       <FAQAccordion />
       <MentorGrid />

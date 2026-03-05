@@ -595,7 +595,7 @@ export default function MentorshipHome() {
 
 
   const mentors = isFiltered
-    ? (displayMentors||[])
+    ? (displayMentors ||  [])
     : allMentors;
 
   console.log(mentors, "mentors");

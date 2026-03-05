@@ -334,8 +334,8 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, currentPath, onLogout }) => 
             {!collapsed && <div className="my-3 border-t border-gray-100" />}
 
             {/* LTM Membership Section */}
-            {/* <LTMSectionHeader /> */}
-            {/* <LTMItems /> */}
+            <LTMSectionHeader />
+            <LTMItems />
         </div>
     );
 
