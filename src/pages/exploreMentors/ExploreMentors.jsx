@@ -3506,7 +3506,6 @@ export default function ExploreMentors() {
                             {isError && !isLoading && <Loader />}
                             {!isLoading && !isError && searchEmpty && (
                                 <div style={{ textAlign: "center", padding: "60px 0", border: "2px dashed #e5e7eb", borderRadius: "12px", background: "white" }}>
-                                    <p style={{ fontSize: "32px", marginBottom: "8px" }}>🔍</p>
                                     <p style={{ fontWeight: 600, color: "#374151" }}>No mentors match your filters</p>
                                     <p style={{ fontSize: "13px", color: "#9ca3af" }}>Try adjusting your criteria</p>
                                 </div>
