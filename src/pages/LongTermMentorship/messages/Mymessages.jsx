@@ -360,7 +360,7 @@ export default function Mymessages() {
 
         <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
           {!activeSessionId ? (
-            <EmptyState  title="Select a conversation" subtitle="Click a session on the left to start messaging" />
+            <EmptyState  title="Select a conversation" />
           ) : (
             <>
               <div style={{ padding: "14px 20px", borderBottom: "1px solid #eef0f7", display: "flex", alignItems: "center", gap: 12, background: "#fff", flexShrink: 0 }}>
