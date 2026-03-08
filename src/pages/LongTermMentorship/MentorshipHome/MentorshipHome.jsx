@@ -325,6 +325,178 @@ function SubscribePanel({ mentor, onClose }) {
 }
 
 // ── Mentor Card ──────────────────────────────────────────────────────────────
+// function MentorCard({ mentor, index, onSubscribe }) {
+//   const rawAreas = mentor.areasOfInterest || mentor.currentSkills || "";
+//   const areas = rawAreas.split(",").map((s) => s.trim()).filter(Boolean);
+//   const inits = (mentor.fullName || "")
+//     .split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase();
+//   const openSlots = (mentor.availability || []).reduce(
+//     (sum, d) => sum + (d.slots || []).filter((s) => !s.isBooked).length, 0
+//   );
+//   const daysPerWeek = (mentor.availability || []).length;
+//   console.log(mentor, "mentor.availability ")
+//   return (
+//     <motion.article
+//       initial={{ opacity: 0, y: 20 }}
+//       animate={{ opacity: 1, y: 0 }}
+//       transition={{ duration: 0.35, delay: index * 0.05 }}
+//       style={{
+//         width: "380px", maxWidth: "100%",
+//         border: "1px solid #e5e7eb", borderRadius: "16px",
+//         background: "white", display: "flex", overflow: "hidden",
+//         fontFamily: FONT,
+//         boxShadow: "0 1px 4px rgba(59,130,246,.06)",
+//         transition: "box-shadow .2s, border-color .2s",
+//       }}
+//       onMouseEnter={(e) => {
+//         e.currentTarget.style.borderColor = BLUE;
+//         e.currentTarget.style.boxShadow = "0 4px 20px rgba(59,130,246,.15)";
+//       }}
+//       onMouseLeave={(e) => {
+//         e.currentTarget.style.borderColor = "#e5e7eb";
+//         e.currentTarget.style.boxShadow = "0 1px 4px rgba(59,130,246,.06)";
+//       }}
+//     >
+//       {/* Left info */}
+//       <div style={{ flex: 1, padding: "16px", minWidth: 0 }}>
+
+//         {/* ⭐ Rating */}
+//         <div style={{ display: "flex", alignItems: "center", gap: "4px", marginBottom: "6px" }}>
+//           <Star size={13} fill="#f59e0b" color="#f59e0b" />
+//           <span style={{ fontSize: "12px", fontWeight: 600, color: "#1f2937" }}>5.00</span>
+//         </div>
+
+//         {/* Name */}
+//         <p style={{
+//           fontWeight: 700, fontSize: "16px", color: "#111827",
+//           margin: "0 0 3px", whiteSpace: "nowrap",
+//           overflow: "hidden", textOverflow: "ellipsis",
+//         }}>
+//           {mentor.fullName}
+//         </p>
+
+//         {/* Role · exp */}
+//         <p style={{ fontSize: "13px", color: "#6b7280", margin: "0 0 10px" }}>
+//           {mentor.currentRole || "Mentor"}
+//           {mentor.yearsOfExperience ? ` · ${mentor.yearsOfExperience} yrs` : ""}
+//         </p>
+
+//         {/* Skill pills */}
+//         <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "10px" }}>
+//           {areas.slice(0, 3).map((a, i) => (
+//             <span key={i} style={{
+//               fontSize: "11px", fontWeight: 500,
+//               padding: "3px 10px", borderRadius: "20px",
+//               background: BLUE_LIGHT, color: BLUE,
+//               border: `1px solid ${BLUE_BORDER}`,
+//             }}>
+//               {a}
+//             </span>
+//           ))}
+//           {areas.length > 3 && (
+//             <span style={{
+//               fontSize: "11px", fontWeight: 500,
+//               padding: "3px 8px", borderRadius: "20px",
+//               background: "#f3f4f6", color: "#6b7280",
+//               border: "1px solid #e5e7eb",
+//             }}>
+//               +{areas.length - 3}
+//             </span>
+//           )}
+//         </div>
+
+//         {/* Location */}
+//         <div style={{ display: "flex", alignItems: "center", gap: "4px", marginBottom: "6px" }}>
+//           <MapPin size={12} color="#9ca3af" strokeWidth={1.8} />
+//           <span style={{ fontSize: "12px", color: "#9ca3af" }}>
+//             {mentor.location || "—"}
+//           </span>
+//         </div>
+
+//         {/* Slots */}
+//         <p style={{ fontSize: "11px", color: "#9ca3af", margin: "0 0 14px" }}>
+//           🕐 {openSlots} open slot{openSlots !== 1 ? "s" : ""} · {daysPerWeek} days/week
+//         </p>
+
+//         {/* Price + buttons */}
+//         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
+//           <div>
+//             <span style={{ fontWeight: 700, fontSize: "16px", color: "#111827" }}>
+//               ₹{(mentor.hourlyRate || 0).toLocaleString("en-IN")}
+//             </span>
+//             <span style={{ fontSize: "11px", color: "#9ca3af" }}> / session</span>
+//           </div>
+
+//           <div style={{ display: "flex", gap: "6px" }}>
+//             <button style={{
+//               padding: "7px 14px", borderRadius: "8px",
+//               background: BLUE, color: "white", border: "none",
+//               fontSize: "12px", fontWeight: 600, cursor: "pointer",
+//               fontFamily: FONT, whiteSpace: "nowrap",
+//             }}
+//               onMouseEnter={(e) => (e.currentTarget.style.background = "#2563eb")}
+//               onMouseLeave={(e) => (e.currentTarget.style.background = BLUE)}
+//             >
+//               View Profile
+//             </button>
+//             <button
+//               onClick={() => onSubscribe(mentor)}
+//               style={{
+//                 padding: "7px 14px", borderRadius: "8px",
+//                 background: "white", color: BLUE,
+//                 border: `1.5px solid ${BLUE_BORDER}`,
+//                 fontSize: "12px", fontWeight: 600, cursor: "pointer",
+//                 fontFamily: FONT, whiteSpace: "nowrap",
+//               }}
+//               onMouseEnter={(e) => (e.currentTarget.style.background = BLUE_LIGHT)}
+//               onMouseLeave={(e) => (e.currentTarget.style.background = "white")}
+//             >
+//               Subscribe
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Right — avatar panel */}
+//       <div style={{
+//         width: "130px", flexShrink: 0,
+//         background: BLUE_LIGHT,
+//         display: "flex", flexDirection: "column",
+//         alignItems: "center", justifyContent: "center",
+//         gap: "8px", padding: "16px 8px",
+//         position: "relative",
+//       }}>
+//         <span style={{ fontSize: "36px", fontWeight: 700, color: BLUE, fontFamily: FONT }}>
+//           {inits}
+//         </span>
+//         {mentor.mentorCategory && (
+//           <span style={{
+//             fontSize: "9px", fontWeight: 700, color: BLUE,
+//             background: "white", border: `1px solid ${BLUE_BORDER}`,
+//             borderRadius: "20px", padding: "2px 8px",
+//             maxWidth: "110px", overflow: "hidden",
+//             textOverflow: "ellipsis", whiteSpace: "nowrap", textAlign: "center",
+//           }}>
+//             {mentor.mentorCategory}
+//           </span>
+//         )}
+//         {mentor.mentoringStyle && (
+//           <span style={{
+//             position: "absolute", bottom: "12px",
+//             fontSize: "10px", fontWeight: 600, color: BLUE,
+//             background: "white", border: `1px solid ${BLUE_BORDER}`,
+//             borderRadius: "20px", padding: "3px 10px", whiteSpace: "nowrap",
+//           }}>
+//             {mentor.mentoringStyle}
+//           </span>
+//         )}
+//       </div>
+//     </motion.article>
+//   );
+// }
+
+
+
 function MentorCard({ mentor, index, onSubscribe }) {
   const rawAreas = mentor.areasOfInterest || mentor.currentSkills || "";
   const areas = rawAreas.split(",").map((s) => s.trim()).filter(Boolean);
@@ -334,14 +506,14 @@ function MentorCard({ mentor, index, onSubscribe }) {
     (sum, d) => sum + (d.slots || []).filter((s) => !s.isBooked).length, 0
   );
   const daysPerWeek = (mentor.availability || []).length;
-  console.log(mentor, "mentor.availability ")
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: index * 0.05 }}
       style={{
-        width: "380px", maxWidth: "100%",
+        width: "460px", maxWidth: "100%",
         border: "1px solid #e5e7eb", borderRadius: "16px",
         background: "white", display: "flex", overflow: "hidden",
         fontFamily: FONT,
@@ -350,39 +522,34 @@ function MentorCard({ mentor, index, onSubscribe }) {
       }}
       onMouseEnter={(e) => {
         e.currentTarget.style.borderColor = BLUE;
-        e.currentTarget.style.boxShadow = "0 4px 20px rgba(59,130,246,.15)";
+        // e.currentTarget.style.boxShadow = "0 4px 20px rgba(59,130,246,.15)";
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.borderColor = "#e5e7eb";
         e.currentTarget.style.boxShadow = "0 1px 4px rgba(59,130,246,.06)";
       }}
     >
-      {/* Left info */}
-      <div style={{ flex: 1, padding: "16px", minWidth: 0 }}>
+      <div style={{ flex: 1, padding: "16px", minWidth: 0, display: "flex", flexDirection: "column", gap: "8px" }}>
 
-        {/* ⭐ Rating */}
-        <div style={{ display: "flex", alignItems: "center", gap: "4px", marginBottom: "6px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
           <Star size={13} fill="#f59e0b" color="#f59e0b" />
           <span style={{ fontSize: "12px", fontWeight: 600, color: "#1f2937" }}>5.00</span>
         </div>
 
-        {/* Name */}
         <p style={{
           fontWeight: 700, fontSize: "16px", color: "#111827",
-          margin: "0 0 3px", whiteSpace: "nowrap",
+          margin: 0, whiteSpace: "nowrap",
           overflow: "hidden", textOverflow: "ellipsis",
         }}>
           {mentor.fullName}
         </p>
 
-        {/* Role · exp */}
-        <p style={{ fontSize: "13px", color: "#6b7280", margin: "0 0 10px" }}>
+        <p style={{ fontSize: "13px", color: "#6b7280", margin: 0 }}>
           {mentor.currentRole || "Mentor"}
           {mentor.yearsOfExperience ? ` · ${mentor.yearsOfExperience} yrs` : ""}
         </p>
 
-        {/* Skill pills */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "10px" }}>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
           {areas.slice(0, 3).map((a, i) => (
             <span key={i} style={{
               fontSize: "11px", fontWeight: 500,
@@ -405,61 +572,57 @@ function MentorCard({ mentor, index, onSubscribe }) {
           )}
         </div>
 
-        {/* Location */}
-        <div style={{ display: "flex", alignItems: "center", gap: "4px", marginBottom: "6px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
           <MapPin size={12} color="#9ca3af" strokeWidth={1.8} />
           <span style={{ fontSize: "12px", color: "#9ca3af" }}>
             {mentor.location || "—"}
           </span>
         </div>
 
-        {/* Slots */}
-        <p style={{ fontSize: "11px", color: "#9ca3af", margin: "0 0 14px" }}>
+        <p style={{ fontSize: "11px", color: "#9ca3af", margin: 0 }}>
           🕐 {openSlots} open slot{openSlots !== 1 ? "s" : ""} · {daysPerWeek} days/week
         </p>
 
-        {/* Price + buttons */}
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "8px" }}>
-          <div>
-            <span style={{ fontWeight: 700, fontSize: "16px", color: "#111827" }}>
-              ₹{(mentor.hourlyRate || 0).toLocaleString("en-IN")}
-            </span>
-            <span style={{ fontSize: "11px", color: "#9ca3af" }}> / session</span>
-          </div>
+        <div>
+          <span style={{ fontWeight: 700, fontSize: "16px", color: "#111827" }}>
+            ₹{(mentor.hourlyRate || 0).toLocaleString("en-IN")}
+          </span>
+          <span style={{ fontSize: "11px", color: "#9ca3af" }}> / session</span>
+        </div>
 
-          <div style={{ display: "flex", gap: "6px" }}>
-            <button style={{
+        <div style={{ display: "flex", gap: "6px" }}>
+          <button
+            style={{
               padding: "7px 14px", borderRadius: "8px",
               background: BLUE, color: "white", border: "none",
               fontSize: "12px", fontWeight: 600, cursor: "pointer",
               fontFamily: FONT, whiteSpace: "nowrap",
             }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "#2563eb")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = BLUE)}
-            >
-              View Profile
-            </button>
-            <button
-              onClick={() => onSubscribe(mentor)}
-              style={{
-                padding: "7px 14px", borderRadius: "8px",
-                background: "white", color: BLUE,
-                border: `1.5px solid ${BLUE_BORDER}`,
-                fontSize: "12px", fontWeight: 600, cursor: "pointer",
-                fontFamily: FONT, whiteSpace: "nowrap",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = BLUE_LIGHT)}
-              onMouseLeave={(e) => (e.currentTarget.style.background = "white")}
-            >
-              Subscribe
-            </button>
-          </div>
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#2563eb")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = BLUE)}
+          >
+            View Profile
+          </button>
+          <button
+            onClick={() => onSubscribe(mentor)}
+            style={{
+              padding: "7px 14px", borderRadius: "8px",
+              background: "white", color: BLUE,
+              border: `1.5px solid ${BLUE_BORDER}`,
+              fontSize: "12px", fontWeight: 600, cursor: "pointer",
+              fontFamily: FONT, whiteSpace: "nowrap",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = BLUE_LIGHT)}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "white")}
+          >
+            Subscribe
+          </button>
         </div>
+
       </div>
 
-      {/* Right — avatar panel */}
       <div style={{
-        width: "130px", flexShrink: 0,
+        width: "155px", flexShrink: 0,
         background: BLUE_LIGHT,
         display: "flex", flexDirection: "column",
         alignItems: "center", justifyContent: "center",
@@ -474,7 +637,7 @@ function MentorCard({ mentor, index, onSubscribe }) {
             fontSize: "9px", fontWeight: 700, color: BLUE,
             background: "white", border: `1px solid ${BLUE_BORDER}`,
             borderRadius: "20px", padding: "2px 8px",
-            maxWidth: "110px", overflow: "hidden",
+            maxWidth: "130px", overflow: "hidden",
             textOverflow: "ellipsis", whiteSpace: "nowrap", textAlign: "center",
           }}>
             {mentor.mentorCategory}
@@ -595,7 +758,7 @@ export default function MentorshipHome() {
 
 
   const mentors = isFiltered
-    ? (displayMentors ||  [])
+    ? (displayMentors || [])
     : allMentors;
 
   console.log(mentors, "mentors");
@@ -603,7 +766,7 @@ export default function MentorshipHome() {
     try {
       const response = await searchMentors(body).unwrap();
       const result = response?.data || [];
-      console.log(result,"result")
+      console.log(result, "result")
       setDisplayMentors(result);
       setIsFiltered(true);
       setSearchEmpty(result.length === 0);
@@ -642,10 +805,10 @@ export default function MentorshipHome() {
 
 
         {/* Filter */}
-        <FilterBar
+        {/* <FilterBar
           onSearch={handleSearch} isSearching={isSearching}
           onClear={handleClear} isFiltered={isFiltered}
-        />
+        /> */}
 
         {/* Count */}
         {!isLoading && !isError && (

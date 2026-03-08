@@ -16,7 +16,7 @@ const topNavigationItems = [
     // { id: 'bookingsessions', label: 'My Bookings', icon: MessageSquare, path: '/mentee/bookingsessions' },
     { id: 'profile', label: 'Profile Settings', icon: User, path: '/mentee/profile' },
     { id: 'support', label: 'Help & Support', icon: HelpCircle, path: '/mentee/support' },
-    { id: 'home', label: 'Back to Home', icon: Home, path: '/' },
+    // { id: 'home', label: 'Back to Home', icon: Home, path: '/' },
 ];
 
 const ltmNavigationItems = [
@@ -432,7 +432,7 @@ const MenteeDashboard = () => {
         setShowOnboarding(false);
         setIsLogoutModalOpen(false);
         clearAllData();
-        setTimeout(() => window.location.href = '/login', 100);
+        setTimeout(() => window.location.href = '/', 100);
     };
 
     return (

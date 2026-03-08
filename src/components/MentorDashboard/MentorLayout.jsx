@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Home, BookOpen, DollarSign, Star, HelpCircle, Menu, X, LogOut } from 'lucide-react';
+import { Home, BookOpen, DollarSign, Star, Receipt, HelpCircle, Menu, X, LogOut } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 // Navigation items
@@ -7,6 +7,8 @@ const navigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home, route: '/mentor/dashboard' },
     { id: 'sessions', label: 'My Sessions', icon: BookOpen, route: '/mentor/dashboard/sessions' },
     { id: 'messages', label: 'My Messages', icon: DollarSign, route: '/mentor/dashboard/messages' },
+    { id: 'My Pricing', label: 'My pricing', icon: Receipt, route: '/mentor/dashboard/Pricing' },
+    { id: 'My Subscribers', label: 'My Subscribers', icon: DollarSign, route: '/mentor/dashboard/my-mentee-sessions' },
     { id: 'Manage Availability', label: 'Manage Availability', icon: DollarSign, route: '/mentor/dashboard/Manage_Availability' },
     { id: 'earnings', label: 'My Earnings', icon: DollarSign, route: '/mentor/dashboard/earnings' },
     { id: 'reviews', label: 'Reviews', icon: Star, route: '/mentor/dashboard/reviews' },

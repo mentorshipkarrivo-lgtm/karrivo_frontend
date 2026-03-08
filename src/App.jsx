@@ -57,6 +57,11 @@ import ResetPassword from "./Authentication/ResetPassword";
 import MentorMessages from "./components/MentorDashboard/mentorMessages/MentorMessages";
 import MentorAvailability from "./components/MentorDashboard/mentorLtmAvialibility/MentorLtmAvialibility";
 import ExploreMentors from "./pages/exploreMentors/ExploreMentors";
+import MentorLTMPlans from "./pages/home/mentorsection/MentorLTMPlans";
+import MyPricing from "./pages/menteeDashboard/pages/MentorPricing/Mypricing";
+import MentorSessions from "./components/MentorDashboard/mySucribers/MySubcribers";
+import MentorSessionsTable from "./components/MentorDashboard/mySucribers/MySubcribers";
+import MentorSessionDetails from "./components/MentorDashboard/mySucribers/Mentorsessiondetails ";
 
 const getAuthToken = () => {
     try {
@@ -161,9 +166,7 @@ const App = () => {
                 </Route>
 
                 {/* 🔥 PAYMENT PAGE - STANDALONE (NO NAVBAR/FOOTER) */}
-                <Route element={<ProtectedRoute />}>
-                    <Route path="/payment" element={<MenteePayment />} />
-                </Route>
+                <Route path="/payment" element={<MenteePayment />} />
 
                 {/* MENTOR DASHBOARD WITH LAYOUT - NESTED ROUTES */}
                 <Route element={<ProtectedRoute />}>
@@ -172,6 +175,16 @@ const App = () => {
                         <Route path="dashboard" element={<MentorDashboardSection />} />
                         <Route path="dashboard/sessions" element={<MentorSessionBookings />} />
                         <Route path="dashboard/messages" element={<MentorMessages />} />
+                        <Route path="dashboard/Pricing" element={<MyPricing />} />
+
+
+                        <Route path="dashboard/mentor/sessions" element={<MentorSessionsTable />} />
+
+
+                        <Route path="dashboard/mentor/sessions/:subscription_id" element={<MentorSessionDetails />} />
+
+                        <Route path="dashboard/my-mentee-sessions" element={<MentorSessions />} />
+
                         <Route path="dashboard/Manage_Availability" element={<MentorAvailability />} />
                         <Route path="dashboard/earnings" element={<Myearnings />} />
                         <Route path="dashboard/reviews" element={<Reviews />} />
@@ -184,8 +197,15 @@ const App = () => {
                     <Route path="/mentor-profile" element={<MentorProfile />} />
                 </Route>
 
+                <Route path="/mentor/:mentorId/ltm-plans" element={<MentorLTMPlans />} />
 
                 <Route path="/explore-mentors" element={< ExploreMentors />} />
+
+
+
+
+
+
 
 
 

@@ -5,16 +5,16 @@ import { apiSlice } from "../../../ApiSliceComponent/karrivoApi";
 export const sessionsApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
 
-        // GET all sessions for a mentee
-        getSessionsByMentee: builder.query({
-            query: (mentee_id) => `/sessions/get-all-sessions-mentee/${mentee_id}`,
+
+        getSessionsByMentor: builder.query({
+            query: (mentor_id) => `sessions/get-all-sessions-mentor/${mentor_id}`,
         }),
 
-        // UPDATE session
-        updateByMenteeSession: builder.mutation({
+        // UPDATE session (shared by both mentor & mentee)
+        updateByMentorSession: builder.mutation({
             query: ({ session_id, ...body }) => ({
                 url: `/sessions/update-session/${session_id}`,
-                method: "PATCH",
+                method: "POST",
                 body,
             }),
         }),
@@ -22,6 +22,6 @@ export const sessionsApi = apiSlice.injectEndpoints({
 });
 
 export const {
-    useGetSessionsByMenteeQuery,
-    useUpdateByMenteeSessionMutation,
+    useGetSessionsByMentorQuery,
+    useUpdateByMentorSessionMutation,
 } = sessionsApi;
