@@ -254,9 +254,9 @@ const Home = () => {
       <StepsSection />
       <TestimonialsSection />
       <FAQAccordion />
-      <MentorGrid />
+      {/* <MentorGrid /> */}
       <MentoHero />
-      <FindMentor />
+      {/* <FindMentor /> */}
 
       <style jsx>{`
         @keyframes blob {
