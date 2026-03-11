@@ -24,6 +24,10 @@ const MenteeApplicationForm = () => {
     const [errors, setErrors] = useState({});
     const [showSuccessScreen, setShowSuccessScreen] = useState(false);
     const [submissionResponse, setSubmissionResponse] = useState(null);
+    const [currentSkills, setCurrentSkills] = useState(() => {
+        const saved = localStorage.getItem('menteeCurrentSkills');
+        return saved ? JSON.parse(saved) : [];
+    });
 
     const [formData, setFormData] = useState(() => {
         const saved = localStorage.getItem('menteeFormData');
@@ -80,6 +84,20 @@ const MenteeApplicationForm = () => {
         return saved ? JSON.parse(saved) : [];
     });
 
+
+    const addSkill = (skill) => {
+        if (!currentSkills.includes(skill)) {
+            const updated = [...currentSkills, skill];
+            setCurrentSkills(updated);
+            localStorage.setItem('menteeCurrentSkills', JSON.stringify(updated));
+        }
+    };
+
+    const removeSkill = (skill) => {
+        const updated = currentSkills.filter(s => s !== skill);
+        setCurrentSkills(updated);
+        localStorage.setItem('menteeCurrentSkills', JSON.stringify(updated));
+    };
     const addInterest = (interest) => {
         if (!areasOfInterest.includes(interest)) {
             const updated = [...areasOfInterest, interest];
@@ -225,7 +243,8 @@ const MenteeApplicationForm = () => {
             try {
                 const submissionData = {
                     ...formData,
-                    areasOfInterest: areasOfInterest.join(', ')
+                    areasOfInterest: areasOfInterest.join(', '),
+                    currentSkills: currentSkills.join(', ')
                 };
                 const result = await submitApplication(submissionData).unwrap();
                 navigate("/mentee/apply")
@@ -608,8 +627,54 @@ const MenteeApplicationForm = () => {
 
                                         {renderInput('Company / Organization', 'companyName', 'text', true, 'e.g., Google, Microsoft')}
                                         {renderInput('Years of Experience', 'yearsOfExperience', 'text', false, 'e.g., 3 or 3.5')}
+                                        // REPLACE WITH THIS:
                                         <div className="md:col-span-2">
-                                            {renderTextarea('Current Skills & Strengths', 'currentSkills', false, 'Describe your key skills and professional strengths...', 3)}
+                                            <label className="block text-xs font-semibold text-gray-700 mb-1.5">
+                                                Current Skills & Strengths
+                                            </label>
+                                            {currentSkills.length > 0 && (
+                                                <div className="flex flex-wrap gap-1.5 mb-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                                    {currentSkills.map((skill) => (
+                                                        <span key={skill} className="bg-[#0098cc] text-white px-3 py-1 rounded-full flex items-center gap-1.5 text-xs font-medium">
+                                                            {skill}
+                                                            <button type="button" onClick={() => removeSkill(skill)}
+                                                                className="hover:bg-white hover:text-[#0098cc] rounded-full w-4 h-4 flex items-center justify-center text-xs">
+                                                                ✕
+                                                            </button>
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
+                                            <div className="flex gap-2">
+                                                <input
+                                                    type="text"
+                                                    id="skill-input"
+                                                    placeholder="Type a skill and press Enter or click +"
+                                                    disabled={isLoading}
+                                                    className="w-full p-2.5 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0098cc] hover:border-gray-400 disabled:bg-gray-50 disabled:cursor-not-allowed"
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === 'Enter' && e.target.value.trim()) {
+                                                            e.preventDefault();
+                                                            addSkill(e.target.value.trim());
+                                                            e.target.value = '';
+                                                        }
+                                                    }}
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        const input = document.getElementById('skill-input');
+                                                        if (input && input.value.trim()) {
+                                                            addSkill(input.value.trim());
+                                                            input.value = '';
+                                                        }
+                                                    }}
+                                                    disabled={isLoading}
+                                                    className="px-4 py-2 bg-[#0098cc] text-white rounded-lg text-lg font-bold hover:bg-[#007ba8] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                                >
+                                                    +
+                                                </button>
+                                            </div>
                                         </div>
                                         {renderInput('Resume / Portfolio Link', 'resumeLink', 'url', false, 'https://yourportfolio.com', <FileText size={16} />)}
                                         {renderInput('Introduction Video', 'introVideoLink', 'url', false, 'https://youtube.com/...', <Video size={16} />)}
