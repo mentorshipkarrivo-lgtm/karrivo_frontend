@@ -627,7 +627,6 @@ const MenteeApplicationForm = () => {
 
                                         {renderInput('Company / Organization', 'companyName', 'text', true, 'e.g., Google, Microsoft')}
                                         {renderInput('Years of Experience', 'yearsOfExperience', 'text', false, 'e.g., 3 or 3.5')}
-                                        // REPLACE WITH THIS:
                                         <div className="md:col-span-2">
                                             <label className="block text-xs font-semibold text-gray-700 mb-1.5">
                                                 Current Skills & Strengths

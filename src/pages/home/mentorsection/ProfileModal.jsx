@@ -1,535 +1,4 @@
 
-
-// import React, { useState } from "react";
-// import { useParams, useNavigate } from "react-router-dom";
-// import {
-//   Clock,
-//   Calendar,
-//   Loader2,
-//   MapPin,
-//   Plus,
-//   Trash2,
-//   Save,
-//   ChevronDown,
-//   ChevronUp,
-//   X,
-//   Zap,
-// } from "lucide-react";
-// import { useFetchMentorByIdQuery } from "../../topMentors/Mentorsectionapislice";
-// import BookingModal from "./BookingModal";
-
-// // ─── Constants ────────────────────────────────────────────────────────────────
-// const DAYS = [
-//   "Monday",
-//   "Tuesday",
-//   "Wednesday",
-//   "Thursday",
-//   "Friday",
-//   "Saturday",
-//   "Sunday",
-// ];
-
-// const makeSlot = () => ({ startTime: "09:00", endTime: "10:00", isBooked: false });
-
-// // ─────────────────────────────────────────────────────────────────────────────
-// //  AvailabilityManager
-// // ─────────────────────────────────────────────────────────────────────────────
-// const AvailabilityManager = ({ initialAvailability = [], onSave, onCancel }) => {
-//   const buildState = () =>
-//     DAYS.reduce((acc, day) => {
-//       const found = initialAvailability.find((d) => d.day === day);
-//       acc[day] = {
-//         selected: !!found,
-//         open: !!found,
-//         slots: found?.slots?.length ? found.slots.map((s) => ({ ...s })) : [makeSlot()],
-//       };
-//       return acc;
-//     }, {});
-
-//   const [days, setDays] = useState(buildState);
-//   const [isSaving, setIsSaving] = useState(false);
-
-//   const selectedDays = DAYS.filter((d) => days[d].selected);
-//   const allSelected = selectedDays.length === DAYS.length;
-//   const someSelected = selectedDays.length > 0 && !allSelected;
-//   const totalSlots = selectedDays.reduce((n, d) => n + days[d].slots.length, 0);
-
-//   const setDay = (day, patch) =>
-//     setDays((prev) => ({ ...prev, [day]: { ...prev[day], ...patch } }));
-
-//   const setSlots = (day, slots) => setDay(day, { slots });
-
-//   const handleSelectAll = (checked) => {
-//     setDays((prev) =>
-//       DAYS.reduce((acc, day) => {
-//         acc[day] = {
-//           ...prev[day],
-//           selected: checked,
-//           open: checked,
-//           slots: prev[day].slots.length ? prev[day].slots : [makeSlot()],
-//         };
-//         return acc;
-//       }, {})
-//     );
-//   };
-
-//   const toggleDay = (day) => {
-//     const next = !days[day].selected;
-//     setDay(day, {
-//       selected: next,
-//       open: next,
-//       slots: days[day].slots.length ? days[day].slots : [makeSlot()],
-//     });
-//   };
-
-//   const toggleOpen = (day, e) => {
-//     e.stopPropagation();
-//     setDay(day, { open: !days[day].open });
-//   };
-
-//   const addSlot = (day) => setSlots(day, [...days[day].slots, makeSlot()]);
-//   const removeSlot = (day, i) => setSlots(day, days[day].slots.filter((_, j) => j !== i));
-//   const updateSlot = (day, i, f, v) =>
-//     setSlots(day, days[day].slots.map((s, j) => (j === i ? { ...s, [f]: v } : s)));
-
-//   const handleSave = async () => {
-//     const payload = selectedDays.map((day) => ({
-//       day,
-//       slots: days[day].slots.filter((s) => s.startTime && s.endTime),
-//     }));
-//     setIsSaving(true);
-//     try { await onSave?.(payload); } finally { setIsSaving(false); }
-//   };
-
-//   const s = {
-//     card: (active) => ({
-//       border: `1.5px solid ${active ? "#7ee0c1" : "#1f4f47"}`,
-//       borderRadius: 12,
-//       overflow: "hidden",
-//       transition: "border-color 0.2s",
-//     }),
-//     header: (active) => ({
-//       display: "flex",
-//       alignItems: "center",
-//       gap: 12,
-//       padding: "11px 16px",
-//       background: active ? "rgba(126,224,193,0.08)" : "#1a3d38",
-//       cursor: "pointer",
-//       userSelect: "none",
-//     }),
-//     checkbox: (checked, size = 20) => ({
-//       width: size,
-//       height: size,
-//       borderRadius: size === 20 ? 5 : 6,
-//       border: `2px solid ${checked ? "#7ee0c1" : "#4a7a72"}`,
-//       background: checked ? "#7ee0c1" : "transparent",
-//       display: "flex",
-//       alignItems: "center",
-//       justifyContent: "center",
-//       flexShrink: 0,
-//       transition: "all 0.15s",
-//       cursor: "pointer",
-//     }),
-//     indeterminate: {
-//       width: 22, height: 22, borderRadius: 6,
-//       border: "2px solid #7ee0c1",
-//       background: "#3a8c7a",
-//       display: "flex", alignItems: "center", justifyContent: "center",
-//       flexShrink: 0,
-//     },
-//     badge: {
-//       background: "#7ee0c1", color: "#0f2f2a",
-//       borderRadius: 20, padding: "2px 10px",
-//       fontSize: 11, fontWeight: 700,
-//     },
-//     timeInput: {
-//       background: "#0f2f2a",
-//       border: "1.5px solid #2a5f56",
-//       borderRadius: 6,
-//       color: "#fff",
-//       padding: "5px 9px",
-//       fontSize: 13,
-//       outline: "none",
-//       width: 118,
-//     },
-//   };
-
-//   const Tick = ({ size = 12, color = "#0f2f2a" }) => (
-//     <svg width={size} height={size} viewBox="0 0 12 12" fill="none">
-//       <path d="M2 6.5L4.5 9L10 3" stroke={color} strokeWidth="2.2"
-//         strokeLinecap="round" strokeLinejoin="round" />
-//     </svg>
-//   );
-
-//   return (
-//     <div>
-//       <div
-//         style={{
-//           display: "flex", alignItems: "center", gap: 12,
-//           background: allSelected ? "rgba(126,224,193,0.14)" : "rgba(31,79,71,0.55)",
-//           border: `2px solid ${allSelected ? "#7ee0c1" : someSelected ? "#3a8c7a" : "#2a5f56"}`,
-//           borderRadius: 12, padding: "14px 18px", marginBottom: 16,
-//           cursor: "pointer", transition: "all 0.15s",
-//         }}
-//         onClick={() => handleSelectAll(!allSelected)}
-//       >
-//         {someSelected ? (
-//           <div style={s.indeterminate}>
-//             <span style={{ width: 10, height: 2, background: "#fff", borderRadius: 2, display: "block" }} />
-//           </div>
-//         ) : (
-//           <div style={s.checkbox(allSelected, 22)}>
-//             {allSelected && <Tick size={13} />}
-//           </div>
-//         )}
-//         <Calendar size={17} color="#7ee0c1" />
-//         <span style={{ color: "#fff", fontWeight: 700, fontSize: 15, flex: 1 }}>Select All Days</span>
-//         {allSelected && <span style={s.badge}>All 7 days ✓</span>}
-//         {someSelected && <span style={s.badge}>{selectedDays.length} / 7 selected</span>}
-//       </div>
-
-//       <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-//         {DAYS.map((day) => {
-//           const d = days[day];
-//           const isActive = d.selected;
-//           return (
-//             <div key={day} style={s.card(isActive)}>
-//               <div style={s.header(isActive)} onClick={() => toggleDay(day)}>
-//                 <div style={s.checkbox(isActive)}>{isActive && <Tick />}</div>
-//                 <span style={{ fontWeight: 600, color: "#fff", fontSize: 14, flex: 1 }}>{day}</span>
-//                 {isActive && <span style={s.badge}>{d.slots.length} slot{d.slots.length !== 1 ? "s" : ""}</span>}
-//                 {isActive && (
-//                   <button type="button" onClick={(e) => toggleOpen(day, e)}
-//                     style={{ background: "none", border: "none", color: "#7ee0c1", cursor: "pointer", display: "flex", alignItems: "center" }}>
-//                     {d.open ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-//                   </button>
-//                 )}
-//               </div>
-//               {isActive && d.open && (
-//                 <div style={{ background: "#0f2f2a", padding: "12px 16px", display: "flex", flexDirection: "column", gap: 8 }}>
-//                   {d.slots.map((slot, idx) => (
-//                     <div key={idx} style={{ display: "flex", alignItems: "center", gap: 10, background: "#1a3d38", borderRadius: 8, padding: "9px 12px", flexWrap: "wrap" }}>
-//                       <Clock size={14} color="#7ee0c1" />
-//                       <span style={{ color: "#7ee0c1", fontSize: 12, fontWeight: 700, minWidth: 22 }}>#{idx + 1}</span>
-//                       <input type="time" value={slot.startTime} onChange={(e) => updateSlot(day, idx, "startTime", e.target.value)} style={s.timeInput} />
-//                       <span style={{ color: "#7ee0c1", fontSize: 13 }}>→</span>
-//                       <input type="time" value={slot.endTime} onChange={(e) => updateSlot(day, idx, "endTime", e.target.value)} style={s.timeInput} />
-//                       {d.slots.length > 1 && (
-//                         <button type="button" onClick={() => removeSlot(day, idx)}
-//                           style={{ background: "transparent", border: "none", color: "#e57373", cursor: "pointer", marginLeft: "auto", padding: 4, borderRadius: 5, display: "flex", alignItems: "center" }}>
-//                           <Trash2 size={15} />
-//                         </button>
-//                       )}
-//                     </div>
-//                   ))}
-//                   <button type="button" onClick={() => addSlot(day)}
-//                     style={{ display: "flex", alignItems: "center", gap: 6, background: "transparent", border: "1.5px dashed #7ee0c1", color: "#7ee0c1", borderRadius: 7, padding: "7px 14px", fontSize: 13, cursor: "pointer", width: "fit-content", marginTop: 2 }}>
-//                     <Plus size={14} /> Add another slot
-//                   </button>
-//                 </div>
-//               )}
-//             </div>
-//           );
-//         })}
-//       </div>
-
-//       {selectedDays.length > 0 && (
-//         <div style={{ marginTop: 14, background: "rgba(126,224,193,0.08)", border: "1px solid #7ee0c1", borderRadius: 10, padding: "10px 16px", fontSize: 13, color: "#7ee0c1", display: "flex", alignItems: "center", gap: 8 }}>
-//           <Calendar size={15} />
-//           <span><strong>{selectedDays.length}</strong> day{selectedDays.length > 1 ? "s" : ""} · <strong>{totalSlots}</strong> total slot{totalSlots !== 1 ? "s" : ""}</span>
-//         </div>
-//       )}
-
-//       <div style={{ display: "flex", gap: 10, marginTop: 14 }}>
-//         <button type="button" onClick={onCancel}
-//           style={{ flex: 1, background: "transparent", border: "1.5px solid #4a7a72", color: "#7ee0c1", borderRadius: 10, padding: "12px", fontSize: 14, fontWeight: 600, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-//           <X size={15} /> Cancel
-//         </button>
-//         <button type="button" onClick={handleSave} disabled={isSaving || selectedDays.length === 0}
-//           style={{ flex: 2, background: selectedDays.length === 0 ? "#1f4f47" : "linear-gradient(135deg, #7ee0c1, #3a9e84)", border: "none", color: selectedDays.length === 0 ? "#4a7a72" : "#0f2f2a", fontWeight: 700, fontSize: 15, borderRadius: 10, padding: "12px", cursor: selectedDays.length === 0 ? "not-allowed" : "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8, transition: "opacity 0.2s" }}>
-//           <Save size={16} />
-//           {isSaving ? "Saving..." : "Save Availability"}
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// // ─────────────────────────────────────────────────────────────────────────────
-// //  ProfileModal
-// // ─────────────────────────────────────────────────────────────────────────────
-// const ProfileModal = () => {
-//   const { mentorId } = useParams();
-//   const navigate = useNavigate();
-
-//   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
-//   const [showAvailEditor, setShowAvailEditor] = useState(false);
-
-//   const { data: mentor, isLoading, isError } = useFetchMentorByIdQuery(mentorId);
-
-//   const handleBookSession = () => {
-//     const isLoggedIn = !!localStorage.getItem("authToken");
-//     if (!isLoggedIn) { navigate(`/login?mentorId=${mentorId}`); return; }
-//     setIsBookingModalOpen(true);
-//   };
-
-//   // ── Navigate to LTM Plans page ──────────────────────────────── ← NEW
-//   const handleViewLTMPlans = () => {
-//     navigate(`/mentor/${mentorId}/ltm-plans`);
-//   };
-
-//   const handleSaveAvailability = async (availability) => {
-//     console.log("Saving:", availability);
-//     setShowAvailEditor(false);
-//   };
-
-//   if (isLoading) return (
-//     <div className="bg-[#0f2f2a] min-h-screen flex items-center justify-center">
-//       <div className="text-center">
-//         <Loader2 className="w-12 h-12 animate-spin text-[#7ee0c1] mx-auto mb-4" />
-//         <p className="text-white">Loading profile...</p>
-//       </div>
-//     </div>
-//   );
-
-//   if (isError || !mentor) return (
-//     <div className="bg-[#0f2f2a] min-h-screen flex items-center justify-center">
-//       <div className="text-center">
-//         <p className="text-red-500 mb-4">Failed to load profile</p>
-//         <button onClick={() => navigate("/mentors")}
-//           className="bg-[#7ee0c1] text-[#0f2f2a] px-6 py-2 rounded-lg font-semibold">
-//           Back to Mentors
-//         </button>
-//       </div>
-//     </div>
-//   );
-
-//   const skillsArray = mentor.currentSkills
-//     ? mentor.currentSkills.split(/[\n,;]+/).map((s) => s.trim()).filter(Boolean)
-//     : [];
-
-//   const hasAvailability =
-//     Array.isArray(mentor.availability) &&
-//     mentor.availability.some((d) => d.slots?.length > 0);
-
-//   return (
-//     <>
-//       <div className="bg-[#0f2f2a] min-h-screen text-white">
-//         <div className="max-w-7xl mx-auto px-6 py-10">
-//           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-
-//             {/* ── LEFT ───────────────────────────────────────────────────── */}
-//             <div className="lg:col-span-2">
-
-//               {/* Profile Header */}
-//               <div className="flex gap-6">
-//                 <img
-//                   src={mentor.profileImage || "https://via.placeholder.com/180"}
-//                   alt={mentor.fullName}
-//                   className="w-40 h-40 rounded-xl object-cover"
-//                 />
-//                 <div>
-//                   <span className="inline-block bg-[#1f4f47] px-4 py-1 rounded-full text-sm mb-3">
-//                     Top Mentor
-//                   </span>
-//                   <h1 className="text-4xl font-bold">{mentor.fullName}</h1>
-//                   <p className="text-[#7ee0c1] mt-1">
-//                     {mentor.currentRole}
-//                     {mentor.companyName && ` @ ${mentor.companyName}`}
-//                   </p>
-//                   <div className="flex items-center gap-4 mt-4 text-sm text-gray-300">
-//                     <span>5.0</span>
-//                     {mentor.location && (
-//                       <span className="flex items-center gap-1">
-//                         <MapPin size={14} /> {mentor.location}
-//                       </span>
-//                     )}
-//                   </div>
-//                 </div>
-//               </div>
-
-//               {/* Bio */}
-//               {mentor.bio && (
-//                 <p className="mt-6 text-[#7ee0c1] font-medium">{mentor.bio}</p>
-//               )}
-
-//               {/* Meta */}
-//               <div className="mt-4 space-y-2 text-gray-300 text-sm">
-//                 {mentor.location && <p>{mentor.location}</p>}
-//               </div>
-
-//               {/* Stats */}
-//               <div className="mt-10 grid grid-cols-3 gap-4">
-//                 {[
-//                   { label: "Years Exp", value: `${mentor.yearsOfExperience}+` },
-//                   { label: "Rating", value: "5.0" },
-//                   { label: "Per Hour", value: `₹${mentor.hourlyRate}` },
-//                 ].map(({ label, value }) => (
-//                   <div key={label} className="bg-[#1f4f47] p-4 rounded-lg text-center">
-//                     <div className="text-2xl font-bold text-[#7ee0c1]">{value}</div>
-//                     <div className="text-sm text-gray-300">{label}</div>
-//                   </div>
-//                 ))}
-//               </div>
-
-//               {/* ── Weekly Availability ───────────────────────────────────── */}
-//               <div className="mt-10">
-//                 <div className="flex items-center justify-between mb-5">
-//                   <h2 className="text-2xl font-semibold flex items-center gap-2">
-//                     <Calendar className="w-6 h-6 text-[#7ee0c1]" />
-//                     Weekly Availability
-//                   </h2>
-//                 </div>
-
-//                 {showAvailEditor && (
-//                   <div style={{ background: "#0d2823", border: "1.5px solid #2a5f56", borderRadius: 14, padding: "20px 18px", marginBottom: 24 }}>
-//                     <p style={{ color: "#7ee0c1", fontSize: 13, marginBottom: 16 }}>
-//                       ✓ Tick the checkbox to select a day, then set your time slots.
-//                     </p>
-//                     <AvailabilityManager
-//                       initialAvailability={mentor.availability || []}
-//                       onSave={handleSaveAvailability}
-//                       onCancel={() => setShowAvailEditor(false)}
-//                     />
-//                   </div>
-//                 )}
-
-//                 {hasAvailability ? (
-//                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-//                     {mentor.availability
-//                       .filter((d) => d.slots?.length > 0)
-//                       .map((dayData, i) => (
-//                         <div key={i} className="bg-[#1f4f47] rounded-lg p-4">
-//                           <h4 className="font-bold text-white mb-3 flex items-center gap-2">
-//                             <div className="w-2 h-2 rounded-full bg-[#7ee0c1]" />
-//                             {dayData.day}
-//                           </h4>
-//                           <div className="space-y-2">
-//                             {dayData.slots.map((slot, si) => (
-//                               <div key={si} className="flex items-center justify-between p-2 bg-[#0f2f2a] rounded-lg">
-//                                 <div className="flex items-center gap-2">
-//                                   <Clock size={14} className="text-[#7ee0c1]" />
-//                                   <span className="text-sm font-semibold text-white">
-//                                     {slot.startTime} - {slot.endTime}
-//                                   </span>
-//                                 </div>
-//                                 {slot.isBooked && (
-//                                   <span className="text-xs px-2 py-0.5 bg-red-500 text-white rounded-full font-medium">
-//                                     Booked
-//                                   </span>
-//                                 )}
-//                               </div>
-//                             ))}
-//                           </div>
-//                         </div>
-//                       ))}
-//                   </div>
-//                 ) : (
-//                   !showAvailEditor && (
-//                     <div className="bg-amber-900/30 border border-amber-700 rounded-lg p-6 text-center">
-//                       <Clock className="w-12 h-12 text-amber-500 mx-auto mb-2" />
-//                       <p className="text-amber-300 font-medium">Availability to be updated by mentor</p>
-//                       <p className="text-amber-400 text-sm mt-1">Please check back later or contact the mentor directly</p>
-//                     </div>
-//                   )
-//                 )}
-//               </div>
-
-//               {/* Skills */}
-//               <div className="mt-10">
-//                 <h2 className="text-2xl font-semibold mb-4">Skills & Expertise</h2>
-//                 <div className="flex flex-wrap gap-3">
-//                   {skillsArray.slice(0, 12).map((skill, i) => (
-//                     <span key={i} className="bg-[#1f4f47] px-4 py-2 rounded-full text-sm">{skill}</span>
-//                   ))}
-//                   {skillsArray.length > 12 && (
-//                     <span className="text-[#7ee0c1] underline cursor-pointer px-4 py-2">
-//                       + {skillsArray.length - 12} more
-//                     </span>
-//                   )}
-//                 </div>
-//               </div>
-//             </div>
-
-//             {/* ── RIGHT — Pricing Card ──────────────────────────────────── */}
-//             <div className="bg-[#f6ecd9] text-[#0f2f2a] rounded-2xl p-8 h-fit sticky top-10">
-//               <div className="flex justify-between mb-6 border-b pb-3">
-//                 <button className="font-semibold border-b-2 border-[#0f2f2a]">
-//                   Mentorship plans
-//                 </button>
-//               </div>
-
-//               <h2 className="text-5xl font-bold">
-//                 ₹{mentor.hourlyRate}
-//                 <span className="text-xl font-normal"> / month</span>
-//               </h2>
-
-//               <p className="mt-4 text-gray-700">
-//                 Receive tailored mentorship and assistance as we work together
-//                 to help you reach your career goals.
-//               </p>
-
-//               <ul className="mt-6 space-y-3 text-sm">
-//                 <li className="flex gap-2"><Clock size={16} /> 2 calls per month (45 min / call)</li>
-//                 <li>Unlimited Q&A via chat</li>
-//                 <li>Expect responses within 24 hours</li>
-//                 <li>Hands-on support</li>
-//               </ul>
-
-//               {/* Book Session button */}
-//               <button
-//                 onClick={handleBookSession}
-//                 className="mt-8 w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white py-4 rounded-full font-semibold hover:from-blue-600 hover:to-blue-800 transition transform hover:scale-105 active:scale-95"
-//               >
-//                 Book Session
-//               </button>
-
-//               {/* ── View LTM Plans button ── */}
-//               <button
-//                 onClick={handleViewLTMPlans}
-//                 style={{
-//                   marginTop: 12,
-//                   width: "100%",
-//                   padding: "14px",
-//                   borderRadius: 50,
-//                   border: "2px solid #0f2f2a",
-//                   background: "transparent",
-//                   color: "#0f2f2a",
-//                   fontSize: 15,
-//                   fontWeight: 700,
-//                   cursor: "pointer",
-//                   display: "flex",
-//                   alignItems: "center",
-//                   justifyContent: "center",
-//                   gap: 8,
-//                   transition: "all 0.2s",
-//                 }}
-//                 onMouseEnter={e => { e.currentTarget.style.background = "#0f2f2a"; e.currentTarget.style.color = "#f6ecd9"; }}
-//                 onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#0f2f2a"; }}
-//               >
-//                 <Zap size={16} /> View LTM Plans
-//               </button>
-//             </div>
-
-//           </div>
-//         </div>
-//       </div>
-
-//       {mentor && (
-//         <BookingModal
-//           mentor={mentor}
-//           isOpen={isBookingModalOpen}
-//           onClose={() => setIsBookingModalOpen(false)}
-//         />
-//       )}
-//     </>
-//   );
-// };
-
-// export default ProfileModal;
-
-
-
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -537,7 +6,7 @@ import {
   ChevronDown, ChevronUp, X, Zap, Star, Mail, Phone,
   Linkedin, BookOpen, Award, Briefcase, GraduationCap,
   Globe, MessageCircle, CheckCircle, Users, TrendingUp,
-  ArrowLeft, ExternalLink, Shield, Heart,
+  ArrowLeft, ExternalLink, Shield, Heart, CalendarDays
 } from "lucide-react";
 import { useFetchMentorByIdQuery } from "../../topMentors/Mentorsectionapislice";
 import BookingModal from "./BookingModal";
@@ -702,6 +171,9 @@ const ProfileModal = () => {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [showAvailEditor, setShowAvailEditor] = useState(false);
   const [showFullBio, setShowFullBio] = useState(false);
+  const [showAddSlot, setShowAddSlot] = useState(false); const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [newSlot, setNewSlot] = useState({ date: "", startTime: "09:00", endTime: "10:00" });
 
   const { data: mentor, isLoading, isError } = useFetchMentorByIdQuery(mentorId);
 
@@ -733,8 +205,7 @@ const ProfileModal = () => {
     ? mentor.currentSkills.split(/[\n,;]+/).map((s) => s.trim()).filter(Boolean) : [];
   const areasArray = mentor.areasOfInterest
     ? mentor.areasOfInterest.split(/[,;]+/).map((s) => s.trim()).filter(Boolean) : [];
-  const hasAvailability = Array.isArray(mentor.availability) && mentor.availability.some((d) => d.slots?.length > 0);
-  const bioText = mentor.motivationStatement || mentor.bio || "";
+  const hasAvailability = Array.isArray(mentor.weeklyAvailability) && mentor.weeklyAvailability.length > 0; const bioText = mentor.motivationStatement || mentor.bio || "";
   const bioLong = bioText.length > 260;
   const displayBio = showFullBio || !bioLong ? bioText : bioText.slice(0, 260) + "…";
   const initials = mentor.fullName
@@ -764,7 +235,7 @@ const ProfileModal = () => {
 
 
 
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "28px 20px 60px", animation: "fadeUp 0.35s ease" }}>
+        <div style={{ maxWidth: 1300, margin: "0 auto", padding: "28px 20px 60px", animation: "fadeUp 0.35s ease" }}>
 
           {/* ── Profile Header ─────────────────────────────────────────── */}
           <div style={{ display: "flex", gap: 18, alignItems: "flex-start", marginBottom: 20, flexWrap: "wrap" }}>
@@ -884,7 +355,7 @@ const ProfileModal = () => {
               )}
 
               {/* Free Trial */}
-              {mentor.freeTrial && mentor.freeTrial.totalAllowed > mentor.freeTrial.usedCount && (
+              {/* {mentor.freeTrial && mentor.freeTrial.totalAllowed > mentor.freeTrial.usedCount && (
                 <div style={{ background: "rgba(126,224,193,0.04)", border: "1px solid rgba(126,224,193,0.12)", borderRadius: 10, padding: "12px 16px", display: "flex", alignItems: "center", gap: 12 }}>
                   <Star size={16} color="#7ee0c1" style={{ flexShrink: 0 }} />
                   <div style={{ flex: 1 }}>
@@ -897,100 +368,280 @@ const ProfileModal = () => {
                     Claim Trial
                   </button>
                 </div>
-              )}
-
-              {/* Availability */}
-              <Section icon={Calendar} title="Weekly Availability">
-                {showAvailEditor && (
-                  <div style={{ marginBottom: 14, paddingBottom: 14, borderBottom: "1px solid rgba(126,224,193,0.07)" }}>
-                    <AvailabilityManager initialAvailability={mentor.availability || []} onSave={handleSaveAvailability} onCancel={() => setShowAvailEditor(false)} />
-                  </div>
-                )}
-
-                {hasAvailability ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
-                    {mentor.availability.filter((d) => d.slots?.length > 0).map((dayData, i) => (
-                      <div key={i} className="day-item" style={{ border: "1px solid rgba(126,224,193,0.08)", borderRadius: 9, overflow: "hidden", transition: "border-color 0.15s" }}>
-                        <div style={{ padding: "9px 13px", display: "flex", alignItems: "center", gap: 8, background: "rgba(126,224,193,0.02)", borderBottom: "1px solid rgba(126,224,193,0.05)" }}>
-                          <span style={{ fontWeight: 600, color: "#d4e8e4", fontSize: 12.5 }}>{dayData.day}</span>
-                          <span style={{ marginLeft: "auto", fontSize: 10, color: "#3a6a62", fontWeight: 600 }}>{dayData.slots.length} slot{dayData.slots.length !== 1 ? "s" : ""}</span>
-                        </div>
-                        <div style={{ padding: "8px 13px", display: "flex", flexWrap: "wrap", gap: 6 }}>
-                          {dayData.slots.map((slot, si) => (
-                            <div key={si} style={{ display: "inline-flex", alignItems: "center", gap: 5, background: "rgba(126,224,193,0.04)", border: "1px solid rgba(126,224,193,0.09)", borderRadius: 6, padding: "3px 9px" }}>
-                              <Clock size={10} color="#3a6a62" />
-                              <span style={{ fontSize: 11.5, color: "#a4c4be", fontWeight: 500 }}>{slot.startTime} – {slot.endTime}</span>
-                              {slot.isBooked && <span style={{ fontSize: 9, background: "rgba(229,115,115,0.1)", color: "#e57373", padding: "1px 5px", borderRadius: 10, fontWeight: 700, border: "1px solid rgba(229,115,115,0.15)" }}>Booked</span>}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  !showAvailEditor && (
-                    <div style={{ textAlign: "center", padding: "18px 0" }}>
-                      <Clock size={24} color="#2a4a46" style={{ margin: "0 auto 8px", display: "block" }} />
-                      <p style={{ color: "#3a6a62", fontWeight: 600, fontSize: 12, marginBottom: 3 }}>Availability not set</p>
-                      <p style={{ color: "#2a4a46", fontSize: 11 }}>Check back soon or contact the mentor directly.</p>
-                    </div>
-                  )
-                )}
-              </Section>
+              )} */}
 
             </div>
 
             {/* RIGHT — Pricing Card */}
-            <div className="right-col" style={{ position: "sticky", top: 68 }}>
+            {/* RIGHT COLUMN */}
+            <div className="right-col" style={{ position: "sticky", top: 68, display: "flex", flexDirection: "column", gap: 16 }}>
 
-              <div style={{ background: "#f4e8d4", borderRadius: 14, overflow: "hidden", border: "1px solid rgba(180,160,130,0.2)" }}>
-                {/* Header */}
-                <div style={{ background: "#0e2b27", padding: "20px 20px 16px" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
-                    <span style={{ fontSize: 9.5, color: "#7ee0c1", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.6px" }}>Mentorship Plan</span>
-                    <span style={{ background: "rgba(126,224,193,0.1)", color: "#7ee0c1", fontSize: 9.5, padding: "2px 8px", borderRadius: 20, fontWeight: 700, border: "1px solid rgba(126,224,193,0.18)" }}>Popular</span>
+              {/* ── Weekly Availability Card ── */}
+              <div style={{ background: "#111f1d", border: "1px solid rgba(126,224,193,0.09)", borderRadius: 14, overflow: "hidden" }}>
+
+                {/* Card Header */}
+                <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(126,224,193,0.07)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <CalendarDays size={14} color="#7ee0c1" />
+                    <span style={{ fontFamily: "'Fraunces',serif", fontSize: 15, fontWeight: 600, color: "#e0f0ec" }}>
+                      Weekly Availability
+                    </span>
                   </div>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 3, marginBottom: 5 }}>
-                    <span style={{ fontFamily: "'Fraunces',serif", fontSize: 32, fontWeight: 700, color: "#f0f8f6", letterSpacing: "-1px", lineHeight: 1 }}>₹{mentor.hourlyRate?.toLocaleString()}</span>
-                    <span style={{ color: "#7ee0c1", fontSize: 12 }}>/month</span>
-                  </div>
-                  <p style={{ color: "#3a6a62", fontSize: 11, lineHeight: 1.5 }}>Tailored mentorship to accelerate your career</p>
+                  {hasAvailability && (
+                    <span style={{ fontSize: 10, color: "#3a6a62", fontWeight: 600, background: "rgba(126,224,193,0.05)", border: "1px solid rgba(126,224,193,0.1)", borderRadius: 20, padding: "2px 9px" }}>
+                      {mentor.weeklyAvailability.filter(s => !s.isBooked).length} open
+                    </span>
+                  )}
                 </div>
 
-                {/* Features */}
-                <div style={{ padding: "16px 20px" }}>
-                  <PlanFeature text="2 live calls per month (45 min each)" />
-                  <PlanFeature text="Unlimited Q&A via chat" />
-                  <PlanFeature text="Responses within 24 hours" />
-                  <PlanFeature text="Hands-on project support" />
-                  <PlanFeature text="Career roadmap & goal setting" />
-                  <PlanFeature text="Resume & portfolio review" />
+                <div style={{ padding: "16px 18px" }}>
 
-                  <div style={{ borderTop: "1px solid rgba(15,47,42,0.1)", margin: "13px 0 11px" }} />
-
-                  {/* Mini mentor chip */}
-                  <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 14 }}>
-                    <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg,#1c4e46,#3a9e84)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 800, color: "#fff", fontFamily: "'Fraunces',serif", flexShrink: 0 }}>
-                      {initials}
+                  {/* Add Slot Form */}
+                  {showAddSlot && (
+                    <div style={{ background: "#0c2520", border: "1px solid rgba(126,224,193,0.12)", borderRadius: 10, padding: "14px", marginBottom: 16, display: "flex", flexDirection: "column", gap: 12 }}>
+                      <p style={{ fontSize: 11, color: "#7ee0c1", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.5px" }}>New Slot</p>
+                      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                        <div style={{ gridColumn: "1 / -1", display: "flex", flexDirection: "column", gap: 4 }}>
+                          <label style={{ fontSize: 10, color: "#3a6a62", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.4px" }}>Date</label>
+                          <input
+                            type="date"
+                            value={newSlot.date}
+                            onChange={e => setNewSlot(p => ({ ...p, date: e.target.value }))}
+                            style={{ background: "#0f2f2a", border: "1px solid #2a5f56", borderRadius: 7, color: "#fff", padding: "7px 10px", fontSize: 12, outline: "none", width: "100%" }}
+                          />
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                          <label style={{ fontSize: 10, color: "#3a6a62", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.4px" }}>Start</label>
+                          <input
+                            type="time"
+                            value={newSlot.startTime}
+                            onChange={e => setNewSlot(p => ({ ...p, startTime: e.target.value }))}
+                            style={{ background: "#0f2f2a", border: "1px solid #2a5f56", borderRadius: 7, color: "#fff", padding: "7px 10px", fontSize: 12, outline: "none", width: "100%" }}
+                          />
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                          <label style={{ fontSize: 10, color: "#3a6a62", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.4px" }}>End</label>
+                          <input
+                            type="time"
+                            value={newSlot.endTime}
+                            onChange={e => setNewSlot(p => ({ ...p, endTime: e.target.value }))}
+                            style={{ background: "#0f2f2a", border: "1px solid #2a5f56", borderRadius: 7, color: "#fff", padding: "7px 10px", fontSize: 12, outline: "none", width: "100%" }}
+                          />
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", gap: 8 }}>
+                        <button
+                          onClick={() => { setShowAddSlot(false); setNewSlot({ date: "", startTime: "09:00", endTime: "10:00" }); }}
+                          style={{ flex: 1, background: "transparent", border: "1px solid #2a5f56", color: "#7ee0c1", borderRadius: 7, padding: "8px", fontSize: 12, fontWeight: 600, cursor: "pointer" }}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          disabled={!newSlot.date}
+                          onClick={() => { console.log("New slot:", newSlot); setShowAddSlot(false); setNewSlot({ date: "", startTime: "09:00", endTime: "10:00" }); }}
+                          style={{ flex: 2, background: newSlot.date ? "linear-gradient(135deg,#7ee0c1,#3a9e84)" : "#1f4f47", border: "none", color: newSlot.date ? "#0f2f2a" : "#4a7a72", fontWeight: 700, fontSize: 12, borderRadius: 7, padding: "8px", cursor: newSlot.date ? "pointer" : "not-allowed", display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}
+                        >
+                          <Save size={12} /> Save Slot
+                        </button>
+                      </div>
                     </div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontWeight: 700, fontSize: 11.5, color: "#1a2e2a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{mentor.fullName}</div>
-                      <div style={{ fontSize: 10, color: "#5a7a72" }}>{mentor.currentRole}</div>
+                  )}
+
+                  {hasAvailability ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+
+                      {/* ── Date Box Grid ── */}
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+                        {mentor.weeklyAvailability.map((slot, i) => {
+                          const d = new Date(slot.date);
+                          const dayName = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][d.getDay()];
+                          const dateNum = d.getDate();
+                          const month = d.toLocaleDateString("en-IN", { month: "short" });
+                          const isSelected = selectedDate === (slot._id || i);
+                          const isBooked = slot.isBooked;
+
+                          return (
+                            <div
+                              key={slot._id || i}
+                              onClick={() => !isBooked && setSelectedDate(isSelected ? null : (slot._id || i))}
+                              style={{
+                                display: "flex", flexDirection: "column", alignItems: "center",
+                                width: 52, borderRadius: 10, overflow: "hidden",
+                                border: `1.5px solid ${isBooked ? "rgba(229,115,115,0.25)" : isSelected ? "#7ee0c1" : "rgba(126,224,193,0.14)"}`,
+                                cursor: isBooked ? "not-allowed" : "pointer",
+                                opacity: isBooked ? 0.4 : 1,
+                                transform: isSelected ? "scale(1.06)" : "scale(1)",
+                                boxShadow: isSelected ? "0 0 0 3px rgba(126,224,193,0.15)" : "none",
+                                transition: "all 0.15s",
+                                background: isSelected ? "rgba(126,224,193,0.08)" : "rgba(126,224,193,0.02)",
+                              }}
+                            >
+                              {/* Month bar */}
+                              <div style={{
+                                width: "100%", textAlign: "center", padding: "4px 0",
+                                background: isSelected ? "#7ee0c1" : "rgba(126,224,193,0.07)",
+                                fontSize: 8.5, fontWeight: 800, letterSpacing: "0.5px",
+                                color: isSelected ? "#0a211e" : "#3a6a62",
+                                textTransform: "uppercase",
+                              }}>
+                                {month}
+                              </div>
+                              {/* Date */}
+                              <div style={{
+                                fontSize: 19, fontWeight: 800,
+                                color: isSelected ? "#7ee0c1" : "#c4ddd8",
+                                lineHeight: 1, padding: "7px 0 2px",
+                                fontFamily: "'Fraunces',serif",
+                              }}>
+                                {dateNum}
+                              </div>
+                              {/* Day */}
+                              <div style={{
+                                fontSize: 8.5, fontWeight: 700,
+                                color: isSelected ? "#7ee0c1" : "#3a6a62",
+                                textTransform: "uppercase", letterSpacing: "0.3px", paddingBottom: 5,
+                              }}>
+                                {dayName}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {/* ── Selected Slot Detail Card ── */}
+                      {selectedDate !== null && (() => {
+                        const slot = mentor.weeklyAvailability.find((s, i) => (s._id || i) === selectedDate);
+                        if (!slot) return null;
+                        const d = new Date(slot.date);
+                        const dateLabel = d.toLocaleDateString("en-IN", { weekday: "long", day: "2-digit", month: "long", year: "numeric" });
+
+                        return (
+                          <div style={{ border: "1px solid rgba(126,224,193,0.18)", borderRadius: 12, overflow: "hidden", animation: "fadeUp 0.2s ease" }}>
+
+                            {/* Detail rows */}
+                            <div style={{ padding: "14px 16px", background: "rgba(126,224,193,0.03)", display: "flex", flexDirection: "column", gap: 10 }}>
+
+                              <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                                <div style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(126,224,193,0.08)", border: "1px solid rgba(126,224,193,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                  <Calendar size={13} color="#7ee0c1" />
+                                </div>
+                                <div>
+                                  <p style={{ fontSize: 9.5, color: "#3a6a62", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.4px", marginBottom: 2 }}>Date</p>
+                                  <p style={{ fontSize: 12.5, fontWeight: 700, color: "#e0f0ec", lineHeight: 1.3 }}>{dateLabel}</p>
+                                </div>
+                              </div>
+
+                              <div style={{ height: 1, background: "rgba(126,224,193,0.06)" }} />
+
+                              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                                <div style={{ width: 30, height: 30, borderRadius: 8, background: "rgba(126,224,193,0.08)", border: "1px solid rgba(126,224,193,0.12)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                                  <Clock size={13} color="#7ee0c1" />
+                                </div>
+                                <div>
+                                  <p style={{ fontSize: 9.5, color: "#3a6a62", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.4px", marginBottom: 2 }}>Time · Session</p>
+                                  <p style={{ fontSize: 12.5, fontWeight: 600, color: "#a4c4be" }}>{slot.startTime} – {slot.endTime} &nbsp;·&nbsp; 1:1 Session</p>
+                                </div>
+                              </div>
+
+                              <div style={{ height: 1, background: "rgba(126,224,193,0.06)" }} />
+
+                              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                <span style={{ fontSize: 10, color: "#3a6a62", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.4px" }}>Session Fee</span>
+                                <span style={{ fontSize: 16, fontWeight: 800, color: "#7ee0c1", fontFamily: "'Fraunces',serif" }}>
+                                  ₹{mentor.hourlyRate?.toLocaleString()}
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Book Button */}
+                            <button
+                              onClick={() => {
+                                setSelectedSlot({ date: slot.date, startTime: slot.startTime, endTime: slot.endTime });
+                                setIsBookingModalOpen(true);
+                              }}
+                              style={{
+                                width: "100%", background: "linear-gradient(135deg,#7ee0c1,#3a9e84)",
+                                border: "none", color: "#0a211e", fontWeight: 700, fontSize: 13.5,
+                                padding: "13px", cursor: "pointer", display: "flex",
+                                alignItems: "center", justifyContent: "center", gap: 7,
+                                letterSpacing: "0.2px", transition: "opacity 0.15s",
+                              }}
+                              onMouseEnter={e => e.currentTarget.style.opacity = "0.9"}
+                              onMouseLeave={e => e.currentTarget.style.opacity = "1"}
+                            >
+                              <Calendar size={14} /> Book this Session
+                            </button>
+                          </div>
+                        );
+                      })()}
+
                     </div>
-                    <span style={{ fontSize: 11, color: "#1a2e2a", fontWeight: 700, flexShrink: 0 }}>★ 5.0</span>
-                  </div>
-
-                  <button onClick={handleBookSession} className="book-btn" style={{ width: "100%", background: "#7ee0c1", color: "#0a211e", border: "none", padding: "12px", borderRadius: 9, fontWeight: 700, fontSize: 13.5, cursor: "pointer", transition: "background 0.15s", marginBottom: 7, letterSpacing: "0.1px" }}>
-                    Book a Session
-                  </button>
-                  <button onClick={handleViewLTMPlans} className="ltm-btn" style={{ width: "100%", background: "transparent", color: "#1a3d38", border: "1.5px solid rgba(15,47,42,0.25)", padding: "10px", borderRadius: 9, fontWeight: 700, fontSize: 12.5, cursor: "pointer", transition: "background 0.15s", display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
-                    <Zap size={12} /> View LTM Plans
-                  </button>
-
-                  <p style={{ textAlign: "center", fontSize: 10, color: "#8aada8", marginTop: 9 }}>🔒 Secure · Cancel anytime</p>
+                  ) : (
+                    !showAddSlot && (
+                      <div style={{ textAlign: "center", padding: "24px 0" }}>
+                        <div style={{ width: 44, height: 44, borderRadius: 12, background: "rgba(126,224,193,0.05)", border: "1px solid rgba(126,224,193,0.08)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>
+                          <Clock size={20} color="#2a4a46" />
+                        </div>
+                        <p style={{ color: "#3a6a62", fontWeight: 600, fontSize: 12.5, marginBottom: 4 }}>No sessions this week</p>
+                        <p style={{ color: "#2a4a46", fontSize: 11, lineHeight: 1.6 }}>Check back soon or contact the mentor directly.</p>
+                      </div>
+                    )
+                  )}
                 </div>
               </div>
 
+              {/* ── Mentorship Plan Card ── */}
+              <div style={{ background: "#f4e8d4", borderRadius: 14, overflow: "hidden", border: "1px solid rgba(180,160,130,0.2)" }}>
+
+                {/* Plan Header */}
+                <div style={{ background: "#0e2b27", padding: "20px 20px 18px" }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+                    <span style={{ fontSize: 9.5, color: "#7ee0c1", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.7px" }}>
+                      Mentorship Plan
+                    </span>
+                    <span style={{ background: "rgba(126,224,193,0.1)", color: "#7ee0c1", fontSize: 9.5, padding: "2px 9px", borderRadius: 20, fontWeight: 700, border: "1px solid rgba(126,224,193,0.18)" }}>
+                      Popular
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 6 }}>
+                    <span style={{ fontFamily: "'Fraunces',serif", fontSize: 34, fontWeight: 700, color: "#f0f8f6", letterSpacing: "-1px", lineHeight: 1 }}>
+                      ₹{mentor.hourlyRate?.toLocaleString()}
+                    </span>
+                    <span style={{ color: "#7ee0c1", fontSize: 12, fontWeight: 500 }}>/month</span>
+                  </div>
+                  <p style={{ color: "#4a7a72", fontSize: 11.5, lineHeight: 1.6 }}>
+                    Tailored mentorship to accelerate your career
+                  </p>
+                </div>
+
+                {/* Plan Features */}
+                <div style={{ padding: "18px 20px", display: "flex", flexDirection: "column", gap: 14 }}>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    {/* <PlanFeature text="2 live calls per month (45 min each)" /> */}
+                    {/* <PlanFeature text="Unlimited Q&A via chat" /> */}
+                    <PlanFeature text="Responses within 24 hours" />
+                    <PlanFeature text="Hands-on project support" />
+                    <PlanFeature text="Career roadmap & goal setting" />
+                    <PlanFeature text="Resume & portfolio review" />
+                  </div>
+
+                  <div style={{ height: 1, background: "rgba(15,47,42,0.1)" }} />
+
+
+
+                  {/* CTA */}
+                  <button
+                    onClick={handleViewLTMPlans}
+                    className="ltm-btn"
+                    style={{ width: "100%", background: "transparent", color: "#1a3d38", border: "1.5px solid rgba(15,47,42,0.25)", padding: "11px", borderRadius: 10, fontWeight: 700, fontSize: 13, cursor: "pointer", transition: "background 0.15s", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
+                  >
+                    <Zap size={13} /> View LTM Plans
+                  </button>
+
+                  <p style={{ textAlign: "center", fontSize: 10.5, color: "#8aada8" }}>🔒 Secure · Cancel anytime</p>
+                </div>
+              </div>
 
             </div>
           </div>
@@ -998,8 +649,12 @@ const ProfileModal = () => {
       </div>
 
       {mentor && (
-        <BookingModal mentor={mentor} isOpen={isBookingModalOpen} onClose={() => setIsBookingModalOpen(false)} />
-      )}
+        <BookingModal
+          mentor={mentor}
+          isOpen={isBookingModalOpen}
+          onClose={() => setIsBookingModalOpen(false)}
+          selectedSlot={selectedSlot}
+        />)}
     </>
   );
 };

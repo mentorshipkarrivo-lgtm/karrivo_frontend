@@ -424,17 +424,7 @@ function MentorCard({ mentor, index, onViewProfile, onBookSession }) {
           </div>
         )}
 
-        {canBook && (
-          <button
-            onClick={() => onBookSession(mentor)}
-            className="absolute bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-1 text-[11px] font-semibold rounded-full shadow-md transition-all"
-            style={{ background: "white", color: BLUE, border: `1px solid ${BLUE_BORDER}`, fontFamily: FONT }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = BLUE; e.currentTarget.style.color = "white"; }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = "white"; e.currentTarget.style.color = BLUE; }}
-          >
-            Book Trial
-          </button>
-        )}
+     
       </div>
     </motion.article>
   );
@@ -577,7 +567,7 @@ export default function BookingsSection() {
         </motion.div>
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
+        {/* <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
           {[
             { icon: Users, label: "Total Mentors", value: mentorsList.length },
             { icon: Award, label: "Approved", value: approvedCount },
@@ -598,7 +588,7 @@ export default function BookingsSection() {
               </div>
             </motion.div>
           ))}
-        </div>
+        </div> */}
 
    
 
@@ -642,9 +632,9 @@ export default function BookingsSection() {
                 />
               ))}
             </div>
-            <p className="text-xs text-gray-400 text-center mt-4">
-              Showing {filtered.length} of {mentorsList.length} mentor{mentorsList.length !== 1 ? "s" : ""}
-            </p>
+              {/* <p className="text-xs text-gray-400 text-center mt-4">
+                Showing {filtered.length} of {mentorsList.length} mentor{mentorsList.length !== 1 ? "s" : ""}
+              </p> */}
           </section>
         )}
       </div>

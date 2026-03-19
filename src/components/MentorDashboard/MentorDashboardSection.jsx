@@ -25,10 +25,10 @@ const formatShortDate = (dateString) => {
 };
 
 const statusConfig = {
-  confirmed:  { bg: 'bg-emerald-500/10', text: 'text-emerald-400',  dot: 'bg-emerald-400',  label: 'Confirmed'  },
-  completed:  { bg: 'bg-blue-500/10',    text: 'text-blue-400',     dot: 'bg-blue-400',     label: 'Completed'  },
-  cancelled:  { bg: 'bg-red-500/10',     text: 'text-red-400',      dot: 'bg-red-400',      label: 'Cancelled'  },
-  pending:    { bg: 'bg-amber-500/10',   text: 'text-amber-400',    dot: 'bg-amber-400',    label: 'Pending'    },
+  confirmed: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', dot: 'bg-emerald-400', label: 'Confirmed' },
+  completed: { bg: 'bg-blue-500/10', text: 'text-blue-400', dot: 'bg-blue-400', label: 'Completed' },
+  cancelled: { bg: 'bg-red-500/10', text: 'text-red-400', dot: 'bg-red-400', label: 'Cancelled' },
+  pending: { bg: 'bg-amber-500/10', text: 'text-amber-400', dot: 'bg-amber-400', label: 'Pending' },
 };
 
 // ── Stat Card ─────────────────────────────────────────────────
@@ -49,9 +49,8 @@ const StatCard = ({ label, value, icon: Icon, iconColor, sub, subColor }) => (
 const TabBtn = ({ label, active, onClick }) => (
   <button
     onClick={onClick}
-    className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-all ${
-      active ? 'bg-[#0098cc] text-white shadow-sm' : 'text-white/50 hover:bg-white/10'
-    }`}
+    className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-all ${active ? 'bg-[#0098cc] text-white shadow-sm' : 'text-white/50 hover:bg-white/10'
+      }`}
   >
     {label}
   </button>
@@ -95,9 +94,8 @@ const BookingCard = ({ booking }) => {
                 {cfg.label}
               </span>
               {/* Free / paid badge */}
-              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${
-                booking.isFreeSession ? 'bg-violet-500/10 text-violet-400' : 'bg-emerald-500/10 text-emerald-400'
-              }`}>
+              <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${booking.isFreeSession ? 'bg-violet-500/10 text-violet-400' : 'bg-emerald-500/10 text-emerald-400'
+                }`}>
                 {booking.isFreeSession ? 'Free' : `₹${booking.price}`}
               </span>
             </div>
@@ -124,11 +122,11 @@ const BookingCard = ({ booking }) => {
         <div className="border-t border-white/10 px-4 pb-4 pt-3 flex flex-col gap-2.5">
           <div className="grid grid-cols-2 gap-2 text-xs">
             {[
-              { label: 'Duration',       value: `${booking.durationMinutes} min` },
-              { label: 'Session Type',   value: booking.sessionType },
-              { label: 'Mentee Email',   value: booking.menteeEmail },
-              { label: 'Payment',        value: booking.paymentStatus },
-              { label: 'Method',         value: booking.paymentMethod },
+              { label: 'Duration', value: `${booking.durationMinutes} min` },
+              { label: 'Session Type', value: booking.sessionType },
+              { label: 'Mentee Email', value: booking.menteeEmail },
+              { label: 'Payment', value: booking.paymentStatus },
+              { label: 'Method', value: booking.paymentMethod },
               { label: 'Transaction ID', value: booking.transactionId },
             ].map(({ label, value }) => (
               <div key={label} className="bg-[#062117] rounded-lg p-2 border border-white/5">
@@ -165,7 +163,7 @@ const SessionsPanel = ({ email }) => {
     useGetMentorSessionBookingsQuery(email, { skip: !email });
 
   const bookings = sessionData?.data?.bookings || [];
-  const stats    = sessionData?.data?.stats || {};
+  const stats = sessionData?.data?.stats || {};
 
   const filtered = filter === 'all'
     ? bookings
@@ -185,10 +183,10 @@ const SessionsPanel = ({ email }) => {
   );
 
   const filterBtns = [
-    { key: 'all',       label: `All (${stats.total || 0})` },
+    { key: 'all', label: `All (${stats.total || 0})` },
     { key: 'confirmed', label: `Confirmed (${stats.confirmed || 0})` },
     { key: 'completed', label: `Completed (${stats.completed || 0})` },
-    { key: 'pending',   label: `Pending (${stats.pending || 0})` },
+    { key: 'pending', label: `Pending (${stats.pending || 0})` },
     { key: 'cancelled', label: `Cancelled (${stats.cancelled || 0})` },
   ];
 
@@ -197,10 +195,10 @@ const SessionsPanel = ({ email }) => {
       {/* Mini stats row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
         {[
-          { label: 'Total',     value: stats.total     || 0, color: 'text-[#0098cc]' },
+          { label: 'Total', value: stats.total || 0, color: 'text-[#0098cc]' },
           { label: 'Confirmed', value: stats.confirmed || 0, color: 'text-emerald-400' },
           { label: 'Completed', value: stats.completed || 0, color: 'text-blue-400' },
-          { label: 'Revenue',   value: `₹${stats.totalRevenue || 0}`, color: 'text-amber-400' },
+          { label: 'Revenue', value: `₹${stats.totalRevenue || 0}`, color: 'text-amber-400' },
         ].map(({ label, value, color }) => (
           <div key={label} className="bg-[#062117] border border-white/10 rounded-xl p-3 text-center">
             <p className={`text-lg font-bold ${color}`}>{value}</p>
@@ -215,11 +213,10 @@ const SessionsPanel = ({ email }) => {
           <button
             key={key}
             onClick={() => setFilter(key)}
-            className={`px-3 py-1.5 rounded-xl text-[10px] font-semibold transition-all ${
-              filter === key
+            className={`px-3 py-1.5 rounded-xl text-[10px] font-semibold transition-all ${filter === key
                 ? 'bg-[#0098cc] text-white'
                 : 'bg-[#062117] border border-white/10 text-white/40 hover:text-white/70'
-            }`}
+              }`}
           >
             {label}
           </button>
@@ -245,10 +242,10 @@ const SessionsPanel = ({ email }) => {
 
 // ── Main ──────────────────────────────────────────────────────
 const MentorDashboardSection = () => {
-  const [mentorId, setMentorId]         = useState(null);
-  const [mentorEmail, setMentorEmail]   = useState(null);
-  const [activeTab, setActiveTab]       = useState(0);
-  const [isPanelOpen, setIsPanelOpen]   = useState(false);
+  const [mentorId, setMentorId] = useState(null);
+  const [mentorEmail, setMentorEmail] = useState(null);
+  const [activeTab, setActiveTab] = useState(0);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [showSessions, setShowSessions] = useState(false);
   const navigate = useNavigate();
 
@@ -272,23 +269,23 @@ const MentorDashboardSection = () => {
   const { data: sessionData, isLoading: sessionsLoading } =
     useGetMentorSessionBookingsQuery(mentorEmail, { skip: !mentorEmail });
 
-  const sessionStats    = sessionData?.data?.stats    || {};
+  const sessionStats = sessionData?.data?.stats || {};
   const sessionBookings = sessionData?.data?.bookings || [];
 
   // Derive upcoming = confirmed sessions whose date is today or future
-  const today     = new Date(); today.setHours(0, 0, 0, 0);
-  const upcoming  = sessionBookings.filter(
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const upcoming = sessionBookings.filter(
     (b) => b.status === 'confirmed' && new Date(b.sessionDate) >= today
   ).length;
   const completed = sessionStats.completed || 0;
-  const total     = sessionStats.total     || 0;
+  const total = sessionStats.total || 0;
   const cancelled = sessionStats.cancelled || 0;
 
   const user = userDetails?.data;
 
   useEffect(() => {
     if (user?.mentorId) {
-      try { localStorage.setItem('mentorId', user.mentorId); } catch (e) {}
+      try { localStorage.setItem('mentorId', user.mentorId); } catch (e) { }
     }
   }, [user]);
 
@@ -354,9 +351,8 @@ const MentorDashboardSection = () => {
         </button>
 
         {/* ── LEFT PANEL ─────────────────────────────────────── */}
-        <div className={`xl:w-80 xl:shrink-0 flex flex-col bg-[#062117] border border-white/10 rounded-2xl overflow-hidden ${
-          isPanelOpen ? 'flex' : 'hidden xl:flex'
-        }`}>
+        <div className={`xl:w-80 xl:shrink-0 flex flex-col bg-[#062117] border border-white/10 rounded-2xl overflow-hidden ${isPanelOpen ? 'flex' : 'hidden xl:flex'
+          }`}>
           <div className="flex gap-1 p-2 border-b border-white/10">
             {TABS.map((t, i) => (
               <TabBtn key={t} label={t} active={activeTab === i} onClick={() => setActiveTab(i)} />
@@ -376,9 +372,8 @@ const MentorDashboardSection = () => {
                 </div>
 
                 <div className="bg-[#031610] rounded-xl px-4 py-3 border border-white/10 flex items-center gap-2.5">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                    user?.isVerified ? 'bg-emerald-500/10' : 'bg-amber-500/10'
-                  }`}>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${user?.isVerified ? 'bg-emerald-500/10' : 'bg-amber-500/10'
+                    }`}>
                     {user?.isVerified
                       ? <CheckCircle2 size={16} className="text-emerald-500" />
                       : <CircleAlert size={16} className="text-amber-500" />
@@ -448,11 +443,11 @@ const MentorDashboardSection = () => {
                   Profile Information
                 </p>
                 {[
-                  { icon: UserRound, label: 'Full Name',  value: user?.name },
-                  { icon: Mail,      label: 'Email',      value: user?.email },
-                  { icon: Phone,     label: 'Phone',      value: user?.phone ? `+${user.countryCode} ${user.phone}` : null },
-                  { icon: UserRound, label: 'Username',   value: user?.username },
-                  { icon: MapPin,    label: 'Location',   value: user?.city ? `${user.city}, ${user.country}` : null },
+                  { icon: UserRound, label: 'Full Name', value: user?.name },
+                  { icon: Mail, label: 'Email', value: user?.email },
+                  { icon: Phone, label: 'Phone', value: user?.phone ? `+${user.countryCode} ${user.phone}` : null },
+                  { icon: UserRound, label: 'Username', value: user?.username },
+                  { icon: MapPin, label: 'Location', value: user?.city ? `${user.city}, ${user.country}` : null },
                 ].map((item) => (
                   <InfoRow key={item.label} {...item} />
                 ))}
@@ -468,9 +463,9 @@ const MentorDashboardSection = () => {
                 </p>
                 {[
                   { label: 'Account Created', value: formatDate(user?.createdAt) },
-                  { label: 'Last Updated',    value: formatDate(user?.updatedAt) },
-                  { label: 'Account Status',  value: user?.isActive ? 'Active' : 'Inactive' },
-                  { label: 'Verification',    value: user?.isVerified ? 'Verified' : 'Pending' },
+                  { label: 'Last Updated', value: formatDate(user?.updatedAt) },
+                  { label: 'Account Status', value: user?.isActive ? 'Active' : 'Inactive' },
+                  { label: 'Verification', value: user?.isVerified ? 'Verified' : 'Pending' },
                 ].map(({ label, value }) => (
                   <div key={label} className="bg-[#031610] rounded-xl p-3 border border-white/10 flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 min-w-0">

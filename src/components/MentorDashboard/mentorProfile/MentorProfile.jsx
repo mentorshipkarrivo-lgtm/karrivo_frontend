@@ -1586,7 +1586,7 @@ import {
   Upload, Eye, CheckCircle, Clock, Calendar, Briefcase,
   BookOpen, Award, FileText, TrendingUp, Users, Zap, Globe,
   Phone, Mail, AlertCircle, ExternalLink, ChevronRight,
-  Circle, AlertTriangle, Edit,
+  Circle, AlertTriangle, Edit, UserX
 } from 'lucide-react';
 import { useGetMentorDetailsMutation, useUpdateMentorDetailsMutation } from "./mentorprofileapi";
 import { showToast } from '../../../utils/Toastprovider';
@@ -1695,8 +1695,9 @@ const AvailPanel = ({ availability, isEditing, setFormData }) => {
   const [err, setErr] = useState('');
 
   const flat = (availability || [])
-    .flatMap(de => (de.slots || []).map(s => ({ ...s, day: de.day, ds: s.date ? new Date(s.date).toISOString().split('T')[0] : null })))
-    .filter(s => s.ds).sort((a, b) => new Date(a.ds) - new Date(b.ds));
+    .filter(s => s.date)
+    .map(s => ({ ...s, ds: new Date(s.date).toISOString().split('T')[0] }))
+    .sort((a, b) => new Date(a.ds) - new Date(b.ds));
 
   const add = () => {
     setErr('');
@@ -1708,21 +1709,18 @@ const AvailPanel = ({ availability, isEditing, setFormData }) => {
       const [xh, xm] = ex.startTime.split(':').map(Number), [yh, ym] = ex.endTime.split(':').map(Number);
       if (ns < (yh * 60 + ym) && ne > (xh * 60 + xm)) { setErr(`Conflicts with ${ex.startTime}–${ex.endTime}`); return; }
     }
-    const day = dayFrom(nd);
-    setFormData(p => {
-      const av = p.availability.map(d => ({ ...d, slots: [...(d.slots || [])] }));
-      const di = av.findIndex(d => d.day === day);
-      const slot = { date: new Date(nd), startTime: nt, endTime: end, isBooked: false };
-      if (di >= 0) av[di] = { ...av[di], slots: [...av[di].slots, slot] };
-      else av.push({ day, slots: [slot] });
-      return { ...p, availability: av };
-    });
+    setFormData(p => ({
+      ...p,
+      availability: [...(p.availability || []), { date: new Date(nd), startTime: nt, endTime: end, isBooked: false }]
+    }));
     setNd(''); setNt('09:00');
   };
 
   const remove = ds => {
-    const day = dayFrom(ds);
-    setFormData(p => ({ ...p, availability: p.availability.map(d => d.day !== day ? d : { ...d, slots: d.slots.filter(s => new Date(s.date).toISOString().split('T')[0] !== ds) }) }));
+    setFormData(p => ({
+      ...p,
+      availability: (p.availability || []).filter(s => new Date(s.date).toISOString().split('T')[0] !== ds)
+    }));
   };
 
   return (
@@ -2185,8 +2183,7 @@ const MentorProfile = () => {
   useEffect(() => { if (email) getMentorDetails(email); }, [email]);
   useEffect(() => {
     if (data?.data) {
-      const merged = DAYS.map(d => { const ex = data.data.availability?.find(a => a.day === d); return { day: d, slots: ex?.slots || [] }; });
-      setFormData({ ...data.data, availability: merged });
+      setFormData({ ...data.data });
     }
   }, [data]);
 
@@ -2195,22 +2192,12 @@ const MentorProfile = () => {
 
   const handleSave = async (shouldClose = true) => {
     try {
-      const flatAv = (formData.availability || [])
-        .flatMap(de => (de.slots || []).map(s => ({
-          date: s.date,
-          startTime: s.startTime,
-          endTime: s.endTime,
-          isBooked: s.isBooked || false,
-        })))
-        // strictly require all three fields — prevents Mongoose validation errors
-        .filter(s => s.date && s.startTime && s.endTime);
-      await updateMentorDetails({ email, ...formData, availability: flatAv }).unwrap();
+      await updateMentorDetails({ email, ...formData }).unwrap();
       await getMentorDetails(email);
       if (shouldClose) setTimeout(handleClose, 200);
       showToast('Profile updated!', 'success');
     } catch { showToast('Failed to update.'); }
   };
-
   if (isLoading) return (
     <div style={{ fontFamily: F, minHeight: '100vh', background: BG, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center' }}>
@@ -2220,16 +2207,54 @@ const MentorProfile = () => {
     </div>
   );
 
-  if (error || Object.keys(formData).length < 2) return (
-    <div style={{ fontFamily: F, minHeight: '100vh', background: BG, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
-      <div style={{ background: CARD, borderRadius: 16, border: `1px solid ${BOR}`, padding: '36px 40px', maxWidth: 340, width: '100%', textAlign: 'center' }}>
-        <X size={28} style={{ color: RED, display: 'block', margin: '0 auto 12px' }} />
-        <p style={{ fontFamily: F, color: TXT_M, fontSize: 14, fontWeight: 700, margin: '0 0 6px' }}>Couldn't Load Profile</p>
-        <p style={{ fontFamily: F, color: TXT_S, fontSize: 12, margin: '0 0 16px' }}>Please refresh the page.</p>
-        <button onClick={() => getMentorDetails(email)} style={{ fontFamily: F, fontSize: 12, fontWeight: 700, color: '#fff', background: ACC, border: 'none', borderRadius: 8, padding: '9px 22px', cursor: 'pointer' }}>Retry</button>
+  if (error || Object.keys(formData).length < 2)
+    return (
+      <div
+        style={{
+          fontFamily: F,
+          minHeight: "100vh",
+          background: BG,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: 24,
+        }}
+      >
+        <div
+          style={{
+            background: CARD,
+            borderRadius: 16,
+            border: `1px solid ${BOR}`,
+            padding: "36px 40px",
+            maxWidth: 340,
+            width: "100%",
+            textAlign: "center",
+          }}
+        >
+          {/* Lucide Not Found Icon */}
+          <UserX
+            size={32}
+            style={{
+              color: TXT_M,
+              display: "block",
+              margin: "0 auto 12px",
+            }}
+          />
+
+          <p
+            style={{
+              fontFamily: F,
+              color: TXT_M,
+              fontSize: 14,
+              fontWeight: 700,
+              margin: "0 0 6px",
+            }}
+          >
+            No Profile Found
+          </p>
+        </div>
       </div>
-    </div>
-  );
+    );
 
   const skills = (formData.currentSkills || '').split(',').map(s => s.trim()).filter(Boolean);
   const areas = (formData.areasOfInterest || '').split(',').map(s => s.trim()).filter(Boolean);
