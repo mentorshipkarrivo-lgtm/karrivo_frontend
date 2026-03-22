@@ -62,6 +62,7 @@ import MyPricing from "./pages/menteeDashboard/pages/MentorPricing/Mypricing";
 import MentorSessions from "./components/MentorDashboard/mySucribers/MySubcribers";
 import MentorSessionsTable from "./components/MentorDashboard/mySucribers/MySubcribers";
 import MentorSessionDetails from "./components/MentorDashboard/mySucribers/Mentorsessiondetails ";
+import LtmsessionsCompleted from "./pages/LongTermMentorship/ltmsessionhistory/Ltmsessionhistory";
 
 const getAuthToken = () => {
     try {
@@ -243,7 +244,7 @@ const App = () => {
                         <Route path="/mentee/ltm-home" element={< MentorshipHome />} />
                         <Route path="/mentee/book-session" element={< Ltmhomesessions />} />
                         <Route path="/mentee/upcoming" element={<Ltmupcommingsessions />} />
-                        <Route path="/mentee/sessions" element={<Ltmsessionhistory />} />
+                        <Route path="/mentee/completed_sessions" element={<LtmsessionsCompleted />} />
                         <Route path="/mentee/subscription" element={<Subscriptionplan />} />
                         <Route path="/mentee/mentor" element={<Mymentor />} />
                         <Route path="/mentee/messages" element={<Mymessages />} />

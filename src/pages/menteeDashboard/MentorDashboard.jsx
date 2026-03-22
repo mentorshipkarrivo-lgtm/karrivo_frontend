@@ -23,7 +23,7 @@ const ltmNavigationItems = [
     { id: 'ltm-home', label: 'Mentorship Home', icon: Home, path: '/mentee/ltm-home' },
     // { id: 'book-session', label: 'Book Session', icon: Calendar, path: '/mentee/book-session' },
     { id: 'upcoming-sessions', label: 'Upcoming Sessions', icon: Clock, path: '/mentee/upcoming' },
-    { id: 'sessions', label: 'Session History', icon: BookOpen, path: '/mentee/sessions' },
+    { id: 'completed', label: 'Session History', icon: BookOpen, path: '/mentee/completed_sessions' },
     { id: 'subscription', label: 'Subscription Plan', icon: CreditCard, path: '/mentee/subscription' },
     { id: 'mentor', label: 'My Mentor', icon: User, path: '/mentee/mentor' },
     { id: 'Performance & Activity Overview', label: 'Performance Overview', icon: MessageCircle, path: '/mentee/messages' },
@@ -334,8 +334,8 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, currentPath, onLogout }) => 
             {!collapsed && <div className="my-3 border-t border-gray-100" />}
 
             {/* LTM Membership Section */}
-            {/* <LTMSectionHeader /> */}
-            {/* <LTMItems /> */}
+            {/* <LTMSectionHeader />
+            <LTMItems /> */}
         </div>
     );
 

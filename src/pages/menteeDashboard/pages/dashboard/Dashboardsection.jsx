@@ -9,7 +9,7 @@ import Loader from '../../../../global/Loader';
 
 const DashboardSection = () => {
     const userData = JSON.parse(localStorage.getItem("userData") || "{}");
-    const userId = userData?.username || userData?._id;
+    const userId =  userData?._id;
     const navigate = useNavigate()
 
     const [sidebarOpen, setSidebarOpen] = useState(false);

@@ -7,7 +7,8 @@ import {
   useLoginMutation,
   useOTPresentMutation,
   useForgotMutation,
-  useVerifyOtpMutation
+  useVerifyOtpMutation,
+  useGoogleAuthMutation
 } from "../ApiSliceComponent/RegisterApiSlice"
 import { useNavigate, useLocation } from 'react-router-dom';
 import GoogleSignIn from './googleSignin';
@@ -68,7 +69,7 @@ const LoginPage = () => {
   const [resendOtp, { isLoading: isResending }] = useOTPresentMutation();
   const [forgotPassword, { isLoading: isForgotLoading }] = useForgotMutation();
   const [verifyOtp, { isLoading: isVerifyingOtp }] = useVerifyOtpMutation();
-
+  const [googleAuth] = useGoogleAuthMutation();
   const isLoading = isRegistering || isVerifying || isLoggingIn || isResending || isForgotLoading || isVerifyingOtp;
 
   const handleChange = (e) => {
@@ -101,6 +102,29 @@ const LoginPage = () => {
 
     // Signup with OTP filled, or login — submit
     handleSubmit();
+  };
+
+
+  const handleGoogleSuccess = async (token) => {
+    try {
+      const response = await googleAuth(token).unwrap();
+      if (response.data?.token) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('authToken', response.data.token);
+      }
+      if (response.data) {
+        localStorage.setItem('userData', JSON.stringify(response.data));
+        localStorage.setItem('userRole', response.data.role);
+        localStorage.setItem('userName', response.data.name);
+      }
+      showToast.success('Google login successful!');
+      if (mentorId) navigate(`/book-session?mentorId=${mentorId}`);
+      else if (response.data.role === 2) navigate('/mentor/dashboard');
+      else if (response.data.role === 1) navigate('/mentee/dashboard');
+      else navigate('/dashboard');
+    } catch (error) {
+      showToast.error(error?.data?.message || 'Google login failed.');
+    }
   };
 
   const handleSendOTP = async () => {
@@ -161,7 +185,7 @@ const LoginPage = () => {
       // Step 1: Verify OTP first (same as signup flow)
       await verify({
         email: formData.email,
-        otpType: "forgot",   // change this to whatever your backend expects
+        otpType: "forgotPassword",
         otp: Number(formData.otp)
       }).unwrap();
 
@@ -497,6 +521,14 @@ const LoginPage = () => {
                   {(isLoggingIn || isVerifying) && <Loader2 size={16} className="animate-spin" />}
                   {isLogin ? 'SIGN IN' : 'SIGN UP'}
                 </button>
+
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '4px 0' }}>
+                  <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
+                  <span style={{ fontSize: 12, color: '#94a3b8' }}>or</span>
+                  <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
+                </div>
+                <GoogleSignIn onSuccess={handleGoogleSuccess} />
               </div>
             )}
 
