@@ -177,6 +177,8 @@ const MenteeApplicationForm = () => {
                 newErrors.motivationStatement = 'Motivation statement is required';
             } else if (formData.motivationStatement.trim().length < 50) {
                 newErrors.motivationStatement = 'Please provide at least 50 characters';
+            } else if (formData.motivationStatement.trim().length > 1500) {
+                newErrors.motivationStatement = 'Motivation statement cannot exceed 1500 characters';
             }
         }
 
@@ -302,6 +304,7 @@ const MenteeApplicationForm = () => {
                 placeholder={placeholder}
                 rows={rows}
                 disabled={isLoading}
+                maxLength={name === 'motivationStatement' ? 1500 : undefined}
                 className={`w-full px-3 py-2 text-sm border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0098cc] focus:border-[#0098cc] transition-all disabled:bg-gray-50 disabled:cursor-not-allowed resize-none ${errors[name] ? 'border-red-400 bg-red-50' : 'border-gray-300 hover:border-gray-400'}`}
             />
             {errors[name] && (
@@ -469,7 +472,19 @@ const MenteeApplicationForm = () => {
                                             {renderInput('Location', 'location', 'text', false, 'City, Country', <MapPin size={16} />)}
                                         </div>
                                         <div className="md:col-span-2">
-                                            {renderTextarea('Motivation Statement', 'motivationStatement', true, 'Tell us why you want a mentor and what you hope to achieve... (Min. 50 characters)', 4)}
+                                            {renderTextarea('Motivation Statement', 'motivationStatement', true, 'Tell us why you want a mentor and what you hope to achieve... (Min. 50 / Max. 1500 characters)', 4)}
+                                            <div className="flex justify-end mt-1">
+                                                <span className={`text-xs font-medium ${formData.motivationStatement.length > 1500
+                                                    ? 'text-red-500'
+                                                    : formData.motivationStatement.length >= 1400
+                                                        ? 'text-orange-400'
+                                                        : formData.motivationStatement.length >= 50
+                                                            ? 'text-green-500'
+                                                            : 'text-gray-400'
+                                                    }`}>
+                                                    {formData.motivationStatement.length} / 1500
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -483,14 +498,12 @@ const MenteeApplicationForm = () => {
                                             <Target className="w-5 h-5 text-[#0098cc]" />
                                             Goals & Interests
                                         </h2>
-                                        <p className="text-gray-600 text-xs">What areas do you want to grow in?</p>
                                     </div>
 
                                     <div className="grid grid-cols-1 gap-4">
-                                        {/* Areas of Interest */}
                                         <div className="mb-2">
                                             <label className="block mb-2 font-semibold text-gray-700 text-xs">
-                                                Areas of Interest <span className="text-red-500">*</span>
+                                                Areas of Guidance Offered<span className="text-red-500">*</span>
                                             </label>
                                             {areasOfInterest.length > 0 && (
                                                 <div className="flex flex-wrap gap-1.5 mb-3 p-3 bg-blue-50 rounded-lg border border-blue-200">

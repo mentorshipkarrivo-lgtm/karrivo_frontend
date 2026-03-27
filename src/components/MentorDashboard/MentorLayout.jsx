@@ -1,18 +1,40 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Home, BookOpen, DollarSign, Star, Receipt, HelpCircle, Menu, X, LogOut } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
 
-// Navigation items
+import {
+    Home,
+    CalendarCheck,
+    MessageCircle,
+    IndianRupee,
+    Users,
+    Clock,
+    BarChart3,
+    Star,
+    X,
+    Menu,
+    LogOut,
+    Headphones,
+    Receipt
+} from "lucide-react"; import { useNavigate, useLocation, NavLink } from 'react-router-dom';
+import KarrivoLogo from "../../assets/KarivoLogo.jpg";
+
 const navigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home, route: '/mentor/dashboard' },
-    { id: 'sessions', label: 'My Sessions', icon: BookOpen, route: '/mentor/dashboard/sessions' },
-    { id: 'messages', label: 'My Messages', icon: DollarSign, route: '/mentor/dashboard/messages' },
-    { id: 'My Pricing', label: 'My pricing', icon: Receipt, route: '/mentor/dashboard/Pricing' },
-    { id: 'My Subscribers', label: 'My Subscribers', icon: DollarSign, route: '/mentor/dashboard/my-mentee-sessions' },
-    { id: 'Manage Availability', label: 'Manage Availability', icon: DollarSign, route: '/mentor/dashboard/Manage_Availability' },
-    { id: 'earnings', label: 'My Earnings', icon: DollarSign, route: '/mentor/dashboard/earnings' },
+
+    { id: 'sessions', label: 'Sessions', icon: CalendarCheck, route: '/mentor/dashboard/sessions' },
+
+    { id: 'messages', label: 'Messages', icon: MessageCircle, route: '/mentor/dashboard/messages' },
+
+    { id: 'pricing', label: 'Pricing', icon: IndianRupee, route: '/mentor/dashboard/pricing' },
+
+    { id: 'subscribers', label: 'Subscribers', icon: Users, route: '/mentor/dashboard/my-mentee-sessions' },
+
+    { id: 'availability', label: 'Manage Availability', icon: Clock, route: '/mentor/dashboard/Manage_Availability' },
+
+    { id: 'earnings', label: 'Earnings', icon: BarChart3, route: '/mentor/dashboard/earnings' },
+
     { id: 'reviews', label: 'Reviews', icon: Star, route: '/mentor/dashboard/reviews' },
-    { id: 'support', label: 'Support Request', icon: HelpCircle, route: '/mentor-dashboard/support' },
+
+    { id: 'support', label: 'Support Request', icon: Headphones, route: '/mentor-dashboard/support' },
 ];
 
 // Logout Modal
@@ -150,9 +172,19 @@ const MentorLayout = ({ children }) => {
             {/* Logo row */}
             <div className="h-16 flex items-center border-b border-white/10 shrink-0 px-3">
                 <div className="flex items-center gap-2.5 overflow-hidden">
-                    <div className="w-8 h-8 bg-[#0098cc] rounded-lg flex items-center justify-center text-white font-bold text-sm shrink-0">
-                        M
-                    </div>
+                    <NavLink
+                        className="flex items-center transition-transform duration-300 hover:scale-105"
+                        to="/"
+                    //   onClick={closeNavbar}
+                    >
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center">
+                            <img
+                                src={KarrivoLogo}
+                                className="h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10 object-contain"
+                                alt="Logo"
+                            />
+                        </div>
+                    </NavLink>
                     {!collapsed && (
                         <span className="text-white font-semibold text-base whitespace-nowrap">
                             MentorHub

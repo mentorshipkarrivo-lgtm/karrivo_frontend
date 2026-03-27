@@ -21,19 +21,19 @@ const topNavigationItems = [
 
 const ltmNavigationItems = [
     { id: 'ltm-home', label: 'Mentorship Home', icon: Home, path: '/mentee/ltm-home' },
-    // { id: 'book-session', label: 'Book Session', icon: Calendar, path: '/mentee/book-session' },
     { id: 'upcoming-sessions', label: 'Upcoming Sessions', icon: Clock, path: '/mentee/upcoming' },
     { id: 'completed', label: 'Session History', icon: BookOpen, path: '/mentee/completed_sessions' },
     { id: 'subscription', label: 'Subscription Plan', icon: CreditCard, path: '/mentee/subscription' },
     { id: 'mentor', label: 'My Mentor', icon: User, path: '/mentee/mentor' },
-    { id: 'Performance & Activity Overview', label: 'Performance Overview', icon: MessageCircle, path: '/mentee/messages' },
+    { id: 'mentee Payments', label: 'Mentee Payments', icon: MessageCircle, path: '/mentee/mentee-payments' },
+    { id: 'Performance & Activity Overview', label: 'Performance Overview', icon: MessageCircle, path: '/mentee/performance-tracking' },
 ];
 
 const menteeTypes = ['All Mentors', 'Engineering Mentors', 'Top Mentors', 'Startup Mentors', 'Product Mentors', 'Marketing Mentors', 'Leadership Mentors', 'AI Mentors'];
 
 const getPageLabel = (pathname) => {
     // const allItems = [...topNavigationItems, ...ltmNavigationItems];
-        const allItems = [...topNavigationItems, ...ltmNavigationItems];
+    const allItems = [...topNavigationItems, ...ltmNavigationItems];
 
     const match = allItems.find(item => item.path === pathname);
     return match ? match.label : 'Dashboard';

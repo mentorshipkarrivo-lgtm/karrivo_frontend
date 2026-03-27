@@ -190,7 +190,7 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
     const [inputValues, setInputValues] = useState({ skill: '', previousCompany: '', customDomain: '', customTargetDomain: '' });
     const [errors, setErrors] = useState({});
     const [driveLinkError, setDriveLinkError] = useState('');
-
+    const charCount = (text) => text.trim().length;
     useEffect(() => { setCurrentSection(section); }, [section]);
 
     useEffect(() => {
@@ -547,16 +547,34 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
                 )}
 
                 <FormField label="About You">
-                    <textarea name="about" value={formData.about} onChange={handleChange} rows={3}
-                        placeholder="Brief description about yourself..." className={`${inputClass} resize-none`} />
+                    <textarea
+                        name="about"
+                        value={formData.about}
+                        onChange={(e) => {
+                            if (e.target.value.length <= 500) handleChange(e);
+                        }}
+                        rows={3}
+                        placeholder="Brief description about yourself..."
+                        className={`${inputClass} resize-none`}
+                    />
+                    <div className="flex justify-between mt-1">
+                        <span className={`text-xs ${charCount(formData.about) < 50 && formData.about ? 'text-red-500' : 'text-gray-400'}`}>
+                            {charCount(formData.about) < 50 && formData.about
+                                ? `Minimum 50 characters required (${charCount(formData.about)}/50)`
+                                : ''}
+                        </span>
+                        <span className={`text-xs ${charCount(formData.about) > 450 ? 'text-orange-400' : 'text-gray-400'}`}>
+                            {charCount(formData.about)}/500
+                        </span>
+                    </div>
                 </FormField>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <FormField label="Availability">
                         <input name="availability" value={formData.availability} onChange={handleChange}
                             placeholder="e.g., Weekends, Evenings" className={inputClass} />
                     </FormField>
-                </div>
+                </div> */}
             </div>
         )
     };

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   Layers, ClipboardCheck, CheckCircle2, Circle, AlertCircle,
   Loader2, Send, X, BookOpen, ClipboardList, MessageSquare,
@@ -426,8 +426,8 @@ export default function Ltmupcommingsessions() {
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const { data: result, isLoading, isError } = useGetSessionsByMenteeQuery(userData?._id);
   const [updateSession] = useUpdateByMenteeSessionMutation();
-
   const [perPage, setPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
   const [taskFilter, setTaskFilter] = useState("all");
   const [sortOrder, setSortOrder] = useState("newest");
   const [search, setSearch] = useState("");
@@ -461,7 +461,10 @@ export default function Ltmupcommingsessions() {
     return list;
   }, [sessions, taskFilter, sortOrder, search]);
 
-  const paginated = displayed.slice(0, perPage);
+  // Reset to page 1 whenever filters/search/sort change
+  useEffect(() => setCurrentPage(1), [taskFilter, sortOrder, search, perPage]);
+  const totalPages = Math.ceil(displayed.length / perPage);
+  const paginated = displayed.slice((currentPage - 1) * perPage, currentPage * perPage);
 
   const showToast = (msg, type = "success") => { setToast({ msg, type }); setTimeout(() => setToast(null), 3500); };
 
@@ -611,7 +614,6 @@ export default function Ltmupcommingsessions() {
                         {/* Session */}
                         <td style={{ padding: "14px 16px", whiteSpace: "nowrap" }}>
                           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                            <div style={{ width: 28, height: 28, borderRadius: 7, background: "#eff6ff", border: "1px solid #bfdbfe", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#3b82f6", flexShrink: 0 }}>{num}</div>
                             <span style={{ fontSize: 13, fontWeight: 600, color: "#1e293b" }}>{session.session_title || `Session ${session.session_number}`}</span>
                           </div>
                         </td>
@@ -670,16 +672,62 @@ export default function Ltmupcommingsessions() {
               </table>
 
               {/* Footer */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", borderTop: "1px solid #f1f5f9" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", borderTop: "1px solid #f1f5f9", flexWrap: "wrap", gap: 10 }}>
                 <span style={{ fontSize: 13, color: "#94a3b8", fontFamily: ff }}>
-                  Showing {paginated.length} of {displayed.length} session{displayed.length !== 1 ? "s" : ""}
+                  Showing {(currentPage - 1) * perPage + 1}–{Math.min(currentPage * perPage, displayed.length)} of {displayed.length} session{displayed.length !== 1 ? "s" : ""}
                 </span>
-                {sessions.every((s) => s.status === "completed") && sessions.length > 0 && (
-                  <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 13, color: "#3b82f6", fontWeight: 600, fontFamily: ff }}>
-                    <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#3b82f6" }} />
-                    All Completed
-                  </span>
-                )}
+
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    style={{
+                      padding: "6px 14px", borderRadius: 8, fontSize: 13, fontWeight: 600,
+                      background: currentPage === 1 ? "#f1f5f9" : "#fff",
+                      color: currentPage === 1 ? "#cbd5e1" : "#3b82f6",
+                      border: `1px solid ${currentPage === 1 ? "#e2e8f0" : "#bfdbfe"}`,
+                      cursor: currentPage === 1 ? "not-allowed" : "pointer", fontFamily: ff,
+                    }}>
+                    ← Previous
+                  </button>
+
+                  {Array.from({ length: totalPages }, (_, i) => i + 1)
+                    .filter((p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+                    .reduce((acc, p, idx, arr) => {
+                      if (idx > 0 && p - arr[idx - 1] > 1) acc.push("...");
+                      acc.push(p);
+                      return acc;
+                    }, [])
+                    .map((p, idx) =>
+                      p === "..." ? (
+                        <span key={`ellipsis-${idx}`} style={{ fontSize: 13, color: "#94a3b8", padding: "0 4px" }}>…</span>
+                      ) : (
+                        <button key={p} onClick={() => setCurrentPage(p)}
+                          style={{
+                            width: 32, height: 32, borderRadius: 8, fontSize: 13, fontWeight: 600,
+                            background: currentPage === p ? "#3b82f6" : "#fff",
+                            color: currentPage === p ? "#fff" : "#64748b",
+                            border: `1px solid ${currentPage === p ? "#3b82f6" : "#e2e8f0"}`,
+                            cursor: "pointer", fontFamily: ff,
+                          }}>
+                          {p}
+                        </button>
+                      )
+                    )}
+
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    style={{
+                      padding: "6px 14px", borderRadius: 8, fontSize: 13, fontWeight: 600,
+                      background: currentPage === totalPages ? "#f1f5f9" : "#fff",
+                      color: currentPage === totalPages ? "#cbd5e1" : "#3b82f6",
+                      border: `1px solid ${currentPage === totalPages ? "#e2e8f0" : "#bfdbfe"}`,
+                      cursor: currentPage === totalPages ? "not-allowed" : "pointer", fontFamily: ff,
+                    }}>
+                    Next →
+                  </button>
+                </div>
               </div>
             </div>
           )}

@@ -41,6 +41,17 @@ export const mentorSectionApiSlice = apiSlice.injectEndpoints({
             transformResponse: (response) => response.data,
         }),
 
+
+
+        createSubscription: builder.mutation({
+            query: (subscriptionData) => ({
+                url: '/subscription/create-subscription-plan',
+                method: 'POST',
+                body: subscriptionData,
+            }),
+            transformResponse: (response) => response,
+            invalidatesTags: [{ type: "Booking", id: "LIST" }],
+        }),
         // ✅ Create Booking (free or paid, decided by backend)
         createBooking: builder.mutation({
             query: (bookingData) => ({
@@ -162,6 +173,7 @@ export const {
     useCancelBookingMutation,
     useFetchMentorReviewsQuery,
     useSubmitReviewMutation,
-    useBookSessionMutation
+    useBookSessionMutation,
+    useCreateSubscriptionMutation
 } = mentorSectionApiSlice;
 

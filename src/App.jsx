@@ -63,6 +63,8 @@ import MentorSessions from "./components/MentorDashboard/mySucribers/MySubcriber
 import MentorSessionsTable from "./components/MentorDashboard/mySucribers/MySubcribers";
 import MentorSessionDetails from "./components/MentorDashboard/mySucribers/Mentorsessiondetails ";
 import LtmsessionsCompleted from "./pages/LongTermMentorship/ltmsessionhistory/Ltmsessionhistory";
+import MenteePayments from "./pages/menteeDashboard/pages/menteePayments/MenteePayments";
+import MenteePerformanceDashboard from "./pages/menteeDashboard/pages/menteePerformanceTracking/menteePerformanceTracking";
 
 const getAuthToken = () => {
     try {
@@ -248,8 +250,13 @@ const App = () => {
                         <Route path="/mentee/subscription" element={<Subscriptionplan />} />
                         <Route path="/mentee/mentor" element={<Mymentor />} />
                         <Route path="/mentee/messages" element={<Mymessages />} />
+                        <Route path="/mentee/mentee-payments" element={<MenteePayments />} />
+                        <Route path="/mentee/performance-tracking" element={<MenteePerformanceDashboard />} />
+
                     </Route>
                 </Route>
+
+
 
                 {/* MENTOR DASHBOARD ROUTES (ALTERNATIVE PATHS) */}
                 <Route element={<ProtectedRoute />}>

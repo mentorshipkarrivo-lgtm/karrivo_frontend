@@ -919,10 +919,10 @@ import { useGetCompletedSessionsQuery } from "./ltmsessionhistoryapislice";
 const fmtDate = (s) =>
   s
     ? new Date(s).toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      })
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    })
     : "—";
 
 const StarRow = ({ value = 0 }) => (
@@ -932,8 +932,8 @@ const StarRow = ({ value = 0 }) => (
         key={i}
         size={12}
         style={{
-          color: i < value ? "#2563eb" : "#cbd5e1",
-          fill:  i < value ? "#2563eb" : "none",
+          color: i < value ? "#f59e0b" : "#cbd5e1",
+          fill: i < value ? "#f59e0b" : "none",
         }}
       />
     ))}
@@ -956,10 +956,10 @@ const StatCard = ({ icon, label, value }) => (
       {icon}
     </div>
     <div>
-      <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: "#93c5fd" }}>
+      <p className="text-xs font-semibold uppercase tracking-wide" style={{ color: "#1e293b" }}>
         {label}
       </p>
-      <p className="text-2xl font-bold leading-none mt-0.5" style={{ color: "#2563eb" }}>
+      <p className="text-2xl font-bold leading-none mt-0.5" style={{ color: "#1e293b" }}>
         {value}
       </p>
     </div>
@@ -1081,10 +1081,10 @@ export default function LtmsessionsCompleted() {
 
   const sessions = data?.data || data || [];
 
-  const [search,     setSearch]     = useState("");
+  const [search, setSearch] = useState("");
   const [filterTask, setFilterTask] = useState("all");
-  const [sortBy,     setSortBy]     = useState("date_desc");
-  const [perPage,    setPerPage]    = useState(10);
+  const [sortBy, setSortBy] = useState("date_desc");
+  const [perPage, setPerPage] = useState(10);
 
   const filtered = sessions
     .filter((s) => {
@@ -1095,20 +1095,20 @@ export default function LtmsessionsCompleted() {
         String(s.session_number).includes(q);
       const matchTask =
         filterTask === "all" ? true
-        : filterTask === "done" ? s.task_completed === true
-        : s.task_completed !== true;
+          : filterTask === "done" ? s.task_completed === true
+            : s.task_completed !== true;
       return matchSearch && matchTask;
     })
     .sort((a, b) => {
-      if (sortBy === "date_desc")   return new Date(b.session_date || b.createdAt) - new Date(a.session_date || a.createdAt);
-      if (sortBy === "date_asc")    return new Date(a.session_date || a.createdAt) - new Date(b.session_date || b.createdAt);
+      if (sortBy === "date_desc") return new Date(b.session_date || b.createdAt) - new Date(a.session_date || a.createdAt);
+      if (sortBy === "date_asc") return new Date(a.session_date || a.createdAt) - new Date(b.session_date || b.createdAt);
       if (sortBy === "rating_desc") return (b.mentee_rating ?? 0) - (a.mentee_rating ?? 0);
-      if (sortBy === "number_asc")  return a.session_number - b.session_number;
+      if (sortBy === "number_asc") return a.session_number - b.session_number;
       return 0;
     })
     .slice(0, perPage);
 
-  const total     = sessions.length;
+  const total = sessions.length;
   const tasksDone = sessions.filter((s) => s.task_completed).length;
   const avgRating =
     total > 0
@@ -1142,12 +1142,12 @@ export default function LtmsessionsCompleted() {
       {/* ── Stat cards ── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
         <StatCard
-          icon={<Layers size={18} style={{ color: "#2563eb" }} />}
+          icon={<Layers size={18} style={{ color: "#1e293b" }} />}
           label="Total Sessions"
           value={total}
         />
         <StatCard
-          icon={<CheckSquare size={18} style={{ color: "#2563eb" }} />}
+          icon={<CheckSquare size={18} style={{ color: "#1e293b" }} />}
           label="Tasks Completed"
           value={`${tasksDone}/${total}`}
         />
@@ -1168,7 +1168,7 @@ export default function LtmsessionsCompleted() {
 
         {/* Panel title */}
         <div className="px-5 py-4" style={{ borderBottom: "1px solid #dbeafe" }}>
-          <h2 className="text-base font-bold" style={{ color: "#1e3a8a" }}>
+          <h2 className="text-base font-bold" style={{ color: "#1e293b" }}>
             Completed Sessions
           </h2>
         </div>
@@ -1204,7 +1204,7 @@ export default function LtmsessionsCompleted() {
                 <option value="date_desc">Newest First</option>
                 <option value="date_asc">Oldest First</option>
                 <option value="rating_desc">Highest Rated</option>
-                <option value="number_asc">Session #</option>
+                {/* <option value="number_asc">Session #</option> */}
               </select>
               <ChevronDown size={11} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none"
                 style={{ color: "#2563eb" }} />
@@ -1225,7 +1225,7 @@ export default function LtmsessionsCompleted() {
                   color: "#1e3a8a",
                 }}
                 onFocus={(e) => (e.target.style.borderColor = "#2563eb")}
-                onBlur={(e)  => (e.target.style.borderColor = "#dbeafe")}
+                onBlur={(e) => (e.target.style.borderColor = "#dbeafe")}
               />
             </div>
           </div>
@@ -1236,7 +1236,7 @@ export default function LtmsessionsCompleted() {
           {isLoading ? (
             <table className="w-full">
               <thead>
-                <tr style={{ background: "#2563eb" }}>
+                <tr style={{ background: "#3b82f6" }}>
                   {COLS.map((c) => (
                     <th key={c} className="px-4 py-3 text-left text-xs font-bold text-white tracking-wide whitespace-nowrap">
                       {c}
@@ -1295,16 +1295,9 @@ export default function LtmsessionsCompleted() {
                     {/* Session */}
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
-                        <div
-                          className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
-                          style={{ background: "#eff6ff", border: "1.5px solid #bfdbfe" }}
-                        >
-                          <span className="font-bold text-xs font-mono" style={{ color: "#2563eb" }}>
-                            {String(s.session_number).padStart(2, "0")}
-                          </span>
-                        </div>
+
                         <span className="text-sm font-semibold whitespace-nowrap max-w-[130px] truncate"
-                          style={{ color: "#1e3a8a" }}>
+                          style={{ color: "#1e293b" }}>
                           {s.session_title || "Untitled"}
                         </span>
                       </div>
@@ -1423,10 +1416,10 @@ export default function LtmsessionsCompleted() {
             <p className="text-xs font-mono" style={{ color: "#94a3b8" }}>
               Showing {filtered.length} of {sessions.length} session{sessions.length !== 1 ? "s" : ""}
             </p>
-            <div className="flex items-center gap-1.5">
+            {/* <div className="flex items-center gap-1.5">
               <div className="w-2 h-2 rounded-full" style={{ background: "#2563eb" }} />
               <span className="text-xs font-semibold" style={{ color: "#93c5fd" }}>All Completed</span>
-            </div>
+            </div> */}
           </div>
         )}
       </div>

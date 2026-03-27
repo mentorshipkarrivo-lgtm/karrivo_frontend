@@ -310,24 +310,21 @@ const LoginPage = () => {
       {/* RIGHT - Form Panel */}
       <div className="w-full lg:w-2/3 h-2/3 lg:h-full overflow-y-auto">
         <div className="min-h-full flex items-center justify-center p-4 lg:p-8">
-          <div className="w-full max-w-xl bg-white rounded-2xl p-6 lg:p-10 my-4">
-
-            {/* Mentor booking message */}
-            {mentorId && !isForgotPassword && (
-              <div className="bg-[#0098cc]/10 border-l-4 border-[#0098cc] rounded-lg p-3 mb-4">
-                <div className="flex items-start gap-2">
-                  <ShieldCheck className="w-4 h-4 text-[#0098cc] flex-shrink-0 mt-0.5" />
-                  <div>
-                    <p className="text-xs font-semibold text-[#062117] mb-0.5">📚 Complete your booking</p>
-                    <p className="text-xs text-gray-600">
-                      You're booking a session with{' '}
-                      <span className="font-semibold text-[#062117]">{mentorName || 'your mentor'}</span>.
-                      Please {isLogin ? 'sign in' : 'create an account'} to proceed
-                    </p>
-                  </div>
+          <div className="w-full max-w-xl bg-white rounded-2xl p-6 lg:p-10 my-4 h-[560px] overflow-y-auto">            {mentorId && !isForgotPassword && (
+            <div className="bg-[#0098cc]/10 border-l-4 border-[#0098cc] rounded-lg p-3 mb-4">
+              <div className="flex items-start gap-2">
+                <ShieldCheck className="w-4 h-4 text-[#0098cc] flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-xs font-semibold text-[#062117] mb-0.5">📚 Complete your booking</p>
+                  <p className="text-xs text-gray-600">
+                    You're booking a session with{' '}
+                    <span className="font-semibold text-[#062117]">{mentorName || 'your mentor'}</span>.
+                    Please {isLogin ? 'sign in' : 'create an account'} to proceed
+                  </p>
                 </div>
               </div>
-            )}
+            </div>
+          )}
 
             {/* Back button */}
             {isForgotPassword && (
@@ -523,12 +520,16 @@ const LoginPage = () => {
                 </button>
 
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '4px 0' }}>
-                  <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
-                  <span style={{ fontSize: 12, color: '#94a3b8' }}>or</span>
-                  <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
-                </div>
-                <GoogleSignIn onSuccess={handleGoogleSuccess} />
+                {userType === 'mentee' && (
+                  <>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '4px 0' }}>
+                      <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
+                      <span style={{ fontSize: 12, color: '#94a3b8' }}>or</span>
+                      <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
+                    </div>
+                    <GoogleSignIn onSuccess={handleGoogleSuccess} />
+                  </>
+                )}
               </div>
             )}
 
@@ -536,27 +537,32 @@ const LoginPage = () => {
             {!isForgotPassword && (
               <div className="mt-4 text-center">
                 <p className="text-xs text-gray-500">
-                  {isLogin ? "Don't have an account? " : 'Already have an account? '}
-                  <button
-                    onClick={() => {
-                      setOtpSent(false);
-                      setFormData({ name: '', email: '', phone: '', countryCode: '+91', password: '', confirmPassword: '', otp: '', newPassword: '' });
-                      setIsLogin(!isLogin);
-                    }}
-                    disabled={isLoading}
-                    className="text-[#008FC4] font-semibold ml-1 hover:underline disabled:opacity-50"
-                  >
-                    {isLogin ? 'Sign Up' : 'Sign In'}
-                  </button>
+                  {!isLogin ? 'Already have an account? ' : (userType === 'mentee' ? "Don't have an account? " : null)}
+                  {(!isLogin || userType === 'mentee') && (
+                    <button
+                      onClick={() => {
+                        setOtpSent(false);
+                        setFormData({ name: '', email: '', phone: '', countryCode: '+91', password: '', confirmPassword: '', otp: '', newPassword: '' });
+                        setIsLogin(!isLogin);
+                      }}
+                      disabled={isLoading}
+                      className="text-[#008FC4] font-semibold ml-1 hover:underline disabled:opacity-50"
+                    >
+                      {isLogin ? 'Sign Up' : 'Sign In'}
+                    </button>
+                  )}
                 </p>
-
-                {!isLogin && (
+                {isLogin && userType === 'mentor' && (
                   <div onClick={() => navigate('/mentee/apply')}
                     className="w-full py-2 rounded-full text-[#008FC4] font-semibold cursor-pointer hover:text-[#006f99] flex items-center justify-center text-base">
-                    Join as a Mentor? Register Here
+                    <span className="text-gray-500 text-sm">
+                      Want to become a Mentor?
+                    </span>{" "}
+                    <span className="text-base">
+                      Register here
+                    </span>
                   </div>
                 )}
-
               </div>
             )}
           </div>

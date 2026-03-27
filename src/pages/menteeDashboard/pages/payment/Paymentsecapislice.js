@@ -1,17 +1,18 @@
-import { apiSlice } from "../../../../ApiSliceComponent/karrivoApi";
+import {apiSlice}  from "../../../../ApiSliceComponent/karrivoApi"
 
-export const walletApiSlice = apiSlice.injectEndpoints({
+export const paymentApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    addTransaction: builder.mutation({
-      query: (data) => ({
-        url: `/mentee/addTransaction`,
+
+    // ── POST /payments/submit ──
+    submitPayment: builder.mutation({
+      query: (body) => ({
+        url: "/payments/submit",
         method: "POST",
-        body: data,
+        body,
       }),
     }),
+
   }),
 });
 
-export const {
-  useAddTransactionMutation,
-} = walletApiSlice;
+export const { useSubmitPaymentMutation } = paymentApiSlice;
