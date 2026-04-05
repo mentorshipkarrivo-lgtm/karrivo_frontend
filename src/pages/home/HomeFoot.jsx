@@ -3,7 +3,7 @@ import { Facebook, Instagram, Twitter, Linkedin, Youtube } from "lucide-react";
 
 export default function FooterLinks() {
   return (
-    <footer className="bg-[#041A15] text-white">
+    <footer className="bg-[#0d2620] text-white">
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Brand Section */}
         <div className="mb-12">

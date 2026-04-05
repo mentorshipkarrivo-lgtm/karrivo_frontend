@@ -17,9 +17,9 @@ export const menteeApiSlice = apiSlice.injectEndpoints({
         }),
 
         updateMentorDetails: builder.mutation({
-            query: (payload) => ({  // ✅ Changed from destructuring to full payload
+            query: (payload) => ({  
                 url: "/Mentor/update-mentor-details",
-                method: "PUT",
+                method: "POST",
                 body: payload,  // ✅ Send entire payload
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,

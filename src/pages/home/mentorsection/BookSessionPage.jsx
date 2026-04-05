@@ -4,7 +4,7 @@ import { Loader2, AlertCircle, ArrowLeft } from "lucide-react";
 import { useFetchMentorByIdQuery } from "./Mentorapislice";
 import BookingModal from "./BookingModal";
 
-import karrivoLogo from "../../../assets/KarivoLogo.jpg";
+import karrivoLogo from "../../../assets/KarrivoLogo.png";
 
 const TIPS = [
   "Mentees give updates to their mentors on a daily basis to stay consistent",

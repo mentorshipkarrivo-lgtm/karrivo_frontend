@@ -136,7 +136,8 @@ const DeleteModal = ({ record, onConfirm, onCancel, busy }) => (
    MAIN
 ══════════════════════════════════════════════════════════════ */
 export default function MentorAvailability() {
-  const mentorId = JSON.parse(localStorage.getItem("userData") || "{}")?._id;
+  const mentor_Id = JSON.parse(localStorage.getItem("userData") || "{}")?._id;
+  console.log(mentor_Id, 'mentor_Id')
 
   const [tab, setTab] = useState("schedule");
   const [editMode, setEditMode] = useState(false);
@@ -157,8 +158,8 @@ export default function MentorAvailability() {
     timeZone: "Asia/Kolkata", reason: "", customReason: "", notes: "",
   });
 
-  const { data: availData, isLoading: loadA } = useGetMentorAvailabilityQuery(mentorId, { skip: !mentorId });
-  const { data: unavailData, isLoading: loadU } = useGetMentorUnavailabilityQuery(mentorId, { skip: !mentorId });
+  const { data: availData, isLoading: loadA } = useGetMentorAvailabilityQuery(mentor_Id, { skip: !mentor_Id });
+  const { data: unavailData, isLoading: loadU } = useGetMentorUnavailabilityQuery(mentor_Id, { skip: !mentor_Id });
   const [upsert, { isLoading: saving }] = useUpsertMentorAvailabilityMutation();
   const [addBlock, { isLoading: addingBlock }] = useAddMentorUnavailabilityMutation();
   const [delBlock, { isLoading: deletingBlock }] = useDeleteMentorUnavailabilityMutation();
@@ -217,7 +218,7 @@ export default function MentorAvailability() {
 
   const handleSave = async () => {
     try {
-      await upsert({ mentorId, daySlots: enabledSlots.map(({ day, from, to }) => ({ day, from, to })), availableDaysPerWeek: spw, timeZone: tz, notes, availableForMonths: apiMonths }).unwrap();
+      await upsert({ mentor_Id, daySlots: enabledSlots.map(({ day, from, to }) => ({ day, from, to })), availableDaysPerWeek: spw, timeZone: tz, notes, availableForMonths: apiMonths }).unwrap();
       setSaved(true); setEditMode(false); showToast("Schedule saved ✓");
     } catch (e) { console.error(e); }
   };
@@ -227,7 +228,7 @@ export default function MentorAvailability() {
     if (hasOverlap || dateOrderErr) return; // extra guard
     const reason = form.reason === "Other" ? (form.customReason.trim() || "Other") : form.reason;
     try {
-      const res = await addBlock({ mentorId, ...form, reason }).unwrap();
+      const res = await addBlock({ mentor_Id, ...form, reason }).unwrap();
       setShowModal(false);
       setForm({ unavailableFrom: "", unavailableTo: "", daysOfWeek: [], timeZone: tz, reason: "", customReason: "", notes: "" });
       const count = res?.data?.subscriptionsExtended;
@@ -236,7 +237,7 @@ export default function MentorAvailability() {
   };
 
   const handleDelete = async () => {
-    try { await delBlock({ mentorId, unavailId: delTarget._id }).unwrap(); setDelTarget(null); showToast("Block removed"); }
+    try { await delBlock({ mentor_Id, unavailId: delTarget._id }).unwrap(); setDelTarget(null); showToast("Block removed"); }
     catch (e) { console.error(e); }
   };
 

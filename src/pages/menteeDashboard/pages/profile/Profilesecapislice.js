@@ -22,44 +22,95 @@ export const profileApiSlice = apiSlice.injectEndpoints({
         }),
 
         // Save/Update Profile
+        // saveUserProfile: builder.mutation({
+        //     query: (profileData) => ({
+
+        //         url: "mentee/dashboard/save-profile",
+        //         method: "POST",
+        //         body: profileData,
+        //         headers: {
+        //             Authorization: `Bearer ${localStorage.getItem("token")}`,
+        //             "Content-Type": "application/json",
+        //         },
+        //     }),
+        //     // Invalidate cache to trigger refetch
+        //     invalidatesTags: (result, error, profileData) => [
+        //         { type: "UserProfile", id: profileData.userId }
+        //     ],
+        //     transformResponse: (response) => {
+        //         console.log('💾 Save Response:', response);
+        //         return response;
+        //     },
+        //     async onQueryStarted(profileData, { dispatch, queryFulfilled }) {
+        //         try {
+        //             const { data } = await queryFulfilled;
+
+        //             dispatch(
+        //                 profileApiSlice.util.updateQueryData(
+        //                     'manageUserProfile',
+        //                     profileData.userId,
+        //                     (draft) => {
+        //                         // Update draft with new profile data
+        //                         Object.assign(draft, data);
+        //                     }
+        //                 )
+        //             );
+        //         } catch (err) {
+        //             console.error('❌ Mutation failed:', err);
+        //         }
+        //     },
+        // }),
+
         saveUserProfile: builder.mutation({
-            query: (profileData) => ({
-                url: "mentee/dashboard/save-profile",
-                method: "POST",
-                body: profileData,
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    "Content-Type": "application/json",
-                },
-            }),
-            // Invalidate cache to trigger refetch
+            query: (profileData) => {
+                console.log("📤 Profile Data Sent:", profileData);
+
+                return {
+                    url: "mentee/dashboard/save-profile",
+                    method: "POST",
+                    body: profileData,
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        "Content-Type": "application/json",
+                    },
+                };
+            },
+
             invalidatesTags: (result, error, profileData) => [
                 { type: "UserProfile", id: profileData.userId }
             ],
+
             transformResponse: (response) => {
-                console.log('💾 Save Response:', response);
+                console.log("💾 Save Response:", response);
                 return response;
             },
+
             async onQueryStarted(profileData, { dispatch, queryFulfilled }) {
+                console.log("🚀 onQueryStarted profileData:", profileData);
+
                 try {
                     const { data } = await queryFulfilled;
 
+                    console.log("✅ Fulfilled Data:", data);
+
                     dispatch(
                         profileApiSlice.util.updateQueryData(
-                            'manageUserProfile',
+                            "manageUserProfile",
                             profileData.userId,
                             (draft) => {
-                                // Update draft with new profile data
+                                console.log("📝 Draft Before:", draft);
+
                                 Object.assign(draft, data);
+
+                                console.log("📝 Draft After:", draft);
                             }
                         )
                     );
                 } catch (err) {
-                    console.error('❌ Mutation failed:', err);
+                    console.error("❌ Mutation failed:", err);
                 }
             },
         }),
-
 
         uploadProfilePhoto: builder.mutation({
             query: ({ userId, profilePhotoUrl }) => ({

@@ -671,28 +671,7 @@ export default function TestimonialsSection() {
         >
           Real experiences from professionals who achieved their goals with expert guidance.
         </p>
-        <div
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            marginTop: "20px",
-            padding: "8px 20px",
-            border: "1px solid #e5e7eb",
-            borderRadius: "100px",
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: "13px",
-              color: "#111",
-              fontWeight: "500",
-            }}
-          >
-            1,50,000+ Businesses
-          </span>
-        </div>
+        
       </div>
 
       {/* Carousel */}

@@ -46,7 +46,7 @@ const LoginPage = () => {
         navigate(`/book-session?mentorId=${mentorId}`, { replace: true });
       } else {
         if (userRole === "2") navigate('/mentor/dashboard', { replace: true });
-        else if (userRole === "1") navigate('/mentee/dashboard', { replace: true });
+        else if (userRole === "1") navigate('/mentee/bookings', { replace: true });
         else navigate('/dashboard', { replace: true });
       }
     }
@@ -120,7 +120,7 @@ const LoginPage = () => {
       showToast.success('Google login successful!');
       if (mentorId) navigate(`/book-session?mentorId=${mentorId}`);
       else if (response.data.role === 2) navigate('/mentor/dashboard');
-      else if (response.data.role === 1) navigate('/mentee/dashboard');
+      else if (response.data.role === 1) navigate('/mentee/bookings');
       else navigate('/dashboard');
     } catch (error) {
       showToast.error(error?.data?.message || 'Google login failed.');
@@ -235,7 +235,7 @@ const LoginPage = () => {
           }
           if (mentorId) navigate(`/book-session?mentorId=${mentorId}`);
           else if (loginResponse.data.role === 2) navigate('/mentor/dashboard');
-          else if (loginResponse.data.role === 1) navigate('/mentee/dashboard');
+          else if (loginResponse.data.role === 1) navigate('/mentee/bookings');
           else navigate('/dashboard');
         } catch {
           setFormData({ name: '', email: formData.email, phone: '', countryCode: '+91', password: '', confirmPassword: '', otp: '', newPassword: '' });
@@ -261,7 +261,7 @@ const LoginPage = () => {
         showToast.success('Login successful!');
         if (mentorId) navigate(`/book-session?mentorId=${mentorId}`);
         else if (response.data.role === 2) navigate('/mentor/dashboard');
-        else if (response.data.role === 1) navigate('/mentee/dashboard');
+        else if (response.data.role === 1) navigate('/mentee/bookings');
         else navigate('/dashboard');
       } catch (error) {
         showToast.error(error?.data?.message || 'Login failed. Please check your credentials.');
@@ -520,7 +520,7 @@ const LoginPage = () => {
                 </button>
 
 
-                {userType === 'mentee' && (
+                {/* {userType === 'mentee' && (
                   <>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: '4px 0' }}>
                       <div style={{ flex: 1, height: 1, background: '#e2e8f0' }} />
@@ -529,7 +529,7 @@ const LoginPage = () => {
                     </div>
                     <GoogleSignIn onSuccess={handleGoogleSuccess} />
                   </>
-                )}
+                )} */}
               </div>
             )}
 

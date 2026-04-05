@@ -117,6 +117,12 @@ const MentorLTMPlans = () => {
 
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
 
+    const getCookie = (name) => {
+      const match = document.cookie.split('; ').find(row => row.startsWith(name + '='));
+      return match ? JSON.parse(decodeURIComponent(match.split('=')[1])) : {};
+    };
+    const profileData = getCookie('profileData');
+
     const planTypeMap = { 1: 'one_month', 3: 'three_months', 6: 'six_months' };
 
     try {
@@ -124,10 +130,12 @@ const MentorLTMPlans = () => {
         mentor_id: mentor._id,
         mentee_id: userData._id,
         plan_type: planTypeMap[plan.months],
+        mentee_status: profileData.status,
         amount: plan.totalPrice,
         payment_status: 'pending',
         payment_done: false,
         payment_id: null,
+        paymentType: "subcription",
         total_sessions: plan.totalSessions,
       }).unwrap();
 
@@ -140,6 +148,7 @@ const MentorLTMPlans = () => {
           menteeId: userData._id,
           menteeName: userData.name,
           planMonths: plan.months,
+          paymentType: "subcription",
           totalSessions: plan.totalSessions,
           basePrice: plan.totalPrice,
           createdBy: userData._id,

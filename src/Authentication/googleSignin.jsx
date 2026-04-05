@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth } from  "../../firebase"
+import { auth } from "../../firebase"
 import { useNavigate } from 'react-router-dom';
 
 const GoogleSignIn = ({ onSuccess }) => {
@@ -37,7 +37,7 @@ const GoogleSignIn = ({ onSuccess }) => {
             localStorage.setItem('userName', data.data.name);
 
             if (data.data.role === 2) navigate('/mentor/dashboard', { replace: true });
-            else if (data.data.role === 1) navigate('/mentee/dashboard', { replace: true });
+            else if (data.data.role === 1) navigate('/mentee/bookings', { replace: true });
             else navigate('/dashboard', { replace: true });
 
         } catch (error) {

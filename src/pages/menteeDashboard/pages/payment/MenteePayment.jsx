@@ -1,1174 +1,3 @@
-// import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { ArrowLeft, Copy, Check, Upload, Shield, CheckCircle, Percent } from "lucide-react";
-
-// const MenteePayment = () => {
-//   const navigate = useNavigate();
-//   const [copiedPrimary, setCopiedPrimary] = useState(false);
-//   const [copiedSecond, setCopiedSecond] = useState(false);
-//   const [transactionId, setTransactionId] = useState("");
-//   const [screenshotName, setScreenshotName] = useState("");
-//   const [showSuccess, setShowSuccess] = useState(false);
-//   const [discountCode, setDiscountCode] = useState("");
-
-//   const mentorName = "Rahul Sharma";
-//   const mentorRole = "Product Manager @ Google";
-//   const planMonths = 3;
-//   const totalSessions = 12;
-//   const basePrice = 14999;
-//   const tax = 500;
-//   const insurance = 1200;
-//   const total = basePrice + tax + insurance;
-//   const upiId = "karrivo2024@upi";
-//   const secondUpiId = "example.174327728615@sbi";
-
-//   const copy = (text, setter) => {
-//     navigator.clipboard.writeText(text);
-//     setter(true);
-//     setTimeout(() => setter(false), 2000);
-//   };
-
-//   if (showSuccess) {
-//     return (
-//       <div style={{
-//         height: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
-//         background: "#f0f4f8", fontFamily: "'DM Sans', sans-serif"
-//       }}>
-//         <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap');`}</style>
-//         <div style={{
-//           background: "#fff", borderRadius: 20, padding: "48px 40px",
-//           maxWidth: 420, width: "90%", textAlign: "center",
-//           boxShadow: "0 20px 60px rgba(0,0,0,0.1)"
-//         }}>
-//           <div style={{
-//             width: 68, height: 68, borderRadius: "50%",
-//             background: "linear-gradient(135deg,#22c55e,#16a34a)",
-//             display: "flex", alignItems: "center", justifyContent: "center",
-//             margin: "0 auto 18px", boxShadow: "0 8px 24px rgba(34,197,94,0.3)"
-//           }}>
-//             <CheckCircle size={34} color="#fff" />
-//           </div>
-//           <h2 style={{ fontSize: 22, fontWeight: 800, color: "#0f172a", margin: "0 0 8px" }}>Payment Confirmed!</h2>
-//           <p style={{ fontSize: 13, color: "#64748b", marginBottom: 28, lineHeight: 1.6 }}>
-//             Your <strong>{planMonths}-month mentorship</strong> with {mentorName} is now active.
-//           </p>
-//           <button onClick={() => navigate("/")} style={{
-//             background: "#0f172a", color: "#fff", border: "none",
-//             borderRadius: 50, padding: "12px 32px", fontSize: 14, fontWeight: 700,
-//             cursor: "pointer", fontFamily: "'DM Sans', sans-serif"
-//           }}>Go to Dashboard →</button>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div style={{
-//       height: "100vh", overflow: "hidden",
-//       background: "#eef1f6",
-//       fontFamily: "'DM Sans', sans-serif",
-//       display: "flex", flexDirection: "column",
-//     }}>
-//       <style>{`
-//         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap');
-//         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-//         .inp {
-//           width: 100%; padding: 8px 11px; border: 1.5px solid #e2e8f0;
-//           border-radius: 8px; font-size: 12px; font-family: 'DM Sans', sans-serif;
-//           background: #fff; color: #1e293b; outline: none; transition: border-color 0.18s;
-//         }
-//         .inp:focus { border-color: #0098cc; box-shadow: 0 0 0 3px rgba(0,152,204,0.1); }
-//         .card {
-//           background: #fff; border-radius: 14px;
-//           border: 1px solid #e2e8f0; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-//         }
-//         .lbl {
-//           font-size: 9px; font-weight: 700; letter-spacing: 1.1px;
-//           text-transform: uppercase; color: #94a3b8; display: block; margin-bottom: 10px;
-//         }
-//         .copy-btn {
-//           position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-//           background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;
-//           width: 24px; height: 24px; display: flex; align-items: center;
-//           justify-content: center; cursor: pointer; transition: all 0.15s;
-//         }
-//         .copy-btn:hover { background: #e0f2fe; border-color: #0098cc; }
-//       `}</style>
-
-//       {/* ── Top Bar ── */}
-//       <div style={{
-//         background: "#fff", borderBottom: "1px solid #e8edf3",
-//         padding: "0 24px", height: 50, display: "flex", alignItems: "center",
-//         justifyContent: "space-between", flexShrink: 0
-//       }}>
-//         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-//           <button onClick={() => navigate(-1)} style={{
-//             background: "#f1f5f9", border: "none", borderRadius: 8,
-//             width: 30, height: 30, display: "flex", alignItems: "center",
-//             justifyContent: "center", cursor: "pointer", color: "#475569"
-//           }}>
-//             <ArrowLeft size={14} />
-//           </button>
-//           <span style={{ fontSize: 14, fontWeight: 700, color: "#0f172a" }}>Complete Payment</span>
-//           <span style={{ fontSize: 11, color: "#94a3b8" }}>· Long-Term Mentorship · {mentorName}</span>
-//         </div>
-//         <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-//           <Shield size={12} color="#22c55e" />
-//           <span style={{ fontSize: 11, color: "#64748b", fontWeight: 500 }}>Secured Payment</span>
-//         </div>
-//       </div>
-
-//       {/* ── Body: 3 columns ── */}
-//       <div style={{
-//         flex: 1, display: "flex", gap: 14, padding: "14px 24px",
-//         overflow: "hidden", minHeight: 0
-//       }}>
-
-//         {/* ══ COL 1 — QR + Form (flex: 2.2) ══ */}
-//         <div className="card" style={{ flex: 2.2, padding: "18px 22px", display: "flex", flexDirection: "column", gap: 13, minWidth: 0 }}>
-//           <span className="lbl">Scan to Pay</span>
-
-//           {/* QR + UPI IDs side by side */}
-//           <div style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
-//             {/* Big QR */}
-//             <div style={{
-//               border: "1.5px solid #e8edf3", borderRadius: 12, padding: 8,
-//               background: "#fafafa", flexShrink: 0
-//             }}>
-//               <img
-//                 src="https://img.freepik.com/free-vector/scan-me-qr-code_78370-2915.jpg?semt=ais_hybrid&w=740&q=80"
-//                 alt="QR"
-//                 style={{ width: 148, height: 148, display: "block", borderRadius: 8 }}
-//               />
-//               <p style={{ fontSize: 10, color: "#94a3b8", textAlign: "center", marginTop: 7, fontWeight: 500 }}>
-//                 PhonePe · GPay · Paytm
-//               </p>
-//             </div>
-
-//             {/* UPI IDs + OR */}
-//             <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10, paddingTop: 4 }}>
-//               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
-//                 <div style={{ flex: 1, height: 1, background: "#f1f5f9" }} />
-//                 <span style={{ fontSize: 10, color: "#cbd5e1", fontWeight: 700 }}>OR USE UPI ID</span>
-//                 <div style={{ flex: 1, height: 1, background: "#f1f5f9" }} />
-//               </div>
-
-//               <div>
-//                 <span style={{ fontSize: 9, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.8px", textTransform: "uppercase", display: "block", marginBottom: 5 }}>Primary UPI ID</span>
-//                 <div style={{ position: "relative" }}>
-//                   <input className="inp" value={upiId} readOnly style={{ paddingRight: 34, fontWeight: 600, background: "#f8fafc" }} />
-//                   <button className="copy-btn" onClick={() => copy(upiId, setCopiedPrimary)}>
-//                     {copiedPrimary ? <Check size={10} color="#22c55e" /> : <Copy size={10} color="#64748b" />}
-//                   </button>
-//                 </div>
-//               </div>
-
-//               <div>
-//                 <span style={{ fontSize: 9, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.8px", textTransform: "uppercase", display: "block", marginBottom: 5 }}>Secondary UPI ID</span>
-//                 <div style={{ position: "relative" }}>
-//                   <input className="inp" value={secondUpiId} readOnly style={{ paddingRight: 34, fontWeight: 600, background: "#f8fafc" }} />
-//                   <button className="copy-btn" onClick={() => copy(secondUpiId, setCopiedSecond)}>
-//                     {copiedSecond ? <Check size={10} color="#22c55e" /> : <Copy size={10} color="#64748b" />}
-//                   </button>
-//                 </div>
-//               </div>
-
-//               <div style={{
-//                 background: "#fffbeb", border: "1px solid #fde68a",
-//                 borderRadius: 8, padding: "8px 11px"
-//               }}>
-//                 <p style={{ fontSize: 10, color: "#92400e", lineHeight: 1.55 }}>
-//                   <strong>Pay exactly ₹{total.toLocaleString("en-IN")}</strong> — wrong amounts delay activation up to 48h.
-//                 </p>
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Divider */}
-//           <div style={{ borderTop: "1.5px solid #f1f5f9" }} />
-
-//           {/* Upload + Transaction side by side */}
-//           <div style={{ display: "flex", gap: 12 }}>
-//             <div style={{ flex: 1 }}>
-//               <span style={{ fontSize: 9, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.8px", textTransform: "uppercase", display: "block", marginBottom: 5 }}>Payment Screenshot</span>
-//               <label style={{
-//                 display: "flex", alignItems: "center", gap: 8,
-//                 border: `1.5px dashed ${screenshotName ? "#86efac" : "#cbd5e1"}`,
-//                 borderRadius: 9, padding: "9px 12px", cursor: "pointer",
-//                 background: screenshotName ? "#f0fdf4" : "#fafbfc", transition: "all 0.2s",
-//                 height: 40
-//               }}>
-//                 <input type="file" accept=".jpg,.jpeg,.png,.jfif" style={{ display: "none" }}
-//                   onChange={e => { if (e.target.files[0]) setScreenshotName(e.target.files[0].name); }} />
-//                 <Upload size={13} color={screenshotName ? "#16a34a" : "#94a3b8"} />
-//                 <span style={{ fontSize: 11, color: screenshotName ? "#15803d" : "#64748b", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-//                   {screenshotName || "Upload screenshot"}
-//                 </span>
-//               </label>
-//             </div>
-
-//             <div style={{ flex: 1 }}>
-//               <span style={{ fontSize: 9, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.8px", textTransform: "uppercase", display: "block", marginBottom: 5 }}>Transaction / UTR ID</span>
-//               <input
-//                 className="inp"
-//                 placeholder="e.g. T2312XXXXXXX"
-//                 value={transactionId}
-//                 onChange={e => setTransactionId(e.target.value.toUpperCase())}
-//                 style={{ letterSpacing: "0.4px", height: 40 }}
-//               />
-//             </div>
-//           </div>
-
-//           {/* CTA */}
-//           <button
-//             onClick={() => setShowSuccess(true)}
-//             style={{
-//               width: "100%", background: "linear-gradient(135deg,#0098cc,#005f8a)",
-//               color: "#fff", border: "none", borderRadius: 9,
-//               padding: "11px", fontSize: 14, fontWeight: 700,
-//               cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
-//               boxShadow: "0 4px 14px rgba(0,152,204,0.3)", marginTop: "auto"
-//             }}
-//           >
-//             Confirm Payment — ₹{total.toLocaleString("en-IN")}
-//           </button>
-//         </div>
-
-//         {/* ══ COL 2 — Summary (flex: 2) ══ */}
-//         <div className="card" style={{ flex: 2, padding: "18px 20px", display: "flex", flexDirection: "column", gap: 11, minWidth: 0 }}>
-//           <span className="lbl">Summary</span>
-//           <p style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.5, marginTop: -4 }}>
-//             Total includes plan fee, platform tax and session insurance.
-//           </p>
-
-//           {/* Mentor */}
-//           <div style={{
-//             display: "flex", alignItems: "center", gap: 10,
-//             background: "#f8fafc", borderRadius: 10, padding: "9px 11px",
-//             border: "1px solid #e8edf3"
-//           }}>
-//             <div style={{
-//               width: 34, height: 34, borderRadius: "50%",
-//               background: "linear-gradient(135deg,#0098cc,#005f8a)",
-//               display: "flex", alignItems: "center", justifyContent: "center",
-//               color: "#fff", fontWeight: 800, fontSize: 13, flexShrink: 0
-//             }}>{mentorName[0]}</div>
-//             <div style={{ minWidth: 0 }}>
-//               <p style={{ fontSize: 12, fontWeight: 700, color: "#1e293b" }}>{mentorName}</p>
-//               <p style={{ fontSize: 10, color: "#64748b" }}>{mentorRole}</p>
-//             </div>
-//             <span style={{
-//               marginLeft: "auto", fontSize: 9, fontWeight: 800,
-//               background: "#1d4ed8", color: "#fff",
-//               padding: "2px 8px", borderRadius: 20, letterSpacing: "0.4px", flexShrink: 0
-//             }}>LTM</span>
-//           </div>
-
-//           {/* Plan */}
-//           <div style={{
-//             background: "linear-gradient(135deg,#eff6ff,#dbeafe)",
-//             borderRadius: 8, padding: "9px 12px",
-//             display: "flex", justifyContent: "space-between", alignItems: "center",
-//             border: "1px solid #bfdbfe"
-//           }}>
-//             <div>
-//               <p style={{ fontSize: 11, fontWeight: 700, color: "#1d4ed8" }}>{planMonths} Month Plan</p>
-//               <p style={{ fontSize: 10, color: "#3b82f6" }}>{totalSessions} sessions</p>
-//             </div>
-//             <p style={{ fontSize: 13, fontWeight: 800, color: "#1d4ed8" }}>₹{basePrice.toLocaleString("en-IN")}</p>
-//           </div>
-
-//           {/* Breakdown */}
-//           <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-//             {[
-//               { label: "Shipping", val: `₹${basePrice.toLocaleString("en-IN")}` },
-//               { label: "Tax", val: `₹${tax.toLocaleString("en-IN")}` },
-//               { label: "Insurance", val: `₹${insurance.toLocaleString("en-IN")}` },
-//             ].map((r, i) => (
-//               <div key={i} style={{ display: "flex", justifyContent: "space-between" }}>
-//                 <span style={{ fontSize: 12, color: "#64748b" }}>{r.label}</span>
-//                 <span style={{ fontSize: 12, fontWeight: 500, color: "#374151" }}>{r.val}</span>
-//               </div>
-//             ))}
-//           </div>
-
-//           <div style={{ borderTop: "1.5px solid #f1f5f9" }} />
-
-//           {/* Discount */}
-//           <div style={{ display: "flex", gap: 8 }}>
-//             <div style={{ position: "relative", flex: 1 }}>
-//               <Percent size={11} color="#94a3b8" style={{ position: "absolute", left: 9, top: "50%", transform: "translateY(-50%)" }} />
-//               <input className="inp" placeholder="Discount code" value={discountCode}
-//                 onChange={e => setDiscountCode(e.target.value.toUpperCase())}
-//                 style={{ paddingLeft: 25, fontSize: 11 }} />
-//             </div>
-//             <button style={{
-//               background: "#0f172a", color: "#fff", border: "none",
-//               borderRadius: 8, padding: "0 14px", fontSize: 11,
-//               fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif"
-//             }}>Apply</button>
-//           </div>
-
-//           {/* Total */}
-//           <div style={{
-//             background: "#0f172a", borderRadius: 10,
-//             padding: "12px 16px", display: "flex",
-//             justifyContent: "space-between", alignItems: "center", marginTop: "auto"
-//           }}>
-//             <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.55)" }}>Total Due</span>
-//             <span style={{ fontSize: 20, fontWeight: 800, color: "#38bdf8", letterSpacing: "-0.5px" }}>
-//               ₹{total.toLocaleString("en-IN")}
-//             </span>
-//           </div>
-//         </div>
-
-//         {/* ══ COL 3 — How to Pay (flex: 1.3 — narrower) ══ */}
-//         <div className="card" style={{ flex: 1.3, padding: "18px 16px", display: "flex", flexDirection: "column", minWidth: 0 }}>
-//           <span className="lbl">How to Pay</span>
-//           <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10, minHeight: 0 }}>
-//             {[
-//               { n: "01", color: "#0098cc", bg: "#e0f2fe", border: "#bae6fd", title: "Scan QR or Copy UPI", desc: "Use any UPI app. Tap scan QR or pay via UPI ID from the left panel." },
-//               { n: "02", color: "#7c3aed", bg: "#ede9fe", border: "#ddd6fe", title: "Enter Exact Amount", desc: `Pay exactly ₹${total.toLocaleString("en-IN")}. Wrong amounts delay activation.` },
-//               { n: "03", color: "#d97706", bg: "#fef3c7", border: "#fde68a", title: "Screenshot Confirmation", desc: "Capture confirmation showing Transaction ID and amount clearly." },
-//               { n: "04", color: "#16a34a", bg: "#dcfce7", border: "#bbf7d0", title: "Upload & Confirm", desc: "Paste UTR ID, upload screenshot, hit Confirm. Activates in ~2 hours." },
-//             ].map((s, i) => (
-//               <div key={i} style={{
-//                 flex: 1, background: "#fafbfc", borderRadius: 10,
-//                 border: `1px solid ${s.border}`,
-//                 padding: "10px 13px", display: "flex", gap: 11, alignItems: "flex-start",
-//                 minHeight: 0
-//               }}>
-//                 <div style={{
-//                   width: 26, height: 26, borderRadius: "50%",
-//                   background: s.bg, color: s.color,
-//                   display: "flex", alignItems: "center", justifyContent: "center",
-//                   fontSize: 9, fontWeight: 800, flexShrink: 0, marginTop: 1
-//                 }}>{s.n}</div>
-//                 <div>
-//                   <p style={{ fontSize: 11, fontWeight: 700, color: "#1e293b", marginBottom: 3 }}>{s.title}</p>
-//                   <p style={{ fontSize: 10.5, color: "#64748b", lineHeight: 1.55 }}>{s.desc}</p>
-//                 </div>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default MenteePayment;
-
-// import React, { useState } from "react";
-// import { useNavigate, useLocation } from "react-router-dom";
-// import { ArrowLeft, Copy, Check, Upload, Shield, CheckCircle, Percent } from "lucide-react";
-
-// const MenteePayment = () => {
-//   const navigate = useNavigate();
-//   const location = useLocation();
-
-//   // ── All data comes from MentorLTMPlans via router state ──
-//   const {
-//     mentorName,
-//     mentorRole,
-//     planMonths,
-//     totalSessions,
-//     basePrice,
-//   } = location.state || {};
-
-//   const tax = 500;
-//   const insurance = 1200;
-//   const total = basePrice 
-
-//   const [copiedPrimary, setCopiedPrimary] = useState(false);
-//   const [copiedSecond, setCopiedSecond] = useState(false);
-//   const [transactionId, setTransactionId] = useState("");
-//   const [screenshotName, setScreenshotName] = useState("");
-//   const [showSuccess, setShowSuccess] = useState(false);
-//   const [discountCode, setDiscountCode] = useState("");
-
-//   const upiId = "karrivo2024@upi";
-//   const secondUpiId = "example.174327728615@sbi";
-
-//   const copy = (text, setter) => {
-//     navigator.clipboard.writeText(text);
-//     setter(true);
-//     setTimeout(() => setter(false), 2000);
-//   };
-
-//   // ── Guard: if no state was passed, redirect back ──
-//   if (!location.state || !basePrice) {
-//     return (
-//       <div style={{
-//         height: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
-//         background: "#eef1f6", fontFamily: "'DM Sans', sans-serif"
-//       }}>
-//         <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap');`}</style>
-//         <div style={{ textAlign: "center" }}>
-//           <p style={{ color: "#64748b", marginBottom: 16, fontSize: 14 }}>
-//             No plan selected. Please go back and choose a plan.
-//           </p>
-//           <button onClick={() => navigate(-1)} style={{
-//             background: "#0f172a", color: "#fff", border: "none",
-//             borderRadius: 50, padding: "10px 24px", fontSize: 13, fontWeight: 700,
-//             cursor: "pointer", fontFamily: "'DM Sans', sans-serif"
-//           }}>← Go Back</button>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   if (showSuccess) {
-//     return (
-//       <div style={{
-//         height: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
-//         background: "#f0f4f8", fontFamily: "'DM Sans', sans-serif"
-//       }}>
-//         <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap');`}</style>
-//         <div style={{
-//           background: "#fff", borderRadius: 20, padding: "48px 40px",
-//           maxWidth: 420, width: "90%", textAlign: "center",
-//           boxShadow: "0 20px 60px rgba(0,0,0,0.1)"
-//         }}>
-//           <div style={{
-//             width: 68, height: 68, borderRadius: "50%",
-//             background: "linear-gradient(135deg,#22c55e,#16a34a)",
-//             display: "flex", alignItems: "center", justifyContent: "center",
-//             margin: "0 auto 18px", boxShadow: "0 8px 24px rgba(34,197,94,0.3)"
-//           }}>
-//             <CheckCircle size={34} color="#fff" />
-//           </div>
-//           <h2 style={{ fontSize: 22, fontWeight: 800, color: "#0f172a", margin: "0 0 8px" }}>
-//             Payment Confirmed!
-//           </h2>
-//           <p style={{ fontSize: 13, color: "#64748b", marginBottom: 28, lineHeight: 1.6 }}>
-//             Your <strong>{planMonths}-month mentorship</strong> with {mentorName} is now active.
-//           </p>
-//           <button onClick={() => navigate("/")} style={{
-//             background: "#0f172a", color: "#fff", border: "none",
-//             borderRadius: 50, padding: "12px 32px", fontSize: 14, fontWeight: 700,
-//             cursor: "pointer", fontFamily: "'DM Sans', sans-serif"
-//           }}>Go to Dashboard →</button>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div style={{
-//       height: "100vh", overflow: "hidden",
-//       background: "#eef1f6",
-//       fontFamily: "'DM Sans', sans-serif",
-//       display: "flex", flexDirection: "column",
-//     }}>
-//       <style>{`
-//         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap');
-//         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-//         .inp {
-//           width: 100%; padding: 8px 11px; border: 1.5px solid #e2e8f0;
-//           border-radius: 8px; font-size: 12px; font-family: 'DM Sans', sans-serif;
-//           background: #fff; color: #1e293b; outline: none; transition: border-color 0.18s;
-//         }
-//         .inp:focus { border-color: #0098cc; box-shadow: 0 0 0 3px rgba(0,152,204,0.1); }
-//         .card {
-//           background: #fff; border-radius: 14px;
-//           border: 1px solid #e2e8f0; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
-//         }
-//         .lbl {
-//           font-size: 9px; font-weight: 700; letter-spacing: 1.1px;
-//           text-transform: uppercase; color: #94a3b8; display: block; margin-bottom: 10px;
-//         }
-//         .copy-btn {
-//           position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
-//           background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;
-//           width: 24px; height: 24px; display: flex; align-items: center;
-//           justify-content: center; cursor: pointer; transition: all 0.15s;
-//         }
-//         .copy-btn:hover { background: #e0f2fe; border-color: #0098cc; }
-//       `}</style>
-
-//       {/* ── Top Bar ── */}
-//       <div style={{
-//         background: "#fff", borderBottom: "1px solid #e8edf3",
-//         padding: "0 24px", height: 50, display: "flex", alignItems: "center",
-//         justifyContent: "space-between", flexShrink: 0
-//       }}>
-//         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-//           <button onClick={() => navigate(-1)} style={{
-//             background: "#f1f5f9", border: "none", borderRadius: 8,
-//             width: 30, height: 30, display: "flex", alignItems: "center",
-//             justifyContent: "center", cursor: "pointer", color: "#475569"
-//           }}>
-//             <ArrowLeft size={14} />
-//           </button>
-//           <span style={{ fontSize: 14, fontWeight: 700, color: "#0f172a" }}>Complete Payment</span>
-//           <span style={{ fontSize: 11, color: "#94a3b8" }}>· Long-Term Mentorship · {mentorName}</span>
-//         </div>
-//         <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-//           <Shield size={12} color="#22c55e" />
-//           <span style={{ fontSize: 11, color: "#64748b", fontWeight: 500 }}>Secured Payment</span>
-//         </div>
-//       </div>
-
-//       {/* ── Body: 3 columns ── */}
-//       <div style={{
-//         flex: 1, display: "flex", gap: 14, padding: "14px 24px",
-//         overflow: "hidden", minHeight: 0
-//       }}>
-
-//         {/* ══ COL 1 — QR + Form ══ */}
-//         <div className="card" style={{ flex: 2.2, padding: "18px 22px", display: "flex", flexDirection: "column", gap: 13, minWidth: 0 }}>
-//           <span className="lbl">Scan to Pay</span>
-
-//           <div style={{ display: "flex", gap: 20, alignItems: "flex-start" }}>
-//             {/* QR */}
-//             <div style={{
-//               border: "1.5px solid #e8edf3", borderRadius: 12, padding: 8,
-//               background: "#fafafa", flexShrink: 0
-//             }}>
-//               <img
-//                 src="https://img.freepik.com/free-vector/scan-me-qr-code_78370-2915.jpg?semt=ais_hybrid&w=740&q=80"
-//                 alt="QR"
-//                 style={{ width: 148, height: 148, display: "block", borderRadius: 8 }}
-//               />
-//               <p style={{ fontSize: 10, color: "#94a3b8", textAlign: "center", marginTop: 7, fontWeight: 500 }}>
-//                 PhonePe · GPay · Paytm
-//               </p>
-//             </div>
-
-//             {/* UPI IDs */}
-//             <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10, paddingTop: 4 }}>
-//               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 2 }}>
-//                 <div style={{ flex: 1, height: 1, background: "#f1f5f9" }} />
-//                 <span style={{ fontSize: 10, color: "#cbd5e1", fontWeight: 700 }}>OR USE UPI ID</span>
-//                 <div style={{ flex: 1, height: 1, background: "#f1f5f9" }} />
-//               </div>
-
-//               <div>
-//                 <span style={{ fontSize: 9, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.8px", textTransform: "uppercase", display: "block", marginBottom: 5 }}>Primary UPI ID</span>
-//                 <div style={{ position: "relative" }}>
-//                   <input className="inp" value={upiId} readOnly style={{ paddingRight: 34, fontWeight: 600, background: "#f8fafc" }} />
-//                   <button className="copy-btn" onClick={() => copy(upiId, setCopiedPrimary)}>
-//                     {copiedPrimary ? <Check size={10} color="#22c55e" /> : <Copy size={10} color="#64748b" />}
-//                   </button>
-//                 </div>
-//               </div>
-
-//               <div>
-//                 <span style={{ fontSize: 9, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.8px", textTransform: "uppercase", display: "block", marginBottom: 5 }}>Secondary UPI ID</span>
-//                 <div style={{ position: "relative" }}>
-//                   <input className="inp" value={secondUpiId} readOnly style={{ paddingRight: 34, fontWeight: 600, background: "#f8fafc" }} />
-//                   <button className="copy-btn" onClick={() => copy(secondUpiId, setCopiedSecond)}>
-//                     {copiedSecond ? <Check size={10} color="#22c55e" /> : <Copy size={10} color="#64748b" />}
-//                   </button>
-//                 </div>
-//               </div>
-
-//               <div style={{
-//                 background: "#fffbeb", border: "1px solid #fde68a",
-//                 borderRadius: 8, padding: "8px 11px"
-//               }}>
-//                 <p style={{ fontSize: 10, color: "#92400e", lineHeight: 1.55 }}>
-//                   <strong>Pay exactly ₹{total.toLocaleString("en-IN")}</strong> — wrong amounts delay activation up to 48h.
-//                 </p>
-//               </div>
-//             </div>
-//           </div>
-
-//           <div style={{ borderTop: "1.5px solid #f1f5f9" }} />
-
-//           {/* Upload + Transaction */}
-//           <div style={{ display: "flex", gap: 12 }}>
-//             <div style={{ flex: 1 }}>
-//               <span style={{ fontSize: 9, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.8px", textTransform: "uppercase", display: "block", marginBottom: 5 }}>Payment Screenshot</span>
-//               <label style={{
-//                 display: "flex", alignItems: "center", gap: 8,
-//                 border: `1.5px dashed ${screenshotName ? "#86efac" : "#cbd5e1"}`,
-//                 borderRadius: 9, padding: "9px 12px", cursor: "pointer",
-//                 background: screenshotName ? "#f0fdf4" : "#fafbfc", transition: "all 0.2s",
-//                 height: 40
-//               }}>
-//                 <input type="file" accept=".jpg,.jpeg,.png,.jfif" style={{ display: "none" }}
-//                   onChange={e => { if (e.target.files[0]) setScreenshotName(e.target.files[0].name); }} />
-//                 <Upload size={13} color={screenshotName ? "#16a34a" : "#94a3b8"} />
-//                 <span style={{ fontSize: 11, color: screenshotName ? "#15803d" : "#64748b", fontWeight: 500, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-//                   {screenshotName || "Upload screenshot"}
-//                 </span>
-//               </label>
-//             </div>
-
-//             <div style={{ flex: 1 }}>
-//               <span style={{ fontSize: 9, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.8px", textTransform: "uppercase", display: "block", marginBottom: 5 }}>Transaction / UTR ID</span>
-//               <input
-//                 className="inp"
-//                 placeholder="e.g. T2312XXXXXXX"
-//                 value={transactionId}
-//                 onChange={e => setTransactionId(e.target.value.toUpperCase())}
-//                 style={{ letterSpacing: "0.4px", height: 40 }}
-//               />
-//             </div>
-//           </div>
-
-//           {/* CTA */}
-//           <button
-//             onClick={() => setShowSuccess(true)}
-//             style={{
-//               width: "100%", background: "linear-gradient(135deg,#0098cc,#005f8a)",
-//               color: "#fff", border: "none", borderRadius: 9,
-//               padding: "11px", fontSize: 14, fontWeight: 700,
-//               cursor: "pointer", fontFamily: "'DM Sans', sans-serif",
-//               boxShadow: "0 4px 14px rgba(0,152,204,0.3)", marginTop: "auto"
-//             }}
-//           >
-//             Confirm Payment — ₹{total.toLocaleString("en-IN")}
-//           </button>
-//         </div>
-
-//         {/* ══ COL 2 — Summary ══ */}
-//         <div className="card" style={{ flex: 2, padding: "18px 20px", display: "flex", flexDirection: "column", gap: 11, minWidth: 0 }}>
-//           <span className="lbl">Summary</span>
-//           <p style={{ fontSize: 11, color: "#94a3b8", lineHeight: 1.5, marginTop: -4 }}>
-//             Total includes plan fee, platform tax and session insurance.
-//           </p>
-
-//           {/* Mentor */}
-//           <div style={{
-//             display: "flex", alignItems: "center", gap: 10,
-//             background: "#f8fafc", borderRadius: 10, padding: "9px 11px",
-//             border: "1px solid #e8edf3"
-//           }}>
-//             <div style={{
-//               width: 34, height: 34, borderRadius: "50%",
-//               background: "linear-gradient(135deg,#0098cc,#005f8a)",
-//               display: "flex", alignItems: "center", justifyContent: "center",
-//               color: "#fff", fontWeight: 800, fontSize: 13, flexShrink: 0
-//             }}>
-//               {mentorName?.[0]}
-//             </div>
-//             <div style={{ minWidth: 0 }}>
-//               <p style={{ fontSize: 12, fontWeight: 700, color: "#1e293b" }}>{mentorName}</p>
-//               <p style={{ fontSize: 10, color: "#64748b" }}>{mentorRole}</p>
-//             </div>
-//             <span style={{
-//               marginLeft: "auto", fontSize: 9, fontWeight: 800,
-//               background: "#1d4ed8", color: "#fff",
-//               padding: "2px 8px", borderRadius: 20, letterSpacing: "0.4px", flexShrink: 0
-//             }}>LTM</span>
-//           </div>
-
-//           {/* Plan */}
-//           <div style={{
-//             background: "linear-gradient(135deg,#eff6ff,#dbeafe)",
-//             borderRadius: 8, padding: "9px 12px",
-//             display: "flex", justifyContent: "space-between", alignItems: "center",
-//             border: "1px solid #bfdbfe"
-//           }}>
-//             <div>
-//               <p style={{ fontSize: 11, fontWeight: 700, color: "#1d4ed8" }}>{planMonths} Month Plan</p>
-//               <p style={{ fontSize: 10, color: "#3b82f6" }}>{totalSessions} sessions</p>
-//             </div>
-//             <p style={{ fontSize: 13, fontWeight: 800, color: "#1d4ed8" }}>
-//               ₹{basePrice?.toLocaleString("en-IN")}
-//             </p>
-//           </div>
-
-//           {/* Breakdown */}
-//           <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
-//             {[
-//               { label: "Plan Price", val: `₹${basePrice?.toLocaleString("en-IN")}` },
-
-//             ].map((r, i) => (
-//               <div key={i} style={{ display: "flex", justifyContent: "space-between" }}>
-//                 <span style={{ fontSize: 12, color: "#64748b" }}>{r.label}</span>
-//                 <span style={{ fontSize: 12, fontWeight: 500, color: "#374151" }}>{r.val}</span>
-//               </div>
-//             ))}
-//           </div>
-
-//           <div style={{ borderTop: "1.5px solid #f1f5f9" }} />
-
-//           {/* Discount */}
-//           <div style={{ display: "flex", gap: 8 }}>
-//             <div style={{ position: "relative", flex: 1 }}>
-//               <Percent size={11} color="#94a3b8" style={{ position: "absolute", left: 9, top: "50%", transform: "translateY(-50%)" }} />
-//               <input className="inp" placeholder="Discount code" value={discountCode}
-//                 onChange={e => setDiscountCode(e.target.value.toUpperCase())}
-//                 style={{ paddingLeft: 25, fontSize: 11 }} />
-//             </div>
-//             <button style={{
-//               background: "#0f172a", color: "#fff", border: "none",
-//               borderRadius: 8, padding: "0 14px", fontSize: 11,
-//               fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans', sans-serif"
-//             }}>Apply</button>
-//           </div>
-
-//           {/* Total */}
-//           <div style={{
-//             background: "#0f172a", borderRadius: 10,
-//             padding: "12px 16px", display: "flex",
-//             justifyContent: "space-between", alignItems: "center", marginTop: "auto"
-//           }}>
-//             <span style={{ fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.55)" }}>Total Due</span>
-//             <span style={{ fontSize: 20, fontWeight: 800, color: "#38bdf8", letterSpacing: "-0.5px" }}>
-//               ₹{total.toLocaleString("en-IN")}
-//             </span>
-//           </div>
-//         </div>
-
-//         {/* ══ COL 3 — How to Pay ══ */}
-//         <div className="card" style={{ flex: 1.3, padding: "18px 16px", display: "flex", flexDirection: "column", minWidth: 0 }}>
-//           <span className="lbl">How to Pay</span>
-//           <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10, minHeight: 0 }}>
-//             {[
-//               { n: "01", color: "#0098cc", bg: "#e0f2fe", border: "#bae6fd", title: "Scan QR or Copy UPI", desc: "Use any UPI app. Tap scan QR or pay via UPI ID from the left panel." },
-//               { n: "02", color: "#7c3aed", bg: "#ede9fe", border: "#ddd6fe", title: "Enter Exact Amount", desc: `Pay exactly ₹${total.toLocaleString("en-IN")}. Wrong amounts delay activation.` },
-//               { n: "03", color: "#d97706", bg: "#fef3c7", border: "#fde68a", title: "Screenshot Confirmation", desc: "Capture confirmation showing Transaction ID and amount clearly." },
-//               { n: "04", color: "#16a34a", bg: "#dcfce7", border: "#bbf7d0", title: "Upload & Confirm", desc: "Paste UTR ID, upload screenshot, hit Confirm. Activates in ~2 hours." },
-//             ].map((s, i) => (
-//               <div key={i} style={{
-//                 flex: 1, background: "#fafbfc", borderRadius: 10,
-//                 border: `1px solid ${s.border}`,
-//                 padding: "10px 13px", display: "flex", gap: 11, alignItems: "flex-start",
-//                 minHeight: 0
-//               }}>
-//                 <div style={{
-//                   width: 26, height: 26, borderRadius: "50%",
-//                   background: s.bg, color: s.color,
-//                   display: "flex", alignItems: "center", justifyContent: "center",
-//                   fontSize: 9, fontWeight: 800, flexShrink: 0, marginTop: 1
-//                 }}>{s.n}</div>
-//                 <div>
-//                   <p style={{ fontSize: 11, fontWeight: 700, color: "#1e293b", marginBottom: 3 }}>{s.title}</p>
-//                   <p style={{ fontSize: 10.5, color: "#64748b", lineHeight: 1.55 }}>{s.desc}</p>
-//                 </div>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default MenteePayment;
-
-
-
-// import React, { useState } from "react";
-// import { useNavigate, useLocation } from "react-router-dom";
-// import {
-//   Copy, Check, Upload, Shield, CheckCircle,
-//   Lock, ChevronRight, AlertCircle, X, QrCode, Link2
-// } from "lucide-react";
-// import {storage}  from "../../../../../firebase"
-// import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-
-// export default function MenteePayment() {
-//   const navigate = useNavigate();
-//   const location = useLocation();
-//   const { mentorName, mentorRole, planMonths, totalSessions, basePrice } = location.state || {};
-//   const total = basePrice;
-
-//   const [copiedPrimary, setCopiedPrimary] = useState(false);
-//   const [copiedSecond,  setCopiedSecond]  = useState(false);
-//   const [transactionId, setTransactionId] = useState("");
-//   const [screenshotName, setScreenshotName] = useState("");
-//   const [showSuccess, setShowSuccess]     = useState(false);
-//   const [discountCode, setDiscountCode]   = useState("");
-//   const [screenshotUrl, setScreenshotUrl] = useState("");
-//   const [uploading, setUploading]         = useState(false);
-//   const [uploadError, setUploadError]     = useState("");
-//   const [activeTab, setActiveTab]         = useState("qr");
-
-//   const upiId       = "karrivo2024@upi";
-//   const secondUpiId = "example.174327728615@sbi";
-
-//   const copy = (text, setter) => {
-//     navigator.clipboard.writeText(text);
-//     setter(true);
-//     setTimeout(() => setter(false), 2000);
-//   };
-
-//   const handleFileUpload = async (file) => {
-//     if (!file) return;
-//     setScreenshotName(file.name);
-//     setUploading(true);
-//     setUploadError("");
-//     setScreenshotUrl("");
-//     try {
-//       const storageRef = ref(storage, `payment-screenshots/${Date.now()}_${file.name}`);
-//       await uploadBytes(storageRef, file);
-//       const url = await getDownloadURL(storageRef);
-//       setScreenshotUrl(url);
-//     } catch (err) {
-//       setUploadError("Upload failed. Please try again.");
-//       setScreenshotName("");
-//     } finally {
-//       setUploading(false);
-//     }
-//   };
-
-//   const handleConfirm = () => {
-//     if (!screenshotUrl)        { setUploadError("Please upload your payment screenshot."); return; }
-//     if (!transactionId.trim()) { setUploadError("Please enter your Transaction / UTR ID."); return; }
-//     setUploadError("");
-//     setShowSuccess(true);
-//   };
-
-//   /* ── Guard ── */
-//   if (!location.state || !basePrice) {
-//     return (
-//       <div className="h-screen flex items-center justify-center bg-slate-100">
-//         <div className="text-center px-6">
-//           <p className="text-slate-500 text-sm mb-4">No plan selected. Please go back.</p>
-//           <button
-//             onClick={() => navigate(-1)}
-//             className="bg-slate-900 text-white text-sm font-semibold px-5 py-2.5 rounded-lg"
-//           >
-//             ← Go Back
-//           </button>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   /* ── Success ── */
-//   if (showSuccess) {
-//     return (
-//       <div className="h-screen flex items-center justify-center bg-slate-100">
-//         <div className="bg-white rounded-2xl p-10 max-w-sm w-11/12 text-center shadow-xl">
-//           <div className="w-16 h-16 rounded-full bg-emerald-500 flex items-center justify-center mx-auto mb-4">
-//             <CheckCircle size={30} color="#fff" />
-//           </div>
-//           <h2 className="text-xl font-extrabold text-slate-900 mb-2">Payment Submitted!</h2>
-//           <p className="text-sm text-slate-500 mb-1 leading-relaxed">
-//             Your <span className="font-bold text-slate-700">{planMonths}-month mentorship</span> with{" "}
-//             <span className="font-bold text-slate-700">{mentorName}</span> is being activated.
-//           </p>
-//           <p className="text-xs text-slate-400 mb-7">Verification and activation within 2 hours.</p>
-//           <button
-//             onClick={() => navigate("/")}
-//             className="w-full bg-slate-900 text-white font-bold py-3 rounded-xl text-sm"
-//           >
-//             Go to Dashboard →
-//           </button>
-//         </div>
-//       </div>
-//     );
-//   }
-
-//   /* ── Main ── */
-//   return (
-//     <div className="h-screen overflow-hidden bg-slate-200 flex items-center justify-center p-3">
-//       <div className="w-full max-w-[820px] h-full max-h-[660px] flex rounded-2xl overflow-hidden shadow-2xl">
-
-//         {/* ══ LEFT PANEL ══ */}
-//         <div className="w-60 shrink-0 bg-[#0f172a] flex flex-col p-5 overflow-hidden">
-
-//           {/* Mentor */}
-//           <div className="flex items-center gap-3 mb-5">
-//             <div className="w-9 h-9 rounded-full bg-indigo-500 flex items-center justify-center text-white font-extrabold text-sm shrink-0">
-//               {mentorName?.[0]}
-//             </div>
-//             <div className="min-w-0">
-//               <p className="text-white font-bold text-sm leading-tight truncate">{mentorName}</p>
-//               <p className="text-slate-400 text-[11px] truncate">{mentorRole}</p>
-//             </div>
-//           </div>
-
-//           {/* Amount */}
-//           <div className="mb-4">
-//             <p className="text-slate-500 text-[9px] font-bold uppercase tracking-widest mb-1">Total Amount</p>
-//             <p className="text-white text-3xl font-extrabold tracking-tight leading-none">
-//               ₹{total?.toLocaleString("en-IN")}
-//             </p>
-//           </div>
-
-//           {/* Plan card */}
-//           <div className="bg-white/5 border border-white/10 rounded-xl p-3 mb-4 space-y-2">
-//             <div className="flex justify-between items-center">
-//               <span className="text-slate-400 text-[11px]">Duration</span>
-//               <span className="text-white text-[11px] font-bold">{planMonths} Months</span>
-//             </div>
-//             <div className="flex justify-between items-center">
-//               <span className="text-slate-400 text-[11px]">Sessions</span>
-//               <span className="text-white text-[11px] font-bold">{totalSessions}</span>
-//             </div>
-//             <div className="border-t border-white/10 pt-2 flex justify-between items-center">
-//               <span className="text-slate-300 text-xs font-semibold">Plan price</span>
-//               <span className="text-white text-sm font-extrabold">₹{basePrice?.toLocaleString("en-IN")}</span>
-//             </div>
-//           </div>
-
-//           {/* Steps */}
-//           <div className="flex-1 min-h-0 overflow-hidden">
-//             <p className="text-slate-600 text-[9px] font-bold uppercase tracking-widest mb-2">How it works</p>
-//             <div className="space-y-2">
-//               {[
-//                 { color: "bg-indigo-500/20 text-indigo-400", n: "1", t: "Scan QR or copy UPI",  d: "PhonePe, GPay, Paytm" },
-//                 { color: "bg-emerald-500/20 text-emerald-400", n: "2", t: "Upload screenshot",  d: "Capture confirmation" },
-//                 { color: "bg-amber-500/20 text-amber-400",   n: "3", t: "Enter UTR ID",         d: "12-digit reference" },
-//                 { color: "bg-pink-500/20 text-pink-400",     n: "4", t: "Confirm & activate",   d: "Ready in ~2 hours" },
-//               ].map(s => (
-//                 <div key={s.n} className="flex items-start gap-2">
-//                   <div className={`w-5 h-5 rounded-full shrink-0 flex items-center justify-center text-[9px] font-extrabold ${s.color}`}>
-//                     {s.n}
-//                   </div>
-//                   <div>
-//                     <p className="text-white/80 text-[10px] font-semibold leading-tight">{s.t}</p>
-//                     <p className="text-slate-500 text-[9px]">{s.d}</p>
-//                   </div>
-//                 </div>
-//               ))}
-//             </div>
-//           </div>
-
-//           {/* Trust */}
-//           <div className="flex items-center gap-1.5 pt-3 border-t border-white/10 mt-3">
-//             <Shield size={10} className="text-emerald-400 shrink-0" />
-//             <span className="text-slate-500 text-[9px]">Secured by Karrivo</span>
-//           </div>
-//         </div>
-
-//         {/* ══ RIGHT PANEL ══ */}
-//         <div className="flex-1 bg-white flex flex-col overflow-hidden">
-
-//           {/* Scrollable area */}
-//           <div className="flex-1 overflow-y-auto px-5 pt-5 pb-2 space-y-3">
-
-//             {/* Title */}
-//             <div>
-//               <p className="text-base font-extrabold text-slate-900 tracking-tight">Complete your payment</p>
-//               <p className="text-[11px] text-slate-400 mt-0.5">Pay via UPI · ₹{total?.toLocaleString("en-IN")}</p>
-//             </div>
-
-//             {/* Tabs */}
-//             <div className="flex bg-slate-100 rounded-xl p-1 gap-1">
-//               {[
-//                 { id: "qr",  Icon: QrCode, label: "Scan QR" },
-//                 { id: "upi", Icon: Link2,  label: "UPI ID"  },
-//               ].map(({ id, Icon, label }) => (
-//                 <button
-//                   key={id}
-//                   onClick={() => setActiveTab(id)}
-//                   className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-bold transition-all ${
-//                     activeTab === id
-//                       ? "bg-white text-slate-900 shadow-sm"
-//                       : "text-slate-400 hover:text-slate-600"
-//                   }`}
-//                 >
-//                   <Icon size={12} />
-//                   {label}
-//                 </button>
-//               ))}
-//             </div>
-
-//             {/* QR Tab */}
-//             {activeTab === "qr" && (
-//               <div className="flex flex-col items-center gap-3">
-//                 <div className="border border-slate-200 rounded-2xl p-3 shadow-sm">
-//                   <img
-//                     src="https://img.freepik.com/free-vector/scan-me-qr-code_78370-2915.jpg?semt=ais_hybrid&w=740&q=80"
-//                     alt="UPI QR"
-//                     className="w-32 h-32 rounded-lg block"
-//                   />
-//                 </div>
-//                 <div className="flex gap-1.5 flex-wrap justify-center">
-//                   {["PhonePe", "Google Pay", "Paytm", "BHIM"].map(a => (
-//                     <span key={a} className="text-[10px] font-semibold text-slate-500 bg-slate-100 rounded-md px-2 py-1">
-//                       {a}
-//                     </span>
-//                   ))}
-//                 </div>
-//                 <div className="w-full bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 flex gap-2 items-start">
-//                   <AlertCircle size={12} className="text-amber-500 mt-0.5 shrink-0" />
-//                   <p className="text-[11px] text-amber-800 leading-relaxed">
-//                     Pay exactly <span className="font-bold">₹{total?.toLocaleString("en-IN")}</span> — wrong amounts delay activation by 48h.
-//                   </p>
-//                 </div>
-//               </div>
-//             )}
-
-//             {/* UPI Tab */}
-//             {activeTab === "upi" && (
-//               <div className="space-y-2.5">
-//                 {[
-//                   { label: "Primary UPI ID",   val: upiId,       copied: copiedPrimary, setter: setCopiedPrimary },
-//                   { label: "Secondary UPI ID", val: secondUpiId, copied: copiedSecond,  setter: setCopiedSecond },
-//                 ].map(row => (
-//                   <div key={row.label}>
-//                     <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">{row.label}</p>
-//                     <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
-//                       <span className="text-xs font-semibold text-slate-700 flex-1 break-all">{row.val}</span>
-//                       <button
-//                         onClick={() => copy(row.val, row.setter)}
-//                         className="flex items-center gap-1 bg-slate-900 text-white text-[10px] font-bold px-2.5 py-1.5 rounded-lg shrink-0"
-//                       >
-//                         {row.copied ? <Check size={9} /> : <Copy size={9} />}
-//                         {row.copied ? "Copied" : "Copy"}
-//                       </button>
-//                     </div>
-//                   </div>
-//                 ))}
-//                 <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 flex gap-2 items-start">
-//                   <AlertCircle size={12} className="text-amber-500 mt-0.5 shrink-0" />
-//                   <p className="text-[11px] text-amber-800 leading-relaxed">
-//                     Pay exactly <span className="font-bold">₹{total?.toLocaleString("en-IN")}</span> — wrong amounts delay activation.
-//                   </p>
-//                 </div>
-//               </div>
-//             )}
-
-//             {/* Divider */}
-//             <div className="flex items-center gap-2">
-//               <div className="flex-1 h-px bg-slate-100" />
-//               <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest whitespace-nowrap">After Payment</span>
-//               <div className="flex-1 h-px bg-slate-100" />
-//             </div>
-
-//             {/* Upload */}
-//             <div>
-//               <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
-//                 Payment Screenshot <span className="text-red-400">*</span>
-//               </p>
-//               <label className={`flex flex-col items-center justify-center gap-1.5 border-2 border-dashed rounded-xl py-4 cursor-pointer transition-all ${
-//                 uploading
-//                   ? "border-blue-300 bg-blue-50 cursor-not-allowed"
-//                   : screenshotUrl
-//                     ? "border-emerald-400 bg-emerald-50 border-solid"
-//                     : "border-slate-200 bg-slate-50 hover:border-indigo-400 hover:bg-indigo-50"
-//               }`}>
-//                 <input
-//                   type="file"
-//                   accept=".jpg,.jpeg,.png,.jfif"
-//                   className="hidden"
-//                   disabled={uploading}
-//                   onChange={e => handleFileUpload(e.target.files[0])}
-//                 />
-//                 {uploading ? (
-//                   <>
-//                     <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center">
-//                       <Upload size={13} className="text-blue-500" />
-//                     </div>
-//                     <p className="text-xs font-semibold text-blue-600">Uploading...</p>
-//                   </>
-//                 ) : screenshotUrl ? (
-//                   <>
-//                     <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
-//                       <Check size={14} className="text-emerald-600" />
-//                     </div>
-//                     <p className="text-xs font-bold text-emerald-700">Uploaded successfully</p>
-//                     <p className="text-[10px] text-emerald-500 max-w-[200px] truncate">{screenshotName}</p>
-//                   </>
-//                 ) : (
-//                   <>
-//                     <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center">
-//                       <Upload size={13} className="text-slate-400" />
-//                     </div>
-//                     <p className="text-xs font-semibold text-slate-600">Click to upload screenshot</p>
-//                     <p className="text-[10px] text-slate-400">JPG, PNG up to 5MB</p>
-//                   </>
-//                 )}
-//               </label>
-//             </div>
-
-//             {/* UTR */}
-//             <div>
-//               <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
-//                 Transaction / UTR ID <span className="text-red-400">*</span>
-//               </p>
-//               <input
-//                 className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all placeholder:font-normal placeholder:text-slate-400"
-//                 placeholder="e.g. T2312XXXXXXX"
-//                 value={transactionId}
-//                 onChange={e => { setTransactionId(e.target.value.toUpperCase()); setUploadError(""); }}
-//               />
-//               <p className="text-[9px] text-slate-400 mt-1">Find this in your UPI app under payment history</p>
-//             </div>
-
-//             {/* Discount */}
-//             <div className="flex gap-2">
-//               <input
-//                 className="flex-1 border border-slate-200 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all placeholder:text-slate-400"
-//                 placeholder="Discount code (optional)"
-//                 value={discountCode}
-//                 onChange={e => setDiscountCode(e.target.value.toUpperCase())}
-//               />
-//               <button className="bg-slate-100 border border-slate-200 text-slate-600 text-xs font-bold px-4 rounded-xl hover:bg-slate-200 transition-all">
-//                 Apply
-//               </button>
-//             </div>
-
-//             {/* Error */}
-//             {uploadError && (
-//               <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
-//                 <X size={12} className="text-red-500 shrink-0" />
-//                 <p className="text-xs font-medium text-red-600">{uploadError}</p>
-//               </div>
-//             )}
-//           </div>
-
-//           {/* ── Sticky footer ── */}
-//           <div className="border-t border-slate-100 px-5 py-3 bg-white space-y-2 shrink-0">
-
-//             {/* Total row */}
-//             <div className="flex items-center justify-between">
-//               <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
-//                 <Lock size={10} />
-//                 <span>Secure payment</span>
-//               </div>
-//               <div className="flex items-baseline gap-1">
-//                 <span className="text-[11px] text-slate-400">Total:</span>
-//                 <span className="text-base font-extrabold text-slate-900 tracking-tight">
-//                   ₹{total?.toLocaleString("en-IN")}
-//                 </span>
-//               </div>
-//             </div>
-
-//             {/* Confirm */}
-//             <button
-//               onClick={handleConfirm}
-//               disabled={uploading}
-//               className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all ${
-//                 uploading
-//                   ? "bg-slate-100 text-slate-400 cursor-not-allowed"
-//                   : "bg-slate-900 text-white hover:bg-slate-800 active:scale-[0.99] shadow-lg shadow-slate-900/20"
-//               }`}
-//             >
-//               {uploading ? (
-//                 "Uploading screenshot..."
-//               ) : (
-//                 <>
-//                   <Lock size={13} />
-//                   Pay ₹{total?.toLocaleString("en-IN")} · Confirm
-//                   <ChevronRight size={14} />
-//                 </>
-//               )}
-//             </button>
-
-//             {/* Trust badges */}
-//             <div className="flex items-center justify-center gap-5">
-//               {[
-//                 { Icon: Shield,      label: "Secure Upload"  },
-//                 { Icon: CheckCircle, label: "2hr Activation" },
-//                 { Icon: Lock,        label: "100% Safe"      },
-//               ].map(({ Icon, label }) => (
-//                 <div key={label} className="flex items-center gap-1">
-//                   <Icon size={10} className="text-slate-300" />
-//                   <span className="text-[9px] text-slate-400 font-medium">{label}</span>
-//                 </div>
-//               ))}
-//             </div>
-//           </div>
-
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import {
@@ -1179,11 +8,11 @@ import { storage } from "../../../../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useSubmitPaymentMutation } from "./Paymentsecapislice";
 
+
 export default function MenteePayment() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // ── All fields passed from MentorLTMPlans ──
   const {
     subscription_id,
     session_id,
@@ -1196,10 +25,13 @@ export default function MenteePayment() {
     totalSessions,
     basePrice,
     createdBy,
+    paymentType,
+    bookingDetails,
   } = location.state || {};
 
-  console.log(createdBy,"createdBy")
+  console.log(paymentType, "paymentTypeswe")
 
+  const isSessionBooking = paymentType === "bookingsession";
   const total = basePrice;
 
   const [copiedPrimary, setCopiedPrimary] = useState(false);
@@ -1229,7 +61,6 @@ export default function MenteePayment() {
     setTimeout(() => setter(false), 2000);
   };
 
-  // ── Step 1: Upload screenshot to Firebase → get URL ──
   const handleFileUpload = async (file) => {
     if (!file) return;
     setScreenshotName(file.name);
@@ -1249,40 +80,48 @@ export default function MenteePayment() {
     }
   };
 
-  // ── Step 2: Send full payload to POST /payments/submit ──
   const handleConfirm = async () => {
     if (!screenshotUrl) { setUploadError("Please upload your payment screenshot."); return; }
     if (!transactionId.trim()) { setUploadError("Please enter your Transaction / UTR ID."); return; }
     setUploadError("");
-
     try {
       await submitPayment({
         subscription_id,
-        session_id,                            // session booking id
-        mentorId,                              // mentor's _id
-        menteeId,                              // mentee's _id
-        mentorName,                            // mentor full name
-        menteeName,                            // mentee full name
-        paymentAmount: total,                // basePrice from plan
-        transactionId: transactionId.trim(), // user typed UTR
-        screenshotUrl,                         // firebase URL
+        session_id,
+        mentorId,
+        menteeId,
+        mentorName,
+        menteeName,
+        paymentAmount: total,
+        paymentType,
+        transactionId: transactionId.trim(),
+        screenshotUrl,
         transactionDate: new Date().toISOString(),
-        createdBy,                             // mentee's _id
+        createdBy,
+        ...(isSessionBooking && { paymentType: "bookingsession" }),
       }).unwrap();
     } catch {
       // error shown via isError
     }
   };
 
-  /* ── Guard: no state passed ── */
+  // Opacity variants of cream — all derived from #f4e8d4
+  const cream = "#f4e8d4";
+  const creamDim = "rgba(244,232,212,0.4)";
+  const creamFaint = "rgba(244,232,212,0.15)";
+  const creamGhost = "rgba(244,232,212,0.07)";
+  const creamBorder = "rgba(244,232,212,0.1)";
+
+  /* ── Guard ── */
   if (!location.state || !basePrice) {
     return (
-      <div className="h-screen flex items-center justify-center bg-slate-100">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "#0a211e" }}>
         <div className="text-center px-6">
-          <p className="text-slate-500 text-sm mb-4">No plan selected. Please go back.</p>
+          <p className="text-sm mb-4" style={{ color: creamDim }}>No plan selected. Please go back.</p>
           <button
             onClick={() => navigate(-1)}
-            className="bg-slate-900 text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-slate-800 transition-colors"
+            className="text-sm font-semibold px-5 py-2.5 rounded-lg transition-opacity hover:opacity-80"
+            style={{ background: "#0e2b27", color: cream, border: `1px solid ${creamBorder}` }}
           >
             ← Go Back
           </button>
@@ -1291,59 +130,57 @@ export default function MenteePayment() {
     );
   }
 
-  /* ── Success: API returned 201 ── */
+  /* ── Success ── */
   if (isSuccess) {
     return (
-      <div className="h-screen flex items-center justify-center bg-slate-100">
-        <div className="bg-white rounded-2xl p-10 max-w-sm w-11/12 text-center shadow-xl">
-          <div className="w-16 h-16 rounded-full bg-emerald-500 flex items-center justify-center mx-auto mb-4">
-            <CheckCircle size={30} color="#fff" />
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ background: "#0a211e" }}>
+        <div className="rounded-2xl p-8 sm:p-10 max-w-sm w-full text-center" style={{ background: "#0e2b27", border: `1px solid ${creamBorder}`, boxShadow: "0 25px 60px rgba(0,0,0,0.5)" }}>
+          <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: cream }}>
+            <CheckCircle size={30} color="#0a211e" />
           </div>
-          <h2 className="text-xl font-extrabold text-slate-900 mb-2">Payment Submitted!</h2>
-          <p className="text-sm text-slate-500 mb-1 leading-relaxed">
-            Your <span className="font-bold text-slate-700">{planMonths}-month mentorship</span> with{" "}
-            <span className="font-bold text-slate-700">{mentorName}</span> is being activated.
+          <h2 className="text-xl font-extrabold mb-2" style={{ color: cream }}>Payment Submitted!</h2>
+          <p className="text-sm mb-1 leading-relaxed" style={{ color: creamDim }}>
+            {isSessionBooking ? (
+              <>Your session with <span className="font-bold" style={{ color: cream }}>{mentorName}</span> is being confirmed.</>
+            ) : (
+              <>Your <span className="font-bold" style={{ color: cream }}>{planMonths}-month mentorship</span> with{" "}
+                <span className="font-bold" style={{ color: cream }}>{mentorName}</span> is being activated.</>
+            )}
           </p>
 
-          {/* Response from backend */}
           {responseData?.data && (
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 mt-4 mb-4 text-left space-y-2">
-              <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Payment Details</p>
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-500">Status</span>
-                <span className="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
-                  {responseData.data.paymentStatus}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-500">Transaction ID</span>
-                <span className="text-xs font-bold text-slate-800">{responseData.data.transactionId}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-500">Amount Paid</span>
-                <span className="text-xs font-bold text-slate-800">
-                  ₹{responseData.data.paymentAmount?.toLocaleString("en-IN")}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-500">Mentor</span>
-                <span className="text-xs font-bold text-slate-800">{responseData.data.mentorName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-xs text-slate-500">Mentee</span>
-                <span className="text-xs font-bold text-slate-800">{responseData.data.menteeName}</span>
-              </div>
+            <div className="rounded-xl p-3 mt-4 mb-4 text-left space-y-2" style={{ background: "#0a211e", border: `1px solid ${creamBorder}` }}>
+              <p className="text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: cream }}>Payment Details</p>
+              {[
+                { label: "Status", value: responseData.data.paymentStatus, isStatus: true },
+                { label: "Transaction ID", value: responseData.data.transactionId },
+                { label: "Amount Paid", value: `₹${responseData.data.paymentAmount?.toLocaleString("en-IN")}` },
+                { label: "Mentor", value: responseData.data.mentorName },
+                { label: "Mentee", value: responseData.data.menteeName },
+              ].map(item => (
+                <div key={item.label} className="flex justify-between">
+                  <span className="text-xs" style={{ color: creamDim }}>{item.label}</span>
+                  {item.isStatus ? (
+                    <span className="text-xs font-bold px-2 py-0.5 rounded-full" style={{ color: cream, background: creamGhost }}>
+                      {item.value}
+                    </span>
+                  ) : (
+                    <span className="text-xs font-bold" style={{ color: cream }}>{item.value}</span>
+                  )}
+                </div>
+              ))}
             </div>
           )}
 
-          <p className="text-xs text-slate-400 mb-6">
+          <p className="text-xs mb-6" style={{ color: creamDim }}>
             {responseData?.message || "Verification and activation within 2 hours."}
           </p>
           <button
-            onClick={() => navigate("/")}
-            className="w-full bg-slate-900 text-white font-bold py-3 rounded-xl text-sm hover:bg-slate-800 transition-colors"
+            onClick={() => navigate("/mentee/bookings")}
+            className="w-full font-bold py-3 rounded-xl text-sm transition-opacity hover:opacity-90"
+            style={{ background: cream, color: "#0a211e" }}
           >
-            Go to Dashboard →
+            See Your Bookings →
           </button>
         </div>
       </div>
@@ -1352,68 +189,101 @@ export default function MenteePayment() {
 
   /* ── Main UI ── */
   return (
-    <div className="h-screen overflow-hidden bg-slate-200 flex items-center justify-center p-3">
-      <div className="w-full max-w-[820px] h-full max-h-[660px] flex rounded-2xl overflow-hidden shadow-2xl">
+    <div className="min-h-screen flex items-center justify-center p-3 sm:p-4" style={{ background: "#0a211e" }}>
+      <div
+        className="w-full max-w-[860px] flex flex-col lg:flex-row rounded-2xl overflow-hidden lg:max-h-[680px]"
+        style={{ background: "#0e2b27", border: `1px solid ${creamBorder}`, boxShadow: "0 25px 80px rgba(0,0,0,0.5)" }}
+      >
 
         {/* ══ LEFT PANEL ══ */}
-        <div className="w-60 shrink-0 bg-[#0f172a] flex flex-col p-5 overflow-hidden">
+        <div
+          className="w-full lg:w-64 shrink-0 flex flex-col p-5"
+          style={{ background: "#0a211e", borderRight: `1px solid ${creamBorder}` }}
+        >
 
           {/* Mentor */}
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-9 h-9 rounded-full bg-indigo-500 flex items-center justify-center text-white font-extrabold text-sm shrink-0">
+            <div
+              className="w-9 h-9 rounded-full flex items-center justify-center font-extrabold text-sm shrink-0"
+              style={{ background: cream, color: "#0a211e" }}
+            >
               {mentorName?.[0]}
             </div>
             <div className="min-w-0">
-              <p className="text-white font-bold text-sm leading-tight truncate">{mentorName}</p>
-              <p className="text-slate-400 text-[11px] truncate">{mentorRole}</p>
+              <p className="font-bold text-sm leading-tight truncate" style={{ color: cream }}>{mentorName}</p>
+              <p className="text-[11px] truncate" style={{ color: creamDim }}>{mentorRole}</p>
             </div>
           </div>
 
           {/* Amount */}
           <div className="mb-4">
-            <p className="text-slate-500 text-[9px] font-bold uppercase tracking-widest mb-1">Total Amount</p>
-            <p className="text-white text-3xl font-extrabold tracking-tight leading-none">
+            <p className="text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: creamDim }}>Total Amount</p>
+            <p className="text-3xl font-extrabold tracking-tight leading-none" style={{ color: cream }}>
               ₹{total?.toLocaleString("en-IN")}
             </p>
           </div>
 
           {/* Plan card */}
-          <div className="bg-white/5 border border-white/10 rounded-xl p-3 mb-4 space-y-2">
+          <div className="rounded-xl p-3 mb-4 space-y-2" style={{ background: creamGhost, border: `1px solid ${creamBorder}` }}>
             <div className="flex justify-between items-center">
-              <span className="text-slate-400 text-[11px]">Mentee</span>
-              <span className="text-white text-[11px] font-bold truncate max-w-[110px]">{menteeName}</span>
+              <span className="text-[11px]" style={{ color: creamDim }}>Mentee</span>
+              <span className="text-[11px] font-bold truncate max-w-[120px]" style={{ color: cream }}>{menteeName}</span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-400 text-[11px]">Duration</span>
-              <span className="text-white text-[11px] font-bold">{planMonths} Months</span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-slate-400 text-[11px]">Sessions</span>
-              <span className="text-white text-[11px] font-bold">{totalSessions}</span>
-            </div>
-            <div className="border-t border-white/10 pt-2 flex justify-between items-center">
-              <span className="text-slate-300 text-xs font-semibold">Plan price</span>
-              <span className="text-white text-sm font-extrabold">₹{basePrice?.toLocaleString("en-IN")}</span>
+            {isSessionBooking ? (
+              <>
+                {[
+                  { label: "Date", value: bookingDetails?.date },
+                  { label: "Time", value: bookingDetails?.time },
+                  { label: "Type", value: bookingDetails?.sessionType },
+                ].map(r => (
+                  <div key={r.label} className="flex justify-between items-center">
+                    <span className="text-[11px]" style={{ color: creamDim }}>{r.label}</span>
+                    <span className="text-[11px] font-bold" style={{ color: cream }}>{r.value}</span>
+                  </div>
+                ))}
+              </>
+            ) : (
+              <>
+                <div className="flex justify-between items-center">
+                  <span className="text-[11px]" style={{ color: creamDim }}>Duration</span>
+                  <span className="text-[11px] font-bold" style={{ color: cream }}>{planMonths} Months</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-[11px]" style={{ color: creamDim }}>Sessions</span>
+                  <span className="text-[11px] font-bold" style={{ color: cream }}>{totalSessions}</span>
+                </div>
+              </>
+            )}
+            <div className="pt-2 flex justify-between items-center" style={{ borderTop: `1px solid ${creamBorder}` }}>
+              <span className="text-xs font-semibold" style={{ color: creamDim }}>
+                {isSessionBooking ? "Session fee" : "Plan price"}
+              </span>
+              <span className="text-sm font-extrabold" style={{ color: cream }}>
+                ₹{basePrice?.toLocaleString("en-IN")}
+              </span>
             </div>
           </div>
 
           {/* Steps */}
-          <div className="flex-1 min-h-0 overflow-hidden">
-            <p className="text-slate-600 text-[9px] font-bold uppercase tracking-widest mb-2">How it works</p>
+          <div className="hidden sm:block flex-1 min-h-0 overflow-hidden">
+            <p className="text-[9px] font-bold uppercase tracking-widest mb-2" style={{ color: creamDim }}>How it works</p>
             <div className="space-y-2">
               {[
-                { color: "bg-indigo-500/20 text-indigo-400", n: "1", t: "Scan QR or copy UPI", d: "PhonePe, GPay, Paytm" },
-                { color: "bg-emerald-500/20 text-emerald-400", n: "2", t: "Upload screenshot", d: "Capture confirmation" },
-                { color: "bg-amber-500/20 text-amber-400", n: "3", t: "Enter UTR ID", d: "12-digit reference" },
-                { color: "bg-pink-500/20 text-pink-400", n: "4", t: "Confirm & activate", d: "Ready in ~2 hours" },
+                { n: "1", t: "Scan QR or copy UPI", d: "PhonePe, GPay, Paytm" },
+                { n: "2", t: "Upload screenshot", d: "Capture confirmation" },
+                { n: "3", t: "Enter UTR ID", d: "12-digit reference" },
+                { n: "4", t: "Confirm & activate", d: "Ready in ~2 hours" },
               ].map(s => (
                 <div key={s.n} className="flex items-start gap-2">
-                  <div className={`w-5 h-5 rounded-full shrink-0 flex items-center justify-center text-[9px] font-extrabold ${s.color}`}>
+                  <div
+                    className="w-5 h-5 rounded-full shrink-0 flex items-center justify-center text-[9px] font-extrabold"
+                    style={{ background: creamFaint, color: cream }}
+                  >
                     {s.n}
                   </div>
                   <div>
-                    <p className="text-white/80 text-[10px] font-semibold leading-tight">{s.t}</p>
-                    <p className="text-slate-500 text-[9px]">{s.d}</p>
+                    <p className="text-[10px] font-semibold leading-tight" style={{ color: cream }}>{s.t}</p>
+                    <p className="text-[9px]" style={{ color: creamDim }}>{s.d}</p>
                   </div>
                 </div>
               ))}
@@ -1421,26 +291,27 @@ export default function MenteePayment() {
           </div>
 
           {/* Trust */}
-          <div className="flex items-center gap-1.5 pt-3 border-t border-white/10 mt-3">
-            <Shield size={10} className="text-emerald-400 shrink-0" />
-            <span className="text-slate-500 text-[9px]">Secured by Karrivo</span>
+          <div className="flex items-center gap-1.5 pt-3 mt-3" style={{ borderTop: `1px solid ${creamBorder}` }}>
+            <Shield size={10} style={{ color: creamDim }} className="shrink-0" />
+            <span className="text-[9px]" style={{ color: creamDim }}>Secured by Karrivo</span>
           </div>
         </div>
 
         {/* ══ RIGHT PANEL ══ */}
-        <div className="flex-1 bg-white flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden" style={{ background: "#0e2b27" }}>
 
-          {/* Scrollable area */}
-          <div className="flex-1 overflow-y-auto px-5 pt-5 pb-2 space-y-3">
+          <div className="flex-1 overflow-y-auto px-4 sm:px-5 pt-5 pb-2 space-y-3">
 
             {/* Title */}
             <div>
-              <p className="text-base font-extrabold text-slate-900 tracking-tight">Complete your payment</p>
-              <p className="text-[11px] text-slate-400 mt-0.5">Pay via UPI · ₹{total?.toLocaleString("en-IN")}</p>
+              <p className="text-base font-extrabold tracking-tight" style={{ color: cream }}>Complete your payment</p>
+              <p className="text-[11px] mt-0.5" style={{ color: creamDim }}>
+                Pay via UPI · ₹{total?.toLocaleString("en-IN")}
+              </p>
             </div>
 
             {/* Tabs */}
-            <div className="flex bg-slate-100 rounded-xl p-1 gap-1">
+            <div className="flex rounded-xl p-1 gap-1" style={{ background: "#0a211e" }}>
               {[
                 { id: "qr", Icon: QrCode, label: "Scan QR" },
                 { id: "upi", Icon: Link2, label: "UPI ID" },
@@ -1448,10 +319,12 @@ export default function MenteePayment() {
                 <button
                   key={id}
                   onClick={() => setActiveTab(id)}
-                  className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-bold transition-all ${activeTab === id
-                    ? "bg-white text-slate-900 shadow-sm"
-                    : "text-slate-400 hover:text-slate-600"
-                    }`}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-bold transition-all"
+                  style={
+                    activeTab === id
+                      ? { background: "#0e2b27", color: cream, border: `1px solid ${creamBorder}` }
+                      : { color: creamDim, background: "transparent", border: "1px solid transparent" }
+                  }
                 >
                   <Icon size={12} />
                   {label}
@@ -1462,22 +335,28 @@ export default function MenteePayment() {
             {/* QR Tab */}
             {activeTab === "qr" && (
               <div className="flex flex-col items-center gap-3">
-                <div className="border border-slate-200 rounded-2xl p-3 shadow-sm">
+                <div className="rounded-2xl p-3" style={{ background: "#0a211e", border: `1px solid ${creamBorder}` }}>
                   <img
                     src="https://img.freepik.com/free-vector/scan-me-qr-code_78370-2915.jpg?semt=ais_hybrid&w=740&q=80"
                     alt="UPI QR"
-                    className="w-32 h-32 rounded-lg block"
+                    className="w-28 h-28 sm:w-32 sm:h-32 rounded-lg block"
                   />
                 </div>
                 <div className="flex gap-1.5 flex-wrap justify-center">
                   {["PhonePe", "Google Pay", "Paytm", "BHIM"].map(a => (
-                    <span key={a} className="text-[10px] font-semibold text-slate-500 bg-slate-100 rounded-md px-2 py-1">{a}</span>
+                    <span
+                      key={a}
+                      className="text-[10px] font-semibold rounded-md px-2 py-1"
+                      style={{ color: creamDim, background: "#0a211e", border: `1px solid ${creamBorder}` }}
+                    >
+                      {a}
+                    </span>
                   ))}
                 </div>
-                <div className="w-full bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 flex gap-2 items-start">
-                  <AlertCircle size={12} className="text-amber-500 mt-0.5 shrink-0" />
-                  <p className="text-[11px] text-amber-800 leading-relaxed">
-                    Pay exactly <span className="font-bold">₹{total?.toLocaleString("en-IN")}</span> — wrong amounts delay activation by 48h.
+                <div className="w-full rounded-xl px-3 py-2 flex gap-2 items-start" style={{ background: creamGhost, border: `1px solid ${creamBorder}` }}>
+                  <AlertCircle size={12} style={{ color: cream }} className="mt-0.5 shrink-0" />
+                  <p className="text-[11px] leading-relaxed" style={{ color: creamDim }}>
+                    Pay exactly <span className="font-bold" style={{ color: cream }}>₹{total?.toLocaleString("en-IN")}</span> — wrong amounts delay activation by 48h.
                   </p>
                 </div>
               </div>
@@ -1491,12 +370,17 @@ export default function MenteePayment() {
                   { label: "Secondary UPI ID", val: secondUpiId, copied: copiedSecond, setter: setCopiedSecond },
                 ].map(row => (
                   <div key={row.label}>
-                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">{row.label}</p>
-                    <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
-                      <span className="text-xs font-semibold text-slate-700 flex-1 break-all">{row.val}</span>
+                    <p className="text-[9px] font-bold uppercase tracking-widest mb-1" style={{ color: creamDim }}>{row.label}</p>
+                    <div className="flex items-center gap-2 rounded-xl px-3 py-2" style={{ background: "#0a211e", border: `1px solid ${creamBorder}` }}>
+                      <span className="text-xs font-semibold flex-1 break-all" style={{ color: cream }}>{row.val}</span>
                       <button
                         onClick={() => copy(row.val, row.setter)}
-                        className="flex items-center gap-1 bg-slate-900 text-white text-[10px] font-bold px-2.5 py-1.5 rounded-lg shrink-0 hover:bg-slate-700 transition-colors"
+                        className="flex items-center gap-1 text-[10px] font-bold px-2.5 py-1.5 rounded-lg shrink-0 transition-all"
+                        style={
+                          row.copied
+                            ? { background: cream, color: "#0a211e" }
+                            : { background: creamFaint, color: cream, border: `1px solid ${creamBorder}` }
+                        }
                       >
                         {row.copied ? <Check size={9} /> : <Copy size={9} />}
                         {row.copied ? "Copied" : "Copy"}
@@ -1504,10 +388,10 @@ export default function MenteePayment() {
                     </div>
                   </div>
                 ))}
-                <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5 flex gap-2 items-start">
-                  <AlertCircle size={12} className="text-amber-500 mt-0.5 shrink-0" />
-                  <p className="text-[11px] text-amber-800 leading-relaxed">
-                    Pay exactly <span className="font-bold">₹{total?.toLocaleString("en-IN")}</span> — wrong amounts delay activation.
+                <div className="rounded-xl px-3 py-2.5 flex gap-2 items-start" style={{ background: creamGhost, border: `1px solid ${creamBorder}` }}>
+                  <AlertCircle size={12} style={{ color: cream }} className="mt-0.5 shrink-0" />
+                  <p className="text-[11px] leading-relaxed" style={{ color: creamDim }}>
+                    Pay exactly <span className="font-bold" style={{ color: cream }}>₹{total?.toLocaleString("en-IN")}</span> — wrong amounts delay activation.
                   </p>
                 </div>
               </div>
@@ -1515,22 +399,26 @@ export default function MenteePayment() {
 
             {/* Divider */}
             <div className="flex items-center gap-2">
-              <div className="flex-1 h-px bg-slate-100" />
-              <span className="text-[9px] font-bold text-slate-300 uppercase tracking-widest whitespace-nowrap">After Payment</span>
-              <div className="flex-1 h-px bg-slate-100" />
+              <div className="flex-1 h-px" style={{ background: creamBorder }} />
+              <span className="text-[9px] font-bold uppercase tracking-widest whitespace-nowrap" style={{ color: creamDim }}>After Payment</span>
+              <div className="flex-1 h-px" style={{ background: creamBorder }} />
             </div>
 
             {/* Upload */}
             <div>
-              <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
-                Payment Screenshot <span className="text-red-400">*</span>
+              <p className="text-[9px] font-bold uppercase tracking-widest mb-1.5" style={{ color: creamDim }}>
+                Payment Screenshot <span style={{ color: cream }}>*</span>
               </p>
-              <label className={`flex flex-col items-center justify-center gap-1.5 border-2 border-dashed rounded-xl py-4 cursor-pointer transition-all ${uploading
-                ? "border-blue-300 bg-blue-50 cursor-not-allowed"
-                : screenshotUrl
-                  ? "border-emerald-400 bg-emerald-50 border-solid"
-                  : "border-slate-200 bg-slate-50 hover:border-indigo-400 hover:bg-indigo-50"
-                }`}>
+              <label
+                className="flex flex-col items-center justify-center gap-1.5 border-2 border-dashed rounded-xl py-4 cursor-pointer transition-all"
+                style={
+                  uploading
+                    ? { borderColor: creamDim, background: creamGhost }
+                    : screenshotUrl
+                      ? { borderColor: cream, background: creamGhost, borderStyle: "solid" }
+                      : { borderColor: "rgba(244,232,212,0.12)", background: "#0a211e" }
+                }
+              >
                 <input
                   type="file"
                   accept=".jpg,.jpeg,.png,.jfif"
@@ -1540,26 +428,26 @@ export default function MenteePayment() {
                 />
                 {uploading ? (
                   <>
-                    <div className="w-7 h-7 rounded-full bg-blue-100 flex items-center justify-center">
-                      <Upload size={13} className="text-blue-500" />
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: creamFaint }}>
+                      <Upload size={13} style={{ color: cream }} />
                     </div>
-                    <p className="text-xs font-semibold text-blue-600">Uploading to Firebase...</p>
+                    <p className="text-xs font-semibold" style={{ color: cream }}>Uploading...</p>
                   </>
                 ) : screenshotUrl ? (
                   <>
-                    <div className="w-7 h-7 rounded-full bg-emerald-100 flex items-center justify-center">
-                      <Check size={14} className="text-emerald-600" />
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: creamFaint }}>
+                      <Check size={14} style={{ color: cream }} />
                     </div>
-                    <p className="text-xs font-bold text-emerald-700">Uploaded successfully</p>
-                    <p className="text-[10px] text-emerald-500 max-w-[200px] truncate">{screenshotName}</p>
+                    <p className="text-xs font-bold" style={{ color: cream }}>Uploaded successfully</p>
+                    <p className="text-[10px] max-w-[200px] truncate" style={{ color: creamDim }}>{screenshotName}</p>
                   </>
                 ) : (
                   <>
-                    <div className="w-7 h-7 rounded-full bg-slate-200 flex items-center justify-center">
-                      <Upload size={13} className="text-slate-400" />
+                    <div className="w-7 h-7 rounded-full flex items-center justify-center" style={{ background: creamFaint }}>
+                      <Upload size={13} style={{ color: creamDim }} />
                     </div>
-                    <p className="text-xs font-semibold text-slate-600">Click to upload screenshot</p>
-                    <p className="text-[10px] text-slate-400">JPG, PNG up to 5MB</p>
+                    <p className="text-xs font-semibold" style={{ color: cream }}>Click to upload screenshot</p>
+                    <p className="text-[10px]" style={{ color: creamDim }}>JPG, PNG up to 5MB</p>
                   </>
                 )}
               </label>
@@ -1567,46 +455,60 @@ export default function MenteePayment() {
 
             {/* UTR */}
             <div>
-              <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">
-                Transaction / UTR ID <span className="text-red-400">*</span>
+              <p className="text-[9px] font-bold uppercase tracking-widest mb-1.5" style={{ color: creamDim }}>
+                Transaction / UTR ID <span style={{ color: cream }}>*</span>
               </p>
               <input
-                className="w-full border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-semibold text-slate-800 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all placeholder:font-normal placeholder:text-slate-400"
+                className="w-full rounded-xl px-3 py-2.5 text-xs font-semibold outline-none transition-all"
+                style={{
+                  background: "#0a211e",
+                  border: `1px solid ${creamBorder}`,
+                  color: cream,
+                  caretColor: cream,
+                }}
+                onFocus={e => { e.target.style.borderColor = "rgba(244,232,212,0.3)"; e.target.style.boxShadow = "0 0 0 3px rgba(244,232,212,0.05)"; }}
+                onBlur={e => { e.target.style.borderColor = creamBorder; e.target.style.boxShadow = "none"; }}
                 placeholder="e.g. T2312XXXXXXX"
                 value={transactionId}
                 onChange={e => { setTransactionId(e.target.value.toUpperCase()); setUploadError(""); }}
               />
-              <p className="text-[9px] text-slate-400 mt-1">Find this in your UPI app under payment history</p>
+              <p className="text-[9px] mt-1" style={{ color: creamDim }}>Find this in your UPI app under payment history</p>
             </div>
 
             {/* Discount */}
             <div className="flex gap-2">
               <input
-                className="flex-1 border border-slate-200 rounded-xl px-3 py-2.5 text-xs outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 transition-all placeholder:text-slate-400"
+                className="flex-1 rounded-xl px-3 py-2.5 text-xs outline-none transition-all"
+                style={{ background: "#0a211e", border: `1px solid ${creamBorder}`, color: cream, caretColor: cream }}
+                onFocus={e => { e.target.style.borderColor = "rgba(244,232,212,0.3)"; e.target.style.boxShadow = "0 0 0 3px rgba(244,232,212,0.05)"; }}
+                onBlur={e => { e.target.style.borderColor = creamBorder; e.target.style.boxShadow = "none"; }}
                 placeholder="Discount code (optional)"
                 value={discountCode}
                 onChange={e => setDiscountCode(e.target.value.toUpperCase())}
               />
-              <button className="bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold px-4 rounded-xl hover:bg-slate-200 transition-colors">
+              <button
+                className="text-xs font-bold px-4 rounded-xl transition-opacity hover:opacity-80"
+                style={{ background: creamFaint, border: `1px solid ${creamBorder}`, color: cream }}
+              >
                 Apply
               </button>
             </div>
 
-            {/* Field / upload error */}
+            {/* Upload error */}
             {uploadError && (
-              <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
-                <X size={12} className="text-red-500 shrink-0" />
-                <p className="text-xs font-medium text-red-600">{uploadError}</p>
+              <div className="flex items-center gap-2 rounded-xl px-3 py-2" style={{ background: creamGhost, border: `1px solid ${creamBorder}` }}>
+                <X size={12} style={{ color: cream }} className="shrink-0" />
+                <p className="text-xs font-medium" style={{ color: cream }}>{uploadError}</p>
               </div>
             )}
 
-            {/* API error from backend */}
+            {/* API error */}
             {isError && (
-              <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2.5">
-                <X size={12} className="text-red-500 shrink-0 mt-0.5" />
+              <div className="flex items-start gap-2 rounded-xl px-3 py-2.5" style={{ background: creamGhost, border: `1px solid ${creamBorder}` }}>
+                <X size={12} style={{ color: cream }} className="shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-xs font-bold text-red-600">Submission failed</p>
-                  <p className="text-[11px] text-red-500 mt-0.5">
+                  <p className="text-xs font-bold" style={{ color: cream }}>Submission failed</p>
+                  <p className="text-[11px] mt-0.5" style={{ color: creamDim }}>
                     {error?.data?.message || "Something went wrong. Please try again."}
                   </p>
                 </div>
@@ -1615,17 +517,16 @@ export default function MenteePayment() {
           </div>
 
           {/* ── Sticky footer ── */}
-          <div className="border-t border-slate-100 px-5 py-3 bg-white space-y-2 shrink-0">
+          <div className="px-4 sm:px-5 py-3 space-y-2 shrink-0" style={{ background: "#0e2b27", borderTop: `1px solid ${creamBorder}` }}>
 
-            {/* Total row */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-slate-400 text-[11px]">
+              <div className="flex items-center gap-1.5 text-[11px]" style={{ color: creamDim }}>
                 <Lock size={10} />
                 <span>Secure payment</span>
               </div>
               <div className="flex items-baseline gap-1">
-                <span className="text-[11px] text-slate-400">Total:</span>
-                <span className="text-base font-extrabold text-slate-900 tracking-tight">
+                <span className="text-[11px]" style={{ color: creamDim }}>Total:</span>
+                <span className="text-base font-extrabold tracking-tight" style={{ color: cream }}>
                   ₹{total?.toLocaleString("en-IN")}
                 </span>
               </div>
@@ -1635,10 +536,12 @@ export default function MenteePayment() {
             <button
               onClick={handleConfirm}
               disabled={uploading || isSubmitting}
-              className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all ${uploading || isSubmitting
-                ? "bg-slate-100 text-slate-400 cursor-not-allowed"
-                : "bg-slate-900 text-white hover:bg-slate-800 active:scale-[0.99] shadow-lg shadow-slate-900/20"
-                }`}
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-bold transition-all"
+              style={
+                uploading || isSubmitting
+                  ? { background: creamFaint, color: creamDim, cursor: "not-allowed" }
+                  : { background: cream, color: "#0a211e", boxShadow: "0 8px 24px rgba(244,232,212,0.12)" }
+              }
             >
               {isSubmitting ? (
                 <><Loader2 size={14} className="animate-spin" /> Submitting payment...</>
@@ -1650,15 +553,15 @@ export default function MenteePayment() {
             </button>
 
             {/* Trust badges */}
-            <div className="flex items-center justify-center gap-5">
+            <div className="flex items-center justify-center gap-4 sm:gap-5">
               {[
                 { Icon: Shield, label: "Secure Upload" },
                 { Icon: CheckCircle, label: "2hr Activation" },
                 { Icon: Lock, label: "100% Safe" },
               ].map(({ Icon, label }) => (
                 <div key={label} className="flex items-center gap-1">
-                  <Icon size={10} className="text-slate-300" />
-                  <span className="text-[9px] text-slate-400 font-medium">{label}</span>
+                  <Icon size={10} style={{ color: creamDim }} />
+                  <span className="text-[9px] font-medium" style={{ color: creamDim }}>{label}</span>
                 </div>
               ))}
             </div>
@@ -1668,3 +571,10 @@ export default function MenteePayment() {
     </div>
   );
 }
+
+
+
+
+
+
+

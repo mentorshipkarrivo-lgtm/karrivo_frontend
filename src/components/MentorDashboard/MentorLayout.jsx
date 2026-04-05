@@ -15,14 +15,14 @@ import {
     Headphones,
     Receipt
 } from "lucide-react"; import { useNavigate, useLocation, NavLink } from 'react-router-dom';
-import KarrivoLogo from "../../assets/KarivoLogo.jpg";
+import KarrivoLogo from "../../assets/KarrivoLogo.png";
 
 const navigationItems = [
     { id: 'dashboard', label: 'Dashboard', icon: Home, route: '/mentor/dashboard' },
 
     { id: 'sessions', label: 'Sessions', icon: CalendarCheck, route: '/mentor/dashboard/sessions' },
 
-    { id: 'messages', label: 'Messages', icon: MessageCircle, route: '/mentor/dashboard/messages' },
+    // { id: 'messages', label: 'Messages', icon: MessageCircle, route: '/mentor/dashboard/messages' },
 
     { id: 'pricing', label: 'Pricing', icon: IndianRupee, route: '/mentor/dashboard/pricing' },
 
@@ -172,7 +172,7 @@ const MentorLayout = ({ children }) => {
             {/* Logo row */}
             <div className="h-16 flex items-center border-b border-white/10 shrink-0 px-3">
                 <div className="flex items-center gap-2.5 overflow-hidden">
-                    <NavLink
+                    {/* <NavLink
                         className="flex items-center transition-transform duration-300 hover:scale-105"
                         to="/"
                     //   onClick={closeNavbar}
@@ -184,7 +184,7 @@ const MentorLayout = ({ children }) => {
                                 alt="Logo"
                             />
                         </div>
-                    </NavLink>
+                    </NavLink> */}
                     {!collapsed && (
                         <span className="text-white font-semibold text-base whitespace-nowrap">
                             MentorHub
