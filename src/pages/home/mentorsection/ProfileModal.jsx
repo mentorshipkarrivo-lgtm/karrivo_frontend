@@ -90,18 +90,34 @@ const ProfileModal = () => {
   const initials = mentor.fullName?.split(" ").slice(0, 2).map(w => w[0]).join("").toUpperCase() ?? "M";
   const joined = mentor.createdAt ? new Date(mentor.createdAt).toLocaleDateString("en-IN", { month: "short", year: "numeric" }) : null;
 
-  const hasSlots = Array.isArray(mentor.weeklyAvailability) && mentor.weeklyAvailability.length > 0;
+  const hasSlots =
+    Array.isArray(mentor.weeklyAvailability) &&
+    mentor.weeklyAvailability.some(d => d.slots?.length > 0);
+
+
+
+  const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const DAY_MAP = { Sunday: 0, Monday: 1, Tuesday: 2, Wednesday: 3, Thursday: 4, Friday: 5, Saturday: 6 };
+
 
   const grouped = hasSlots
-    ? mentor.weeklyAvailability.reduce((acc, s) => {
-      const k = s.date.slice(0, 10);
-      (acc[k] = acc[k] || []).push(s);
+    ? mentor.weeklyAvailability.reduce((acc, { day, slots, _id: dayId }) => {
+      // Find the next occurrence of this weekday from today
+      const today = new Date();
+      const todayDay = today.getDay();
+      const targetDay = DAY_MAP[day];
+      const diff = (targetDay - todayDay + 7) % 7 || 7; // always future
+      const date = new Date(today);
+      date.setDate(today.getDate() + diff);
+      const dk = date.toISOString().slice(0, 10);
+
+      acc[dk] = (slots || []).map(slot => ({ ...slot, date: dk, day }));
       return acc;
     }, {})
     : {};
+
   const uniqueDates = Object.keys(grouped).sort();
 
-  const DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
     <>
@@ -330,7 +346,7 @@ const ProfileModal = () => {
                   <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 6 }}>
                     <span style={{ fontFamily: "'Fraunces',serif", fontSize: 34, fontWeight: 700, color: "#f0f8f6", letterSpacing: "-1px", lineHeight: 1 }}>₹{mentor.hourlyRate?.toLocaleString()}</span>
                     <span style={{ color: "#7ee0c1", fontSize: 12, fontWeight: 500 }}>/session</span>
-                  </div>  
+                  </div>
                   <p style={{ color: "#4a7a72", fontSize: 11.5, lineHeight: 1.6 }}>Tailored mentorship to accelerate your career</p>
                 </div>
                 <div style={{ padding: "18px 20px", display: "flex", flexDirection: "column", gap: 14 }}>

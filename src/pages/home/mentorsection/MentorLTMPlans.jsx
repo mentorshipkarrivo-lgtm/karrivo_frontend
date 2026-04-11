@@ -62,22 +62,47 @@ const PLAN_META = {
   },
 };
 
-function normalizePlans(apiPlans = {}) {
-  return Object.entries(apiPlans)
-    .map(([key, value]) => {
-      const months = value?.months ?? parseInt(key, 10);
-      const meta = PLAN_META[months];
-      if (!meta) return null;
-      return {
-        ...meta,
-        key: `${months}Month`,
-        months,
-        totalSessions: value?.totalSessions ?? 0,
-        totalPrice: value?.totalPrice ?? 0,
-      };
-    })
-    .filter(Boolean)
-    .sort((a, b) => a.months - b.months);
+function normalizePlans(apiPlans = {}, hourlyRate = 1500) {
+  const hasPlans = Object.keys(apiPlans).length > 0;
+
+  // If backend has real plans, use them
+  if (hasPlans) {
+    return Object.entries(apiPlans)
+      .map(([key, value]) => {
+        const months = value?.months ?? parseInt(key, 10);
+        const meta = PLAN_META[months];
+        if (!meta) return null;
+        return {
+          ...meta,
+          key: `${months}Month`,
+          months,
+          totalSessions: value?.totalSessions ?? 0,
+          totalPrice: value?.totalPrice ?? 0,
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.months - b.months);
+  }
+
+  // Fallback: generate from hourlyRate
+  // Assume 4 sessions/month, slight discount for longer plans
+  const SESSION_DURATION_HRS = 0.5; // 30-min sessions
+  const sessionRate = Math.round(hourlyRate * SESSION_DURATION_HRS);
+
+  return [1, 3, 6].map((months) => {
+    const meta = PLAN_META[months];
+    const sessionsPerMonth = 4;
+    const totalSessions = months * sessionsPerMonth;
+    const discount = months === 1 ? 1 : months === 3 ? 0.9 : 0.8; // 0/10/20% off
+    const totalPrice = Math.round(sessionRate * totalSessions * discount);
+    return {
+      ...meta,
+      key: `${months}Month`,
+      months,
+      totalSessions,
+      totalPrice,
+    };
+  });
 }
 
 const MentorLTMPlans = () => {
@@ -108,7 +133,8 @@ const MentorLTMPlans = () => {
     </div>
   );
 
-  const PLANS = normalizePlans(mentor?.pricing?.plans);
+// inside MentorLTMPlans, replace the existing PLANS line:
+const PLANS = normalizePlans(mentor?.pricing?.plans, mentor?.hourlyRate);
   const effectiveSelected = selected ?? (PLANS.length === 1 ? PLANS[0].key : null);
 
 
