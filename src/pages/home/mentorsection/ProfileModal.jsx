@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -6,7 +7,8 @@ import {
   MessageCircle, CheckCircle, Users, TrendingUp, ExternalLink,
   Shield, Heart, CalendarDays, ChevronDown, ChevronUp,
 } from "lucide-react";
-import { useFetchMentorByIdQuery } from "../../topMentors/Mentorsectionapislice";
+import Cookies from "js-cookie";
+import { useFetchMentorByIdQuery, useFetchMentorReviewsQuery, useSubmitReviewMutation } from "../../topMentors/Mentorsectionapislice";
 import BookingModal from "./BookingModal";
 
 /* ─── tiny shared atoms ─────────────────────────────────────── */
@@ -64,7 +66,51 @@ const ProfileModal = () => {
   const [selectedDate, setSelectedDate] = useState(null); // "YYYY-MM-DD"
   const [selectedSlot, setSelectedSlot] = useState(null); // slot object
 
-  const { data: mentor, isLoading, isError } = useFetchMentorByIdQuery(mentorId);
+
+  //  Reviews
+  const [reviewText, setReviewText] = useState("");
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewSubmitted, setReviewSubmitted] = useState(false);
+
+  const { data: reviewsData } = useFetchMentorReviewsQuery({ mentorId, page: 1, limit: 10 });
+  const [submitReview, { isLoading: submittingReview }] = useSubmitReviewMutation();
+
+  const reviews = reviewsData?.reviews || [];
+
+
+
+  const cookieData = Cookies.get("profileData");
+
+  const userData = cookieData ? JSON.parse(cookieData) : null;
+
+  const currentStatus = userData?.profile?.currentStatus;
+
+  const { data: mentor, isLoading, isError } =
+    useFetchMentorByIdQuery({ mentorId, currentStatus });
+  const userData1 = JSON.parse(localStorage.getItem("userData"));
+
+  const userMenteeId = userData1?._id;
+
+  console.log(userMenteeId, "userMenteeId1234");
+
+  const handleReviewSubmit = async () => {
+    if (!reviewText.trim()) return;
+    try {
+      await submitReview({
+        mentorId,
+        menteeId: userMenteeId,
+        rating: reviewRating,
+        comment: reviewText.trim(),
+      }).unwrap();
+      setReviewText("");
+      setReviewRating(5);
+      setReviewSubmitted(true);
+      setTimeout(() => setReviewSubmitted(false), 3000);
+    } catch (err) {
+      console.error("Review error:", err);
+    }
+  };
+
 
   if (isLoading) return (
     <div style={{ background: "#0a211e", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -365,6 +411,134 @@ const ProfileModal = () => {
                 </div>
               </div>
 
+
+              {/* ── Reviews & Comments ── */}
+              <Card icon={MessageCircle} title="Reviews & Comments">
+                <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+
+                  {/* Existing Reviews */}
+                  {reviews.length > 0 ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                      {reviews.map((r, i) => (
+                        <div key={r._id || i} style={{
+                          background: "rgba(126,224,193,0.03)",
+                          border: "1px solid rgba(126,224,193,0.08)",
+                          borderRadius: 10, padding: "12px 14px"
+                        }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                              <div style={{
+                                width: 28, height: 28, borderRadius: "50%",
+                                background: "linear-gradient(135deg,#1c4e46,#3a9e84)",
+                                display: "flex", alignItems: "center", justifyContent: "center",
+                                fontSize: 11, fontWeight: 700, color: "#fff"
+                              }}>
+                                {r.menteeName?.[0]?.toUpperCase() || "U"}
+                              </div>
+                              <span style={{ fontSize: 12, fontWeight: 600, color: "#c4ddd8" }}>
+                                {r.menteeName || "Anonymous"}
+                              </span>
+                            </div>
+                            <div style={{ display: "flex", gap: 2 }}>
+                              {[1, 2, 3, 4, 5].map(star => (
+                                <Star key={star} size={11}
+                                  color={star <= r.rating ? "#f59e0b" : "#2a4a46"}
+                                  fill={star <= r.rating ? "#f59e0b" : "none"} />
+                              ))}
+                            </div>
+                          </div>
+                          <p style={{ fontSize: 12, color: "#7a9e98", lineHeight: 1.7 }}>{r.comment}</p>
+                          {r.createdAt && (
+                            <p style={{ fontSize: 10, color: "#2a4a46", marginTop: 6 }}>
+                              {new Date(r.createdAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p style={{ fontSize: 12, color: "#2a4a46", textAlign: "center", padding: "10px 0" }}>
+                      No reviews yet. Be the first to leave one!
+                    </p>
+                  )}
+
+                  {/* Divider */}
+                  <div style={{ height: 1, background: "rgba(126,224,193,0.07)" }} />
+
+                  {/* Write a Review */}
+                  {userData ? (
+                    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                      <p style={{
+                        fontSize: 11, fontWeight: 700, color: "#3a6a62",
+                        textTransform: "uppercase", letterSpacing: "0.4px"
+                      }}>
+                        Leave a Comment
+                      </p>
+
+                      {/* Star Selector */}
+                      <div style={{ display: "flex", gap: 5 }}>
+                        {[1, 2, 3, 4, 5].map(star => (
+                          <Star key={star} size={18} style={{ cursor: "pointer" }}
+                            color={star <= reviewRating ? "#f59e0b" : "#2a4a46"}
+                            fill={star <= reviewRating ? "#f59e0b" : "none"}
+                            onClick={() => setReviewRating(star)} />
+                        ))}
+                      </div>
+
+                      {/* Text Area */}
+                      <textarea
+                        rows={3}
+                        value={reviewText}
+                        onChange={e => setReviewText(e.target.value)}
+                        placeholder="Share your experience with this mentor..."
+                        style={{
+                          background: "rgba(126,224,193,0.03)",
+                          border: "1px solid rgba(126,224,193,0.12)",
+                          borderRadius: 10, padding: "10px 12px",
+                          color: "#c4ddd8", fontSize: 12.5, lineHeight: 1.7,
+                          resize: "vertical", outline: "none",
+                          fontFamily: "'DM Sans', sans-serif",
+                          width: "100%"
+                        }}
+                      />
+
+                      {/* Submit Button */}
+                      <button
+                        onClick={handleReviewSubmit}
+                        disabled={submittingReview || !reviewText.trim()}
+                        style={{
+                          background: reviewText.trim()
+                            ? "linear-gradient(135deg,#7ee0c1,#3a9e84)"
+                            : "#1f4f47",
+                          border: "none", borderRadius: 9,
+                          color: reviewText.trim() ? "#0a211e" : "#4a7a72",
+                          fontWeight: 700, fontSize: 13, padding: "10px",
+                          cursor: reviewText.trim() ? "pointer" : "not-allowed",
+                          display: "flex", alignItems: "center",
+                          justifyContent: "center", gap: 6,
+                          transition: "all .15s"
+                        }}>
+                        <MessageCircle size={13} />
+                        {submittingReview ? "Submitting..." : "Submit Review"}
+                      </button>
+
+                      {reviewSubmitted && (
+                        <div style={{
+                          display: "flex", alignItems: "center", gap: 6,
+                          color: "#7ee0c1", fontSize: 12, fontWeight: 600
+                        }}>
+                          <CheckCircle size={13} /> Review submitted successfully!
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <p style={{ fontSize: 12, color: "#3a6a62", textAlign: "center" }}>
+                      Please log in to leave a review.
+                    </p>
+                  )}
+                </div>
+              </Card>
+
             </div>
           </div>
         </div>
@@ -378,6 +552,5 @@ const ProfileModal = () => {
 };
 
 export default ProfileModal;
-
 
 

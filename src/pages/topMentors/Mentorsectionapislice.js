@@ -1,9 +1,10 @@
+
+
 import { apiSlice } from "../../ApiSliceComponent/karrivoApi";
 
 export const mentorSectionApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
 
-        // ✅ Check Free Session Eligibility (from SessionBooking schema)
         checkFreeSessionEligibility: builder.query({
             query: ({ userId, username, mentorUserId }) => ({
                 url: '/mentee/trailbookings/check-free-session',
@@ -11,11 +12,10 @@ export const mentorSectionApiSlice = apiSlice.injectEndpoints({
                 body: { userId, username, mentorUserId }
             }),
             // response shape: { success, hasFreeSession, freeSessionUsed, message, usedSessionDetails }
-            transformResponse: (response) => response,
+            transformRespone: (response) => response,
             providesTags: ['FreeSession'],
         }),
 
-        // Fetch Top Mentors
         fetchTopMentors: builder.query({
             query: ({ limit = 4 }) => `/Mentor/topmentors?limit=${limit}`,
             transformResponse: (response) => response.data,
@@ -26,11 +26,24 @@ export const mentorSectionApiSlice = apiSlice.injectEndpoints({
         }),
 
         // Fetch Mentor By ID
+        // fetchMentorById: builder.query({
+        //     query: (mentorId) => `/Mentor/view/${mentorId}`,
+        //     transformResponse: (response) => response.data,
+        //     providesTags: (result, error, mentorId) => [{ type: "Mentor", id: mentorId }],
+        // }),
+
+
         fetchMentorById: builder.query({
-            query: (mentorId) => `/Mentor/view/${mentorId}`,
+            query: ({ mentorId, currentStatus }) => ({
+                url: `/Mentor/view/${mentorId}`,   // ✅ param
+                params: { currentStatus },         // ✅ query
+            }),
             transformResponse: (response) => response.data,
-            providesTags: (result, error, mentorId) => [{ type: "Mentor", id: mentorId }],
+            providesTags: (result, error, arg) => [
+                { type: "Mentor", id: arg.mentorId },
+            ],
         }),
+
 
         // Fetch Mentor Availability
         fetchMentorAvailability: builder.query({
@@ -52,7 +65,7 @@ export const mentorSectionApiSlice = apiSlice.injectEndpoints({
             transformResponse: (response) => response,
             invalidatesTags: [{ type: "Booking", id: "LIST" }],
         }),
-        // ✅ Create Booking (free or paid, decided by backend)
+        //  Create Booking (free or paid, decided by backend)
         createBooking: builder.mutation({
             query: (bookingData) => ({
                 url: '/mentee/trailbookings/bookings_session',
@@ -158,6 +171,37 @@ export const mentorSectionApiSlice = apiSlice.injectEndpoints({
             }),
             transformResponse: (response) => response.data,
         }),
+
+
+        submitReview: builder.mutation({
+            query: ({ mentorId, menteeId, rating, comment }) => ({
+                url: '/reviews/create-reviews',
+                method: 'POST',
+                body: { mentorId, menteeId, rating, comment },
+            }),
+            transformResponse: (response) => response.data,
+            invalidatesTags: (result, error, { mentorId }) => [
+                { type: "Review", id: mentorId },
+                { type: "Review", id: "LIST" },
+            ],
+        }),
+
+
+        fetchMentorReviews: builder.query({
+            query: ({ mentorId, page = 1, limit = 10 }) => ({
+                url: `/reviews/${mentorId}/reviews`,
+                params: { page, limit },
+            }),
+            transformResponse: (response) => response.data,
+            providesTags: (result, error, { mentorId }) => [{ type: "Review", id: mentorId }],
+        }),
+
+
+
+
+
+
+
     }),
 });
 
@@ -174,6 +218,6 @@ export const {
     useFetchMentorReviewsQuery,
     useSubmitReviewMutation,
     useBookSessionMutation,
-    useCreateSubscriptionMutation
-} = mentorSectionApiSlice;
+    useCreateSubscriptionMutation,
 
+} = mentorSectionApiSlice;

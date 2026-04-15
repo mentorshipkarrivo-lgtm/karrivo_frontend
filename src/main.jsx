@@ -9,6 +9,7 @@ import App from "./App";
 import { store } from "./pages/services/store.js"
 import "./index.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { ToastProvider } from "./global/Tostify.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -16,13 +17,15 @@ ReactDOM.createRoot(document.getElementById("root")).render(
 
       <Provider store={store}>
 
-        <BrowserRouter>
-          
+        <ToastProvider>
+          <BrowserRouter>
+
             {/* <HelmetProvider> */}
             <App />
             {/* </HelmetProvider> */}
-          
-        </BrowserRouter>
+
+          </BrowserRouter>
+        </ToastProvider>
       </Provider>
     </GoogleOAuthProvider >
   </React.StrictMode>
