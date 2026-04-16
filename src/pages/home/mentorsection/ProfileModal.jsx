@@ -138,7 +138,7 @@ const ProfileModal = () => {
 
   const hasSlots =
     Array.isArray(mentor.weeklyAvailability) &&
-    mentor.weeklyAvailability.some(d => d.slots?.length > 0);
+    mentor.weeklyAvailability.length > 0;
 
 
 
@@ -147,17 +147,17 @@ const ProfileModal = () => {
 
 
   const grouped = hasSlots
-    ? mentor.weeklyAvailability.reduce((acc, { day, slots, _id: dayId }) => {
-      // Find the next occurrence of this weekday from today
+    ? mentor.weeklyAvailability.reduce((acc, slot) => {
       const today = new Date();
       const todayDay = today.getDay();
-      const targetDay = DAY_MAP[day];
-      const diff = (targetDay - todayDay + 7) % 7 || 7; // always future
+      const targetDay = DAY_MAP[slot.day];  // ← Use slot.day directly
+      const diff = (targetDay - todayDay + 7) % 7 || 7;
       const date = new Date(today);
       date.setDate(today.getDate() + diff);
       const dk = date.toISOString().slice(0, 10);
 
-      acc[dk] = (slots || []).map(slot => ({ ...slot, date: dk, day }));
+      if (!acc[dk]) acc[dk] = [];
+      acc[dk].push({ ...slot, date: dk });  // ← Push slot directly
       return acc;
     }, {})
     : {};
