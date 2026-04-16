@@ -61,8 +61,8 @@ export const mentorAvailabilityApiSlice = apiSlice.injectEndpoints({
     // ── Delete Unavailability by mentorId + unavailId ─────────────────────
     // Route: DELETE /mentor/unavailability/:mentorId/:unavailId
     deleteMentorUnavailability: builder.mutation({
-      query: ({ mentorId, unavailId }) => ({
-        url: `/ltmMentorAvialabilty/mentor/unavailability/${mentorId}/${unavailId}`,
+      query: ({ mentor_Id, unavailId }) => ({
+        url: `/ltmMentorAvialabilty/mentor/unavailability/${mentor_Id}/${unavailId}`,
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,

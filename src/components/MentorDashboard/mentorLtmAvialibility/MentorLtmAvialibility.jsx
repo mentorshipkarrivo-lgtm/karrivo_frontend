@@ -57,9 +57,17 @@ const findOverlaps = (recs, from, to) => {
   if (!from || !to) return [];
   const f = new Date(from);
   const t = new Date(to);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
   return recs.filter((u) => {
-    const uf = new Date(u.unavailableFrom);
     const ut = new Date(u.unavailableTo);
+    ut.setHours(23, 59, 59, 999);
+
+    // ✅ Skip expired blocks — they're done, no conflict
+    if (ut < today) return false;
+
+    const uf = new Date(u.unavailableFrom);
     return uf <= t && ut >= f;
   });
 };
@@ -146,7 +154,6 @@ export default function MentorAvailability() {
   const [delTarget, setDelTarget] = useState(null);
   const [snapshot, setSnapshot] = useState(null);
   const [toastMsg, setToastMsg] = useState(null);
-
   const [daySlots, setDaySlots] = useState(ALL_DAYS.map((d) => ({ day: d, enabled: true, from: "09:00", to: "10:00" })));
   const [spw, setSpw] = useState(1);
   const [tz, setTz] = useState("Asia/Kolkata");
@@ -237,6 +244,7 @@ export default function MentorAvailability() {
   };
 
   const handleDelete = async () => {
+    console.log(mentor_Id, "mentorId1w2e3r4")
     try { await delBlock({ mentor_Id, unavailId: delTarget._id }).unwrap(); setDelTarget(null); showToast("Block removed"); }
     catch (e) { console.error(e); }
   };
