@@ -229,7 +229,7 @@ const BookingModal = ({ mentor, isOpen, onClose, selectedSlot }) => {
     e.preventDefault();
 
     if (!topic.trim()) {
-      showToast.error("Please enter a topic to discuss.");
+      alert("Please enter a topic to discuss.");
       return;
     }
     if (!userId) {

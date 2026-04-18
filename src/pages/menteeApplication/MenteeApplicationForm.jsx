@@ -496,8 +496,7 @@ const MenteeApplicationForm = () => {
                                     <div className="mb-5">
                                         <h2 className="text-lg font-bold text-gray-800 mb-1 flex items-center gap-2">
                                             <Target className="w-5 h-5 text-[#0098cc]" />
-                                            Goals & Interests
-                                        </h2>
+                                            Domains of Expertise                                        </h2>
                                     </div>
 
                                     <div className="grid grid-cols-1 gap-4">
