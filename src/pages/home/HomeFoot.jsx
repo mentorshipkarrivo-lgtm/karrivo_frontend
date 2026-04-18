@@ -18,7 +18,7 @@ export default function FooterLinks() {
           </div>
           {/* Social Icons */}
           <div className="flex gap-4">
-            <a href="#" className="text-gray-400 hover:text-white">
+            <a href="https://www.facebook.com/profile.php?id=61570709791237" className="text-gray-400 hover:text-white">
               <Facebook size={20} />
             </a>
             <a href="#" className="text-gray-400 hover:text-white">
@@ -27,7 +27,7 @@ export default function FooterLinks() {
             <a href="#" className="text-gray-400 hover:text-white">
               <Twitter size={20} />
             </a>
-            <a href="#" className="text-gray-400 hover:text-white">
+            <a href="https://www.linkedin.com/company/karrivo/" className="text-gray-400 hover:text-white">
               <Linkedin size={20} />
             </a>
             <a href="#" className="text-gray-400 hover:text-white">
