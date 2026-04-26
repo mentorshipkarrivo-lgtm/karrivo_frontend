@@ -657,7 +657,7 @@ export default function TestimonialsSection() {
           }}
         >
           Grows with{" "}
-          <span style={{ fontStyle: "italic", color: "#2563eb" }}>you!</span>
+          <span style={{ fontStyle: "italic", color: "#0098cc" }}>you!</span>
         </h2>
         <p
           style={{
@@ -671,7 +671,7 @@ export default function TestimonialsSection() {
         >
           Real experiences from professionals who achieved their goals with expert guidance.
         </p>
-        
+
       </div>
 
       {/* Carousel */}

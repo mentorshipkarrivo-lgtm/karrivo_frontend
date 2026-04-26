@@ -60,7 +60,7 @@ const BookingSuccessScreen = ({ mentor, onClose }) => (
       </p>
     </motion.div>
 
-    <motion.button
+    {/* <motion.button
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.22 }}
@@ -68,7 +68,7 @@ const BookingSuccessScreen = ({ mentor, onClose }) => (
       className="w-full max-w-[185px] h-10 rounded-full bg-[#1d8e85] text-white text-[13px] font-semibold hover:bg-[#27a398] active:scale-[0.98] transition-all duration-200"
     >
       View Your Sessions →
-    </motion.button>
+    </motion.button> */}
   </motion.div>
 );
 
@@ -123,7 +123,7 @@ const FreeSessionBanner = ({ hasFreeSession, freeSessionUsed, isLoading, usedSes
     return (
       <div className="rounded-xl overflow-hidden border border-blue-200">
         {/* Top bar */}
-        <div className="bg-[#79dbbc] px-4 py-2 flex items-center gap-2">
+        <div className="bg-[#7da5a2] px-4 py-2 flex items-center gap-2">
           <AlertCircle className="w-3.5 h-3.5 text-[#0a211e] flex-shrink-0" />
           <span className="text-[#0a211e] text-xs font-bold tracking-wide uppercase">
             Free Session Used
@@ -470,8 +470,8 @@ const BookingModal = ({ mentor, isOpen, onClose, selectedSlot }) => {
                       flex items-center justify-center gap-2
                       disabled:opacity-50 disabled:cursor-not-allowed
                       ${hasFreeSession
-                        ? "bg-green-600 hover:bg-green-700"
-                        : "bg-[#062117] hover:bg-[#0a3323]"}
+                        ? "bg-[#0d1f2d]"
+                        : "bg-[#0d1f2d]"}
                     `}
                   >
                     {isCheckingSession ? (

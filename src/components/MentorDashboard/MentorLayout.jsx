@@ -30,7 +30,7 @@ const navigationItems = [
 
     { id: 'availability', label: 'Manage Availability', icon: Clock, route: '/mentor/dashboard/Manage_Availability' },
 
-    { id: 'earnings', label: 'Earnings', icon: BarChart3, route: '/mentor/dashboard/earnings' },
+    // { id: 'earnings', label: 'Earnings', icon: BarChart3, route: '/mentor/dashboard/earnings' },
 
     { id: 'reviews', label: 'Reviews', icon: Star, route: '/mentor/dashboard/reviews' },
 

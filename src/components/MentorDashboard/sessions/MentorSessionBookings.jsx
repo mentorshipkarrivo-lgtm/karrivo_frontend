@@ -1082,8 +1082,74 @@ const SessionDetailModal = ({ session, onClose, formatDate }) => {
 // ══════════════════════════════════════════════════════════════
 // MOBILE CARD  (< md)
 // ══════════════════════════════════════════════════════════════
+// const SessionCard = ({ session, formatDate, onViewDetails }) => (
+//     <div className="bg-[#062117] border border-white/10 rounded-xl p-3.5 flex flex-col gap-3">
+//         {/* Header row */}
+//         <div className="flex items-start justify-between gap-2">
+//             <div className="flex items-center gap-2.5 min-w-0">
+//                 <div className="w-8 h-8 rounded-full bg-[#0098cc]/10 flex items-center justify-center shrink-0">
+//                     <User size={14} className="text-[#0098cc]" />
+//                 </div>
+//                 <div className="min-w-0">
+//                     <p className="text-white text-sm font-semibold truncate leading-tight">{session.menteeName}</p>
+//                     <p className="text-white/40 text-[11px] truncate">{session.menteeEmail}</p>
+//                 </div>
+//             </div>
+//             <StatusBadge status={session.status} />
+//         </div>
+
+//         {/* Topic */}
+//         <div className="bg-[#031610] rounded-lg px-3 py-2">
+//             <p className="text-white/30 text-[10px] uppercase tracking-wider mb-0.5">Topic</p>
+//             <p className="text-white text-sm font-medium leading-snug">{session.topic}</p>
+//             {session.description && (
+//                 <p className="text-white/40 text-xs mt-1 line-clamp-2">{session.description}</p>
+//             )}
+//         </div>
+
+//         {/* Stats grid 2×2 */}
+//         <div className="grid grid-cols-2 gap-2">
+//             <div className="bg-[#031610] rounded-lg p-2.5">
+//                 <p className="text-white/30 text-[10px] mb-1">Date</p>
+//                 <p className="text-white/80 text-xs font-medium">{formatDate(session.sessionDate)}</p>
+//             </div>
+//             <div className="bg-[#031610] rounded-lg p-2.5">
+//                 <p className="text-white/30 text-[10px] mb-1">Time</p>
+//                 <p className="text-white/80 text-xs font-medium flex items-center gap-1">
+//                     <Clock size={9} className="text-[#0098cc]" />
+//                     {session.startTime}
+//                 </p>
+//             </div>
+//             <div className="bg-[#031610] rounded-lg p-2.5">
+//                 <p className="text-white/30 text-[10px] mb-1">Duration</p>
+//                 <p className="text-white/80 text-xs font-medium">{session.durationMinutes} min</p>
+//             </div>
+//             <div className="bg-[#031610] rounded-lg p-2.5">
+//                 <p className="text-white/30 text-[10px] mb-1">Price</p>
+//                 <p className={`text-xs font-semibold ${session.isFreeSession ? 'text-violet-400' : 'text-white'}`}>
+//                     {session.isFreeSession ? 'Free' : session.price}
+//                 </p>
+//             </div>
+//         </div>
+
+//         {/* Footer */}
+//         <div className="flex items-center justify-between pt-0.5">
+//             <PaymentBadge paymentStatus={session.paymentStatus} isFreeSession={session.isFreeSession} />
+//             <button
+//                 onClick={() => onViewDetails(session)}
+//                 className="inline-flex items-center gap-1.5 bg-[#0098cc]/10 hover:bg-[#0098cc]/20 border border-[#0098cc]/20 text-[#0098cc] px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+//             >
+//                 <Eye size={11} />
+//                 Details
+//             </button>
+//         </div>
+//     </div>
+// );
+
 const SessionCard = ({ session, formatDate, onViewDetails }) => (
-    <div className="bg-[#062117] border border-white/10 rounded-xl p-3.5 flex flex-col gap-3">
+    <div className={`bg-[#062117] border border-white/10 rounded-xl p-3.5 flex flex-col gap-3
+    ${session.isExpired ? "opacity-60 grayscale" : ""}`}>
+
         {/* Header row */}
         <div className="flex items-start justify-between gap-2">
             <div className="flex items-center gap-2.5 min-w-0">
@@ -1091,11 +1157,17 @@ const SessionCard = ({ session, formatDate, onViewDetails }) => (
                     <User size={14} className="text-[#0098cc]" />
                 </div>
                 <div className="min-w-0">
-                    <p className="text-white text-sm font-semibold truncate leading-tight">{session.menteeName}</p>
-                    <p className="text-white/40 text-[11px] truncate">{session.menteeEmail}</p>
+                    <p className="text-white text-sm font-semibold truncate leading-tight">
+                        {session.menteeName}
+                    </p>
+                    <p className="text-white/40 text-[11px] truncate">
+                        {session.menteeEmail}
+                    </p>
                 </div>
             </div>
-            <StatusBadge status={session.status} />
+
+            {/* 🔥 FIXED STATUS */}
+            <StatusBadge status={session.isExpired ? "expired" : session.status} />
         </div>
 
         {/* Topic */}
@@ -1107,11 +1179,13 @@ const SessionCard = ({ session, formatDate, onViewDetails }) => (
             )}
         </div>
 
-        {/* Stats grid 2×2 */}
+        {/* Stats */}
         <div className="grid grid-cols-2 gap-2">
             <div className="bg-[#031610] rounded-lg p-2.5">
                 <p className="text-white/30 text-[10px] mb-1">Date</p>
-                <p className="text-white/80 text-xs font-medium">{formatDate(session.sessionDate)}</p>
+                <p className="text-white/80 text-xs font-medium">
+                    {formatDate(session.sessionDate)}
+                </p>
             </div>
             <div className="bg-[#031610] rounded-lg p-2.5">
                 <p className="text-white/30 text-[10px] mb-1">Time</p>
@@ -1122,7 +1196,9 @@ const SessionCard = ({ session, formatDate, onViewDetails }) => (
             </div>
             <div className="bg-[#031610] rounded-lg p-2.5">
                 <p className="text-white/30 text-[10px] mb-1">Duration</p>
-                <p className="text-white/80 text-xs font-medium">{session.durationMinutes} min</p>
+                <p className="text-white/80 text-xs font-medium">
+                    {session.durationMinutes} min
+                </p>
             </div>
             <div className="bg-[#031610] rounded-lg p-2.5">
                 <p className="text-white/30 text-[10px] mb-1">Price</p>
@@ -1134,13 +1210,22 @@ const SessionCard = ({ session, formatDate, onViewDetails }) => (
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-0.5">
-            <PaymentBadge paymentStatus={session.paymentStatus} isFreeSession={session.isFreeSession} />
+            <PaymentBadge
+                paymentStatus={session.paymentStatus}
+                isFreeSession={session.isFreeSession}
+            />
+
             <button
-                onClick={() => onViewDetails(session)}
-                className="inline-flex items-center gap-1.5 bg-[#0098cc]/10 hover:bg-[#0098cc]/20 border border-[#0098cc]/20 text-[#0098cc] px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+                onClick={() => !session.isExpired && onViewDetails(session)}
+                disabled={session.isExpired}
+                className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors
+                ${session.isExpired
+                        ? "bg-gray-500/20 border border-gray-400/20 text-gray-400 cursor-not-allowed opacity-60"
+                        : "bg-[#0098cc]/10 hover:bg-[#0098cc]/20 border border-[#0098cc]/20 text-[#0098cc]"
+                    }`}
             >
                 <Eye size={11} />
-                Details
+                {session.isExpired ? "Expired" : "Details"}
             </button>
         </div>
     </div>
@@ -1149,8 +1234,68 @@ const SessionCard = ({ session, formatDate, onViewDetails }) => (
 // ══════════════════════════════════════════════════════════════
 // TABLET CARD  (md → lg)
 // ══════════════════════════════════════════════════════════════
+// const SessionCardTablet = ({ session, formatDate, onViewDetails }) => (
+//     <div className="bg-[#062117] border border-white/10 rounded-xl p-4 flex gap-4">
+//         {/* Avatar */}
+//         <div className="w-10 h-10 rounded-full bg-[#0098cc]/10 flex items-center justify-center shrink-0 mt-0.5">
+//             <User size={16} className="text-[#0098cc]" />
+//         </div>
+
+//         {/* Main content */}
+//         <div className="flex-1 min-w-0">
+//             {/* Row 1 */}
+//             <div className="flex items-start justify-between gap-3 mb-2">
+//                 <div className="min-w-0">
+//                     <p className="text-white text-sm font-semibold truncate">{session.menteeName}</p>
+//                     <p className="text-white/40 text-xs truncate">{session.menteeEmail}</p>
+//                 </div>
+//                 <div className="flex items-center gap-1.5 shrink-0">
+//                     <StatusBadge status={session.status} />
+//                     <PaymentBadge paymentStatus={session.paymentStatus} isFreeSession={session.isFreeSession} />
+//                 </div>
+//             </div>
+
+//             {/* Topic */}
+//             <p className="text-white/80 text-sm font-medium mb-2 truncate">{session.topic}</p>
+
+//             {/* Row 3 — meta chips */}
+//             <div className="flex items-center gap-3 flex-wrap text-xs text-white/50">
+//                 <span className="flex items-center gap-1">
+//                     <Calendar size={11} className="text-[#0098cc]" />
+//                     {formatDate(session.sessionDate)}
+//                 </span>
+//                 <span className="flex items-center gap-1">
+//                     <Clock size={11} className="text-[#0098cc]" />
+//                     {session.startTime}
+//                 </span>
+//                 <span className="flex items-center gap-1">
+//                     <Timer size={11} className="text-[#0098cc]" />
+//                     {session.durationMinutes} min
+//                 </span>
+//                 <span className={`font-semibold ${session.isFreeSession ? 'text-violet-400' : 'text-white/70'}`}>
+//                     {session.isFreeSession ? 'Free' : session.price}
+//                 </span>
+//             </div>
+//         </div>
+
+//         {/* Action */}
+//         <div className="shrink-0 flex items-center">
+//             <button
+//                 onClick={() => onViewDetails(session)}
+//                 className="inline-flex items-center gap-1.5 bg-[#0098cc]/10 hover:bg-[#0098cc]/20 border border-[#0098cc]/20 text-[#0098cc] px-3 py-2 rounded-lg text-xs font-semibold transition-colors"
+//             >
+//                 <Eye size={12} />
+//                 Details
+//             </button>
+//         </div>
+//     </div>
+// );
+
+
 const SessionCardTablet = ({ session, formatDate, onViewDetails }) => (
-    <div className="bg-[#062117] border border-white/10 rounded-xl p-4 flex gap-4">
+    <div className={`bg-[#062117] border border-white/10 rounded-xl p-4 flex gap-4
+    ${session.isExpired ? "opacity-60 grayscale" : ""}`}>
+
         {/* Avatar */}
         <div className="w-10 h-10 rounded-full bg-[#0098cc]/10 flex items-center justify-center shrink-0 mt-0.5">
             <User size={16} className="text-[#0098cc]" />
@@ -1158,22 +1303,31 @@ const SessionCardTablet = ({ session, formatDate, onViewDetails }) => (
 
         {/* Main content */}
         <div className="flex-1 min-w-0">
+
             {/* Row 1 */}
             <div className="flex items-start justify-between gap-3 mb-2">
                 <div className="min-w-0">
                     <p className="text-white text-sm font-semibold truncate">{session.menteeName}</p>
                     <p className="text-white/40 text-xs truncate">{session.menteeEmail}</p>
                 </div>
+
                 <div className="flex items-center gap-1.5 shrink-0">
-                    <StatusBadge status={session.status} />
-                    <PaymentBadge paymentStatus={session.paymentStatus} isFreeSession={session.isFreeSession} />
+                    {/* 🔥 FIXED STATUS */}
+                    <StatusBadge status={session.isExpired ? "expired" : session.status} />
+
+                    <PaymentBadge
+                        paymentStatus={session.paymentStatus}
+                        isFreeSession={session.isFreeSession}
+                    />
                 </div>
             </div>
 
             {/* Topic */}
-            <p className="text-white/80 text-sm font-medium mb-2 truncate">{session.topic}</p>
+            <p className="text-white/80 text-sm font-medium mb-2 truncate">
+                {session.topic}
+            </p>
 
-            {/* Row 3 — meta chips */}
+            {/* Meta */}
             <div className="flex items-center gap-3 flex-wrap text-xs text-white/50">
                 <span className="flex items-center gap-1">
                     <Calendar size={11} className="text-[#0098cc]" />
@@ -1196,15 +1350,21 @@ const SessionCardTablet = ({ session, formatDate, onViewDetails }) => (
         {/* Action */}
         <div className="shrink-0 flex items-center">
             <button
-                onClick={() => onViewDetails(session)}
-                className="inline-flex items-center gap-1.5 bg-[#0098cc]/10 hover:bg-[#0098cc]/20 border border-[#0098cc]/20 text-[#0098cc] px-3 py-2 rounded-lg text-xs font-semibold transition-colors"
+                onClick={() => !session.isExpired && onViewDetails(session)}
+                disabled={session.isExpired}
+                className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-colors
+                ${session.isExpired
+                        ? "bg-gray-500/20 border border-gray-400/20 text-gray-400 cursor-not-allowed opacity-60"
+                        : "bg-[#0098cc]/10 hover:bg-[#0098cc]/20 border border-[#0098cc]/20 text-[#0098cc]"
+                    }`}
             >
                 <Eye size={12} />
-                Details
+                {session.isExpired ? "Expired" : "Details"}
             </button>
         </div>
     </div>
 );
+
 
 // ══════════════════════════════════════════════════════════════
 // STAT PILL
@@ -1219,7 +1379,7 @@ const StatPill = ({ label, value, valueClass = 'text-white' }) => (
 // ══════════════════════════════════════════════════════════════
 // FILTERS
 // ══════════════════════════════════════════════════════════════
-const FILTERS = ['all', 'confirmed', 'pending', 'cancelled', 'completed'];
+const FILTERS = ['all', 'confirmed'];
 
 // ══════════════════════════════════════════════════════════════
 // MAIN COMPONENT
@@ -1250,7 +1410,9 @@ const MentorSessionBookings = () => {
 
     const filteredSessions = filter === 'all'
         ? sessions
-        : sessions.filter(s => s.status === filter);
+        : sessions.filter(s =>
+            (s.isExpired ? "expired" : s.status) === filter
+        );
 
     // Lock body scroll when modal open
     useEffect(() => {
@@ -1340,8 +1502,8 @@ const MentorSessionBookings = () => {
                                 key={f}
                                 onClick={() => { setFilter(f); setMobileFilterOpen(false); }}
                                 className={`w-full text-left px-4 py-2.5 text-sm capitalize transition-colors ${filter === f
-                                        ? 'bg-[#0098cc]/20 text-[#0098cc] font-semibold'
-                                        : 'text-white/60 hover:bg-white/5 hover:text-white'
+                                    ? 'bg-[#0098cc]/20 text-[#0098cc] font-semibold'
+                                    : 'text-white/60 hover:bg-white/5 hover:text-white'
                                     }`}
                             >
                                 {f === 'all' ? 'All Sessions' : f}
@@ -1363,8 +1525,8 @@ const MentorSessionBookings = () => {
                             key={f}
                             onClick={() => setFilter(f)}
                             className={`inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 rounded-lg text-xs sm:text-sm font-semibold transition-all capitalize ${filter === f
-                                    ? 'bg-[#0098cc] text-white'
-                                    : 'bg-[#062117] border border-white/10 text-white/50 hover:text-white hover:border-white/20'
+                                ? 'bg-[#0098cc] text-white'
+                                : 'bg-[#062117] border border-white/10 text-white/50 hover:text-white hover:border-white/20'
                                 }`}
                         >
                             {f}
@@ -1494,7 +1656,7 @@ const MentorSessionBookings = () => {
 
                                             {/* Status */}
                                             <td className="px-3 xl:px-4 py-3.5 whitespace-nowrap">
-                                                <StatusBadge status={session.status} />
+                                                <StatusBadge status={session.isExpired ? "expired" : session.status} />
                                             </td>
 
                                             {/* Payment */}
@@ -1514,11 +1676,16 @@ const MentorSessionBookings = () => {
                                             {/* Action */}
                                             <td className="px-3 xl:px-4 py-3.5 whitespace-nowrap">
                                                 <button
-                                                    onClick={() => setSelectedSession(session)}
-                                                    className="inline-flex items-center gap-1.5 bg-[#0098cc]/10 hover:bg-[#0098cc]/20 border border-[#0098cc]/20 text-[#0098cc] px-2.5 xl:px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"
+                                                    onClick={() => !session.isExpired && setSelectedSession(session)}
+                                                    disabled={session.isExpired}
+                                                    className={`inline-flex items-center gap-1.5 px-2.5 xl:px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors
+        ${session.isExpired
+                                                            ? "bg-gray-500/20 border border-gray-400/20 text-gray-400 cursor-not-allowed opacity-60"
+                                                            : "bg-[#0098cc]/10 hover:bg-[#0098cc]/20 border border-[#0098cc]/20 text-[#0098cc]"
+                                                        }`}
                                                 >
                                                     <Eye size={11} />
-                                                    View
+                                                    {session.isExpired ? "Expired" : "View"}
                                                 </button>
                                             </td>
                                         </tr>

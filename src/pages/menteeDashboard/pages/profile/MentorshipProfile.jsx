@@ -1,5 +1,3 @@
-
-
 // import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 // import {
@@ -186,12 +184,12 @@
 //     const [status, setStatus] = useState('idle');
 //     const [errMsg, setErrMsg] = useState('');
 //     const [preview, setPreview] = useState(currentUrl);
-//     const [dragging, setDragging] = useState(false);   // ← NEW
+//     const [dragging, setDragging] = useState(false);
 //     const inputRef = useRef(null);
 
 //     useEffect(() => { setPreview(currentUrl); }, [currentUrl]);
 
-//     const handleFile = useCallback((file) => {    // ← useCallback like Code 2
+//     const handleFile = useCallback((file) => {
 //         if (!file) return;
 //         if (!ALLOWED_TYPES.includes(file.type)) { setErrMsg('Only JPG, PNG, WebP allowed.'); setStatus('error'); return; }
 //         if (file.size > MAX_MB * 1024 * 1024) { setErrMsg(`Max ${MAX_MB}MB allowed.`); setStatus('error'); return; }
@@ -215,9 +213,8 @@
 //                 } catch { setErrMsg('Could not get download URL.'); setStatus('error'); }
 //             }
 //         );
-//     }, [userId, currentUrl, onUpload]);   // ← deps like Code 2
+//     }, [userId, currentUrl, onUpload]);
 
-//     // ── NEW: drag and drop handlers ──
 //     const onDrop = useCallback(e => { e.preventDefault(); setDragging(false); handleFile(e.dataTransfer.files?.[0]); }, [handleFile]);
 //     const onDragOver = e => { e.preventDefault(); setDragging(true); };
 //     const onDragLeave = () => setDragging(false);
@@ -237,9 +234,9 @@
 //         <div className="flex flex-col gap-2">
 //             <label className="text-sm font-semibold text-gray-800">Profile Photo</label>
 //             <div
-//                 onDrop={onDrop}           // ← NEW
-//                 onDragOver={onDragOver}   // ← NEW
-//                 onDragLeave={onDragLeave} // ← NEW
+//                 onDrop={onDrop}
+//                 onDragOver={onDragOver}
+//                 onDragLeave={onDragLeave}
 //                 onClick={() => !isUploading && inputRef.current?.click()}
 //                 className={`w-full rounded-xl border-2 border-dashed cursor-pointer transition-colors
 //                     ${dragging ? 'border-blue-400 bg-blue-50/40' : ''}
@@ -285,11 +282,11 @@
 //                                 <><p className="text-sm font-medium text-gray-600">Photo ready</p><p className="text-xs text-gray-400">Click to replace</p></>
 //                             )}
 //                         </div>
-//                         {!isUploading && (
+//                         {/* {!isUploading && (
 //                             <button type="button" onClick={clear} className="flex-shrink-0 p-1.5 rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-colors">
 //                                 <X size={13} />
 //                             </button>
-//                         )}
+//                         )} */}
 //                     </div>
 //                 ) : (
 //                     <div className="text-center py-6 px-4">
@@ -297,7 +294,7 @@
 //                             <Camera size={18} className="text-blue-600" />
 //                         </div>
 //                         <p className="text-sm font-semibold text-gray-700 mb-0.5">
-//                             {dragging ? 'Drop to upload' : 'Upload Profile Photo'}  {/* ← NEW */}
+//                             {dragging ? 'Drop to upload' : 'Upload Profile Photo'}
 //                         </p>
 //                         <p className="text-xs text-gray-400">Drag & drop or click · JPG PNG WebP · Max {MAX_MB}MB</p>
 //                     </div>
@@ -328,16 +325,8 @@
 //     useEffect(() => { setCurrentSection(section); }, [section]);
 
 //     useEffect(() => {
-//         // let cookieStatus = '';
-//         // try {
-//         //     const cookieRaw = Cookies.get("profileData");
-//         //     if (cookieRaw) {
-//         //         const parsed = JSON.parse(decodeURIComponent(cookieRaw));
-//         //         cookieStatus = parsed?.status || '';
-//         //     }
-//         // } catch { }
-
 //         const isFresher = (profileData?.currentStatus || '').toLowerCase() === 'fresher';
+
 //         if (isOpen && profileData) {
 //             setFormData({
 //                 fullName: profileData.fullName || '',
@@ -453,7 +442,7 @@
 //                 city: formData.city,
 //                 country: formData.country,
 //                 linkedinUrl: formData.linkedinUrl,
-//                 profilePhotoUrl: formData.profilePhotoUrl,  // ← included here
+//                 profilePhotoUrl: formData.profilePhotoUrl,
 //             };
 //         } else if (currentSection === 'experience') {
 //             return {
@@ -525,13 +514,11 @@
 //         <div className="space-y-5">
 //             <h3 className="text-base font-bold text-gray-800 pb-2 border-b border-gray-100">Basic Information</h3>
 
-//             {/* ── Profile Photo Upload ── */}
 //             <ProfilePhotoUpload
 //                 currentUrl={formData.profilePhotoUrl || ''}
 //                 onUpload={async url => {
 //                     setFormData(prev => ({ ...prev, profilePhotoUrl: url }));
 //                     onPhotoUpload?.(url);
-//                     // Auto-save immediately so it persists on refresh
 //                     if (url) {
 //                         await onSave({ profilePhotoUrl: url }, false);
 //                     }
@@ -569,12 +556,8 @@
 //     );
 
 //     const renderExperienceSection = () => {
-//         // let cookieStatus = '';
-//         // try {
-//         //     const raw = Cookies.get("profileData");
-//         //     if (raw) cookieStatus = JSON.parse(decodeURIComponent(raw))?.status || '';
-//         // } catch { }
 //         const isFresher = (profileData?.currentStatus || '').toLowerCase() === 'fresher';
+
 //         return (
 //             <div className="space-y-5">
 //                 <h3 className="text-base font-bold text-gray-800 pb-2 border-b border-gray-100">Professional Experience</h3>
@@ -616,46 +599,36 @@
 //                             placeholder="e.g., Frontend Developer" className={inputErrClass('role')} />
 //                     </FormField>
 
-//                     {(() => {
-//                         // let cookieStatus = '';
-//                         // try {
-//                         //     const raw = Cookies.get("profileData");
-//                         //     if (raw) cookieStatus = JSON.parse(decodeURIComponent(raw))?.status || '';
-//                         // } catch { }
-//                         const isFresher = (profileData?.currentStatus || '').toLowerCase() === 'fresher';
-//                         return (
-//                             <FormField
-//                                 label="Years of Experience"
-//                                 required
-//                                 hint={isFresher ? undefined : "Enter 0 if you're a student or fresher"}
-//                                 error={errors.yearsOfExperience}
-//                             >
-//                                 {isFresher ? (
-//                                     <div>
-//                                         <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg border border-blue-200 bg-blue-50">
-//                                             <CheckCircle size={14} className="text-blue-600 flex-shrink-0" />
-//                                             <span className="text-sm font-semibold text-blue-800">0 years</span>
-//                                             <span className="ml-auto text-xs bg-blue-600 text-white px-2 py-0.5 rounded-full font-medium">Fresher</span>
-//                                         </div>
-//                                         <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
-//                                             <AlertCircle size={11} />Auto-filled as 0 because your profile status is Fresher.
-//                                         </p>
-//                                         <input type="hidden" name="yearsOfExperience" value={0} />
-//                                     </div>
-//                                 ) : (
-//                                     <input
-//                                         name="yearsOfExperience"
-//                                         type="number"
-//                                         min="0"
-//                                         value={formData.yearsOfExperience}
-//                                         onChange={handleChange}
-//                                         placeholder="e.g., 3"
-//                                         className={inputErrClass('yearsOfExperience')}
-//                                     />
-//                                 )}
-//                             </FormField>
-//                         );
-//                     })()}
+//                     <FormField
+//                         label="Years of Experience"
+//                         required
+//                         hint={isFresher ? undefined : "Enter 0 if you're a student or fresher"}
+//                         error={errors.yearsOfExperience}
+//                     >
+//                         {isFresher ? (
+//                             <div>
+//                                 <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg border border-blue-200 bg-blue-50">
+//                                     <CheckCircle size={14} className="text-blue-600 flex-shrink-0" />
+//                                     <span className="text-sm font-semibold text-blue-800">0 years</span>
+//                                     <span className="ml-auto text-xs text-white px-2 py-0.5 rounded-full font-medium">Fresher</span>
+//                                 </div>
+//                                 <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+//                                     <AlertCircle size={11} />Auto-filled as 0 because your profile status is Fresher.
+//                                 </p>
+//                                 <input type="hidden" name="yearsOfExperience" value={0} />
+//                             </div>
+//                         ) : (
+//                             <input
+//                                 name="yearsOfExperience"
+//                                 type="number"
+//                                 min="0"
+//                                 value={formData.yearsOfExperience}
+//                                 onChange={handleChange}
+//                                 placeholder="e.g., 3"
+//                                 className={inputErrClass('yearsOfExperience')}
+//                             />
+//                         )}
+//                     </FormField>
 
 //                     {!isFresher && (
 //                         <FormField label="Current Company">
@@ -666,7 +639,7 @@
 //                     <FormField label="Highest Education" required error={errors.highestEducation}>
 //                         <select name="highestEducation" value={formData.highestEducation} onChange={handleChange} className={selectClass('highestEducation')}>
 //                             <option value="">Select education level</option>
-//                             {["High School", "Diploma", "Bachelor's Degree", "Master's Degree", "PhD", "Other"].map(o => (
+//                             {["High School", "Diploma", "Bachelors Degree", "Masters Degree", "PhD", "Other"].map(o => (
 //                                 <option key={o} value={o}>{o}</option>
 //                             ))}
 //                         </select>
@@ -841,7 +814,6 @@
 //     return (
 //         <div className="fixed inset-0 bg-black/60 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 overflow-y-auto">
 //             <div className="bg-white w-full sm:rounded-xl sm:max-w-3xl max-h-screen sm:max-h-[92vh] flex flex-col shadow-2xl sm:my-4">
-//                 {/* Header */}
 //                 <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 flex-shrink-0">
 //                     <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
 //                         <CiEdit className="text-blue-600 text-xl" /> Edit Profile
@@ -851,31 +823,27 @@
 //                     </button>
 //                 </div>
 
-//                 <div className="flex flex-1 min-h-0 flex-col sm:flex-row">
-//                     {/* Sidebar nav */}
-//                     <div className="sm:w-48 flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-100 bg-gray-50/40 sm:rounded-bl-xl">
-//                         <nav className="flex sm:flex-col gap-1 p-3 overflow-x-auto sm:overflow-x-visible">
-//                             {navItems.map(({ id, label, icon }) => (
-//                                 <button
-//                                     key={id} type="button"
-//                                     onClick={() => { setCurrentSection(id); setErrors({}); }}
-//                                     className={`flex items-center gap-2 flex-shrink-0 sm:flex-shrink px-3 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap
+//                 <div className="flex flex-1 min-h-0 flex-col sm:flex-row sm:min-h-[450px]">                    <div className="sm:w-48 flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-100 bg-gray-50/40 sm:rounded-bl-xl">
+//                     <nav className="flex sm:flex-col gap-1 p-3 overflow-x-auto sm:overflow-x-visible">
+//                         {navItems.map(({ id, label, icon }) => (
+//                             <button
+//                                 key={id} type="button"
+//                                 onClick={() => { setCurrentSection(id); setErrors({}); }}
+//                                 className={`flex items-center gap-2 flex-shrink-0 sm:flex-shrink px-3 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap
 //                                         ${currentSection === id ? 'bg-blue-600 text-white shadow-sm' : 'text-gray-500 hover:bg-gray-200 hover:text-gray-700'}`}
-//                                 >
-//                                     {icon}
-//                                     <span>{label}</span>
-//                                 </button>
-//                             ))}
-//                         </nav>
-//                     </div>
+//                             >
+//                                 {icon}
+//                                 <span>{label}</span>
+//                             </button>
+//                         ))}
+//                     </nav>
+//                 </div>
 
-//                     {/* Content */}
 //                     <div className="flex-1 min-h-0 overflow-y-auto p-5">
 //                         {renderContent()}
 //                     </div>
 //                 </div>
 
-//                 {/* Footer */}
 //                 <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 px-5 py-4 border-t border-gray-100 bg-gray-50/40 flex-shrink-0 sm:rounded-b-xl">
 //                     <button
 //                         type="button" onClick={onClose} disabled={isSaving}
@@ -988,7 +956,7 @@
 //     const [isEditingProfile, setIsEditingProfile] = useState(false);
 //     const [isEditingGoals, setIsEditingGoals] = useState(false);
 //     const [editSection, setEditSection] = useState('about');
-//     const [livePhotoUrl, setLivePhotoUrl] = useState('');   // ← ADD THIS
+//     const [livePhotoUrl, setLivePhotoUrl] = useState('');
 
 //     const userData = JSON.parse(Cookies.get("userData") || "{}");
 //     const useremail = JSON.parse(localStorage.getItem("userData") || "{}");
@@ -1023,7 +991,6 @@
 //             await refetch();
 //             if (shouldClose) setTimeout(handleCloseModal, 200);
 //         } catch {
-//             // Don't alert for background photo saves — only for explicit user saves
 //             if (shouldClose) alert("Failed to save profile. Please try again.");
 //         }
 //     };
@@ -1039,7 +1006,6 @@
 //                 <AlertCircle className="text-red-400 h-12 w-12 mx-auto mb-4" />
 //                 <h2 className="text-xl font-bold text-gray-900 mb-2">Couldn't Load Profile</h2>
 //                 <p className="text-gray-500 text-sm mb-5">{error?.data?.message || "Please try again."}</p>
-//                 {/* <button onClick={() => refetch()} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors text-sm font-medium">Retry</button> */}
 //             </div>
 //         </div>
 //     );
@@ -1052,6 +1018,7 @@
 //         city: profileData?.city || (userData?.address !== 'N/A' ? userData?.address : '') || '',
 //         country: profileData?.country || '',
 //         state: profileData?.state || '',
+//         currentStatus: profileData?.currentStatus || '',
 //         highestEducation: profileData?.highestEducation || (userData?.education ? mapEducation(userData.education) : ''),
 //         role: profileData?.role || (() => {
 //             if (userData?.role === 1) return 'Mentee';
@@ -1061,7 +1028,7 @@
 //         })(),
 //         yearsOfExperience: (profileData?.yearsOfExperience != null)
 //             ? profileData.yearsOfExperience
-//             : (['fresher', 'student'].includes(userData?.status?.toLowerCase()) ? 0 : null),
+//             : ((profileData?.currentStatus || '').toLowerCase() === 'fresher' ? 0 : null),
 //         domain: profileData?.domain || '',
 //         linkedinUrl: profileData?.linkedinUrl || '',
 //         skills: Array.isArray(profileData?.skills) ? profileData.skills : [],
@@ -1077,8 +1044,7 @@
 //         targetCompanies: Array.isArray(profileData?.targetCompanies) ? profileData.targetCompanies : [],
 //         prepTimeline: profileData?.prepTimeline || '',
 //         resumeDriveLink: profileData?.resumeDriveLink || '',
-//         profilePhotoUrl: livePhotoUrl || profileData?.profilePhotoUrl || '',  // ← CHANGE THIS LINE
-
+//         profilePhotoUrl: livePhotoUrl || profileData?.profilePhotoUrl || '',
 //     };
 
 //     const completionFields = [
@@ -1106,7 +1072,6 @@
 
 //     const isNewProfile = profileData === null;
 
-//     // ── Avatar: real photo → Google photo → initials ──────────────────────
 //     const avatarSrc = profile.profilePhotoUrl || googleUser?.profile || '';
 //     const initials = (profile.fullName || userData?.name || 'U')
 //         .split(' ').slice(0, 2).map(w => w[0].toUpperCase()).join('');
@@ -1134,10 +1099,8 @@
 
 //                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 lg:gap-6">
 
-//                     {/* ── LEFT / MAIN COLUMN ────────────────────────────────────────── */}
 //                     <div className="lg:col-span-2 space-y-5">
 
-//                         {/* Profile Identity Card */}
 //                         <SectionCard
 //                             title="My Profile"
 //                             subtitle="Your profile is shared with mentors. Keep it updated."
@@ -1147,7 +1110,6 @@
 //                         >
 //                             <div className="flex flex-col sm:flex-row gap-5 sm:gap-6 items-start">
 
-//                                 {/* ── Avatar (no hover upload — handled in modal) ── */}
 //                                 <div className="relative flex-shrink-0">
 //                                     {avatarSrc ? (
 //                                         <img
@@ -1157,7 +1119,6 @@
 //                                             onError={e => { e.currentTarget.style.display = 'none'; e.currentTarget.nextSibling.style.display = 'flex'; }}
 //                                         />
 //                                     ) : null}
-//                                     {/* Initials fallback — shown when no photo or img fails */}
 //                                     <div
 //                                         className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-gray-100 bg-blue-100 items-center justify-center"
 //                                         style={{ display: avatarSrc ? 'none' : 'flex' }}
@@ -1165,7 +1126,6 @@
 //                                         <span className="text-blue-700 font-bold text-xl sm:text-2xl">{initials}</span>
 //                                     </div>
 
-//                                     {/* Edit icon — opens modal on About tab */}
 //                                     <button
 //                                         onClick={() => handleEditProfile('about')}
 //                                         title="Change photo"
@@ -1228,7 +1188,6 @@
 //                             )}
 //                         </SectionCard>
 
-//                         {/* Goals & Expectations Card */}
 //                         <SectionCard
 //                             title="Goals & Expectations"
 //                             subtitle="What you'd like to achieve through Long Term Mentorship."
@@ -1269,7 +1228,6 @@
 //                             )}
 //                         </SectionCard>
 
-//                         {/* Additional Details Card */}
 //                         <SectionCard
 //                             title="Additional Details"
 //                             onEdit={() => handleEditProfile('experience')}
@@ -1311,7 +1269,6 @@
 //                         </SectionCard>
 //                     </div>
 
-//                     {/* ── RIGHT SIDEBAR ───────────────────────────────────────────── */}
 //                     <div className="space-y-5 lg:sticky lg:top-6 lg:self-start">
 //                         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
 //                             <div className="flex items-center justify-between mb-4">
@@ -1372,8 +1329,7 @@
 //                 onSave={handleSave}
 //                 isSaving={isSaving}
 //                 userId={useremail._id}
-//                 onPhotoUpload={setLivePhotoUrl}   // ← ADD THIS PROP
-
+//                 onPhotoUpload={setLivePhotoUrl}
 //             />
 //         </div>
 //     );
@@ -1381,9 +1337,7 @@
 
 // export default MentorshipProfile;
 
-
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-
 import {
     Mail, X, Plus, Phone, Linkedin, Target, Heart, CheckCircle,
     Camera, Trash2, Circle, Edit, Loader2, AlertCircle, ChevronRight,
@@ -1399,41 +1353,34 @@ import Loader from '../../../../global/Loader';
 import { storage } from "../../../../../firebase";
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 
-// ── DOMAIN OPTIONS ───────────────────────────────────────────────────────────
+// ── CONSTANTS ─────────────────────────────────────────────────────────────────
 const DOMAIN_OPTIONS = [
-    "Software Development",
-    "Data Science & AI",
-    "Cybersecurity",
-    "Cloud Computing",
-    "Networking & Infrastructure",
-    "Database Management",
-    "UI/UX & Product Design",
-    "Enterprise Applications",
-    "Microservices & DevOps",
-    "Blockchain & FinTech",
-    "Testing & Quality Assurance",
-    "IT Service Management",
-    "Business Intelligence",
-    "IoT (Internet of Things)",
+    "Software Development", "Data Science & AI", "Cybersecurity", "Cloud Computing",
+    "Networking & Infrastructure", "Database Management", "UI/UX & Product Design",
+    "Enterprise Applications", "Microservices & DevOps", "Blockchain & FinTech",
+    "Testing & Quality Assurance", "IT Service Management", "Business Intelligence", "IoT (Internet of Things)",
 ];
 
 const TARGET_COMPANY_OPTIONS = [
-    "Service-Based Companies",
-    "Consulting Firms",
-    "Product-Based Companies",
-    "Startups & Scaleups",
-    "Core Engineering & R&D",
-    "Financial & Banking IT",
-    "FAANG & MAANG",
+    "Service-Based Companies", "Consulting Firms", "Product-Based Companies",
+    "Startups & Scaleups", "Core Engineering & R&D", "Financial & Banking IT", "FAANG & MAANG",
 ];
 
-// ── MAPPERS ──────────────────────────────────────────────────────────────────
+const COLORS = {
+    primary: '#0098cc',
+    primaryDark: '#007aa8',
+    primaryLight: '#f0f8ff',
+    error: '#ef4444',
+    success: '#10b981',
+};
+
+// ── UTILITIES ─────────────────────────────────────────────────────────────────
 const mapEducation = (val = '') => {
     const map = {
         bachelors: "Bachelor's Degree", bachelor: "Bachelor's Degree",
         masters: "Master's Degree", master: "Master's Degree",
-        phd: "PhD", diploma: "Diploma",
-        highschool: "High School", 'high school': "High School", other: "Other",
+        phd: "PhD", diploma: "Diploma", highschool: "High School",
+        'high school': "High School", other: "Other",
     };
     return map[val.toLowerCase()] || val;
 };
@@ -1446,16 +1393,17 @@ const mapStatus = (val = '') => {
     return map[val.toLowerCase()] || val;
 };
 
-// ── TAG PILL ─────────────────────────────────────────────────────────────────
-const TagPill = ({ label, onRemove, color = 'blue' }) => {
-    const colors = {
-        blue: 'bg-blue-50 text-blue-700 border-blue-200',
-        indigo: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-        purple: 'bg-purple-50 text-purple-700 border-purple-200',
-        green: 'bg-green-50 text-green-700 border-green-200',
+// ── REUSABLE COMPONENTS ───────────────────────────────────────────────────────
+
+const TagPill = ({ label, onRemove, variant = 'blue' }) => {
+    const variants = {
+        blue: { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200' },
+        indigo: { bg: 'bg-indigo-50', text: 'text-indigo-700', border: 'border-indigo-200' },
+        green: { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200' },
     };
+    const style = variants[variant];
     return (
-        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border ${colors[color]}`}>
+        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium border ${style.bg} ${style.text} ${style.border}`}>
             {label}
             {onRemove && (
                 <button onClick={onRemove} className="ml-0.5 hover:opacity-70 transition-opacity leading-none text-base">×</button>
@@ -1464,90 +1412,6 @@ const TagPill = ({ label, onRemove, color = 'blue' }) => {
     );
 };
 
-// ── TAG INPUT ROW ─────────────────────────────────────────────────────────────
-const TagInputRow = ({ placeholder, value, onChange, onAdd }) => (
-    <div className="flex gap-2 mt-2">
-        <input
-            value={value}
-            onChange={e => onChange(e.target.value)}
-            onKeyPress={e => { if (e.key === 'Enter') { e.preventDefault(); onAdd(); } }}
-            placeholder={placeholder}
-            className="flex-1 min-w-0 px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
-        />
-        <button
-            type="button"
-            onClick={onAdd}
-            className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex-shrink-0"
-        >
-            Add
-        </button>
-    </div>
-);
-
-// ── DROPDOWN TAG SELECTOR ─────────────────────────────────────────────────────
-const DropdownTagSelector = ({ options, selected, onAdd, placeholder, allowOther = false }) => {
-    const [val, setVal] = useState('');
-    const [customVal, setCustomVal] = useState('');
-    const available = options.filter(o => !selected.includes(o));
-    const isOther = val === '__other__';
-
-    const handleAdd = () => {
-        const finalVal = isOther ? customVal.trim() : val;
-        if (finalVal && !selected.includes(finalVal)) {
-            onAdd(finalVal);
-            setVal('');
-            setCustomVal('');
-        }
-    };
-
-    return (
-        <div className="mt-2 space-y-2">
-            <div className="flex gap-2">
-                <select
-                    value={val}
-                    onChange={e => { setVal(e.target.value); setCustomVal(''); }}
-                    className="flex-1 min-w-0 px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-white transition"
-                >
-                    <option value="">{placeholder || 'Select an option'}</option>
-                    {available.map(o => <option key={o} value={o}>{o}</option>)}
-                    {allowOther && <option value="__other__">Other (specify below)</option>}
-                </select>
-                {!isOther && (
-                    <button
-                        type="button"
-                        onClick={handleAdd}
-                        disabled={!val}
-                        className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex-shrink-0 disabled:opacity-40"
-                    >
-                        Add
-                    </button>
-                )}
-            </div>
-            {isOther && (
-                <div className="flex gap-2">
-                    <input
-                        value={customVal}
-                        onChange={e => setCustomVal(e.target.value)}
-                        onKeyPress={e => { if (e.key === 'Enter') { e.preventDefault(); handleAdd(); } }}
-                        placeholder="Type your custom option..."
-                        className="flex-1 min-w-0 px-3 py-2 text-sm border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-blue-50/40 transition"
-                        autoFocus
-                    />
-                    <button
-                        type="button"
-                        onClick={handleAdd}
-                        disabled={!customVal.trim()}
-                        className="px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium flex-shrink-0 disabled:opacity-40"
-                    >
-                        Add
-                    </button>
-                </div>
-            )}
-        </div>
-    );
-};
-
-// ── FORM FIELD ────────────────────────────────────────────────────────────────
 const FormField = ({ label, required, children, hint, error }) => (
     <div className="flex flex-col gap-1">
         <label className="text-sm font-semibold text-gray-800">
@@ -1556,6 +1420,13 @@ const FormField = ({ label, required, children, hint, error }) => (
         {children}
         {hint && !error && <p className="text-xs text-gray-500">{hint}</p>}
         {error && <p className="text-xs text-red-500 flex items-center gap-1"><AlertCircle size={11} />{error}</p>}
+    </div>
+);
+
+const InfoRow = ({ icon, children }) => (
+    <div className="flex items-center gap-2 text-gray-600 text-sm min-w-0">
+        <span className="flex-shrink-0 text-gray-400">{icon}</span>
+        <span className="truncate">{children}</span>
     </div>
 );
 
@@ -1600,15 +1471,6 @@ const ProfilePhotoUpload = ({ currentUrl = '', onUpload, userId = 'user' }) => {
     }, [userId, currentUrl, onUpload]);
 
     const onDrop = useCallback(e => { e.preventDefault(); setDragging(false); handleFile(e.dataTransfer.files?.[0]); }, [handleFile]);
-    const onDragOver = e => { e.preventDefault(); setDragging(true); };
-    const onDragLeave = () => setDragging(false);
-
-    const clear = (e) => {
-        e?.stopPropagation();
-        setPreview(''); setStatus('idle'); setProgress(0); setErrMsg('');
-        onUpload?.('');
-        if (inputRef.current) inputRef.current.value = '';
-    };
 
     const isUploading = status === 'uploading';
     const isDone = status === 'done';
@@ -1619,8 +1481,8 @@ const ProfilePhotoUpload = ({ currentUrl = '', onUpload, userId = 'user' }) => {
             <label className="text-sm font-semibold text-gray-800">Profile Photo</label>
             <div
                 onDrop={onDrop}
-                onDragOver={onDragOver}
-                onDragLeave={onDragLeave}
+                onDragOver={e => { e.preventDefault(); setDragging(true); }}
+                onDragLeave={() => setDragging(false)}
                 onClick={() => !isUploading && inputRef.current?.click()}
                 className={`w-full rounded-xl border-2 border-dashed cursor-pointer transition-colors
                     ${dragging ? 'border-blue-400 bg-blue-50/40' : ''}
@@ -1653,11 +1515,11 @@ const ProfilePhotoUpload = ({ currentUrl = '', onUpload, userId = 'user' }) => {
                             {isUploading ? (
                                 <>
                                     <div className="flex items-center gap-2 mb-2">
-                                        <Loader2 size={13} className="animate-spin text-blue-600" />
+                                        <Loader2 size={13} className="animate-spin" style={{ color: COLORS.primary }} />
                                         <span className="text-sm font-medium text-gray-600">Uploading… {progress}%</span>
                                     </div>
                                     <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                                        <div className="h-1.5 bg-blue-600 rounded-full transition-all duration-200" style={{ width: `${progress}%` }} />
+                                        <div className="h-1.5 rounded-full transition-all duration-200" style={{ width: `${progress}%`, backgroundColor: COLORS.primary }} />
                                     </div>
                                 </>
                             ) : isDone ? (
@@ -1666,16 +1528,11 @@ const ProfilePhotoUpload = ({ currentUrl = '', onUpload, userId = 'user' }) => {
                                 <><p className="text-sm font-medium text-gray-600">Photo ready</p><p className="text-xs text-gray-400">Click to replace</p></>
                             )}
                         </div>
-                        {/* {!isUploading && (
-                            <button type="button" onClick={clear} className="flex-shrink-0 p-1.5 rounded-lg bg-red-50 border border-red-200 text-red-500 hover:bg-red-100 transition-colors">
-                                <X size={13} />
-                            </button>
-                        )} */}
                     </div>
                 ) : (
                     <div className="text-center py-6 px-4">
-                        <div className="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center mx-auto mb-3">
-                            <Camera size={18} className="text-blue-600" />
+                        <div className="w-10 h-10 rounded-xl border flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: COLORS.primaryLight, borderColor: COLORS.primary }}>
+                            <Camera size={18} style={{ color: COLORS.primary }} />
                         </div>
                         <p className="text-sm font-semibold text-gray-700 mb-0.5">
                             {dragging ? 'Drop to upload' : 'Upload Profile Photo'}
@@ -1690,6 +1547,96 @@ const ProfilePhotoUpload = ({ currentUrl = '', onUpload, userId = 'user' }) => {
         </div>
     );
 };
+
+// ── TAG INPUT ROW ─────────────────────────────────────────────────────────────
+const TagInputRow = ({ placeholder, value, onChange, onAdd }) => (
+    <div className="flex gap-2 mt-2">
+        <input
+            value={value}
+            onChange={e => onChange(e.target.value)}
+            onKeyPress={e => { if (e.key === 'Enter') { e.preventDefault(); onAdd(); } }}
+            placeholder={placeholder}
+            className="flex-1 min-w-0 px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:border-transparent outline-none transition"
+            style={{ "--tw-ring-color": COLORS.primary }}
+        />
+        <button
+            type="button"
+            onClick={onAdd}
+            className="px-3 py-2 text-white rounded-lg transition-colors text-sm font-medium flex-shrink-0"
+            style={{ backgroundColor: COLORS.primary }}
+        >
+            Add
+        </button>
+    </div>
+);
+
+// ── DROPDOWN TAG SELECTOR ─────────────────────────────────────────────────────
+const DropdownTagSelector = ({ options, selected, onAdd, placeholder, allowOther = false }) => {
+    const [val, setVal] = useState('');
+    const [customVal, setCustomVal] = useState('');
+    const available = options.filter(o => !selected.includes(o));
+    const isOther = val === '__other__';
+
+    const handleAdd = () => {
+        const finalVal = isOther ? customVal.trim() : val;
+        if (finalVal && !selected.includes(finalVal)) {
+            onAdd(finalVal);
+            setVal('');
+            setCustomVal('');
+        }
+    };
+
+    return (
+        <div className="mt-2 space-y-2">
+            <div className="flex gap-2">
+                <select
+                    value={val}
+                    onChange={e => { setVal(e.target.value); setCustomVal(''); }}
+                    className="flex-1 min-w-0 px-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:border-transparent outline-none bg-white transition"
+                    style={{ "--tw-ring-color": COLORS.primary }}
+                >
+                    <option value="">{placeholder || 'Select an option'}</option>
+                    {available.map(o => <option key={o} value={o}>{o}</option>)}
+                    {allowOther && <option value="__other__">Other (specify below)</option>}
+                </select>
+                {!isOther && (
+                    <button
+                        type="button"
+                        onClick={handleAdd}
+                        disabled={!val}
+                        className="px-3 py-2 text-white rounded-lg transition-colors text-sm font-medium flex-shrink-0 disabled:opacity-40"
+                        style={{ backgroundColor: COLORS.primary }}
+                    >
+                        Add
+                    </button>
+                )}
+            </div>
+            {isOther && (
+                <div className="flex gap-2">
+                    <input
+                        value={customVal}
+                        onChange={e => setCustomVal(e.target.value)}
+                        onKeyPress={e => { if (e.key === 'Enter') { e.preventDefault(); handleAdd(); } }}
+                        placeholder="Type your custom option..."
+                        className="flex-1 min-w-0 px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:border-transparent outline-none transition"
+                        style={{ borderColor: `${COLORS.primary}50`, backgroundColor: `${COLORS.primaryLight}40`, "--tw-ring-color": COLORS.primary }}
+                        autoFocus
+                    />
+                    <button
+                        type="button"
+                        onClick={handleAdd}
+                        disabled={!customVal.trim()}
+                        className="px-3 py-2 text-white rounded-lg transition-colors text-sm font-medium flex-shrink-0 disabled:opacity-40"
+                        style={{ backgroundColor: COLORS.primary }}
+                    >
+                        Add
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+};
+
 // ── EDIT MODAL ────────────────────────────────────────────────────────────────
 const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSaving, userId, onPhotoUpload }) => {
     const [currentSection, setCurrentSection] = useState(section);
@@ -1704,13 +1651,11 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
     const [inputValues, setInputValues] = useState({ skill: '', previousCompany: '', customDomain: '', customTargetDomain: '' });
     const [errors, setErrors] = useState({});
     const [driveLinkError, setDriveLinkError] = useState('');
-    const charCount = (text) => text.trim().length;
 
     useEffect(() => { setCurrentSection(section); }, [section]);
 
     useEffect(() => {
         const isFresher = (profileData?.currentStatus || '').toLowerCase() === 'fresher';
-
         if (isOpen && profileData) {
             setFormData({
                 fullName: profileData.fullName || '',
@@ -1883,9 +1828,9 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
         } catch (e) { console.error(e); }
     };
 
-    const inputClass = "w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition";
-    const inputErrClass = (field) => `w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:border-transparent outline-none transition ${errors[field] ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 focus:ring-blue-500'}`;
-    const selectClass = (field) => `w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:border-transparent outline-none transition bg-white ${errors[field] ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 focus:ring-blue-500'}`;
+    const inputClass = "w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:border-transparent outline-none transition";
+    const inputErrClass = (field) => `w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:border-transparent outline-none transition ${errors[field] ? 'border-red-400' : 'border-gray-200'}`;
+    const selectClass = (field) => `w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:border-transparent outline-none transition bg-white ${errors[field] ? 'border-red-400' : 'border-gray-200'}`;
 
     const navItems = [
         { id: 'about', label: 'About', icon: <User size={15} /> },
@@ -1897,19 +1842,15 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
     const renderAboutSection = () => (
         <div className="space-y-5">
             <h3 className="text-base font-bold text-gray-800 pb-2 border-b border-gray-100">Basic Information</h3>
-
             <ProfilePhotoUpload
                 currentUrl={formData.profilePhotoUrl || ''}
                 onUpload={async url => {
                     setFormData(prev => ({ ...prev, profilePhotoUrl: url }));
                     onPhotoUpload?.(url);
-                    if (url) {
-                        await onSave({ profilePhotoUrl: url }, false);
-                    }
+                    if (url) await onSave({ profilePhotoUrl: url }, false);
                 }}
                 userId={userId}
             />
-
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <FormField label="Full Name" required error={errors.fullName}>
                     <input name="fullName" type="text" value={formData.fullName} onChange={handleChange}
@@ -1941,7 +1882,6 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
 
     const renderExperienceSection = () => {
         const isFresher = (profileData?.currentStatus || '').toLowerCase() === 'fresher';
-
         return (
             <div className="space-y-5">
                 <h3 className="text-base font-bold text-gray-800 pb-2 border-b border-gray-100">Professional Experience</h3>
@@ -1973,7 +1913,8 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
                                     if (errors.domain) setErrors(prev => ({ ...prev, domain: '' }));
                                 }}
                                 placeholder="Describe your domain..."
-                                className="mt-2 w-full px-3 py-2 text-sm border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none bg-blue-50/40 transition"
+                                className="mt-2 w-full px-3 py-2 text-sm border rounded-lg focus:ring-2 focus:border-transparent outline-none transition"
+                                style={{ borderColor: `${COLORS.primary}50`, backgroundColor: `${COLORS.primaryLight}40`, "--tw-ring-color": COLORS.primary }}
                             />
                         )}
                     </FormField>
@@ -1991,10 +1932,10 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
                     >
                         {isFresher ? (
                             <div>
-                                <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg border border-blue-200 bg-blue-50">
-                                    <CheckCircle size={14} className="text-blue-600 flex-shrink-0" />
-                                    <span className="text-sm font-semibold text-blue-800">0 years</span>
-                                    <span className="ml-auto text-xs text-white px-2 py-0.5 rounded-full font-medium">Fresher</span>
+                                <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg border" style={{ borderColor: COLORS.primary, backgroundColor: COLORS.primaryLight }}>
+                                    <CheckCircle size={14} style={{ color: COLORS.primary }} className="flex-shrink-0" />
+                                    <span className="text-sm font-semibold" style={{ color: COLORS.primary }}>0 years</span>
+                                    <span className="ml-auto text-xs text-white px-2 py-0.5 rounded-full font-medium" style={{ backgroundColor: COLORS.primary }}>Fresher</span>
                                 </div>
                                 <p className="text-xs text-gray-500 mt-1 flex items-center gap-1">
                                     <AlertCircle size={11} />Auto-filled as 0 because your profile status is Fresher.
@@ -2044,7 +1985,7 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
                     />
                     {formData.skills.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-2">
-                            {formData.skills.map((s, i) => <TagPill key={i} label={s} onRemove={() => removeItem('skills', i)} color="blue" />)}
+                            {formData.skills.map((s, i) => <TagPill key={i} label={s} onRemove={() => removeItem('skills', i)} variant="blue" />)}
                         </div>
                     )}
                 </FormField>
@@ -2059,7 +2000,7 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
                         />
                         {formData.previousCompanies.length > 0 && (
                             <div className="flex flex-wrap gap-2 mt-2">
-                                {formData.previousCompanies.map((c, i) => <TagPill key={i} label={c} onRemove={() => removeItem('previousCompanies', i)} color="indigo" />)}
+                                {formData.previousCompanies.map((c, i) => <TagPill key={i} label={c} onRemove={() => removeItem('previousCompanies', i)} variant="indigo" />)}
                             </div>
                         )}
                     </FormField>
@@ -2075,12 +2016,12 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
                         className={`${inputClass} resize-none`}
                     />
                     <div className="flex justify-between mt-1">
-                        <span className={`text-xs ${charCount(formData.about) < 50 && formData.about ? 'text-red-500' : 'text-gray-500'}`}>
-                            {charCount(formData.about) < 50 && formData.about
-                                ? `Minimum 50 characters required (${charCount(formData.about)}/50)` : ''}
+                        <span className={`text-xs ${formData.about.trim().length < 50 && formData.about ? 'text-red-500' : 'text-gray-500'}`}>
+                            {formData.about.trim().length < 50 && formData.about
+                                ? `Minimum 50 characters required (${formData.about.trim().length}/50)` : ''}
                         </span>
-                        <span className={`text-xs ${charCount(formData.about) > 450 ? 'text-blue-600' : 'text-gray-500'}`}>
-                            {charCount(formData.about)}/500
+                        <span className={`text-xs ${formData.about.trim().length > 450 ? 'text-blue-600' : 'text-gray-500'}`}>
+                            {formData.about.trim().length}/500
                         </span>
                     </div>
                 </FormField>
@@ -2095,12 +2036,12 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
                 <p className="text-xs text-gray-500 mt-0.5">Share your resume with mentors for better guidance</p>
             </div>
 
-            <div className="rounded-xl border border-blue-100 overflow-hidden">
-                <div className="bg-blue-600 px-4 py-2 flex items-center gap-2">
+            <div className="rounded-xl border overflow-hidden" style={{ borderColor: COLORS.primary }}>
+                <div className="px-4 py-2 flex items-center gap-2" style={{ backgroundColor: COLORS.primary }}>
                     <FileText size={13} className="text-white flex-shrink-0" />
                     <span className="text-xs font-bold text-white tracking-wide uppercase">How to get your Drive link</span>
                 </div>
-                <div className="bg-blue-50 px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <div className="px-4 py-3 grid grid-cols-1 sm:grid-cols-2 gap-2" style={{ backgroundColor: COLORS.primaryLight }}>
                     {[
                         "Upload your resume (PDF/DOC) to Google Drive",
                         'Right-click the file → "Get link"',
@@ -2108,8 +2049,8 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
                         "Copy the link and paste it below",
                     ].map((step, i) => (
                         <div key={i} className="flex items-start gap-2">
-                            <span className="flex-shrink-0 w-4 h-4 rounded-full bg-blue-600 text-white text-[10px] font-bold flex items-center justify-center mt-0.5">{i + 1}</span>
-                            <p className="text-xs text-blue-900 leading-relaxed">{step}</p>
+                            <span className="flex-shrink-0 w-4 h-4 rounded-full text-white text-[10px] font-bold flex items-center justify-center mt-0.5" style={{ backgroundColor: COLORS.primary }}>{i + 1}</span>
+                            <p className="text-xs leading-relaxed" style={{ color: COLORS.primary }}>  {step}</p>
                         </div>
                     ))}
                 </div>
@@ -2127,7 +2068,8 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
                 <p className="text-[11px] text-gray-500 leading-relaxed">Your resume is only shared with mentors you connect with.</p>
                 {formData.resumeDriveLink && validateDriveLink(formData.resumeDriveLink) && (
                     <a href={formData.resumeDriveLink} target="_blank" rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-lg transition-colors flex-shrink-0">
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold border px-3 py-1.5 rounded-lg transition-colors flex-shrink-0"
+                        style={{ color: COLORS.primary, borderColor: COLORS.primary, backgroundColor: COLORS.primaryLight }}>
                         <FileText size={13} /> Preview Resume →
                     </a>
                 )}
@@ -2161,7 +2103,7 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
                 />
                 {formData.targetCompanies.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-2">
-                        {formData.targetCompanies.map((c, i) => <TagPill key={i} label={c} onRemove={() => removeItem('targetCompanies', i)} color="green" />)}
+                        {formData.targetCompanies.map((c, i) => <TagPill key={i} label={c} onRemove={() => removeItem('targetCompanies', i)} variant="green" />)}
                     </div>
                 )}
             </FormField>
@@ -2179,7 +2121,8 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
                 <textarea
                     name="mentorHelp" value={formData.mentorHelp} onChange={handleChange}
                     rows={4} placeholder="Describe the support you're looking for from a mentor..."
-                    className={`${errors.mentorHelp ? 'border-red-400 focus:ring-red-400' : 'border-gray-200 focus:ring-blue-500'} w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:border-transparent outline-none transition resize-none`}
+                    className={`${errors.mentorHelp ? 'border-red-400' : 'border-gray-200'} w-full px-3 py-2.5 text-sm border rounded-lg focus:ring-2 focus:border-transparent outline-none transition resize-none`}
+                    style={{ "--tw-ring-color": COLORS.primary }}
                 />
             </FormField>
         </div>
@@ -2200,28 +2143,30 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
             <div className="bg-white w-full sm:rounded-xl sm:max-w-3xl max-h-screen sm:max-h-[92vh] flex flex-col shadow-2xl sm:my-4">
                 <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 flex-shrink-0">
                     <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                        <CiEdit className="text-blue-600 text-xl" /> Edit Profile
+                        <CiEdit className="text-xl" style={{ color: COLORS.primary }} /> Edit Profile
                     </h2>
                     <button onClick={onClose} disabled={isSaving} className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors">
                         <X size={18} />
                     </button>
                 </div>
 
-                <div className="flex flex-1 min-h-0 flex-col sm:flex-row sm:min-h-[450px]">                    <div className="sm:w-48 flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-100 bg-gray-50/40 sm:rounded-bl-xl">
-                    <nav className="flex sm:flex-col gap-1 p-3 overflow-x-auto sm:overflow-x-visible">
-                        {navItems.map(({ id, label, icon }) => (
-                            <button
-                                key={id} type="button"
-                                onClick={() => { setCurrentSection(id); setErrors({}); }}
-                                className={`flex items-center gap-2 flex-shrink-0 sm:flex-shrink px-3 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap
-                                        ${currentSection === id ? 'bg-blue-600 text-white shadow-sm' : 'text-gray-500 hover:bg-gray-200 hover:text-gray-700'}`}
-                            >
-                                {icon}
-                                <span>{label}</span>
-                            </button>
-                        ))}
-                    </nav>
-                </div>
+                <div className="flex flex-1 min-h-0 flex-col sm:flex-row sm:min-h-[450px]">
+                    <div className="sm:w-48 flex-shrink-0 border-b sm:border-b-0 sm:border-r border-gray-100 bg-gray-50/40 sm:rounded-bl-xl">
+                        <nav className="flex sm:flex-col gap-1 p-3 overflow-x-auto sm:overflow-x-visible">
+                            {navItems.map(({ id, label, icon }) => (
+                                <button
+                                    key={id} type="button"
+                                    onClick={() => { setCurrentSection(id); setErrors({}); }}
+                                    className={`flex items-center gap-2 flex-shrink-0 sm:flex-shrink px-3 py-2.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap
+                                        ${currentSection === id ? 'text-white shadow-sm' : 'text-gray-500 hover:bg-gray-200 hover:text-gray-700'}`}
+                                    style={currentSection === id ? { backgroundColor: COLORS.primary } : {}}
+                                >
+                                    {icon}
+                                    <span>{label}</span>
+                                </button>
+                            ))}
+                        </nav>
+                    </div>
 
                     <div className="flex-1 min-h-0 overflow-y-auto p-5">
                         {renderContent()}
@@ -2238,14 +2183,16 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
                     <div className="flex gap-3">
                         <button
                             type="button" onClick={() => handleSave(true)} disabled={isSaving}
-                            className="flex-1 sm:flex-none px-5 py-2.5 text-sm border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                            className="flex-1 sm:flex-none px-5 py-2.5 text-sm rounded-lg hover:opacity-90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                            style={{ backgroundColor: COLORS.primaryLight, color: COLORS.primary, border: `1px solid ${COLORS.primary}` }}
                         >
                             {isSaving ? <><Loader2 size={14} className="animate-spin" />Saving...</> : 'Save'}
                         </button>
                         {currentSection !== 'goals' && (
                             <button
                                 type="button" onClick={handleSaveAndContinue} disabled={isSaving}
-                                className="flex-1 sm:flex-none px-5 py-2.5 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                                className="flex-1 sm:flex-none px-5 py-2.5 text-sm text-white rounded-lg hover:opacity-90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                                style={{ backgroundColor: COLORS.primary }}
                             >
                                 {isSaving
                                     ? <><Loader2 size={14} className="animate-spin" />Saving...</>
@@ -2276,11 +2223,11 @@ const PendingDetailsCard = ({ profile, onEditProfile, onEditGoals }) => {
     if (pendingItems.length === 0) return null;
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border border-blue-100 overflow-hidden">
-            <div className="bg-blue-50 px-5 py-4 flex items-center gap-2">
-                <AlertTriangle className="text-blue-600 flex-shrink-0" size={18} />
+        <div className="bg-white rounded-xl shadow-sm border overflow-hidden" style={{ borderColor: `${COLORS.primary}40` }}>
+            <div className="px-5 py-4 flex items-center gap-2" style={{ backgroundColor: COLORS.primaryLight }}>
+                <AlertTriangle style={{ color: COLORS.primary }} className="flex-shrink-0" size={18} />
                 <h3 className="text-sm font-bold text-gray-800 flex-1">Pending Details</h3>
-                <span className="bg-blue-600 text-white text-xs font-bold px-2 py-0.5 rounded-full">{pendingItems.length}</span>
+                <span className="text-white text-xs font-bold px-2 py-0.5 rounded-full" style={{ backgroundColor: COLORS.primary }}>{pendingItems.length}</span>
             </div>
             <div className="px-5 py-3">
                 <p className="text-xs text-gray-500 mb-3">Complete these to improve your visibility with mentors.</p>
@@ -2288,8 +2235,8 @@ const PendingDetailsCard = ({ profile, onEditProfile, onEditGoals }) => {
                     {pendingItems.map((item, index) => (
                         <li key={index}>
                             <button onClick={item.action} className="w-full flex items-center gap-3 py-2.5 text-left group">
-                                <span className="w-2 h-2 rounded-full bg-blue-300 flex-shrink-0" />
-                                <span className="text-sm text-gray-600 flex-1 group-hover:text-blue-600 transition-colors">{item.label}</span>
+                                <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: `${COLORS.primary}60` }} />
+                                <span className="text-sm text-gray-600 flex-1 group-hover:transition-colors" style={{ "--group-hover-color": COLORS.primary }}>{item.label}</span>
                                 <ChevronRight size={14} className="text-gray-300 group-hover:text-blue-400 transition-colors flex-shrink-0" />
                             </button>
                         </li>
@@ -2299,14 +2246,6 @@ const PendingDetailsCard = ({ profile, onEditProfile, onEditGoals }) => {
         </div>
     );
 };
-
-// ── INFO ROW ──────────────────────────────────────────────────────────────────
-const InfoRow = ({ icon, children }) => (
-    <div className="flex items-center gap-2 text-gray-600 text-sm min-w-0">
-        <span className="flex-shrink-0 text-gray-400">{icon}</span>
-        <span className="truncate">{children}</span>
-    </div>
-);
 
 // ── SECTION CARD ──────────────────────────────────────────────────────────────
 const SectionCard = ({ title, subtitle, onEdit, editLabel = 'Edit', isSaving, children, emptyState }) => (
@@ -2318,7 +2257,8 @@ const SectionCard = ({ title, subtitle, onEdit, editLabel = 'Edit', isSaving, ch
             </div>
             <button
                 onClick={onEdit} disabled={isSaving}
-                className="flex-shrink-0 flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+                className="flex-shrink-0 flex items-center gap-1.5 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+                style={{ backgroundColor: COLORS.primary }}
             >
                 {isSaving ? <Loader2 size={14} className="animate-spin" /> : <Edit size={14} />}
                 {isSaving ? 'Saving...' : editLabel}
@@ -2328,7 +2268,7 @@ const SectionCard = ({ title, subtitle, onEdit, editLabel = 'Edit', isSaving, ch
             {children || (emptyState && (
                 <div className="text-center py-8">
                     <p className="text-gray-400 text-sm mb-3">{emptyState.message}</p>
-                    <button onClick={onEdit} className="text-blue-600 hover:text-blue-700 font-medium text-sm">{emptyState.cta}</button>
+                    <button onClick={onEdit} className="font-medium text-sm" style={{ color: COLORS.primary }}>{emptyState.cta}</button>
                 </div>
             ))}
         </div>
@@ -2378,6 +2318,7 @@ const MentorshipProfile = () => {
             if (shouldClose) alert("Failed to save profile. Please try again.");
         }
     };
+
     if (isLoading) return (
         <div className="min-h-screen bg-white flex items-center justify-center">
             <div className="text-center"><Loader /></div>
@@ -2394,7 +2335,6 @@ const MentorshipProfile = () => {
         </div>
     );
 
-    // ── Build unified profile object ─────────────────────────────────────────
     const profile = {
         fullName: profileData?.fullName || useremail?.name || '',
         email: profileData?.email || useremail?.email || '',
@@ -2455,7 +2395,6 @@ const MentorshipProfile = () => {
     ];
 
     const isNewProfile = profileData === null;
-
     const avatarSrc = profile.profilePhotoUrl || googleUser?.profile || '';
     const initials = (profile.fullName || userData?.name || 'U')
         .split(' ').slice(0, 2).map(w => w[0].toUpperCase()).join('');
@@ -2475,7 +2414,7 @@ const MentorshipProfile = () => {
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
 
                 {isNewProfile && (
-                    <div className="bg-gradient-to-r from-blue-600 to-blue-500 rounded-xl p-6 mb-6 text-white">
+                    <div className="rounded-xl p-6 mb-6 text-white" style={{ background: `linear-gradient(135deg, ${COLORS.primary} 0%, ${COLORS.primaryDark} 100%)` }}>
                         <h2 className="text-xl font-bold mb-1">Welcome! Let's set up your profile 👋</h2>
                         <p className="text-white/90 text-sm">Complete your profile to get matched with the best mentors for your goals.</p>
                     </div>
@@ -2504,16 +2443,17 @@ const MentorshipProfile = () => {
                                         />
                                     ) : null}
                                     <div
-                                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-gray-100 bg-blue-100 items-center justify-center"
-                                        style={{ display: avatarSrc ? 'none' : 'flex' }}
+                                        className="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-gray-100 items-center justify-center"
+                                        style={{ display: avatarSrc ? 'none' : 'flex', backgroundColor: COLORS.primaryLight }}
                                     >
-                                        <span className="text-blue-700 font-bold text-xl sm:text-2xl">{initials}</span>
+                                        <span className="font-bold text-xl sm:text-2xl" style={{ color: COLORS.primary }}>{initials}</span>
                                     </div>
 
                                     <button
                                         onClick={() => handleEditProfile('about')}
                                         title="Change photo"
-                                        className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-blue-600 hover:bg-blue-700 border-2 border-white text-white flex items-center justify-center shadow transition-colors"
+                                        className="absolute bottom-0 right-0 w-7 h-7 rounded-full border-2 border-white text-white flex items-center justify-center shadow transition-colors hover:opacity-90"
+                                        style={{ backgroundColor: COLORS.primary }}
                                     >
                                         <Camera size={13} />
                                     </button>
@@ -2525,7 +2465,7 @@ const MentorshipProfile = () => {
                                             {profile.fullName || <span className="text-gray-400 italic font-normal text-base">No name added</span>}
                                         </h3>
                                         {profile.role && (
-                                            <span className="px-2.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">{profile.role}</span>
+                                            <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full" style={{ backgroundColor: COLORS.primaryLight, color: COLORS.primary }}>{profile.role}</span>
                                         )}
                                     </div>
 
@@ -2540,19 +2480,19 @@ const MentorshipProfile = () => {
                                     <div className="flex flex-wrap gap-3">
                                         {profile.linkedinUrl && (
                                             <a href={profile.linkedinUrl} target="_blank" rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-medium">
+                                                className="inline-flex items-center gap-1.5 text-sm font-medium" style={{ color: COLORS.primary }}>
                                                 <Linkedin size={14} /> LinkedIn
                                             </a>
                                         )}
                                         {profile.resumeDriveLink ? (
                                             <a href={profile.resumeDriveLink} target="_blank" rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-medium">
+                                                className="inline-flex items-center gap-1.5 text-sm font-medium" style={{ color: COLORS.primary }}>
                                                 <FileText size={14} /> View Resume
                                             </a>
                                         ) : !isNewProfile && (
                                             <button
                                                 onClick={() => handleEditProfile('resume')}
-                                                className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700"
+                                                className="inline-flex items-center gap-1 text-xs" style={{ color: COLORS.primary }}
                                             >
                                                 <Plus size={13} /> Add Resume
                                             </button>
@@ -2563,7 +2503,7 @@ const MentorshipProfile = () => {
 
                             {(profile.target || profile.domain) && (
                                 <div className="mt-5 pt-5 border-t border-gray-100 flex items-start gap-3">
-                                    <Target className="text-blue-600 flex-shrink-0 mt-0.5" size={18} />
+                                    <Target style={{ color: COLORS.primary }} className="flex-shrink-0 mt-0.5" size={18} />
                                     <p className="text-sm text-gray-700">
                                         <span className="font-semibold text-gray-900">Target: </span>
                                         {profile.target || `${profile.role || 'Professional'} in ${profile.domain}`}
@@ -2584,7 +2524,7 @@ const MentorshipProfile = () => {
                                 <div className="space-y-5">
                                     {profile.goals && (
                                         <div className="flex items-start gap-3">
-                                            <Target className="text-blue-600 flex-shrink-0 mt-0.5" size={18} />
+                                            <Target style={{ color: COLORS.primary }} className="flex-shrink-0 mt-0.5" size={18} />
                                             <div className="text-sm text-gray-700">
                                                 <span className="font-semibold text-gray-900 block mb-0.5">Main Goal</span>
                                                 {profile.goals}
@@ -2604,7 +2544,7 @@ const MentorshipProfile = () => {
                                         <div className="pt-3 border-t border-gray-50">
                                             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Target Companies</p>
                                             <div className="flex flex-wrap gap-1.5">
-                                                {profile.targetCompanies.map((c, i) => <TagPill key={i} label={c} color="green" />)}
+                                                {profile.targetCompanies.map((c, i) => <TagPill key={i} label={c} variant="green" />)}
                                             </div>
                                         </div>
                                     )}
@@ -2638,7 +2578,7 @@ const MentorshipProfile = () => {
                                         <div>
                                             <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Skills</p>
                                             <div className="flex flex-wrap gap-2">
-                                                {profile.skills.map((s, i) => <TagPill key={i} label={s} color="blue" />)}
+                                                {profile.skills.map((s, i) => <TagPill key={i} label={s} variant="blue" />)}
                                             </div>
                                         </div>
                                     )}
@@ -2657,14 +2597,14 @@ const MentorshipProfile = () => {
                         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                             <div className="flex items-center justify-between mb-4">
                                 <h3 className="font-bold text-gray-900">Profile Completion</h3>
-                                <span className={`text-xl font-bold ${completionPercentage === 100 ? 'text-green-500' : 'text-blue-600'}`}>
+                                <span className="text-xl font-bold" style={{ color: completionPercentage === 100 ? '#10b981' : COLORS.primary }}>
                                     {completionPercentage}%
                                 </span>
                             </div>
                             <div className="w-full bg-gray-100 rounded-full h-2 mb-5 overflow-hidden">
                                 <div
-                                    className={`h-2 rounded-full transition-all duration-700 ${completionPercentage === 100 ? 'bg-green-500' : 'bg-blue-600'}`}
-                                    style={{ width: `${completionPercentage}%` }}
+                                    className="h-2 rounded-full transition-all duration-700"
+                                    style={{ width: `${completionPercentage}%`, backgroundColor: completionPercentage === 100 ? '#10b981' : COLORS.primary }}
                                 />
                             </div>
                             <div className="space-y-3">
@@ -2682,12 +2622,13 @@ const MentorshipProfile = () => {
                             {completionPercentage < 100 ? (
                                 <button
                                     onClick={() => handleEditProfile('about')}
-                                    className="w-full mt-5 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition-colors text-sm"
+                                    className="w-full mt-5 text-white font-semibold py-2.5 rounded-lg hover:opacity-90 transition-colors text-sm"
+                                    style={{ backgroundColor: COLORS.primary }}
                                 >
                                     Complete Your Profile
                                 </button>
                             ) : (
-                                <div className="mt-5 flex items-center justify-center gap-2 text-green-600 py-2">
+                                <div className="mt-5 flex items-center justify-center gap-2 py-2" style={{ color: '#10b981' }}>
                                     <CheckCircle size={20} />
                                     <span className="font-semibold text-sm">Profile Complete!</span>
                                 </div>
@@ -2720,5 +2661,4 @@ const MentorshipProfile = () => {
 };
 
 export default MentorshipProfile;
-
 

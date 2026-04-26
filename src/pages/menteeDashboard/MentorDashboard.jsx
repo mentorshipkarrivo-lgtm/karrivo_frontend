@@ -142,7 +142,7 @@ const ProfileDropdown = ({ userData, onProfileClick, onLogoutClick, isOpen }) =>
         <div className="absolute right-0 top-12 w-64 bg-white rounded-lg shadow-lg border py-2 z-50">
             <div className="px-4 py-3 border-b">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-[#062117] rounded-full flex items-center justify-center text-white flex-shrink-0">
+                    <div className="w-10 h-10 bg-[#0098cc] rounded-full flex items-center justify-center text-white flex-shrink-0">
                         {userData?.name?.charAt(0) || 'U'}
                     </div>
                     <div className="min-w-0">
@@ -162,6 +162,148 @@ const ProfileDropdown = ({ userData, onProfileClick, onLogoutClick, isOpen }) =>
 };
 
 /* ── ProfileCompletionForm ────────────────────────────────────────────────── */
+// const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
+//     const [currentStep, setCurrentStep] = useState(1);
+//     const [formData, setFormData] = useState({
+//         fullName: '', dateOfBirth: '', address: '',
+//         currentStatus: '', highestEducation: '', menteeType: '',
+//     });
+//     const [clientErrors, setClientErrors] = useState({});
+
+//     const set = (field, value) => {
+//         setFormData(prev => ({ ...prev, [field]: value }));
+//         setClientErrors(prev => ({ ...prev, [field]: '' }));
+//     };
+
+//     const validateStep = (step) => {
+//         const errs = {};
+//         if (step === 1) {
+//             if (!formData.fullName || formData.fullName.trim().length < 2) errs.fullName = 'Full name is required (min 2 chars)';
+//             if (!formData.dateOfBirth) errs.dateOfBirth = 'Date of birth is required';
+//             if (!formData.address || formData.address.trim().length < 5) errs.address = 'Address is required (min 5 chars)';
+//         }
+//         if (step === 2) {
+//             if (!formData.currentStatus) errs.currentStatus = 'Select your status';
+//             if (!formData.highestEducation) errs.highestEducation = 'Select education level';
+//         }
+//         if (step === 3) {
+//             if (!formData.menteeType) errs.menteeType = 'Select a mentor type';
+//         }
+//         setClientErrors(errs);
+//         return Object.keys(errs).length === 0;
+//     };
+
+//     const handleNext = () => { if (validateStep(currentStep)) setCurrentStep(s => s + 1); };
+//     const handleSubmit = () => { if (validateStep(3)) onComplete(formData); };
+//     const errors = { ...serverErrors, ...clientErrors };
+//     const FieldError = ({ field }) => errors[field]
+//         ? <p className="text-red-500 text-xs mt-1">{errors[field]}</p>
+//         : null;
+
+//     return (
+//         <div className="flex items-center justify-center min-h-screen p-4">
+//             <div className="bg-white rounded-lg shadow-2xl w-full max-w-lg">
+//                 <div className="px-6 py-5 border-b">
+//                     <h1 className="text-xl sm:text-2xl font-bold">Complete Your Profile</h1>
+//                     <p className="text-sm text-gray-600 mt-1">Just 3 simple steps</p>
+//                     <div className="flex gap-2 mt-4">
+//                         {[1, 2, 3].map(s => (
+//                             <div key={s} className={`h-2 flex-1 rounded ${s <= currentStep ? 'bg-blue-600' : 'bg-gray-200'}`} />
+//                         ))}
+//                     </div>
+//                 </div>
+//                 <div className="px-6 py-5">
+//                     {currentStep === 1 && (
+//                         <div className="space-y-4">
+//                             <h2 className="text-lg font-bold">Personal Information</h2>
+//                             <div>
+//                                 <label className="block text-xs font-medium mb-1.5">Full Name *</label>
+//                                 <input type="text" value={formData.fullName} onChange={e => set('fullName', e.target.value)} placeholder="Enter your full name"
+//                                     className={`w-full px-3 py-2 border rounded-lg text-sm ${errors.fullName ? 'border-red-400' : ''}`} />
+//                                 <FieldError field="fullName" />
+//                             </div>
+//                             <div>
+//                                 <label className="block text-xs font-medium mb-1.5">Date of Birth *</label>
+//                                 <input type="date" value={formData.dateOfBirth} onChange={e => set('dateOfBirth', e.target.value)}
+//                                     className={`w-full px-3 py-2 border rounded-lg text-sm ${errors.dateOfBirth ? 'border-red-400' : ''}`} />
+//                                 <FieldError field="dateOfBirth" />
+//                             </div>
+//                             <div>
+//                                 <label className="block text-xs font-medium mb-1.5">Address *</label>
+//                                 <textarea value={formData.address} onChange={e => set('address', e.target.value)} rows="2"
+//                                     className={`w-full px-3 py-2 border rounded-lg text-sm ${errors.address ? 'border-red-400' : ''}`} />
+//                                 <FieldError field="address" />
+//                             </div>
+//                         </div>
+//                     )}
+//                     {currentStep === 2 && (
+//                         <div className="space-y-4">
+//                             <h2 className="text-lg font-bold">Experience & Education</h2>
+//                             <div>
+//                                 <label className="block text-xs font-medium mb-2">Current Status *</label>
+//                                 <div className="grid grid-cols-2 gap-3">
+//                                     {['fresher', 'experienced'].map(s => (
+//                                         <button key={s} onClick={() => set('currentStatus', s)}
+//                                             className={`p-3 border-2 rounded-lg text-sm ${formData.currentStatus === s ? 'border-blue-600 bg-blue-50' : 'border-gray-300'}`}>
+//                                             {s.charAt(0).toUpperCase() + s.slice(1)}
+//                                         </button>
+//                                     ))}
+//                                 </div>
+//                                 <FieldError field="currentStatus" />
+//                             </div>
+//                             <div>
+//                                 <label className="block text-xs font-medium mb-1.5">Highest Education *</label>
+//                                 <select value={formData.highestEducation} onChange={e => set('highestEducation', e.target.value)}
+//                                     className={`w-full px-3 py-2 border rounded-lg text-sm ${errors.highestEducation ? 'border-red-400' : ''}`}>
+//                                     <option value="">Select education</option>
+//                                     <option value="High School">High School</option>
+//                                     <option value="Diploma">Diploma</option>
+//                                     <option value="Bachelors Degree">Bachelors Degree</option>
+//                                     <option value="Masters Degree">Masters Degree</option>
+//                                     <option value="phd">PhD</option>
+//                                     <option value="Others">Others</option>
+//                                 </select>
+//                                 <FieldError field="highestEducation" />
+//                             </div>
+//                         </div>
+//                     )}
+//                     {currentStep === 3 && (
+//                         <div className="space-y-4">
+//                             <h2 className="text-lg font-bold">What Type of Mentor You Want?</h2>
+//                             <div className="grid grid-cols-2 gap-2">
+//                                 {menteeTypes.map(type => (
+//                                     <button key={type} onClick={() => set('menteeType', type)}
+//                                         className={`p-2.5 border-2 rounded-lg text-left ${formData.menteeType === type ? 'border-blue-600 bg-blue-50' : 'border-gray-300'}`}>
+//                                         <span className="text-xs font-medium">{type}</span>
+//                                     </button>
+//                                 ))}
+//                             </div>
+//                             <FieldError field="menteeType" />
+//                         </div>
+//                     )}
+//                 </div>
+//                 <div className="px-5 py-4 bg-gray-50 flex justify-between border-t">
+//                     <button onClick={() => setCurrentStep(s => s - 1)} disabled={currentStep === 1}
+//                         className="px-4 py-2 rounded-lg disabled:opacity-50 text-sm border hover:bg-gray-100">
+//                         Previous
+//                     </button>
+//                     {currentStep < 3 ? (
+//                         <button onClick={handleNext} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+//                             Next
+//                         </button>
+//                     ) : (
+//                         <button onClick={handleSubmit} disabled={saving}
+//                             className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 flex items-center gap-2 text-sm">
+//                             {saving && <Loader2 size={16} className="animate-spin" />}
+//                             {saving ? 'Saving...' : 'Complete'}
+//                         </button>
+//                     )}
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// };
+
 const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState({
@@ -178,16 +320,16 @@ const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
     const validateStep = (step) => {
         const errs = {};
         if (step === 1) {
-            if (!formData.fullName || formData.fullName.trim().length < 2) errs.fullName = 'Full name is required (min 2 chars)';
+            if (!formData.fullName || formData.fullName.trim().length < 2) errs.fullName = 'Full name required (min 2 chars)';
             if (!formData.dateOfBirth) errs.dateOfBirth = 'Date of birth is required';
-            if (!formData.address || formData.address.trim().length < 5) errs.address = 'Address is required (min 5 chars)';
+            if (!formData.address || formData.address.trim().length < 5) errs.address = 'Address required (min 5 chars)';
         }
         if (step === 2) {
-            if (!formData.currentStatus) errs.currentStatus = 'Select your status';
-            if (!formData.highestEducation) errs.highestEducation = 'Select education level';
+            if (!formData.currentStatus) errs.currentStatus = 'Please select your status';
+            if (!formData.highestEducation) errs.highestEducation = 'Please select education';
         }
         if (step === 3) {
-            if (!formData.menteeType) errs.menteeType = 'Select a mentor type';
+            if (!formData.menteeType) errs.menteeType = 'Please select a mentor type';
         }
         setClientErrors(errs);
         return Object.keys(errs).length === 0;
@@ -196,85 +338,145 @@ const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
     const handleNext = () => { if (validateStep(currentStep)) setCurrentStep(s => s + 1); };
     const handleSubmit = () => { if (validateStep(3)) onComplete(formData); };
     const errors = { ...serverErrors, ...clientErrors };
+
     const FieldError = ({ field }) => errors[field]
-        ? <p className="text-red-500 text-xs mt-1">{errors[field]}</p>
+        ? <p style={{ fontSize: 11, color: '#ef4444', marginTop: 4 }}>{errors[field]}</p>
         : null;
 
+    const inputStyle = (field) => ({
+        width: '100%', padding: '8px 11px',
+        border: `1.5px solid ${errors[field] ? '#f87171' : '#e2e8f0'}`,
+        borderRadius: 8, fontSize: 13, color: '#0f172a',
+        outline: 'none', boxSizing: 'border-box',
+        background: errors[field] ? '#fff8f8' : '#fff',
+        fontFamily: 'inherit', transition: 'border-color 0.15s',
+    });
+
+    const toggleStyle = (active) => ({
+        padding: '9px', border: `1.5px solid ${active ? '#0098cc' : '#e2e8f0'}`,
+        borderRadius: 8, fontSize: 12, fontWeight: 500,
+        background: active ? '#f0f9ff' : '#fff',
+        color: active ? '#0098cc' : '#64748b',
+        cursor: 'pointer', transition: 'all 0.15s', textAlign: 'center',
+    });
+
+    const labelStyle = {
+        display: 'block', fontSize: 11, fontWeight: 500,
+        color: '#64748b', letterSpacing: '0.04em',
+        textTransform: 'uppercase', marginBottom: 5,
+    };
+
     return (
-        <div className="flex items-center justify-center min-h-screen p-4">
-            <div className="bg-white rounded-lg shadow-2xl w-full max-w-lg">
-                <div className="px-6 py-5 border-b">
-                    <h1 className="text-xl sm:text-2xl font-bold">Complete Your Profile</h1>
-                    <p className="text-sm text-gray-600 mt-1">Just 3 simple steps</p>
-                    <div className="flex gap-2 mt-4">
-                        {[1, 2, 3].map(s => (
-                            <div key={s} className={`h-2 flex-1 rounded ${s <= currentStep ? 'bg-blue-600' : 'bg-gray-200'}`} />
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '1rem' }}>
+            <div style={{ background: '#fff', borderRadius: 14, border: '0.5px solid #e2e8f0', width: '100%', maxWidth: 440, overflow: 'hidden' }}>
+
+                {/* Header */}
+                <div style={{ padding: '20px 24px 16px', borderBottom: '0.5px solid #f0f4f8', textAlign: 'center' }}>
+                    {/* <div style={{
+                        width: 40, height: 40, borderRadius: 10,
+                        background: '#f0f9ff', border: '1.5px solid #bae6fd',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 10px',
+                    }}>
+                        <User size={18} color="#0098cc" />
+                    </div> */}
+                    <p style={{ fontSize: 15, fontWeight: 500, color: '#0098cc', margin: '0 0 3px' }}>
+                        Complete your profile
+                    </p>
+                    <p style={{ fontSize: 11, color: '#94a3b8', margin: '0 0 14px' }}>
+                        3 quick steps to get matched with the right mentor
+                    </p>
+                    <div style={{ display: 'flex', gap: 5 }}>
+                        {[1, 2, 3].map(i => (
+                            <div key={i} style={{
+                                flex: 1, height: 3, borderRadius: 99,
+                                background: i <= currentStep ? '#0098cc' : '#e2e8f0',
+                                transition: 'background 0.35s',
+                            }} />
                         ))}
                     </div>
                 </div>
-                <div className="px-6 py-5">
+
+                {/* Body */}
+                <div style={{ padding: '18px 24px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 14 }}>
+                        <span style={{
+                            width: 20, height: 20, borderRadius: '50%',
+                            background: '#0098cc', color: '#fff',
+                            fontSize: 11, fontWeight: 500,
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                        }}>{currentStep}</span>
+                        <span style={{ fontSize: 13, fontWeight: 500, color: '#0098cc' }}>
+                            {currentStep === 1 ? 'Personal information' : currentStep === 2 ? 'Experience & education' : 'Mentor preference'}
+                        </span>
+                    </div>
+
                     {currentStep === 1 && (
-                        <div className="space-y-4">
-                            <h2 className="text-lg font-bold">Personal Information</h2>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                             <div>
-                                <label className="block text-xs font-medium mb-1.5">Full Name *</label>
-                                <input type="text" value={formData.fullName} onChange={e => set('fullName', e.target.value)} placeholder="Enter your full name"
-                                    className={`w-full px-3 py-2 border rounded-lg text-sm ${errors.fullName ? 'border-red-400' : ''}`} />
+                                <label style={labelStyle}>Full name *</label>
+                                <input type="text" value={formData.fullName}
+                                    onChange={e => set('fullName', e.target.value)}
+                                    placeholder="Enter your full name" style={inputStyle('fullName')} />
                                 <FieldError field="fullName" />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium mb-1.5">Date of Birth *</label>
-                                <input type="date" value={formData.dateOfBirth} onChange={e => set('dateOfBirth', e.target.value)}
-                                    className={`w-full px-3 py-2 border rounded-lg text-sm ${errors.dateOfBirth ? 'border-red-400' : ''}`} />
+                                <label style={labelStyle}>Date of birth *</label>
+                                <input type="date" value={formData.dateOfBirth}
+                                    onChange={e => set('dateOfBirth', e.target.value)}
+                                    style={inputStyle('dateOfBirth')} />
                                 <FieldError field="dateOfBirth" />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium mb-1.5">Address *</label>
-                                <textarea value={formData.address} onChange={e => set('address', e.target.value)} rows="2"
-                                    className={`w-full px-3 py-2 border rounded-lg text-sm ${errors.address ? 'border-red-400' : ''}`} />
+                                <label style={labelStyle}>Address *</label>
+                                <textarea value={formData.address}
+                                    onChange={e => set('address', e.target.value)}
+                                    rows={2} placeholder="City, State, Country"
+                                    style={{ ...inputStyle('address'), resize: 'none' }} />
                                 <FieldError field="address" />
                             </div>
                         </div>
                     )}
+
                     {currentStep === 2 && (
-                        <div className="space-y-4">
-                            <h2 className="text-lg font-bold">Experience & Education</h2>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
                             <div>
-                                <label className="block text-xs font-medium mb-2">Current Status *</label>
-                                <div className="grid grid-cols-2 gap-3">
-                                    {['fresher', 'experienced'].map(s => (
-                                        <button key={s} onClick={() => set('currentStatus', s)}
-                                            className={`p-3 border-2 rounded-lg text-sm ${formData.currentStatus === s ? 'border-blue-600 bg-blue-50' : 'border-gray-300'}`}>
-                                            {s.charAt(0).toUpperCase() + s.slice(1)}
+                                <label style={labelStyle}>Current status *</label>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                                    {['Fresher', 'Experienced'].map(v => (
+                                        <button key={v} onClick={() => set('currentStatus', v.toLowerCase())}
+                                            style={toggleStyle(formData.currentStatus === v.toLowerCase())}>
+                                            {v}
                                         </button>
                                     ))}
                                 </div>
                                 <FieldError field="currentStatus" />
                             </div>
                             <div>
-                                <label className="block text-xs font-medium mb-1.5">Highest Education *</label>
-                                <select value={formData.highestEducation} onChange={e => set('highestEducation', e.target.value)}
-                                    className={`w-full px-3 py-2 border rounded-lg text-sm ${errors.highestEducation ? 'border-red-400' : ''}`}>
-                                    <option value="">Select education</option>
-                                    <option value="High School">High School</option>
-                                    <option value="Diploma">Diploma</option>
-                                    <option value="Bachelors Degree">Bachelors Degree</option>
-                                    <option value="Masters Degree">Masters Degree</option>
-                                    <option value="phd">PhD</option>
-                                    <option value="Others">Others</option>
+                                <label style={labelStyle}>Highest education *</label>
+                                <select value={formData.highestEducation}
+                                    onChange={e => set('highestEducation', e.target.value)}
+                                    style={{ ...inputStyle('highestEducation'), cursor: 'pointer' }}>
+                                    <option value="">Select education level</option>
+                                    {['High School', 'Diploma', 'Bachelors Degree', 'Masters Degree', 'PhD', 'Others'].map(o => (
+                                        <option key={o} value={o}>{o}</option>
+                                    ))}
                                 </select>
                                 <FieldError field="highestEducation" />
                             </div>
                         </div>
                     )}
+
                     {currentStep === 3 && (
-                        <div className="space-y-4">
-                            <h2 className="text-lg font-bold">What Type of Mentor You Want?</h2>
-                            <div className="grid grid-cols-2 gap-2">
+                        <div>
+                            <label style={labelStyle}>What type of mentor do you want? *</label>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 7 }}>
                                 {menteeTypes.map(type => (
                                     <button key={type} onClick={() => set('menteeType', type)}
-                                        className={`p-2.5 border-2 rounded-lg text-left ${formData.menteeType === type ? 'border-blue-600 bg-blue-50' : 'border-gray-300'}`}>
-                                        <span className="text-xs font-medium">{type}</span>
+                                        style={{
+                                            ...toggleStyle(formData.menteeType === type),
+                                            textAlign: 'left', padding: '8px 10px', lineHeight: 1.3,
+                                        }}>
+                                        {type}
                                     </button>
                                 ))}
                             </div>
@@ -282,28 +484,50 @@ const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
                         </div>
                     )}
                 </div>
-                <div className="px-5 py-4 bg-gray-50 flex justify-between border-t">
-                    <button onClick={() => setCurrentStep(s => s - 1)} disabled={currentStep === 1}
-                        className="px-4 py-2 rounded-lg disabled:opacity-50 text-sm border hover:bg-gray-100">
-                        Previous
-                    </button>
-                    {currentStep < 3 ? (
-                        <button onClick={handleNext} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
-                            Next
+
+                {/* Footer */}
+                <div style={{
+                    padding: '12px 24px', background: '#fafbfc',
+                    borderTop: '0.5px solid #f0f4f8',
+                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                }}>
+                    <span style={{ fontSize: 11, color: '#94a3b8' }}>Step {currentStep} of 3</span>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                        <button onClick={() => setCurrentStep(s => s - 1)} disabled={currentStep === 1}
+                            style={{
+                                padding: '7px 16px', border: '1.5px solid #e2e8f0', borderRadius: 8,
+                                background: '#fff', color: '#64748b', fontSize: 13, fontWeight: 500,
+                                cursor: currentStep === 1 ? 'default' : 'pointer',
+                                opacity: currentStep === 1 ? 0.35 : 1, fontFamily: 'inherit',
+                            }}>
+                            Back
                         </button>
-                    ) : (
-                        <button onClick={handleSubmit} disabled={saving}
-                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 flex items-center gap-2 text-sm">
-                            {saving && <Loader2 size={16} className="animate-spin" />}
-                            {saving ? 'Saving...' : 'Complete'}
-                        </button>
-                    )}
+                        {currentStep < 3 ? (
+                            <button onClick={handleNext} style={{
+                                padding: '7px 18px', border: 'none', borderRadius: 8,
+                                background: '#0098cc', color: '#fff', fontSize: 13, fontWeight: 500,
+                                cursor: 'pointer', fontFamily: 'inherit',
+                            }}>
+                                Continue →
+                            </button>
+                        ) : (
+                            <button onClick={handleSubmit} disabled={saving} style={{
+                                padding: '7px 18px', border: 'none', borderRadius: 8,
+                                background: '#0098cc', color: '#fff', fontSize: 13, fontWeight: 500,
+                                cursor: saving ? 'default' : 'pointer',
+                                opacity: saving ? 0.5 : 1,
+                                display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'inherit',
+                            }}>
+                                {saving && <Loader2 size={13} className="animate-spin" />}
+                                {saving ? 'Saving...' : 'Complete profile'}
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
     );
 };
-
 /* ── Header ───────────────────────────────────────────────────────────────── */
 const Header = ({
     isSidebarOpen, setIsSidebarOpen,
@@ -326,7 +550,7 @@ const Header = ({
         <div className="relative flex-shrink-0">
             <button
                 onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                className="w-9 h-9 bg-[#062117] rounded-full flex items-center justify-center text-white text-sm font-medium"
+                className="w-9 h-9 bg-[#0098cc] rounded-full flex items-center justify-center text-white text-sm font-medium"
             >
                 {userData?.name?.charAt(0) || 'U'}
             </button>
