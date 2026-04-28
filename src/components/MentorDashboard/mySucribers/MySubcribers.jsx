@@ -1234,25 +1234,74 @@ function SessionEditModal({ session, onClose, onSave }) {
 
                     {tab === "feedback" && (
                         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+
+                            {/* Mentee Feedback */}
                             <div>
                                 <label style={labelStyle}>Mentee Feedback (by you)</label>
-                                <textarea rows={4} style={{ ...inputStyle, resize: "none" }} value={form.mentee_feedback} onChange={set("mentee_feedback")} placeholder="Share thoughts on this session…" />
+                                <textarea
+                                    rows={4}
+                                    style={{ ...inputStyle, resize: "none" }}
+                                    value={form.mentee_feedback}
+                                    onChange={set("mentee_feedback")}
+                                    placeholder="Share thoughts on this session…"
+                                />
                             </div>
+
+                            {/* Mentee Rating (READ ONLY) */}
                             <div>
                                 <label style={labelStyle}>Rating (1–5)</label>
                                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                                     {[1, 2, 3, 4, 5].map(n => (
-                                        <button key={n} onClick={() => setForm(f => ({ ...f, mentee_rating: n }))} style={{ background: "none", border: "none", fontSize: 26, cursor: "pointer", color: n <= form.mentee_rating ? "#00c2ff" : "#0d3020", lineHeight: 1 }}>★</button>
+                                        <span
+                                            key={n}
+                                            style={{
+                                                fontSize: 26,
+                                                color: n <= form.mentee_rating ? "#00c2ff" : "#0d3020",
+                                                cursor: "default" // 👈 no pointer
+                                            }}
+                                        >
+                                            ★
+                                        </span>
                                     ))}
-                                    <span style={{ fontSize: 12, color: "#6db892", marginLeft: 4 }}>{form.mentee_rating > 0 ? `${form.mentee_rating}/5` : "Not rated"}</span>
+                                    <span style={{ fontSize: 12, color: "#6db892", marginLeft: 4 }}>
+                                        {form.mentee_rating > 0 ? `${form.mentee_rating}/5` : "Not rated"}
+                                    </span>
                                 </div>
                             </div>
+
+                            {/* Mentor Feedback */}
                             {session.mentor_feedback && (
                                 <div>
                                     <label style={labelStyle}>Mentor Feedback (read-only)</label>
-                                    <textarea rows={3} readOnly style={{ ...roStyle, resize: "none" }} value={session.mentor_feedback} />
+                                    <textarea
+                                        rows={3}
+                                        readOnly
+                                        style={{ ...roStyle, resize: "none" }}
+                                        value={session.mentor_feedback}
+                                    />
                                 </div>
                             )}
+
+                            {/* Mentor Rating (READ ONLY) */}
+                            {session.mentor_rating > 0 && (
+                                <div>
+                                    <label style={labelStyle}>Mentor Rating</label>
+                                    <div style={{ display: "flex", gap: 8 }}>
+                                        {[1, 2, 3, 4, 5].map(n => (
+                                            <span
+                                                key={n}
+                                                style={{
+                                                    fontSize: 24,
+                                                    color: n <= session.mentor_rating ? "#00c2ff" : "#0d3020"
+                                                }}
+                                            >
+                                                ★
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+
                         </div>
                     )}
                 </div>
