@@ -4,8 +4,7 @@ import { useGetReviewsByMentorIdQuery } from "./Reviewsapislice";
 import Loader from "../../../global/Loader";
 
 export default function MentorReviewsUI() {
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  const mentorId = userData?._id;
+  const mentorId = JSON.parse(localStorage.getItem("userData") || "{}")?._id;
 
   const { data, isLoading } = useGetReviewsByMentorIdQuery(mentorId, {
     skip: !mentorId,
@@ -13,123 +12,133 @@ export default function MentorReviewsUI() {
 
   const reviews = data?.data || [];
 
+  const avgRating =
+    reviews.length > 0
+      ? (
+          reviews.reduce((total, item) => total + item.rating, 0) /
+          reviews.length
+        ).toFixed(1)
+      : "0.0";
+
   if (isLoading) {
     return (
-      <div className="h-screen flex items-center justify-center bg-[#031610]">
+      <div className="min-h-screen flex items-center justify-center bg-white">
         <Loader />
       </div>
     );
   }
 
-  const avgRating =
-    reviews.length > 0
-      ? (
-          reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length
-        ).toFixed(1)
-      : 0;
-
   return (
-    <div className="min-h-screen bg-[#031610]  px-4 text-white">
-      <div className="max-w-6xl mx-auto text-center">
-
+    <div className="min-h-screen bg-white px-4 py-10 text-gray-700">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <h1 className="text-4xl font-bold mb-3">
-          Read reviews, <br />
-          <span className="text-teal-400">ride with confidence.</span>
-        </h1>
+        <div className="text-center mb-14">
+          <h1 className="text-4xl md:text-5xl font-bold text-[#1a1a2e] leading-tight">
+            Read Reviews,<br />
+            <span className="text-[#0098cc]">Learn With Confidence</span>
+          </h1>
 
-        {/* Rating */}
-        <div className="flex justify-center items-center gap-2 mb-12">
-          {/* <span className="font-semibold">{avgRating}/5</span> */}
+          <p className="text-gray-500 mt-4 text-sm md:text-base max-w-2xl mx-auto">
+            Trusted feedback from learners helps you understand the real mentor experience.
+          </p>
 
-          <div className="flex">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                size={18}
-                className={
-                  i < Math.round(avgRating)
-                    ? "fill-teal-400 text-teal-400"
-                    : "text-gray-500"
-                }
-              />
-            ))}
+          {/* Rating Summary */}
+          <div className="flex flex-wrap justify-center items-center gap-3 mt-8">
+            <div className="text-2xl font-bold text-[#1a1a2e]">
+              {avgRating}/5
+            </div>
+
+            <div className="flex gap-1">
+              {[...Array(5)].map((_, index) => (
+                <Star
+                  key={index}
+                  size={18}
+                  className={
+                    index < Math.round(avgRating)
+                      ? "fill-[#0098cc] text-[#0098cc]"
+                      : "text-gray-300"
+                  }
+                />
+              ))}
+            </div>
+
+            <button className="bg-[#1a1a2e] text-white px-4 py-2 rounded-xl text-sm font-semibold shadow-sm">
+              Total Reviews ({reviews.length})
+            </button>
           </div>
-
-          <span className="text-teal-400 font-semibold">Reviews</span>
-          <span className="text-sm text-gray-400">
-            ({reviews.length})
-          </span>
         </div>
 
-        {/* Layout */}
+        {/* Reviews Layout */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          {/* Left Side Content */}
+          <div className="bg-gray-50 border border-gray-200 rounded-3xl p-8 shadow-sm">
+            <div className="text-6xl text-[#0098cc] mb-4">“</div>
 
-          {/* Left Text */}
-          <div className="text-left">
-            <div className="text-6xl text-teal-800 mb-4">“</div>
-            <h2 className="text-2xl font-semibold">
-              What our <br /> customers are saying
+            <h2 className="text-2xl font-bold text-[#1a1a2e] leading-snug mb-4">
+              What Our Learners
+              <br />
+              Are Saying
             </h2>
+
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Real feedback from mentees who joined sessions, improved skills,
+              and built confidence through mentorship.
+            </p>
           </div>
 
-          {/* Cards */}
+          {/* Review Cards */}
           <div className="lg:col-span-2 grid md:grid-cols-2 gap-6">
             {reviews.slice(0, 4).map((review) => (
               <div
                 key={review._id}
-                className="rounded-xl p-6 
-                bg-gradient-to-br from-[#06221a] to-[#0b3d2e] 
-                border border-teal-900 
-                shadow-lg hover:shadow-teal-900/40 
-                transition-all duration-300"
+                className="bg-white border border-gray-200 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all duration-300"
               >
-                {/* Comment */}
-                <p className="text-gray-300 text-sm mb-4 leading-relaxed">
+                {/* Review Comment */}
+                <p className="text-gray-600 text-sm leading-relaxed mb-5 min-h-[90px]">
                   {review.comment}
                 </p>
 
-                {/* Stars */}
-                <div className="flex mb-4">
-                  {[...Array(5)].map((_, i) => (
+                {/* Review Stars */}
+                <div className="flex gap-1 mb-5">
+                  {[...Array(5)].map((_, index) => (
                     <Star
-                      key={i}
+                      key={index}
                       size={16}
                       className={
-                        i < review.rating
-                          ? "fill-teal-400 text-teal-400"
-                          : "text-gray-600"
+                        index < review.rating
+                          ? "fill-[#0098cc] text-[#0098cc]"
+                          : "text-gray-300"
                       }
                     />
                   ))}
                 </div>
 
-                {/* User */}
-                <div className="flex items-center gap-3 mt-4">
-                  <div className="w-10 h-10 rounded-full bg-teal-700 flex items-center justify-center text-sm font-bold">
-                    {review.menteeName?.charAt(0)}
+                {/* User Section */}
+                <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 rounded-full bg-[#0098cc] text-white flex items-center justify-center font-bold text-sm">
+                      {review.menteeName?.charAt(0) || "U"}
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm font-semibold text-[#1a1a2e]">
+                        {review.menteeName}
+                      </h3>
+                      <p className="text-xs text-gray-400">
+                        {new Date(review.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
                   </div>
 
-                  <div>
-                    <p className="text-sm font-semibold">
-                      {review.menteeName}
-                    </p>
-                    <p className="text-xs text-gray-400">
-                      {new Date(review.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
+                  {review.isVerified && (
+                    <span className="bg-gray-100 text-[#0098cc] text-xs font-medium px-3 py-1 rounded-full border border-gray-200">
+                      ✓ Verified
+                    </span>
+                  )}
                 </div>
-
-                {/* Verified */}
-                {review.isVerified && (
-                  <div className="mt-3 inline-block bg-teal-900 text-teal-300 text-xs px-3 py-1 rounded-full">
-                    ✓ Verified
-                  </div>
-                )}
               </div>
             ))}
           </div>
-
         </div>
       </div>
     </div>

@@ -136,14 +136,31 @@ const LogoutModal = ({ isOpen, onClose, onConfirm }) => {
 };
 
 /* ── ProfileDropdown ──────────────────────────────────────────────────────── */
-const ProfileDropdown = ({ userData, onProfileClick, onLogoutClick, isOpen }) => {
+const ProfileDropdown = ({ userData, onProfileClick, onLogoutClick, isOpen, profilePhotoUrl }) => {
     if (!isOpen) return null;
+
+    const initials = userData?.name?.split(' ').slice(0, 2).map(n => n?.[0]?.toUpperCase()).join('') || 'U';
+
     return (
         <div className="absolute right-0 top-12 w-64 bg-white rounded-lg shadow-lg border py-2 z-50">
             <div className="px-4 py-3 border-b">
                 <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-[#0098cc] rounded-full flex items-center justify-center text-white flex-shrink-0">
-                        {userData?.name?.charAt(0) || 'U'}
+                    {profilePhotoUrl ? (
+                        <img
+                            src={profilePhotoUrl}
+                            alt={userData?.name}
+                            className="w-10 h-10 rounded-full flex-shrink-0 object-cover bg-gray-100"
+                            onError={e => {
+                                e.target.style.display = 'none';
+                                if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
+                            }}
+                        />
+                    ) : null}
+                    <div
+                        className="w-10 h-10 bg-[#0098cc] rounded-full flex items-center justify-center text-white flex-shrink-0 font-semibold text-sm"
+                        style={{ display: profilePhotoUrl ? 'none' : 'flex' }}
+                    >
+                        {initials}
                     </div>
                     <div className="min-w-0">
                         <div className="font-medium text-sm truncate">{userData?.name}</div>
@@ -161,148 +178,6 @@ const ProfileDropdown = ({ userData, onProfileClick, onLogoutClick, isOpen }) =>
     );
 };
 
-/* ── ProfileCompletionForm ────────────────────────────────────────────────── */
-// const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
-//     const [currentStep, setCurrentStep] = useState(1);
-//     const [formData, setFormData] = useState({
-//         fullName: '', dateOfBirth: '', address: '',
-//         currentStatus: '', highestEducation: '', menteeType: '',
-//     });
-//     const [clientErrors, setClientErrors] = useState({});
-
-//     const set = (field, value) => {
-//         setFormData(prev => ({ ...prev, [field]: value }));
-//         setClientErrors(prev => ({ ...prev, [field]: '' }));
-//     };
-
-//     const validateStep = (step) => {
-//         const errs = {};
-//         if (step === 1) {
-//             if (!formData.fullName || formData.fullName.trim().length < 2) errs.fullName = 'Full name is required (min 2 chars)';
-//             if (!formData.dateOfBirth) errs.dateOfBirth = 'Date of birth is required';
-//             if (!formData.address || formData.address.trim().length < 5) errs.address = 'Address is required (min 5 chars)';
-//         }
-//         if (step === 2) {
-//             if (!formData.currentStatus) errs.currentStatus = 'Select your status';
-//             if (!formData.highestEducation) errs.highestEducation = 'Select education level';
-//         }
-//         if (step === 3) {
-//             if (!formData.menteeType) errs.menteeType = 'Select a mentor type';
-//         }
-//         setClientErrors(errs);
-//         return Object.keys(errs).length === 0;
-//     };
-
-//     const handleNext = () => { if (validateStep(currentStep)) setCurrentStep(s => s + 1); };
-//     const handleSubmit = () => { if (validateStep(3)) onComplete(formData); };
-//     const errors = { ...serverErrors, ...clientErrors };
-//     const FieldError = ({ field }) => errors[field]
-//         ? <p className="text-red-500 text-xs mt-1">{errors[field]}</p>
-//         : null;
-
-//     return (
-//         <div className="flex items-center justify-center min-h-screen p-4">
-//             <div className="bg-white rounded-lg shadow-2xl w-full max-w-lg">
-//                 <div className="px-6 py-5 border-b">
-//                     <h1 className="text-xl sm:text-2xl font-bold">Complete Your Profile</h1>
-//                     <p className="text-sm text-gray-600 mt-1">Just 3 simple steps</p>
-//                     <div className="flex gap-2 mt-4">
-//                         {[1, 2, 3].map(s => (
-//                             <div key={s} className={`h-2 flex-1 rounded ${s <= currentStep ? 'bg-blue-600' : 'bg-gray-200'}`} />
-//                         ))}
-//                     </div>
-//                 </div>
-//                 <div className="px-6 py-5">
-//                     {currentStep === 1 && (
-//                         <div className="space-y-4">
-//                             <h2 className="text-lg font-bold">Personal Information</h2>
-//                             <div>
-//                                 <label className="block text-xs font-medium mb-1.5">Full Name *</label>
-//                                 <input type="text" value={formData.fullName} onChange={e => set('fullName', e.target.value)} placeholder="Enter your full name"
-//                                     className={`w-full px-3 py-2 border rounded-lg text-sm ${errors.fullName ? 'border-red-400' : ''}`} />
-//                                 <FieldError field="fullName" />
-//                             </div>
-//                             <div>
-//                                 <label className="block text-xs font-medium mb-1.5">Date of Birth *</label>
-//                                 <input type="date" value={formData.dateOfBirth} onChange={e => set('dateOfBirth', e.target.value)}
-//                                     className={`w-full px-3 py-2 border rounded-lg text-sm ${errors.dateOfBirth ? 'border-red-400' : ''}`} />
-//                                 <FieldError field="dateOfBirth" />
-//                             </div>
-//                             <div>
-//                                 <label className="block text-xs font-medium mb-1.5">Address *</label>
-//                                 <textarea value={formData.address} onChange={e => set('address', e.target.value)} rows="2"
-//                                     className={`w-full px-3 py-2 border rounded-lg text-sm ${errors.address ? 'border-red-400' : ''}`} />
-//                                 <FieldError field="address" />
-//                             </div>
-//                         </div>
-//                     )}
-//                     {currentStep === 2 && (
-//                         <div className="space-y-4">
-//                             <h2 className="text-lg font-bold">Experience & Education</h2>
-//                             <div>
-//                                 <label className="block text-xs font-medium mb-2">Current Status *</label>
-//                                 <div className="grid grid-cols-2 gap-3">
-//                                     {['fresher', 'experienced'].map(s => (
-//                                         <button key={s} onClick={() => set('currentStatus', s)}
-//                                             className={`p-3 border-2 rounded-lg text-sm ${formData.currentStatus === s ? 'border-blue-600 bg-blue-50' : 'border-gray-300'}`}>
-//                                             {s.charAt(0).toUpperCase() + s.slice(1)}
-//                                         </button>
-//                                     ))}
-//                                 </div>
-//                                 <FieldError field="currentStatus" />
-//                             </div>
-//                             <div>
-//                                 <label className="block text-xs font-medium mb-1.5">Highest Education *</label>
-//                                 <select value={formData.highestEducation} onChange={e => set('highestEducation', e.target.value)}
-//                                     className={`w-full px-3 py-2 border rounded-lg text-sm ${errors.highestEducation ? 'border-red-400' : ''}`}>
-//                                     <option value="">Select education</option>
-//                                     <option value="High School">High School</option>
-//                                     <option value="Diploma">Diploma</option>
-//                                     <option value="Bachelors Degree">Bachelors Degree</option>
-//                                     <option value="Masters Degree">Masters Degree</option>
-//                                     <option value="phd">PhD</option>
-//                                     <option value="Others">Others</option>
-//                                 </select>
-//                                 <FieldError field="highestEducation" />
-//                             </div>
-//                         </div>
-//                     )}
-//                     {currentStep === 3 && (
-//                         <div className="space-y-4">
-//                             <h2 className="text-lg font-bold">What Type of Mentor You Want?</h2>
-//                             <div className="grid grid-cols-2 gap-2">
-//                                 {menteeTypes.map(type => (
-//                                     <button key={type} onClick={() => set('menteeType', type)}
-//                                         className={`p-2.5 border-2 rounded-lg text-left ${formData.menteeType === type ? 'border-blue-600 bg-blue-50' : 'border-gray-300'}`}>
-//                                         <span className="text-xs font-medium">{type}</span>
-//                                     </button>
-//                                 ))}
-//                             </div>
-//                             <FieldError field="menteeType" />
-//                         </div>
-//                     )}
-//                 </div>
-//                 <div className="px-5 py-4 bg-gray-50 flex justify-between border-t">
-//                     <button onClick={() => setCurrentStep(s => s - 1)} disabled={currentStep === 1}
-//                         className="px-4 py-2 rounded-lg disabled:opacity-50 text-sm border hover:bg-gray-100">
-//                         Previous
-//                     </button>
-//                     {currentStep < 3 ? (
-//                         <button onClick={handleNext} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
-//                             Next
-//                         </button>
-//                     ) : (
-//                         <button onClick={handleSubmit} disabled={saving}
-//                             className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 flex items-center gap-2 text-sm">
-//                             {saving && <Loader2 size={16} className="animate-spin" />}
-//                             {saving ? 'Saving...' : 'Complete'}
-//                         </button>
-//                     )}
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
 
 const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
     const [currentStep, setCurrentStep] = useState(1);
@@ -532,38 +407,56 @@ const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
 const Header = ({
     isSidebarOpen, setIsSidebarOpen,
     userData, isProfileDropdownOpen, setIsProfileDropdownOpen,
-    onProfileClick, onLogoutClick, currentPath,
-}) => (
-    <header className="bg-white border-b px-3 sm:px-6 py-0 flex items-center justify-between sticky top-0 z-40 h-[65px] flex-shrink-0">
-        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <button
-                onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0"
-                aria-label="Toggle sidebar"
-            >
-                <Menu size={22} className="text-gray-600" />
-            </button>
-            <h1 className="text-base sm:text-lg font-semibold text-gray-800 truncate">
-                {getPageLabel(currentPath)}
-            </h1>
-        </div>
-        <div className="relative flex-shrink-0">
-            <button
-                onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                className="w-9 h-9 bg-[#0098cc] rounded-full flex items-center justify-center text-white text-sm font-medium"
-            >
-                {userData?.name?.charAt(0) || 'U'}
-            </button>
-            <ProfileDropdown
-                userData={userData}
-                isOpen={isProfileDropdownOpen}
-                onProfileClick={onProfileClick}
-                onLogoutClick={onLogoutClick}
-            />
-        </div>
-    </header>
-);
+    onProfileClick, onLogoutClick, currentPath, profilePhotoUrl,
+}) => {
+    const initials = userData?.name?.split(' ').slice(0, 2).map(n => n?.[0]?.toUpperCase()).join('') || 'U';
 
+    return (
+        <header className="bg-white border-b px-3 sm:px-6 py-0 flex items-center justify-between sticky top-0 z-40 h-[65px] flex-shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+                <button
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="p-1.5 rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0"
+                    aria-label="Toggle sidebar"
+                >
+                    <Menu size={22} className="text-gray-600" />
+                </button>
+                <h1 className="text-base sm:text-lg font-semibold text-gray-800 truncate">
+                    {getPageLabel(currentPath)}
+                </h1>
+            </div>
+            <div className="relative flex-shrink-0">
+                <button
+                    onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-medium overflow-hidden"
+                    style={{ background: profilePhotoUrl ? 'transparent' : '#0098cc' }}
+                >
+                    {profilePhotoUrl ? (
+                        <img
+                            src={profilePhotoUrl}
+                            alt={userData?.name}
+                            className="w-9 h-9 rounded-full object-cover"
+                            onError={e => {
+                                e.target.style.display = 'none';
+                                if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex';
+                            }}
+                        />
+                    ) : null}
+                    <span style={{ display: profilePhotoUrl ? 'none' : 'flex' }}>
+                        {initials}
+                    </span>
+                </button>
+                <ProfileDropdown
+                    userData={userData}
+                    isOpen={isProfileDropdownOpen}
+                    onProfileClick={onProfileClick}
+                    onLogoutClick={onLogoutClick}
+                    profilePhotoUrl={profilePhotoUrl}
+                />
+            </div>
+        </header>
+    );
+};
 /* ── Tooltip ──────────────────────────────────────────────────────────────── */
 const Tooltip = ({ label, children }) => (
     <div className="relative group/tip w-full flex justify-center">
@@ -740,6 +633,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, currentPath, onLogout, hasSu
 const MenteeDashboard = () => {
     const navigate = useNavigate();
     const location = useLocation();
+    const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
 
     const getUserId = () => {
         try {
@@ -827,7 +721,31 @@ const MenteeDashboard = () => {
         clearAllData();
         setTimeout(() => (window.location.href = '/'), 100);
     };
+    useEffect(() => {
+        try {
+            const storedProfileData = JSON.parse(localStorage.getItem('profileData') || '{}');
+            if (storedProfileData.profilePhotoUrl) {
+                setProfilePhotoUrl(storedProfileData.profilePhotoUrl);
+            }
+        } catch (e) {
+            console.error('Failed to load profile photo from localStorage:', e);
+        }
+    }, []);
 
+    // Update profile photo when profile data changes
+    useEffect(() => {
+        if (profileData?.profilePhotoUrl) {
+            setProfilePhotoUrl(profileData.profilePhotoUrl);
+            // Also store in localStorage
+            try {
+                const storedData = JSON.parse(localStorage.getItem('profileData') || '{}');
+                storedData.profilePhotoUrl = profileData.profilePhotoUrl;
+                localStorage.setItem('profileData', JSON.stringify(storedData));
+            } catch (e) {
+                console.error('Failed to store profile photo:', e);
+            }
+        }
+    }, [profileData?.profilePhotoUrl]);
     const profileCompleted = profileData?.profileCompleted ?? false;
     const profile = profileData?.profile ?? null;
     const showOnboarding = (isSuccess && !profileCompleted) || isError;
@@ -861,6 +779,7 @@ const MenteeDashboard = () => {
                         isProfileDropdownOpen={isProfileDropdownOpen}
                         setIsProfileDropdownOpen={setIsProfileDropdownOpen}
                         currentPath={location.pathname}
+                        profilePhotoUrl={profilePhotoUrl}
                         onProfileClick={() => {
                             navigate('/mentee/profile');
                             setIsProfileDropdownOpen(false);

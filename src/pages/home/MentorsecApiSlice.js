@@ -7,7 +7,7 @@ export const mentorSearchApiSlice = apiSlice.injectEndpoints({
     // 🔍 Search mentors by query
     searchMentors: builder.query({
       query: (searchQuery = "") => ({
-        url: `/Mentor/search`,
+        url: `/Mentor/applications/search`,
         method: "GET",
         params: {
           q: searchQuery.trim()

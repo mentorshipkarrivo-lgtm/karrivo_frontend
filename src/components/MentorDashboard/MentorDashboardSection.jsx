@@ -1,959 +1,914 @@
+
+
+
 // import React, { useState, useEffect } from 'react';
 // import {
-//   TrendingUp, Users, Calendar, Star, MapPin, Phone,
-//   Mail, UserRound, BadgeCheck, CircleAlert, Loader2,
-//   Copy, Check, CheckCircle2, Video, Clock, IndianRupee,
-//   ExternalLink, ChevronDown, ChevronUp, Wifi, WifiOff
+//   ChevronDown, ChevronUp, WifiOff, Wifi, ExternalLink, Loader2, CircleAlert, UserRound
 // } from 'lucide-react';
 // import { useGetUserDetailsQuery, useGetMentorSessionBookingsQuery } from './MentorDashboardapislice';
 // import { useNavigate } from 'react-router-dom';
 // import Loader from '../../global/Loader';
 
-// // ── Helpers ───────────────────────────────────────────────────
-// const formatDate = (dateString) => {
-//   if (!dateString) return 'N/A';
-//   return new Date(dateString).toLocaleDateString('en-US', {
-//     year: 'numeric', month: 'long', day: 'numeric',
-//   });
+// const C = {
+//   primary: '#0098cc',
+//   btn: '#1a1a2e',
+//   bg: '#ffffff',
+//   surface: '#f8f9fb',
+//   border: '#e8eaed',
+//   borderLight: '#f0f1f3',
+//   textDark: '#111318',
+//   textMid: '#6b7280',
+//   textLight: '#9ca3af',
+//   success: '#10b981',
+//   warning: '#f59e0b',
+//   error: '#ef4444',
 // };
 
-// const formatShortDate = (dateString) => {
-//   if (!dateString) return 'N/A';
-//   return new Date(dateString).toLocaleDateString('en-US', {
-//     month: 'short', day: 'numeric', year: 'numeric',
-//   });
+// const STATUS = {
+//   confirmed: { bg: '#ecfdf5', text: '#059669', dot: '#10b981' },
+//   completed:  { bg: '#eff6ff', text: '#2563eb', dot: '#3b82f6' },
+//   cancelled:  { bg: '#fff1f2', text: '#e11d48', dot: '#ef4444' },
+//   pending:    { bg: '#fffbeb', text: '#d97706', dot: '#f59e0b' },
 // };
 
-// const statusConfig = {
-//   confirmed: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', dot: 'bg-emerald-400', label: 'Confirmed' },
-//   completed: { bg: 'bg-blue-500/10', text: 'text-blue-400', dot: 'bg-blue-400', label: 'Completed' },
-//   cancelled: { bg: 'bg-red-500/10', text: 'text-red-400', dot: 'bg-red-400', label: 'Cancelled' },
-//   pending: { bg: 'bg-amber-500/10', text: 'text-amber-400', dot: 'bg-amber-400', label: 'Pending' },
-// };
-
-// // ── Stat Card ─────────────────────────────────────────────────
-// const StatCard = ({ label, value, icon: Icon, iconColor, sub, subColor }) => (
-//   <div className="bg-[#062117] border border-white/10 rounded-2xl p-4 sm:p-5 flex items-start justify-between transition-shadow">
-//     <div className="flex flex-col gap-1 min-w-0 flex-1 pr-3">
-//       <span className="text-white/50 text-xs sm:text-sm font-medium">{label}</span>
-//       <span className="text-white text-2xl sm:text-3xl font-bold mt-1 tracking-tight truncate">{value}</span>
-//       {sub && <span className={`text-xs mt-1 font-medium ${subColor || 'text-white/40'}`}>{sub}</span>}
-//     </div>
-//     <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-full bg-white/5 flex items-center justify-center shrink-0">
-//       <Icon size={20} className={iconColor} />
-//     </div>
-//   </div>
-// );
-
-// // ── Tab Button ────────────────────────────────────────────────
-// const TabBtn = ({ label, active, onClick }) => (
-//   <button
-//     onClick={onClick}
-//     className={`flex-1 py-2 rounded-xl text-xs font-semibold transition-all ${active ? 'bg-[#0098cc] text-white shadow-sm' : 'text-white/50 hover:bg-white/10'
-//       }`}
-//   >
-//     {label}
-//   </button>
-// );
-
-// const TABS = ['Overview', 'Profile', 'Activity'];
-
-// // ── Info Row ─────────────────────────────────────────────────
-// const InfoRow = ({ icon: Icon, label, value }) => (
-//   <div className="bg-[#031610] rounded-xl p-3 border border-white/10 flex items-center gap-2.5">
-//     <div className="w-7 h-7 rounded-lg bg-[#0098cc]/10 flex items-center justify-center shrink-0">
-//       <Icon size={12} className="text-[#0098cc]" />
-//     </div>
-//     <div className="min-w-0">
-//       <p className="text-white/40 text-[10px]">{label}</p>
-//       <p className="text-white text-xs font-semibold truncate">{value || '—'}</p>
-//     </div>
-//   </div>
-// );
-
-// // ── Session Booking Card ──────────────────────────────────────
-// const BookingCard = ({ booking }) => {
-//   const [expanded, setExpanded] = useState(false);
-//   const cfg = statusConfig[booking.status] || statusConfig.pending;
-
-//   return (
-//     <div className="bg-[#031610] border border-white/10 rounded-2xl overflow-hidden transition-all duration-200">
-//       {/* Header row */}
-//       <div className="p-4 flex items-start justify-between gap-3">
-//         <div className="flex items-start gap-3 min-w-0 flex-1">
-//           <div className="w-9 h-9 rounded-xl bg-[#0098cc]/10 flex items-center justify-center shrink-0 mt-0.5">
-//             <Video size={14} className="text-[#0098cc]" />
-//           </div>
-//           <div className="min-w-0">
-//             <p className="text-white font-semibold text-sm truncate">{booking.topic || 'Session'}</p>
-//             <p className="text-white/40 text-xs mt-0.5 truncate">{booking.menteeName}</p>
-//             <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-//               {/* Status badge */}
-//               <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${cfg.bg} ${cfg.text}`}>
-//                 <span className={`w-1 h-1 rounded-full ${cfg.dot}`} />
-//                 {cfg.label}
-//               </span>
-//               {/* Free / paid badge */}
-//               <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold ${booking.isFreeSession ? 'bg-violet-500/10 text-violet-400' : 'bg-emerald-500/10 text-emerald-400'
-//                 }`}>
-//                 {booking.isFreeSession ? 'Free' : `₹${booking.price}`}
-//               </span>
-//             </div>
-//           </div>
-//         </div>
-
-//         <div className="flex flex-col items-end gap-2 shrink-0">
-//           <div className="flex items-center gap-1 text-white/40 text-[10px]">
-//             <Clock size={10} />
-//             <span>{booking.startTime}</span>
-//           </div>
-//           <p className="text-white/40 text-[10px]">{formatShortDate(booking.sessionDate)}</p>
-//           <button
-//             onClick={() => setExpanded(!expanded)}
-//             className="text-[#0098cc]/60 hover:text-[#0098cc] transition-colors"
-//           >
-//             {expanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-//           </button>
-//         </div>
-//       </div>
-
-//       {/* Expanded detail */}
-//       {expanded && (
-//         <div className="border-t border-white/10 px-4 pb-4 pt-3 flex flex-col gap-2.5">
-//           <div className="grid grid-cols-2 gap-2 text-xs">
-//             {[
-//               { label: 'Duration', value: `${booking.durationMinutes} min` },
-//               { label: 'Session Type', value: booking.sessionType },
-//               { label: 'Mentee Email', value: booking.menteeEmail },
-//               { label: 'Payment', value: booking.paymentStatus },
-//               { label: 'Method', value: booking.paymentMethod },
-//               { label: 'Transaction ID', value: booking.transactionId },
-//             ].map(({ label, value }) => (
-//               <div key={label} className="bg-[#062117] rounded-lg p-2 border border-white/5">
-//                 <p className="text-white/30 text-[9px] uppercase tracking-wide">{label}</p>
-//                 <p className="text-white/80 font-medium mt-0.5 truncate">{value || '—'}</p>
-//               </div>
-//             ))}
-//           </div>
-
-//           {/* Zoom link */}
-//           {booking.meetingLink && (
-//             <a
-//               href={booking.meetingLink}
-//               target="_blank"
-//               rel="noopener noreferrer"
-//               className="flex items-center gap-2 bg-[#0098cc]/10 hover:bg-[#0098cc]/20 border border-[#0098cc]/20 rounded-xl px-3 py-2 text-[#0098cc] text-xs font-medium transition-all"
-//             >
-//               <Wifi size={12} />
-//               Join Zoom Meeting
-//               <ExternalLink size={10} className="ml-auto" />
-//             </a>
-//           )}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// // ── Sessions Panel ────────────────────────────────────────────
-// const SessionsPanel = ({ email }) => {
-//   const [filter, setFilter] = useState('all');
-
-//   const { data: sessionData, isLoading, isError } =
-//     useGetMentorSessionBookingsQuery(email, { skip: !email });
-
-//   const bookings = sessionData?.data?.bookings || [];
-//   const stats = sessionData?.data?.stats || {};
-
-//   const filtered = filter === 'all'
-//     ? bookings
-//     : bookings.filter((b) => b.status === filter);
-
-//   if (isLoading) return (
-//     <div className="flex items-center justify-center py-12">
-//       <Loader2 size={24} className="animate-spin text-[#0098cc]" />
-//     </div>
-//   );
-
-//   if (isError) return (
-//     <div className="flex flex-col items-center justify-center py-12 gap-2">
-//       <WifiOff size={28} className="text-red-400/50" />
-//       <p className="text-white/30 text-sm">Failed to load bookings</p>
-//     </div>
-//   );
-
-//   const filterBtns = [
-//     { key: 'all', label: `All (${stats.total || 0})` },
-//     { key: 'confirmed', label: `Confirmed (${stats.confirmed || 0})` },
-//     { key: 'completed', label: `Completed (${stats.completed || 0})` },
-//     { key: 'pending', label: `Pending (${stats.pending || 0})` },
-//     { key: 'cancelled', label: `Cancelled (${stats.cancelled || 0})` },
-//   ];
-
-//   return (
-//     <div className="flex flex-col gap-4">
-//       {/* Mini stats row */}
-//       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-//         {[
-//           { label: 'Total', value: stats.total || 0, color: 'text-[#0098cc]' },
-//           { label: 'Confirmed', value: stats.confirmed || 0, color: 'text-emerald-400' },
-//           { label: 'Completed', value: stats.completed || 0, color: 'text-blue-400' },
-//           { label: 'Revenue', value: `₹${stats.totalRevenue || 0}`, color: 'text-amber-400' },
-//         ].map(({ label, value, color }) => (
-//           <div key={label} className="bg-[#062117] border border-white/10 rounded-xl p-3 text-center">
-//             <p className={`text-lg font-bold ${color}`}>{value}</p>
-//             <p className="text-white/40 text-[10px] mt-0.5">{label}</p>
-//           </div>
-//         ))}
-//       </div>
-
-//       {/* Filter strip */}
-//       <div className="flex gap-1.5 flex-wrap">
-//         {filterBtns.map(({ key, label }) => (
-//           <button
-//             key={key}
-//             onClick={() => setFilter(key)}
-//             className={`px-3 py-1.5 rounded-xl text-[10px] font-semibold transition-all ${filter === key
-//                 ? 'bg-[#0098cc] text-white'
-//                 : 'bg-[#062117] border border-white/10 text-white/40 hover:text-white/70'
-//               }`}
-//           >
-//             {label}
-//           </button>
-//         ))}
-//       </div>
-
-//       {/* Booking cards */}
-//       {filtered.length === 0 ? (
-//         <div className="flex flex-col items-center justify-center py-10 gap-2">
-//           <Calendar size={28} className="text-white/10" />
-//           <p className="text-white/30 text-sm">No bookings found</p>
-//         </div>
-//       ) : (
-//         <div className="flex flex-col gap-3">
-//           {filtered.map((booking) => (
-//             <BookingCard key={booking._id} booking={booking} />
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// // ── Main ──────────────────────────────────────────────────────
-// const MentorDashboardSection = () => {
+// export default function MentorDashboard() {
+//   const navigate = useNavigate();
 //   const [mentorId, setMentorId] = useState(null);
 //   const [mentorEmail, setMentorEmail] = useState(null);
-//   const [activeTab, setActiveTab] = useState(0);
-//   const [isPanelOpen, setIsPanelOpen] = useState(false);
-//   const [showSessions, setShowSessions] = useState(false);
-//   const navigate = useNavigate();
+//   const [filter, setFilter] = useState('all');
+//   const [expanded, setExpanded] = useState(null);
 
 //   useEffect(() => {
-//     const userData = localStorage.getItem('userData');
-//     if (userData) {
-//       try {
-//         const parsed = JSON.parse(userData);
-//         setMentorId(parsed?._id);
-//         setMentorEmail(parsed?.email);
-//       } catch (e) {
-//         console.error('Error parsing userData:', e);
-//       }
-//     }
+//     try {
+//       const u = JSON.parse(localStorage.getItem('userData') || '{}');
+//       setMentorId(u?._id);
+//       setMentorEmail(u?.email);
+//     } catch (e) { console.error(e); }
 //   }, []);
 
-//   const { data: userDetails, isLoading, isError, error } =
+//   const { data: userDetails, isLoading: detailsLoading, isError: detailsError, error } =
 //     useGetUserDetailsQuery(mentorId, { skip: !mentorId });
-
-//   // ── Fetch sessions by email at top level ─────────────────
 //   const { data: sessionData, isLoading: sessionsLoading } =
 //     useGetMentorSessionBookingsQuery(mentorEmail, { skip: !mentorEmail });
 
-//   const sessionStats = sessionData?.data?.stats || {};
-//   const sessionBookings = sessionData?.data?.bookings || [];
-
-//   // Derive upcoming = confirmed sessions whose date is today or future
-//   const today = new Date(); today.setHours(0, 0, 0, 0);
-//   const upcoming = sessionBookings.filter(
-//     (b) => b.status === 'confirmed' && new Date(b.sessionDate) >= today
-//   ).length;
-//   const completed = sessionStats.completed || 0;
-//   const total = sessionStats.total || 0;
-//   const cancelled = sessionStats.cancelled || 0;
-
 //   const user = userDetails?.data;
+//   const stats = sessionData?.data?.stats || {};
+//   const bookings = sessionData?.data?.bookings || [];
 
 //   useEffect(() => {
 //     if (user?.mentorId) {
-//       try { localStorage.setItem('mentorId', user.mentorId); } catch (e) { }
+//       try { localStorage.setItem('mentorId', user.mentorId); } catch (e) { console.error(e); }
 //     }
 //   }, [user]);
 
-//   // ── Loading ─────────────────────────────────────────────
-//   if (isLoading) return (
-//     <div className="flex-1 flex items-center justify-center min-h-[300px] bg-[#031610]">
-//       <div className="flex flex-col items-center gap-3">
-//         <Loader />
-//       </div>
+//   const today = new Date(); today.setHours(0, 0, 0, 0);
+//   const upcoming = bookings.filter(b => b.status === 'confirmed' && new Date(b.sessionDate) >= today).length;
+//   const total = stats.total || 0;
+//   const completed = stats.completed || 0;
+//   const cancelled = stats.cancelled || 0;
+//   const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
+//   const filtered = filter === 'all' ? bookings : bookings.filter(b => b.status === filter);
+
+//   const fmt = (d, short) => !d ? '—' : new Date(d).toLocaleDateString('en-US',
+//     short
+//       ? { month: 'short', day: 'numeric', year: 'numeric' }
+//       : { year: 'numeric', month: 'long', day: 'numeric' }
+//   );
+
+//   if (detailsLoading) return (
+//     <div style={{ background: C.bg }} className="flex-1 flex items-center justify-center min-h-screen">
+//       <Loader />
 //     </div>
 //   );
 
-//   if (isError) return (
-//     <div className="flex-1 flex items-center justify-center p-4 min-h-[300px] bg-[#031610]">
-//       <div className="bg-[#062117] border border-white/10 rounded-2xl p-8 max-w-sm w-full text-center">
-//         <CircleAlert size={36} className="text-red-400 mx-auto mb-3" />
-//         <p className="text-white/50 text-sm">{error?.data?.message || 'Failed to load user details'}</p>
+//   if (detailsError) return (
+//     <div style={{ background: C.bg }} className="flex-1 flex items-center justify-center min-h-screen p-4">
+//       <div className="text-center">
+//         <CircleAlert size={36} style={{ color: C.error }} className="mx-auto mb-3 opacity-60" />
+//         <p style={{ color: C.textLight }}>{error?.data?.message || 'Failed to load dashboard'}</p>
 //       </div>
 //     </div>
 //   );
 
 //   if (!user) return (
-//     <div className="flex-1 flex items-center justify-center min-h-[300px] bg-[#031610]">
-//       <div className="bg-[#062117] border border-white/10 rounded-2xl p-8 max-w-sm w-full text-center">
-//         <UserRound size={36} className="text-white/20 mx-auto mb-3" />
-//         <p className="text-white/40 text-sm">No user data available</p>
+//     <div style={{ background: C.bg }} className="flex-1 flex items-center justify-center min-h-screen">
+//       <div className="text-center">
+//         <UserRound size={36} style={{ color: C.textLight }} className="mx-auto mb-3 opacity-50" />
+//         <p style={{ color: C.textLight }}>No user data found</p>
 //       </div>
 //     </div>
 //   );
 
-//   const completionRate = total > 0
-//     ? Math.round((completed / total) * 100)
-//     : 0;
+//   const initials = (user?.name || 'M').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+
+//   const filterOptions = [
+//     { key: 'all',       label: `All`,        count: total },
+//     { key: 'confirmed', label: 'Confirmed',  count: stats.confirmed || 0 },
+//     { key: 'completed', label: 'Completed',  count: stats.completed || 0 },
+//     { key: 'pending',   label: 'Pending',    count: stats.pending || 0 },
+//     { key: 'cancelled', label: 'Cancelled',  count: stats.cancelled || 0 },
+//   ];
 
 //   return (
-//     <div className="flex flex-col min-h-full bg-[#031610]">
+//     <div style={{ background: C.bg, minHeight: '100%', fontFamily: "'DM Sans', sans-serif" }}>
+//       <style>{`
+//         @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+//         * { box-sizing: border-box; }
+//         .hover-row:hover { background: #f8f9fb !important; }
+//         .hover-btn:hover { opacity: 0.8; }
+//         .hover-link:hover { opacity: 0.7; }
+//         .filter-btn:hover { background: #f0f8fc !important; color: #0098cc !important; }
+//       `}</style>
 
-//       {/* ══ TOP BAR ════════════════════════════════════════════ */}
-//       <div className="bg-[#062117] border-b border-white/10 px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
-//         <div className="flex items-center gap-3">
-//           <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#0098cc]/20 border-2 border-[#0098cc] flex items-center justify-center shrink-0">
-//             <UserRound size={16} className="text-[#0098cc]" />
-//           </div>
-//           <div>
-//             <p className="text-white font-bold text-sm sm:text-base leading-tight">
-//               Hey {user?.name?.toUpperCase() || 'MENTOR'}
-//             </p>
-//             <p className="text-white/40 text-[10px] sm:text-xs">Welcome to your dashboard</p>
+//       <div style={{ maxWidth: 900, margin: '0 auto', padding: '40px 24px 80px' }}>
+
+//         {/* ── HEADER ── */}
+//         <div style={{ borderBottom: `1px solid ${C.border}`, paddingBottom: 28, marginBottom: 32 }}>
+//           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', flexWrap: 'wrap', gap: 16 }}>
+//             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+//               <div style={{
+//                 width: 52, height: 52, borderRadius: '50%',
+//                 background: `${C.primary}15`, color: C.primary,
+//                 display: 'flex', alignItems: 'center', justifyContent: 'center',
+//                 fontWeight: 700, fontSize: 18, fontFamily: "'DM Mono', monospace", flexShrink: 0,
+//                 border: `2px solid ${C.primary}25`,
+//               }}>
+//                 {initials}
+//               </div>
+//               <div>
+//                 <h1 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: C.textDark, letterSpacing: '-0.4px' }}>
+//                   {user?.name || 'Mentor'}
+//                 </h1>
+//                 <p style={{ margin: '3px 0 0', fontSize: 13, color: C.textMid }}>
+//                   {user?.email}
+//                   {user?.phone && <span style={{ color: C.textLight, margin: '0 6px' }}>·</span>}
+//                   {user?.phone && `+${user.countryCode} ${user.phone}`}
+//                 </p>
+//                 <div style={{ display: 'flex', gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
+//                   {user?.isVerified && (
+//                     <span style={{ background: '#ecfdf5', color: '#059669', fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 20 }}>
+//                       ✓ Verified
+//                     </span>
+//                   )}
+//                   {user?.isActive && (
+//                     <span style={{ background: '#ecfdf5', color: '#059669', fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 20 }}>
+//                       ● Active
+//                     </span>
+//                   )}
+//                   {user?.city && (
+//                     <span style={{ background: `${C.primary}12`, color: C.primary, fontSize: 11, fontWeight: 600, padding: '3px 10px', borderRadius: 20 }}>
+//                       📍 {user.city}{user.country ? `, ${user.country}` : ''}
+//                     </span>
+//                   )}
+//                   {user?.username && (
+//                     <span style={{ background: C.surface, color: C.textMid, fontSize: 11, fontWeight: 500, padding: '3px 10px', borderRadius: 20, border: `1px solid ${C.border}` }}>
+//                       @{user.username}
+//                     </span>
+//                   )}
+//                 </div>
+//               </div>
+//             </div>
+//             <span style={{ fontSize: 12, color: C.textLight, paddingTop: 4 }}>
+//               Member since {fmt(user?.createdAt)}
+//             </span>
 //           </div>
 //         </div>
-//       </div>
 
-//       {/* ══ BODY ════════════════════════════════════════════════ */}
-//       <div className="flex flex-col xl:flex-row flex-1 gap-4 p-4 sm:p-5">
+//         {/* ── STATS GRID ── */}
+//         <div style={{
+//           display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)',
+//           border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden', marginBottom: 28
+//         }}>
+//           {[
+//             { label: 'Total Sessions', value: sessionsLoading ? '—' : total, color: C.primary },
+//             { label: 'Upcoming',       value: sessionsLoading ? '—' : upcoming, color: C.warning },
+//             { label: 'Completed',      value: sessionsLoading ? '—' : completed, color: C.success },
+//             { label: 'Cancelled',      value: sessionsLoading ? '—' : cancelled, color: C.error },
+//           ].map(({ label, value, color }, i) => (
+//             <div key={label} style={{
+//               padding: '24px 16px', textAlign: 'center',
+//               borderRight: i < 3 ? `1px solid ${C.border}` : 'none',
+//               background: C.bg,
+//             }}>
+//               <p style={{ margin: 0, fontSize: 34, fontWeight: 700, color, fontFamily: "'DM Mono', monospace", letterSpacing: '-1px' }}>
+//                 {value}
+//               </p>
+//               <p style={{ margin: '6px 0 0', fontSize: 11, color: C.textLight, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+//                 {label}
+//               </p>
+//             </div>
+//           ))}
+//         </div>
 
-//         {/* ── MOBILE: Toggle Left Panel ──────────────────────── */}
-//         <button
-//           onClick={() => setIsPanelOpen(!isPanelOpen)}
-//           className="xl:hidden flex items-center justify-between bg-[#062117] border border-white/10 rounded-2xl px-4 py-3 text-white/70 text-sm font-medium"
-//         >
-//           <span>Account Overview</span>
-//           <span className="text-[#0098cc] text-xs">{isPanelOpen ? 'Hide ▲' : 'Show ▼'}</span>
-//         </button>
+//         {/* ── COMPLETION RATE ── */}
+//         <div style={{ marginBottom: 32 }}>
+//           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+//             <span style={{ fontSize: 12, color: C.textMid, fontWeight: 500 }}>Session Completion Rate</span>
+//             <span style={{ fontSize: 13, fontWeight: 700, color: C.primary, fontFamily: "'DM Mono', monospace" }}>
+//               {completionRate}%
+//             </span>
+//           </div>
+//           <div style={{ height: 4, borderRadius: 4, background: C.border, overflow: 'hidden' }}>
+//             <div style={{ height: '100%', width: `${completionRate}%`, background: C.primary, borderRadius: 4, transition: 'width 0.8s ease' }} />
+//           </div>
+//         </div>
 
-//         {/* ── LEFT PANEL ─────────────────────────────────────── */}
-//         <div className={`xl:w-80 xl:shrink-0 flex flex-col bg-[#062117] border border-white/10 rounded-2xl overflow-hidden ${isPanelOpen ? 'flex' : 'hidden xl:flex'
-//           }`}>
-//           <div className="flex gap-1 p-2 border-b border-white/10">
-//             {TABS.map((t, i) => (
-//               <TabBtn key={t} label={t} active={activeTab === i} onClick={() => setActiveTab(i)} />
+//         {/* ── PROFILE + ACCOUNT ── */}
+//         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 0, border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden', marginBottom: 40 }}>
+//           {/* Profile */}
+//           <div style={{ padding: '24px 28px', borderRight: `1px solid ${C.border}` }}>
+//             <p style={{ margin: '0 0 16px', fontSize: 10, fontWeight: 700, color: C.textLight, textTransform: 'uppercase', letterSpacing: '1px' }}>
+//               Profile Info
+//             </p>
+//             {[
+//               ['Full Name', user?.name],
+//               ['Username',  user?.username ? `@${user.username}` : null],
+//               ['Email',     user?.email],
+//               ['Phone',     user?.phone ? `+${user.countryCode} ${user.phone}` : null],
+//             ].map(([label, value]) => (
+//               <div key={label} style={{ padding: '12px 0', borderBottom: `1px solid ${C.borderLight}` }}>
+//                 <p style={{ margin: 0, fontSize: 11, color: C.textLight }}>{label}</p>
+//                 <p style={{ margin: '3px 0 0', fontSize: 13, fontWeight: 600, color: C.textDark }}>{value || '—'}</p>
+//               </div>
 //             ))}
 //           </div>
 
-//           <div className="flex-1 p-3 sm:p-4 flex flex-col gap-3 bg-[#031610] overflow-auto">
-
-//             {/* ── OVERVIEW TAB ──────────────────────────────── */}
-//             {activeTab === 0 && (
-//               <>
-//                 <div className="flex items-center justify-between bg-[#031610] rounded-xl px-4 py-3 border border-white/10">
-//                   <div>
-//                     <p className="text-white font-semibold text-sm">Mentor Account</p>
-//                     <p className="text-white/40 text-xs mt-0.5">{user?.username || 'N/A'}</p>
-//                   </div>
-//                 </div>
-
-//                 <div className="bg-[#031610] rounded-xl px-4 py-3 border border-white/10 flex items-center gap-2.5">
-//                   <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${user?.isVerified ? 'bg-emerald-500/10' : 'bg-amber-500/10'
-//                     }`}>
-//                     {user?.isVerified
-//                       ? <CheckCircle2 size={16} className="text-emerald-500" />
-//                       : <CircleAlert size={16} className="text-amber-500" />
-//                     }
-//                   </div>
-//                   <div>
-//                     <p className="text-white text-xs font-semibold">
-//                       {user?.isVerified ? 'Verified Account' : 'Not Verified'}
-//                     </p>
-//                     <p className="text-white/40 text-[10px]">
-//                       {user?.isVerified ? 'Your account is verified' : 'Complete verification to unlock all features'}
-//                     </p>
-//                   </div>
-//                 </div>
-
-//                 <div className="grid grid-cols-2 gap-2">
-//                   <div className="bg-[#031610] rounded-xl p-3 border border-white/10">
-//                     <p className="text-[#0098cc] text-[10px] font-bold uppercase tracking-wide">Total</p>
-//                     <p className="text-white text-2xl font-bold mt-0.5">{sessionsLoading ? '…' : total}</p>
-//                   </div>
-//                   <div className="bg-[#031610] rounded-xl p-3 border border-white/10">
-//                     <p className="text-emerald-400 text-[10px] font-bold uppercase tracking-wide">Completed</p>
-//                     <p className="text-white text-2xl font-bold mt-0.5">{sessionsLoading ? '…' : completed}</p>
-//                   </div>
-//                 </div>
-
-//                 <div className="grid grid-cols-2 gap-2">
-//                   <div className="bg-[#031610] rounded-xl p-3 border border-white/10">
-//                     <p className="text-amber-400 text-[10px] font-bold uppercase tracking-wide">Upcoming</p>
-//                     <p className="text-white text-2xl font-bold mt-0.5">{sessionsLoading ? '…' : upcoming}</p>
-//                   </div>
-//                   <div className="bg-[#031610] rounded-xl p-3 border border-white/10">
-//                     <p className="text-red-400 text-[10px] font-bold uppercase tracking-wide">Cancelled</p>
-//                     <p className="text-white text-2xl font-bold mt-0.5">{sessionsLoading ? '…' : cancelled}</p>
-//                   </div>
-//                 </div>
-
-//                 <div className="bg-[#031610] rounded-xl p-3 border border-white/10">
-//                   <div className="flex justify-between text-[10px] mb-1.5">
-//                     <span className="text-[#0098cc] font-semibold flex items-center gap-1">
-//                       <TrendingUp size={10} /> Completion rate
-//                     </span>
-//                     <span className="text-white/60 font-semibold">{completionRate}%</span>
-//                   </div>
-//                   <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-//                     <div
-//                       className="h-full rounded-full transition-all duration-700"
-//                       style={{
-//                         width: `${completionRate}%`,
-//                         background: 'linear-gradient(90deg, #0098cc, #00b8f0)'
-//                       }}
-//                     />
-//                   </div>
-//                 </div>
-
-//                 <p className="text-[10px] text-[#0098cc]/60 text-center mt-auto px-2">
-//                   Member since {formatDate(user?.createdAt)}
-//                 </p>
-//               </>
-//             )}
-
-//             {/* ── PROFILE TAB ───────────────────────────────── */}
-//             {activeTab === 1 && (
-//               <>
-//                 <p className="text-white font-semibold text-sm flex items-center gap-1.5">
-//                   <UserRound size={13} className="text-[#0098cc]" />
-//                   Profile Information
-//                 </p>
-//                 {[
-//                   { icon: UserRound, label: 'Full Name', value: user?.name },
-//                   { icon: Mail, label: 'Email', value: user?.email },
-//                   { icon: Phone, label: 'Phone', value: user?.phone ? `+${user.countryCode} ${user.phone}` : null },
-//                   { icon: UserRound, label: 'Username', value: user?.username },
-//                   { icon: MapPin, label: 'Location', value: user?.city ? `${user.city}, ${user.country}` : null },
-//                 ].map((item) => (
-//                   <InfoRow key={item.label} {...item} />
-//                 ))}
-//               </>
-//             )}
-
-//             {/* ── ACTIVITY TAB ──────────────────────────────── */}
-//             {activeTab === 2 && (
-//               <>
-//                 <p className="text-white font-semibold text-sm flex items-center gap-1.5">
-//                   <TrendingUp size={13} className="text-[#0098cc]" />
-//                   Account Activity
-//                 </p>
-//                 {[
-//                   { label: 'Account Created', value: formatDate(user?.createdAt) },
-//                   { label: 'Last Updated', value: formatDate(user?.updatedAt) },
-//                   { label: 'Account Status', value: user?.isActive ? 'Active' : 'Inactive' },
-//                   { label: 'Verification', value: user?.isVerified ? 'Verified' : 'Pending' },
-//                 ].map(({ label, value }) => (
-//                   <div key={label} className="bg-[#031610] rounded-xl p-3 border border-white/10 flex items-center justify-between gap-2">
-//                     <div className="flex items-center gap-2 min-w-0">
-//                       <div className="w-1.5 h-1.5 bg-[#0098cc] rounded-full shrink-0" />
-//                       <p className="text-white/40 text-xs truncate">{label}</p>
-//                     </div>
-//                     <p className="text-white text-xs font-semibold shrink-0">{value}</p>
-//                   </div>
-//                 ))}
-//               </>
-//             )}
+//           {/* Account */}
+//           <div style={{ padding: '24px 28px' }}>
+//             <p style={{ margin: '0 0 16px', fontSize: 10, fontWeight: 700, color: C.textLight, textTransform: 'uppercase', letterSpacing: '1px' }}>
+//               Account Status
+//             </p>
+//             {[
+//               ['Created',      fmt(user?.createdAt), null],
+//               ['Last Updated', fmt(user?.updatedAt), null],
+//               ['Status',       user?.isActive ? 'Active' : 'Inactive', user?.isActive ? C.success : C.error],
+//               ['Verification', user?.isVerified ? 'Verified' : 'Pending', user?.isVerified ? C.success : C.warning],
+//             ].map(([label, value, color]) => (
+//               <div key={label} style={{ padding: '12px 0', borderBottom: `1px solid ${C.borderLight}` }}>
+//                 <p style={{ margin: 0, fontSize: 11, color: C.textLight }}>{label}</p>
+//                 <p style={{ margin: '3px 0 0', fontSize: 13, fontWeight: 600, color: color || C.textDark }}>{value}</p>
+//               </div>
+//             ))}
+//             <button
+//               onClick={() => navigate('/mentor-profile')}
+//               className="hover-link"
+//               style={{
+//                 marginTop: 14, background: 'none', border: 'none', padding: 0,
+//                 cursor: 'pointer', fontSize: 12, fontWeight: 600, color: C.primary,
+//                 display: 'inline-flex', alignItems: 'center', gap: 4,
+//               }}
+//             >
+//               View full profile →
+//             </button>
 //           </div>
 //         </div>
 
-//         {/* ── RIGHT: STAT CARDS + SESSIONS ───────────────────── */}
-//         <div className="flex-1 flex flex-col gap-4 min-w-0">
+//         {/* ── SESSIONS ── */}
+//         <div>
+//           <h2 style={{ margin: '0 0 20px', fontSize: 18, fontWeight: 700, color: C.textDark, letterSpacing: '-0.3px' }}>
+//             Session Bookings
+//           </h2>
 
-//           {/* 2-col stat grid — powered by live session data */}
-//           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-//             <StatCard
-//               label="Total Sessions"
-//               value={sessionsLoading ? '…' : total}
-//               icon={Calendar}
-//               iconColor="text-[#0098cc]"
-//               sub={`${cancelled} cancelled`}
-//               subColor="text-white/30"
-//             />
-//             <StatCard
-//               label="Upcoming Sessions"
-//               value={sessionsLoading ? '…' : upcoming}
-//               icon={TrendingUp}
-//               iconColor="text-amber-400"
-//               sub="Confirmed & future"
-//               subColor="text-amber-400/60"
-//             />
-//             <StatCard
-//               label="Completed Sessions"
-//               value={sessionsLoading ? '…' : completed}
-//               icon={Star}
-//               iconColor="text-emerald-400"
-//               sub={total > 0 ? `${Math.round((completed / total) * 100)}% completion rate` : 'No sessions yet'}
-//               subColor="text-emerald-400/60"
-//             />
-//             <StatCard
-//               label="Account Status"
-//               value={user?.isActive ? 'Active' : 'Inactive'}
-//               icon={Users}
-//               iconColor="text-violet-400"
-//               sub={user?.isVerified ? '✓ Verified' : '⚠ Not Verified'}
-//               subColor={user?.isVerified ? 'text-emerald-500' : 'text-amber-500'}
-//             />
+//           {/* Filters */}
+//           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 20 }}>
+//             {filterOptions.map(({ key, label, count }) => {
+//               const active = filter === key;
+//               return (
+//                 <button
+//                   key={key}
+//                   onClick={() => setFilter(key)}
+//                   className={active ? '' : 'filter-btn'}
+//                   style={{
+//                     padding: '6px 14px', borderRadius: 8, border: `1px solid ${active ? C.primary : C.border}`,
+//                     background: active ? C.btn : C.bg, color: active ? '#fff' : C.textMid,
+//                     fontSize: 12, fontWeight: 600, cursor: 'pointer',
+//                     display: 'inline-flex', alignItems: 'center', gap: 5, transition: 'all 0.15s',
+//                   }}
+//                 >
+//                   {label}
+//                   <span style={{
+//                     fontSize: 10, fontWeight: 700, padding: '1px 6px', borderRadius: 10,
+//                     background: active ? 'rgba(255,255,255,0.2)' : C.surface,
+//                     color: active ? '#fff' : C.textLight,
+//                     fontFamily: "'DM Mono', monospace",
+//                   }}>
+//                     {count}
+//                   </span>
+//                 </button>
+//               );
+//             })}
 //           </div>
 
-//           {/* Full-width profile card */}
-//           <div className="bg-[#062117] border border-white/10 rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-4">
-//             <div className="flex flex-col gap-1 min-w-0">
-//               <span className="text-white/50 text-sm font-medium">Profile Details</span>
-//               <span className="text-white text-xl sm:text-2xl font-bold mt-1 truncate">
-//                 {user?.name || 'Mentor'}
-//               </span>
-//               <span className="text-white/40 text-xs truncate">{user?.email}</span>
-//               <button
-//                 onClick={() => navigate('/mentor-profile')}
-//                 className="mt-3 flex items-center gap-2 bg-[#0098cc] hover:bg-[#0098cc]/80 text-white text-sm px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg transition-colors w-fit font-medium"
-//               >
-//                 View Full Profile
-//               </button>
+//           {/* List */}
+//           {sessionsLoading ? (
+//             <div style={{ display: 'flex', justifyContent: 'center', padding: '48px 0' }}>
+//               <Loader2 size={22} style={{ color: C.textLight }} className="animate-spin" />
 //             </div>
-//             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#0098cc]/10 flex items-center justify-center shrink-0">
-//               <BadgeCheck size={22} className="text-[#0098cc]" />
+//           ) : filtered.length === 0 ? (
+//             <div style={{ textAlign: 'center', padding: '48px 0', color: C.textLight }}>
+//               <WifiOff size={26} style={{ margin: '0 auto 10px', opacity: 0.4, display: 'block' }} />
+//               <p style={{ margin: 0, fontSize: 13 }}>No sessions found</p>
 //             </div>
-//           </div>
+//           ) : (
+//             <div style={{ border: `1px solid ${C.border}`, borderRadius: 12, overflow: 'hidden' }}>
+//               {filtered.map((b, idx) => {
+//                 const isOpen = expanded === b._id;
+//                 const sc = STATUS[b.status] || STATUS.pending;
+//                 return (
+//                   <div key={b._id} style={{ borderBottom: idx < filtered.length - 1 ? `1px solid ${C.borderLight}` : 'none' }}>
+//                     {/* Row */}
+//                     <div
+//                       onClick={() => setExpanded(isOpen ? null : b._id)}
+//                       className="hover-row"
+//                       style={{
+//                         display: 'flex', alignItems: 'center', gap: 12,
+//                         padding: '14px 20px', cursor: 'pointer', transition: 'background 0.12s',
+//                         background: isOpen ? '#f5fbfe' : C.bg,
+//                       }}
+//                     >
+//                       {/* Status dot */}
+//                       <div style={{ width: 6, height: 6, borderRadius: '50%', background: sc.dot, flexShrink: 0 }} />
 
-//           {/* ── SESSION BOOKINGS SECTION ─────────────────────── */}
-//           <div className="bg-[#062117] border border-white/10 rounded-2xl overflow-hidden">
-//             {/* Section header / toggle */}
-//             <button
-//               onClick={() => setShowSessions(!showSessions)}
-//               className="w-full flex items-center justify-between px-4 sm:px-5 py-3.5 border-b border-white/10"
-//             >
-//               <div className="flex items-center gap-2.5">
-//                 <div className="w-7 h-7 rounded-lg bg-[#0098cc]/10 flex items-center justify-center">
-//                   <Video size={13} className="text-[#0098cc]" />
-//                 </div>
-//                 <div className="text-left">
-//                   <p className="text-white font-semibold text-sm">Session Bookings</p>
-//                   <p className="text-white/40 text-[10px]">All your mentoring sessions</p>
-//                 </div>
-//               </div>
-//               <div className="flex items-center gap-2">
-//                 <span className="text-[#0098cc] text-xs font-medium">
-//                   {showSessions ? 'Hide' : 'View All'}
-//                 </span>
-//                 {showSessions ? <ChevronUp size={14} className="text-[#0098cc]" /> : <ChevronDown size={14} className="text-[#0098cc]" />}
-//               </div>
-//             </button>
+//                       <div style={{ flex: 1, minWidth: 0 }}>
+//                         <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: C.textDark }}>
+//                           {b.topic || 'Session'}
+//                         </p>
+//                         <p style={{ margin: '3px 0 0', fontSize: 12, color: C.textMid }}>
+//                           {b.menteeName}
+//                           <span style={{ color: C.textLight, margin: '0 5px' }}>·</span>
+//                           {fmt(b.sessionDate, true)}
+//                           <span style={{ color: C.textLight, margin: '0 5px' }}>·</span>
+//                           {b.startTime}
+//                           <span style={{ color: C.textLight, margin: '0 5px' }}>·</span>
+//                           {b.durationMinutes} min
+//                         </p>
+//                       </div>
 
-//             {showSessions && (
-//               <div className="p-4 sm:p-5 bg-[#031610]">
-//                 <SessionsPanel email={mentorEmail} />
-//               </div>
-//             )}
-//           </div>
+//                       <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+//                         <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 6, background: sc.bg, color: sc.text }}>
+//                           {b.status}
+//                         </span>
+//                         <span style={{
+//                           fontSize: 10, fontWeight: 700, padding: '3px 9px', borderRadius: 6,
+//                           background: b.isFreeSession ? `${C.primary}12` : '#ecfdf5',
+//                           color: b.isFreeSession ? C.primary : C.success,
+//                         }}>
+//                           {b.isFreeSession ? 'Free' : `₹${b.price}`}
+//                         </span>
+//                         <span style={{ color: C.textLight }}>
+//                           {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+//                         </span>
+//                       </div>
+//                     </div>
 
+//                     {/* Expanded */}
+//                     {isOpen && (
+//                       <div style={{ padding: '16px 20px 20px', background: '#f8fbfd', borderTop: `1px solid ${C.borderLight}` }}>
+//                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px 20px' }}>
+//                           {[
+//                             ['Duration',       `${b.durationMinutes} min`],
+//                             ['Type',           b.sessionType],
+//                             ['Email',          b.menteeEmail],
+//                             ['Payment Status', b.paymentStatus],
+//                             ['Method',         b.paymentMethod],
+//                             ['Transaction ID', b.transactionId],
+//                           ].map(([label, val]) => (
+//                             <div key={label}>
+//                               <p style={{ margin: 0, fontSize: 10, fontWeight: 700, color: C.textLight, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+//                                 {label}
+//                               </p>
+//                               <p style={{ margin: '3px 0 0', fontSize: 12, color: C.textMid, fontFamily: label === 'Transaction ID' ? "'DM Mono', monospace" : 'inherit', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+//                                 {val || '—'}
+//                               </p>
+//                             </div>
+//                           ))}
+//                         </div>
+//                         {b.meetingLink && (
+//                           <a
+//                             href={b.meetingLink}
+//                             target="_blank"
+//                             rel="noopener noreferrer"
+//                             className="hover-link"
+//                             style={{
+//                               marginTop: 16, display: 'inline-flex', alignItems: 'center', gap: 5,
+//                               fontSize: 12, fontWeight: 600, color: C.primary, textDecoration: 'none',
+//                               padding: '6px 14px', border: `1px solid ${C.primary}30`,
+//                               borderRadius: 8, background: `${C.primary}08`,
+//                             }}
+//                           >
+//                             <Wifi size={12} /> Join meeting <ExternalLink size={11} />
+//                           </a>
+//                         )}
+//                       </div>
+//                     )}
+//                   </div>
+//                 );
+//               })}
+//             </div>
+//           )}
 //         </div>
 //       </div>
 //     </div>
 //   );
-// };
+// }
 
-// export default MentorDashboardSection;
+
+
 
 import React, { useState, useEffect } from 'react';
 import {
-  TrendingUp, Users, Calendar, Star, MapPin, Phone,
-  Mail, UserRound, BadgeCheck, CircleAlert, Loader2,
-  CheckCircle2, Video, Clock, ChevronDown, ChevronUp,
-  WifiOff, Wifi, ExternalLink
+  ChevronRight, WifiOff,   
+  CalendarDays,
+  CheckCircle,Loader2, CircleAlert, UserRound, TrendingUp, BarChart3, Activity
 } from 'lucide-react';
 import { useGetUserDetailsQuery, useGetMentorSessionBookingsQuery } from './MentorDashboardapislice';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../../global/Loader';
 
-/* ── Helpers ─────────────────────────────────────────────────── */
-const formatDate = (d) => {
-  if (!d) return 'N/A';
-  return new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-};
-const formatShort = (d) => {
-  if (!d) return 'N/A';
-  return new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-};
-
-const STATUS_PILL = {
-  confirmed: 'bg-emerald-500/10 text-emerald-400',
-  completed: 'bg-blue-500/10 text-blue-400',
-  cancelled: 'bg-red-500/10 text-red-400',
-  pending: 'bg-amber-500/10 text-amber-400',
+const C = {
+  primary: '#0098cc',
+  btn: '#1a1a2e',
+  bg: '#ffffff',
+  surface: '#f8f9fb',
+  border: '#e8eaed',
+  borderLight: '#f0f1f3',
+  textDark: '#111318',
+  textMid: '#6b7280',
+  textLight: '#9ca3af',
+  success: '#10b981',
+  warning: '#f59e0b',
+  error: '#ef4444',
 };
 
-/* ── Pill ────────────────────────────────────────────────────── */
-const Pill = ({ children, cls }) => (
-  <span className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full ${cls}`}>{children}</span>
-);
+const STATUS = {
+  confirmed: { bg: '#ecfdf5', text: '#059669', dot: '#10b981' },
+  completed: { bg: '#eff6ff', text: '#2563eb', dot: '#3b82f6' },
+  cancelled: { bg: '#fff1f2', text: '#e11d48', dot: '#ef4444' },
+  pending: { bg: '#fffbeb', text: '#d97706', dot: '#f59e0b' },
+};
 
-/* ── Section label ───────────────────────────────────────────── */
-const SectionLabel = ({ children }) => (
-  <p className="text-[10px] font-semibold tracking-widest uppercase text-white/30 mb-3">{children}</p>
-);
+// Simple Line Chart Component
+const LineChart = () => {
+  return (
+    <svg viewBox="0 0 200 80" style={{ width: '100%', height: 80 }}>
+      <polyline
+        points="10,60 30,45 50,50 70,30 90,40 110,25 130,35 150,20 170,30 190,15"
+        fill="none"
+        stroke={C.primary}
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
 
-/* ── Data row ────────────────────────────────────────────────── */
-const DataRow = ({ label, value }) => (
-  <div className="flex items-center justify-between py-2.5 border-b border-white/[0.06] last:border-0">
-    <span className="text-sm text-white/40">{label}</span>
-    <span className="text-sm font-medium text-white text-right max-w-[60%] truncate">{value || '—'}</span>
-  </div>
-);
-
-/* ── Session row ─────────────────────────────────────────────── */
-const SessionRow = ({ booking }) => {
-  const [open, setOpen] = useState(false);
-  const pill = STATUS_PILL[booking.status] || STATUS_PILL.pending;
+// Simple Bar Chart Component
+const BarChart = ({ dataPoints = [6, 8, 5, 7, 9, 6, 8] }) => {
+  const maxValue = 10;
+  const barWidth = 24;
+  const spacing = 4;
 
   return (
-    <div className="border-b border-white/[0.06] last:border-0">
-      <div
-        className="flex items-center gap-4 py-3.5 cursor-pointer group"
-        onClick={() => setOpen(!open)}
-      >
-        {/* left */}
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-white truncate">{booking.topic || 'Session'}</p>
-          <p className="text-xs text-white/40 mt-0.5">
-            {booking.menteeName}
-            <span className="mx-1.5 text-white/20">·</span>
-            {formatShort(booking.sessionDate)}
-            <span className="mx-1.5 text-white/20">·</span>
-            {booking.startTime}
-            <span className="mx-1.5 text-white/20">·</span>
-            {booking.durationMinutes} min
-          </p>
-        </div>
-        {/* right */}
-        <div className="flex items-center gap-2 shrink-0">
-          <Pill cls={pill}>{booking.status}</Pill>
-          <Pill cls={booking.isFreeSession ? 'bg-violet-500/10 text-violet-400' : 'bg-emerald-500/10 text-emerald-400'}>
-            {booking.isFreeSession ? 'Free' : `₹${booking.price}`}
-          </Pill>
-          <span className="text-white/20 group-hover:text-white/50 transition-colors">
-            {open ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-          </span>
-        </div>
-      </div>
+    <svg viewBox="0 0 180 80" style={{ width: '100%', height: 60 }}>
+      {dataPoints.map((value, idx) => {
+        const x = idx * (barWidth + spacing) + 10;
+        const height = (value / maxValue) * 60;
+        const y = 70 - height;
 
-      {/* expanded */}
-      {open && (
-        <div className="pb-4 pl-0">
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-2 mb-3">
-            {[
-              ['Duration', `${booking.durationMinutes} min`],
-              ['Type', booking.sessionType],
-              ['Email', booking.menteeEmail],
-              ['Payment', booking.paymentStatus],
-              ['Method', booking.paymentMethod],
-              ['Transaction', booking.transactionId],
-            ].map(([l, v]) => (
-              <div key={l}>
-                <p className="text-[10px] text-white/25 uppercase tracking-wide">{l}</p>
-                <p className="text-xs text-white/70 mt-0.5 truncate">{v || '—'}</p>
-              </div>
-            ))}
-          </div>
-          {booking.meetingLink && (
-            <a
-              href={booking.meetingLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs text-[#0098cc] hover:underline"
-            >
-              <Wifi size={11} /> Join meeting <ExternalLink size={10} />
-            </a>
-          )}
-        </div>
-      )}
-    </div>
+        return (
+          <rect
+            key={idx}
+            x={x}
+            y={y}
+            width={barWidth}
+            height={height}
+            fill={idx % 2 === 0 ? C.primary : `${C.primary}40`}
+            rx="2"
+          />
+        );
+      })}
+    </svg>
   );
 };
 
-/* ── Sessions section ────────────────────────────────────────── */
-const SessionsSection = ({ email }) => {
-  const [filter, setFilter] = useState('all');
-  const { data: sessionData, isLoading, isError } =
-    useGetMentorSessionBookingsQuery(email, { skip: !email });
-
-  const bookings = sessionData?.data?.bookings || [];
-  const stats = sessionData?.data?.stats || {};
-  const filtered = filter === 'all' ? bookings : bookings.filter(b => b.status === filter);
-
-  if (isLoading) return (
-    <div className="flex justify-center py-10">
-      <Loader2 size={20} className="animate-spin text-white/20" />
-    </div>
-  );
-  if (isError) return (
-    <div className="flex flex-col items-center py-10 gap-2">
-      <WifiOff size={22} className="text-white/20" />
-      <p className="text-xs text-white/30">Failed to load sessions</p>
-    </div>
-  );
-
-  const FILTERS = [
-    { key: 'all', label: `All (${stats.total || 0})` },
-    { key: 'confirmed', label: `Confirmed (${stats.confirmed || 0})` },
-    { key: 'completed', label: `Completed (${stats.completed || 0})` },
-    { key: 'pending', label: `Pending (${stats.pending || 0})` },
-    { key: 'cancelled', label: `Cancelled (${stats.cancelled || 0})` },
-  ];
-
-  return (
-    <>
-      {/* filter strip */}
-      <div className="flex gap-2 flex-wrap mb-4">
-        {FILTERS.map(({ key, label }) => (
-          <button
-            key={key}
-            onClick={() => setFilter(key)}
-            className={`text-[11px] px-3 py-1 rounded-full border transition-all ${filter === key
-                ? 'border-white/20 text-white bg-white/[0.06]'
-                : 'border-white/[0.08] text-white/30 hover:text-white/60'
-              }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-
-      {/* list */}
-      {filtered.length === 0 ? (
-        <p className="text-sm text-white/25 py-8 text-center">No sessions found</p>
-      ) : (
-        <div>
-          {filtered.map(b => <SessionRow key={b._id} booking={b} />)}
-        </div>
-      )}
-    </>
-  );
-};
-
-/* ══════════════════════════════════════════════════════════════
-   MAIN
-══════════════════════════════════════════════════════════════ */
-export default function MentorDashboardSection() {
+export default function MentorDashboard() {
+  const navigate = useNavigate();
   const [mentorId, setMentorId] = useState(null);
   const [mentorEmail, setMentorEmail] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     try {
-      const parsed = JSON.parse(localStorage.getItem('userData') || '{}');
-      setMentorId(parsed?._id);
-      setMentorEmail(parsed?.email);
-    } catch (e) { console.error(e); }
+      const u = JSON.parse(localStorage.getItem('userData') || '{}');
+      setMentorId(u?._id);
+      setMentorEmail(u?.email);
+    } catch (e) {
+      console.error(e);
+    }
   }, []);
 
-  const { data: userDetails, isLoading, isError, error } =
+  const { data: userDetails, isLoading: detailsLoading, isError: detailsError, error } =
     useGetUserDetailsQuery(mentorId, { skip: !mentorId });
-
   const { data: sessionData, isLoading: sessionsLoading } =
     useGetMentorSessionBookingsQuery(mentorEmail, { skip: !mentorEmail });
 
+  const user = userDetails?.data;
   const stats = sessionData?.data?.stats || {};
   const bookings = sessionData?.data?.bookings || [];
 
-  const today = new Date(); today.setHours(0, 0, 0, 0);
-  const upcoming = bookings.filter(
-    b => b.status === 'confirmed' && new Date(b.sessionDate) >= today
-  ).length;
+  useEffect(() => {
+    if (user?.mentorId) {
+      try {
+        localStorage.setItem('mentorId', user.mentorId);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [user]);
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const upcoming = bookings.filter(b => b.status === 'confirmed' && new Date(b.sessionDate) >= today).length;
   const total = stats.total || 0;
   const completed = stats.completed || 0;
   const cancelled = stats.cancelled || 0;
   const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
 
-  const user = userDetails?.data;
+  const fmt = (d, short) =>
+    !d
+      ? '—'
+      : new Date(d).toLocaleDateString('en-US', short ? { month: 'short', day: 'numeric', year: 'numeric' } : { year: 'numeric', month: 'long', day: 'numeric' });
 
-  useEffect(() => {
-    if (user?.mentorId) {
-      try { localStorage.setItem('mentorId', user.mentorId); } catch (e) { }
-    }
-  }, [user]);
-
-  if (isLoading) return (
-    <div className="flex-1 flex items-center justify-center min-h-[300px] bg-[#031610]">
-      <Loader />
-    </div>
-  );
-
-  if (isError) return (
-    <div className="flex-1 flex items-center justify-center p-4 min-h-[300px] bg-[#031610]">
-      <div className="text-center">
-        <CircleAlert size={32} className="text-red-400/50 mx-auto mb-2" />
-        <p className="text-sm text-white/30">{error?.data?.message || 'Failed to load'}</p>
+  if (detailsLoading)
+    return (
+      <div style={{ background: C.bg }} className="flex-1 flex items-center justify-center min-h-screen">
+        <Loader />
       </div>
-    </div>
-  );
+    );
 
-  if (!user) return (
-    <div className="flex-1 flex items-center justify-center min-h-[300px] bg-[#031610]">
-      <div className="text-center">
-        <UserRound size={32} className="text-white/10 mx-auto mb-2" />
-        <p className="text-sm text-white/30">No user data</p>
+  if (detailsError)
+    return (
+      <div style={{ background: C.bg }} className="flex-1 flex items-center justify-center min-h-screen p-4">
+        <div className="text-center">
+          <CircleAlert size={36} style={{ color: C.error }} className="mx-auto mb-3 opacity-60" />
+          <p style={{ color: C.textLight }}>{error?.data?.message || 'Failed to load dashboard'}</p>
+        </div>
       </div>
-    </div>
-  );
+    );
+
+  if (!user)
+    return (
+      <div style={{ background: C.bg }} className="flex-1 flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <UserRound size={36} style={{ color: C.textLight }} className="mx-auto mb-3 opacity-50" />
+          <p style={{ color: C.textLight }}>No user data found</p>
+        </div>
+      </div>
+    );
 
   const initials = (user?.name || 'M')
-    .split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    .split(' ')
+    .map(w => w[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+
+  const todayDate = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' });
 
   return (
-    <div className="min-h-full bg-[#031610] text-white">
-      <div className="max-w-7xl mx-auto px-2 sm:px-8 sm:py-12">
+    <div style={{ background: '#ffffff', minHeight: '100vh', fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+        * { box-sizing: border-box; }
+        .stat-card { transition: transform 0.2s, box-shadow 0.2s; }
+        .stat-card:hover { transform: translateY(-2px); }
+        .session-row:hover { background: #ffffff !important; }
+        .stat-icon {
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+          background: #1a1a2e;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+      `}</style>
 
-        {/* ── HERO ─────────────────────────────────────────────── */}
-        <div className="flex items-start justify-between gap-4 pb-8 border-b border-white/[0.08] flex-wrap">
-          <div className="flex items-center gap-4">
-            {/* avatar */}
-            <div className="w-14 h-14 rounded-full bg-[#0098cc]/20 flex items-center justify-center text-[#0098cc] font-medium text-lg shrink-0">
-              {initials}
-            </div>
-            <div>
-              <h1 className="text-xl font-medium text-white leading-tight">
-                {user?.name || 'Mentor'}
-              </h1>
-              <p className="text-sm text-white/40 mt-0.5">
-                {user?.email}
-                {user?.phone && (
-                  <>
-                    <span className="mx-2 text-white/20">·</span>
-                    +{user.countryCode} {user.phone}
-                  </>
-                )}
-              </p>
-              <div className="flex gap-2 mt-2 flex-wrap">
-                {user?.isVerified && (
-                  <Pill cls="bg-emerald-500/10 text-emerald-400">Verified</Pill>
-                )}
-                {user?.isActive && (
-                  <Pill cls="bg-emerald-500/10 text-emerald-400">Active</Pill>
-                )}
-                {user?.city && (
-                  <Pill cls="bg-white/5 text-white/40">{user.city}, {user.country}</Pill>
-                )}
-                {user?.username && (
-                  <Pill cls="bg-white/5 text-white/40">@{user.username}</Pill>
-                )}
-              </div>
-            </div>
-          </div>
-          <p className="text-xs text-white/25 self-start pt-1">
-            Member since {formatDate(user?.createdAt)}
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 24px 80px' }}>
+        {/* ── HEADER ── */}
+        <div style={{ marginBottom: 32 }}>
+          <h1 style={{ margin: 0, fontSize: 28, fontWeight: 700, color: C.textDark, letterSpacing: '-0.5px' }}>
+            Mentor Dashboard
+          </h1>
+          <p style={{ margin: '4px 0 0', fontSize: 13, color: C.textLight }}>
+            {todayDate}
           </p>
         </div>
 
-        {/* ── STAT NUMBERS ─────────────────────────────────────── */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 border-b border-white/[0.08]">
+        {/* ── TOP STATS CARDS ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 40 }}>
           {[
-            { label: 'Total sessions', value: sessionsLoading ? '…' : total, color: 'text-[#0098cc]' },
-            { label: 'Upcoming', value: sessionsLoading ? '…' : upcoming, color: 'text-amber-400' },
-            { label: 'Completed', value: sessionsLoading ? '…' : completed, color: 'text-emerald-400' },
-            { label: 'Cancelled', value: sessionsLoading ? '…' : cancelled, color: 'text-red-400' },
-          ].map(({ label, value, color }, i) => (
+            {
+              label: "Total Sessions",
+              value: sessionsLoading ? "—" : total,
+              unit: "",
+              icon: <BarChart3 size={20} />,
+            },
+            {
+              label: "Upcoming",
+              value: sessionsLoading ? "—" : upcoming,
+              unit: "",
+              icon: <CalendarDays size={20} />,
+            },
+            {
+              label: "Completion Rate",
+              value: `${completionRate}%`,
+              unit: "",
+              icon: <CheckCircle size={20} />,
+            },
+          ].map(({ label, value, unit, icon }, i) => (
             <div
               key={label}
-              className={`py-7 text-center ${i < 3 ? 'border-r border-white/[0.08]' : ''
-                } ${i >= 2 ? 'border-t border-white/[0.08] sm:border-t-0' : ''
-                }`}
+              className="stat-card"
+              style={{
+                background: '#ffffff',
+                border: `1px solid ${C.border}`,
+                borderRadius: 12,
+                padding: '20px 24px',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: 16,
+              }}
             >
-              <p className={`text-4xl font-medium ${color}`}>{value}</p>
-              <p className="text-xs text-white/30 mt-1.5">{label}</p>
+              <div className="stat-icon" style={{ color: '#fff', fontSize: 20 }}>
+                {icon}
+              </div>
+              <div style={{ flex: 1 }}>
+                <p style={{ margin: 0, fontSize: 11, color: C.textLight, fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  {label}
+                </p>
+                <p style={{ margin: '8px 0 0', fontSize: 28, fontWeight: 700, color: C.textDark, fontFamily: "'DM Mono', monospace", letterSpacing: '-1px' }}>
+                  {value}
+                  <span style={{ fontSize: 14, color: C.textMid, fontWeight: 500, marginLeft: 4 }}>
+                    {unit}
+                  </span>
+                </p>
+              </div>
             </div>
           ))}
         </div>
 
-        {/* ── COMPLETION BAR ───────────────────────────────────── */}
-        <div className="py-5 border-b border-white/[0.08]">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-white/40">Completion rate</span>
-            <span className="text-xs font-medium text-white/60">{completionRate}%</span>
+        {/* ── CHARTS SECTION ── */}
+        {/* <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24, marginBottom: 40 }}>
+          <div
+            style={{
+              background: '#ffffff',
+              border: `1px solid ${C.border}`,
+              borderRadius: 12,
+              padding: '24px',
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+              <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: C.textDark }}>
+                Activity Hours
+              </h3>
+              <select
+                style={{
+                  fontSize: 12,
+                  border: `1px solid ${C.border}`,
+                  borderRadius: 6,
+                  padding: '4px 8px',
+                  background: '#ffffff',
+                  color: C.textMid,
+                  cursor: 'pointer',
+                }}
+              >
+                <option>Weekly</option>
+                <option>Monthly</option>
+                <option>Yearly</option>
+              </select>
+            </div>
+            <div style={{ height: 100 }}>
+              <BarChart dataPoints={[6, 8, 5, 7, 9, 6, 8]} />
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-around', marginTop: 12 }}>
+              {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map(day => (
+                <span key={day} style={{ fontSize: 11, color: C.textLight, fontWeight: 500 }}>
+                  {day}
+                </span>
+              ))}
+            </div>
           </div>
-          <div className="h-[3px] bg-white/[0.06] rounded-full overflow-hidden">
-            <div
-              className="h-full rounded-full bg-[#0098cc] transition-all duration-700"
-              style={{ width: `${completionRate}%` }}
-            />
-          </div>
-        </div>
 
-        {/* ── PROFILE + ACCOUNT ────────────────────────────────── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-0 border-b border-white/[0.08]">
-          {/* profile */}
-          <div className="py-6 sm:pr-8 sm:border-r border-white/[0.08]">
-            <SectionLabel>Profile</SectionLabel>
-            <DataRow label="Full name" value={user?.name} />
-            <DataRow label="Username" value={user?.username ? `@${user.username}` : null} />
-            <DataRow label="Email" value={user?.email} />
-            <DataRow label="Phone" value={user?.phone ? `+${user.countryCode} ${user.phone}` : null} />
-            <DataRow label="Location" value={user?.city ? `${user.city}, ${user.country}` : null} />
+          <div
+            style={{
+              background: '#ffffff',
+              border: `1px solid ${C.border}`,
+              borderRadius: 12,
+              padding: '24px',
+            }}
+          >
+            <h3 style={{ margin: '0 0 20px', fontSize: 15, fontWeight: 700, color: C.textDark }}>
+              Performance
+            </h3>
+            <div style={{ marginBottom: 24 }}>
+              <LineChart />
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}>
+              {[
+                { label: 'Time spent', value: 28, unit: 'hrs', color: '#3b82f6' },
+                { label: 'Session taken', value: 50, unit: 'hrs', color: '#10b981' },
+                { label: 'Events passed', value: 10, unit: 'hrs', color: '#f59e0b' },
+              ].map(({ label, value, unit, color }) => (
+                <div
+                  key={label}
+                  style={{
+                    padding: '12px',
+                    background: '#f8f9fb',
+                    borderRadius: 8,
+                    textAlign: 'center',
+                  }}
+                >
+                  <p style={{ margin: 0, fontSize: 12, color: C.textLight, fontWeight: 500 }}>
+                    {label}
+                  </p>
+                  <p style={{ margin: '4px 0 0', fontSize: 16, fontWeight: 700, color }}>
+                    {value} <span style={{ fontSize: 11, color: C.textMid }}>{unit}</span>
+                  </p>
+                </div>
+              ))}
+            </div>
+            <div style={{ marginTop: 16, padding: '12px', background: '#f8f9fb', borderRadius: 8, textAlign: 'center' }}>
+              <p style={{ margin: 0, fontSize: 12, color: C.textMid }}>
+                Your productivity is <strong style={{ color: C.success }}>30%</strong> higher compared to last month
+              </p>
+            </div>
+          </div>
+        </div> */}
+
+        {/* ── SESSIONS & PROFILE ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+          {/* Session Bookings */}
+          <div
+            style={{
+              background: '#ffffff',
+              border: `1px solid ${C.border}`,
+              borderRadius: 12,
+              overflow: 'hidden',
+            }}
+          >
+            <div style={{ padding: '24px', borderBottom: `1px solid ${C.border}` }}>
+              <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: C.textDark }}>
+                Session Bookings
+              </h3>
+            </div>
+
+            {sessionsLoading ? (
+              <div style={{ display: 'flex', justifyContent: 'center', padding: '48px 0' }}>
+                <Loader2 size={22} style={{ color: C.textLight }} className="animate-spin" />
+              </div>
+            ) : bookings.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '48px 24px', color: C.textLight }}>
+                <WifiOff size={26} style={{ margin: '0 auto 10px', opacity: 0.4, display: 'block' }} />
+                <p style={{ margin: 0, fontSize: 13 }}>No sessions found</p>
+              </div>
+            ) : (
+              <div>
+                {bookings.slice(0, 5).map((b, idx) => {
+                  const sc = STATUS[b.status] || STATUS.pending;
+                  return (
+                    <div
+                      key={b._id}
+                      className="session-row"
+                      onClick={() => navigate(`/session/${b._id}`)}
+                      style={{
+                        padding: '16px 24px',
+                        borderBottom: idx < Math.min(4, bookings.length - 1) ? `1px solid ${C.borderLight}` : 'none',
+                        cursor: 'pointer',
+                        transition: 'background 0.12s',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        background: '#ffffff',
+                      }}
+                    >
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: C.textDark }}>
+                          {b.topic || 'Session'}
+                        </p>
+                        <p style={{ margin: '3px 0 0', fontSize: 11, color: C.textMid }}>
+                          {b.menteeName}
+                          <span style={{ color: C.textLight, margin: '0 5px' }}>·</span>
+                          {fmt(b.sessionDate, true)}
+                        </p>
+                      </div>
+                      <ChevronRight size={16} style={{ color: C.textLight, flexShrink: 0, marginLeft: 12 }} />
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
-          {/* account */}
-          <div className="py-6 sm:pl-8 border-t border-white/[0.08] sm:border-t-0">
-            <SectionLabel>Account</SectionLabel>
-            <DataRow label="Created" value={formatDate(user?.createdAt)} />
-            <DataRow label="Last updated" value={formatDate(user?.updatedAt)} />
-            <DataRow
-              label="Status"
-              value={
-                <Pill cls={user?.isActive ? 'bg-emerald-500/10 text-emerald-400' : 'bg-red-500/10 text-red-400'}>
-                  {user?.isActive ? 'Active' : 'Inactive'}
-                </Pill>
-              }
-            />
-            <DataRow
-              label="Verification"
-              value={
-                <Pill cls={user?.isVerified ? 'bg-emerald-500/10 text-emerald-400' : 'bg-amber-500/10 text-amber-400'}>
-                  {user?.isVerified ? 'Verified' : 'Pending'}
-                </Pill>
-              }
-            />
-            <div className="pt-4">
+          {/* Profile Info */}
+          <div
+            style={{
+              background: '#ffffff',
+              border: `1px solid ${C.border}`,
+              borderRadius: 12,
+              overflow: 'hidden',
+            }}
+          >
+            <div style={{ padding: '24px', borderBottom: `1px solid ${C.border}` }}>
+              <h3 style={{ margin: 0, fontSize: 15, fontWeight: 700, color: C.textDark }}>
+                Profile Info
+              </h3>
+            </div>
+
+            <div style={{ padding: '24px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 24 }}>
+                <div
+                  style={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: '50%',
+                    background: `${C.primary}15`,
+                    color: C.primary,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 700,
+                    fontSize: 18,
+                    fontFamily: "'DM Mono', monospace",
+                    border: `2px solid ${C.primary}25`,
+                    flexShrink: 0,
+                  }}
+                >
+                  {initials}
+                </div>
+                <div>
+                  <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: C.textDark }}>
+                    {user?.name || 'Mentor'}
+                  </p>
+                  <p style={{ margin: '2px 0 0', fontSize: 12, color: C.textMid }}>
+                    {user?.email}
+                  </p>
+                  {user?.isActive && (
+                    <span style={{ fontSize: 11, fontWeight: 600, color: C.success, marginTop: 6, display: 'inline-block' }}>
+                      ● Active
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div style={{ borderTop: `1px solid ${C.borderLight}`, paddingTop: 16 }}>
+                {[
+                  ['Member Since', fmt(user?.createdAt)],
+                  ['Phone', user?.phone ? `+${user.countryCode} ${user.phone}` : '—'],
+                  // ['Location', user?.city ? `${user.city}${user.country ? `, ${user.country}` : ''}` : '—'],
+                  // ['Status', user?.isVerified ? '✓ Verified' : 'Pending'],
+                ].map(([label, value]) => (
+                  <div key={label} style={{ marginBottom: 12 }}>
+                    <p style={{ margin: 0, fontSize: 10, color: C.textLight, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                      {label}
+                    </p>
+                    <p style={{ margin: '3px 0 0', fontSize: 12, color: C.textDark, fontWeight: 600 }}>
+                      {value}
+                    </p>
+                  </div>
+                ))}
+              </div>
+
               <button
                 onClick={() => navigate('/mentor-profile')}
-                className="text-xs text-[#0098cc] hover:underline"
+                style={{
+                  marginTop: 16,
+                  width: '100%',
+                  padding: '10px 14px',
+                  background: C.primary,
+                  color: '#fff',
+                  border: 'none',
+                  borderRadius: 8,
+                  fontSize: 12,
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'opacity 0.2s',
+                }}
+                onMouseOver={e => (e.target.style.opacity = '0.9')}
+                onMouseOut={e => (e.target.style.opacity = '1')}
               >
-                View full profile →
+                View Full Profile
               </button>
             </div>
           </div>
         </div>
-
-        {/* ── SESSION BOOKINGS ─────────────────────────────────── */}
-        {/* <div className="pt-6">
-          <SectionLabel>Session bookings</SectionLabel>
-          <SessionsSection email={mentorEmail} />
-        </div> */}
-
       </div>
     </div>
   );
 }
+
+
+
+
+

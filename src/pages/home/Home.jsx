@@ -12,6 +12,8 @@ import FAQAccordion from './faqs';
 import MentoHero from './Scrollvelocity';
 import HeroSection from './HeroSection ';
 import StepsSection from "./Stepsections";
+import MentorUI from "./mentorsections";
+import MentorHero from "./mentorsections";
 
 const TYPING_CONFIG = {
   texts: ["ML & AI", "Data Science", "Web Development", "Mobile Apps", "Cloud Computing"],
@@ -255,6 +257,7 @@ const Home = () => {
       <TestimonialsSection />
       <FAQAccordion />
       {/* <MentorGrid /> */}
+      {/* <MentorHero/> */}
       <MentoHero />
       {/* <FindMentor /> */}
 

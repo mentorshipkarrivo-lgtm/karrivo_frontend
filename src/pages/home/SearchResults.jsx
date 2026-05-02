@@ -1,81 +1,73 @@
-
-
 // pages/search/SearchResults.js
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Star, Loader2, Search, ArrowLeft, MapPin, Briefcase } from 'lucide-react';
-import { useLazySearchMentorsQuery } from "./MentorsecApiSlice"
+
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Star, Loader2, Search, ArrowLeft, Briefcase } from "lucide-react";
+import { useLazySearchMentorsQuery } from "./MentorsecApiSlice";
 
 const SearchResults = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const [triggerSearch, { data: response, isLoading, isError, error }] = useLazySearchMentorsQuery();
+  const [triggerSearch, { data: response, isLoading, isError, error }] =
+    useLazySearchMentorsQuery();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const query = params.get('q');
-
-    setSearchQuery(query || '');
-    triggerSearch(query || '');
+    const query = params.get("q");
+    setSearchQuery(query || "");
+    triggerSearch(query || "");
   }, [location.search, triggerSearch]);
 
-  const isLoggedIn = !!localStorage.getItem('authToken');
+  const isLoggedIn = !!localStorage.getItem("authToken");
 
   const handleSearch = (e) => {
     e.preventDefault();
-
     if (searchQuery.trim()) {
       navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
     } else {
-      navigate('/search');
-    }
-  };
-
-  const handleBookSession = (mentor) => {
-    if (!isLoggedIn) {
-      navigate(`/login?mentorId=${mentor._id}`);
-    } else {
-      navigate(`/book-session?mentorId=${mentor._id}`);
+      navigate("/search");
     }
   };
 
   const handleViewProfile = (mentor) => {
-    navigate(`/mentor-profile/${mentor._id}`);
+    navigate(`/mentor-profile/${mentor.userId}`);
   };
 
-  const mentorsList = response?.data && Array.isArray(response.data) ? response.data : [];
+  const mentorsList =
+    response?.data && Array.isArray(response.data) ? response.data : [];
 
   return (
-    <div className="min-h-screen bg-[#062117] pt-20 pb-16">
+    <div className="min-h-screen bg-white pt-20 pb-16">
       <div className="container mx-auto px-4 py-8">
+
         {/* Back Button */}
         <button
-          onClick={() => navigate('/')}
-          className="flex items-center gap-2 text-white/80 hover:text-white mb-6 transition-colors"
+          onClick={() => navigate("/")}
+          className="flex items-center gap-2 text-[#1a1a2e] hover:text-[#0098cc] mb-6 transition-colors font-medium"
         >
           <ArrowLeft className="w-5 h-5" />
           Back to Home
         </button>
 
         {/* Search Bar */}
-        <div className="max-w-4xl mx-auto mb-8">
+        <div className="max-w-4xl mx-auto mb-10">
           <form onSubmit={handleSearch} className="flex gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white/60 w-5 h-5" />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#0098cc] w-5 h-5" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search by skills, role, company, location..."
-                className="w-full bg-[#0a2d20] border-2 border-[#0098cc]/30 rounded-full pl-12 pr-4 py-3.5 text-white placeholder-white/60 focus:outline-none focus:border-[#0098cc] transition-all duration-300"
+                className="w-full bg-white border border-[#d9e2ec] rounded-full pl-12 pr-4 py-4 text-[#1a1a2e] placeholder-gray-500 focus:outline-none focus:border-[#0098cc] transition-all duration-300"
               />
             </div>
             <button
               type="submit"
-              className="bg-[#0098cc] hover:bg-[#007fa3] text-white font-semibold px-8 py-3.5 rounded-full transition-all duration-300 hover:shadow-lg hover:shadow-[#0098cc]/20"
+              className="bg-[#1a1a2e] hover:bg-[#111120] text-white font-semibold px-8 py-4 rounded-full transition-all duration-300"
             >
               Search
             </button>
@@ -84,38 +76,39 @@ const SearchResults = () => {
 
         {/* Results Header */}
         {searchQuery && !isLoading && (
-          <div className="max-w-7xl mx-auto mb-6">
-            <h2 className="text-2xl font-bold text-white">
-              Search results for "{searchQuery}"
+          <div className="max-w-7xl mx-auto mb-8">
+            <h2 className="text-2xl font-bold text-[#1a1a2e]">
+              Search results for{" "}
+              <span className="text-[#0098cc]">"{searchQuery}"</span>
             </h2>
             {mentorsList.length > 0 && (
-              <p className="text-white/70 mt-2">
-                Found {mentorsList.length} mentor{mentorsList.length !== 1 ? 's' : ''}
+              <p className="text-gray-500 mt-2">
+                Found {mentorsList.length} mentor{mentorsList.length !== 1 ? "s" : ""}
               </p>
             )}
           </div>
         )}
 
-        {/* Loading State */}
+        {/* Loading */}
         {isLoading && (
           <div className="flex flex-col justify-center items-center py-20">
             <Loader2 className="w-12 h-12 animate-spin text-[#0098cc] mb-4" />
-            <p className="text-white/70">Searching for mentors...</p>
+            <p className="text-gray-500">Searching for mentors...</p>
           </div>
         )}
 
-        {/* Error State */}
+        {/* Error */}
         {isError && !isLoading && (
-          <div className="max-w-7xl mx-auto text-center py-20">
-            <p className="text-red-400 text-lg mb-4">
+          <div className="text-center py-20">
+            <p className="text-red-500 text-lg mb-4">
               Failed to load mentors. Please try again later.
             </p>
-            <p className="text-white/50 text-sm mb-4">
-              Error: {error?.data?.message || error?.message || 'Unknown error'}
+            <p className="text-gray-500 text-sm mb-6">
+              {error?.data?.message || error?.message || "Unknown error"}
             </p>
             <button
               onClick={() => triggerSearch(searchQuery)}
-              className="bg-[#0098cc]/20 hover:bg-[#0098cc]/30 border border-[#0098cc] text-white px-6 py-2 rounded-lg transition-colors"
+              className="bg-[#1a1a2e] text-white px-6 py-3 rounded-lg"
             >
               Retry
             </button>
@@ -124,145 +117,116 @@ const SearchResults = () => {
 
         {/* No Results */}
         {!isLoading && !isError && mentorsList.length === 0 && (
-          <div className="max-w-7xl mx-auto text-center py-20">
-            <p className="text-white/70 text-lg">
+          <div className="text-center py-20">
+            <p className="text-[#1a1a2e] text-lg font-medium">
               {searchQuery
                 ? `No mentors found matching "${searchQuery}"`
-                : 'No mentors available at the moment'
-              }
+                : "No mentors available at the moment"}
             </p>
-            <p className="text-white/50 mt-2">
+            <p className="text-gray-500 mt-2">
               Try different keywords or browse all mentors.
             </p>
-            <button
-              onClick={() => navigate('/')}
-              className="mt-6 bg-[#0098cc] hover:bg-[#007fa3] text-white font-semibold px-8 py-3 rounded-full transition-all duration-300"
-            >
-              Back to Home
-            </button>
           </div>
         )}
 
-        {/* Mentors Grid */}
+        {/* Mentor Cards */}
         {!isLoading && !isError && mentorsList.length > 0 && (
-          <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {mentorsList.map((mentor, index) => {
-                const skillsArray = mentor.currentSkills
-                  ? mentor.currentSkills.split(/[\n,;]+/).map(s => s.trim()).filter(Boolean)
-                  : [];
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {mentorsList.map((mentor, index) => {
+              const guidanceAreas = Array.isArray(mentor.guidanceAreas) ? mentor.guidanceAreas : [];
+              const initials = mentor.fullName
+                ? mentor.fullName.split(" ").map((w) => w[0]).join("").slice(0, 2).toUpperCase()
+                : "?";
+              const profilePhoto =
+                mentor.profilePhoto || mentor["profile Photo"] || mentor.profileImage || "";
+              const rating = mentor.rating || 5.0;
 
-                // Always exactly 3 skill slots — pad with null if fewer
-                const displaySkills = [
-                  skillsArray[0] || null,
-                  skillsArray[1] || null,
-                  skillsArray[2] || null,
-                ];
-
-                const initials = mentor.fullName
-                  ? mentor.fullName.split(" ").map(w => w[0]).join("").slice(0, 2).toUpperCase()
-                  : "?";
-
-                return (
-                  <motion.div
-                    key={mentor._id || index}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.05 }}
-                    className="bg-[#0a2d20] border border-[#0098cc]/20 rounded-2xl hover:border-[#0098cc]/60 transition-all duration-300 hover:-translate-y-1 flex flex-col overflow-hidden"
-                  >
-                    {/* ── IMAGE — fixed height, no overflow ── */}
-                    <div className="h-40 w-full shrink-0 bg-gradient-to-br from-[#0098cc]/15 to-[#062117] flex items-center justify-center overflow-hidden">
-                      {mentor.profileImage ? (
+              return (
+                <motion.article
+                  key={mentor._id || index}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className="group bg-white rounded-xl border border-slate-200 overflow-hidden
+                             hover:border-blue-400 hover:shadow-md transition-all duration-200
+                             flex items-stretch h-[180px]"
+                >
+                  {/* LEFT: Image */}
+                  <div className="relative w-[160px] h-full bg-gradient-to-br from-slate-100 to-slate-200 flex-shrink-0 overflow-hidden">
+                    {profilePhoto ? (
+                      <>
                         <img
-                          src={mentor.profileImage}
+                          src={profilePhoto}
                           alt={mentor.fullName}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover object-center"
+                          onError={(e) => {
+                            e.target.style.display = "none";
+                            if (e.target.nextElementSibling) e.target.nextElementSibling.style.display = "flex";
+                          }}
                         />
-                      ) : (
-                        <div className="w-20 h-20 rounded-full bg-[#0098cc]/20 border-2 border-[#0098cc]/40 flex items-center justify-center">
-                          <span className="text-2xl font-bold text-[#0098cc]">{initials}</span>
+                        <div className="hidden w-full h-full bg-gradient-to-br from-blue-50 to-blue-100 items-center justify-center">
+                          <span className="text-4xl font-bold text-blue-400">{initials}</span>
                         </div>
+                      </>
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
+                        <span className="text-4xl font-bold text-blue-400">{initials}</span>
+                      </div>
+                    )}
+                    <div className="absolute top-2 right-2 bg-white shadow-md rounded-full px-2 py-0.5 flex items-center gap-0.5 border border-slate-100">
+                      <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                      <span className="text-[10px] font-bold text-slate-800">{rating.toFixed(1)}</span>
+                    </div>
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-200" />
+                  </div>
+
+                  {/* RIGHT: Content */}
+                  <div className="flex-1 flex flex-col justify-between p-4 min-w-0">
+                    <div className="mb-2">
+                      <h3 className="font-semibold text-slate-900 text-sm leading-tight truncate">
+                        {mentor.fullName || "Unknown Mentor"}
+                      </h3>
+                      <p className="text-xs text-slate-500 mt-0.5 truncate">
+                        <span className="text-[#0098cc] font-medium">{mentor.currentRole || "Mentor"}</span>
+                        {mentor.yearsOfExperience ? ` · ${mentor.yearsOfExperience}+ yrs` : ""}
+                      </p>
+                      {mentor.companyName && (
+                        <p className="flex items-center gap-1 text-xs text-slate-400 mt-0.5 truncate">
+                          <Briefcase className="w-3 h-3 flex-shrink-0" />
+                          <span className="truncate">{mentor.companyName}</span>
+                        </p>
                       )}
                     </div>
 
-                    {/* ── CARD BODY — all rows fixed height ── */}
-                    <div className="p-5 flex flex-col flex-1">
-
-                      {/* Row 1: Name — 1 line, fixed */}
-                      <h3 className="text-white font-bold text-base leading-snug line-clamp-1">
-                        {mentor.fullName || "Unknown Mentor"}
-                      </h3>
-
-                      {/* Row 2: Role — 1 line, fixed */}
-                      <p className="text-[#0098cc] text-sm font-medium mt-1 line-clamp-1">
-                        {mentor.currentRole || "Role not specified"}
-                      </p>
-
-                      {/* Row 3: Company — 1 line, always present (empty space if none) */}
-                      <p className="text-gray-400 text-xs mt-0.5 line-clamp-1 h-4">
-                        {mentor.companyName ? `at ${mentor.companyName}` : ""}
-                      </p>
-
-                      {/* Row 4: Location — 1 line, always present (empty space if none) */}
-                      <div className="flex items-center gap-1 mt-0.5 h-4">
-                        {mentor.location ? (
-                          <>
-                            <MapPin className="w-3 h-3 text-gray-500 shrink-0" />
-                            <p className="text-gray-500 text-xs line-clamp-1">{mentor.location}</p>
-                          </>
-                        ) : null}
-                      </div>
-
-                      {/* Row 5: Skills — always 3 equal slots */}
-                      <div className="flex gap-1.5 mt-3">
-                        {displaySkills.map((skill, i) => (
-                          <div key={i} className="flex-1 min-w-0">
-                            {skill ? (
-                              <span className="block text-center text-xs px-1.5 py-1 bg-[#0098cc]/10 text-[#0098cc] rounded border border-[#0098cc]/20 truncate">
-                                {skill}
-                              </span>
-                            ) : (
-                              <span className="block h-[26px]" /> /* placeholder keeps height */
-                            )}
-                          </div>
+                    {guidanceAreas.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mb-2">
+                        {guidanceAreas.slice(0, 2).map((area, i) => (
+                          <span key={i} className="inline-block text-[8px] bg-blue-50 text-blue-600 px-1.5 py-0.5 rounded-sm">
+                            {area}
+                          </span>
                         ))}
+                        {guidanceAreas.length > 2 && (
+                          <span className="text-[8px] text-slate-400 px-1.5 py-0.5">+{guidanceAreas.length - 2}</span>
+                        )}
                       </div>
+                    )}
 
-                      {/* Row 6: Rating + Experience — fixed */}
-                      <div className="flex items-center justify-between mt-4 pt-3 border-t border-[#0098cc]/20">
-                        <div className="flex items-center gap-1.5">
-                          <Star className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
-                          <span className="text-xs font-semibold text-white">5.0</span>
-                        </div>
-                        <span className="text-xs text-gray-400">
-                          {mentor.yearsOfExperience || 0}+ yrs exp
-                        </span>
-                      </div>
-
-                      {/* Row 7: Buttons — always at bottom */}
-                      <div className="mt-4 flex flex-col gap-2">
-                        <button
-                          onClick={() => handleViewProfile(mentor)}
-                          className="w-full border border-[#0098cc] text-[#0098cc] text-sm font-semibold py-2 rounded-lg transition-all hover:bg-[#0098cc] hover:text-white"
-                        >
-                          View Profile
-                        </button>
-                        <button
-                          onClick={() => handleBookSession(mentor)}
-                          className="w-full bg-[#0098cc] hover:bg-[#007fa3] text-white text-sm font-semibold py-2 rounded-lg transition-all"
-                        >
-                          Book Session
-                        </button>
-                      </div>
-
-                    </div>
-                  </motion.div>
-                );
-              })}
-            </div>
+                    <button
+                      onClick={() => handleViewProfile(mentor)}
+                      className="w-full py-1.5 rounded-lg font-semibold text-xs text-white
+                                 transition-all duration-150 active:scale-[0.97] shadow-sm
+                                 bg-[#1a1a2e] hover:bg-[#0098cc]"
+                    >
+                      View Profile
+                    </button>
+                  </div>
+                </motion.article>
+              );
+            })}
           </div>
         )}
+
+
       </div>
     </div>
   );
