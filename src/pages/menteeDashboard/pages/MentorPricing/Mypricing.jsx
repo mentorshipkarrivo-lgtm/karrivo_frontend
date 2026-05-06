@@ -980,7 +980,7 @@ const MyPricing = () => {
 
   return (
     <div className="w-full min-h-screen bg-white">
-      <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-8">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-8">
 
         {/* Page Header */}
         <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-5 mb-8">

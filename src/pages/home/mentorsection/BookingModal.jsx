@@ -26,7 +26,7 @@ const BookingSuccessScreen = ({ mentor, onClose }) => (
     animate={{ opacity: 1, scale: 1 }}
     exit={{ opacity: 0, scale: 0.96 }}
     transition={{ duration: 0.18, ease: "easeOut" }}
-    className="flex flex-col items-center justify-center px-6 py-5 text-center  bg-[#021f1a]"
+    className="flex flex-col items-center justify-center px-6 py-5 text-center bg-[#021f1a]"
     style={{ minHeight: 240 }}
   >
     <motion.div
@@ -51,12 +51,13 @@ const BookingSuccessScreen = ({ mentor, onClose }) => (
         Session Confirmed
       </h2>
 
-      <p className="text-[13px] leading-5 text-[#7fb3a8] max-w-[230px] mx-auto">
+      <p className="text-[13px] leading-5 text-[#7fb3a8] max-w-[260px] mx-auto">
         Your session with{" "}
         <span className="font-semibold text-[#d8fff4]">
           {mentor?.fullName}
         </span>{" "}
-        has been booked. Check your inbox for the details.
+        has been booked. Once the mentor confirms, the details will be
+        shared in your email inbox.
       </p>
     </motion.div>
 

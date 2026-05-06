@@ -3,7 +3,7 @@ import {
   MapPin, Briefcase, X, CheckCircle2, ArrowLeft, ArrowRight,
   Star, Calendar, Clock, Video, CheckCircle, XCircle,
   Tag, FileText, Eye, AlertTriangle, User, Check,
-  Loader2, ExternalLink, Zap, BadgeCheck, Phone, MessageCircle,
+  Loader2, ExternalLink, Zap, BadgeCheck, Phone, MessageCircle, CreditCard
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Cookies from "js-cookie";
@@ -504,6 +504,131 @@ function EditPreferencesModal({ isOpen, onClose, onUpdate, initialData }) {
 // RESCHEDULE MODAL
 // ═══════════════════════════════════════════════════════════════════════════
 
+// function RescheduleModal({
+//   booking, isOpen, onClose, onConfirm, isRescheduling,
+//   getMentorName, getMentorInitials, formatCardDate, formatCardTime,
+// }) {
+//   const mentorId = typeof booking?.mentorId === "object"
+//     ? booking?.mentorId?._id || booking?.mentorId?.id
+//     : booking?.mentorId;
+
+//   const { data: slotsData, isLoading: slotsLoading, isError: slotsError } =
+//     useGetRescheduleSlotsQuery({ mentorId }, { skip: !isOpen || !mentorId });
+
+//   const [selectedSlot, setSelectedSlot] = useState(null);
+//   const [step, setStep] = useState("slots");
+
+//   const rawSlots = slotsData?.data?.[0]?.dayslots || [];
+//   const availableSlots = rawSlots.filter((s) => !s.isBooked).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+//   useEffect(() => { if (isOpen && booking) { setSelectedSlot(null); setStep("slots"); } }, [isOpen, booking]);
+//   useEffect(() => { document.body.style.overflow = isOpen ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [isOpen]);
+
+//   if (!booking) return null;
+
+//   const handleConfirm = () => { if (!selectedSlot) return; onConfirm({ bookingId: booking._id, bookedMeetingSlot: selectedSlot }); };
+//   const fmtDate = (d) => new Date(d).toLocaleDateString("en-US", { day: "numeric", month: "long" });
+
+//   return (
+//     <>
+//       <div onClick={onClose}
+//         className={`fixed inset-0 z-50 transition-opacity duration-200 bg-black/30
+//           ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} />
+//       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 pointer-events-none">
+//         <div className={`bg-white w-full sm:rounded-2xl rounded-t-2xl sm:max-w-2xl max-h-[90vh] flex flex-col pointer-events-auto
+//                         border border-slate-200 font-[DM_Sans,sans-serif]
+//                         transition-all duration-200
+//                         ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
+//           <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-100 flex-shrink-0">
+//             <button onClick={onClose} className="flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-700">
+//               <ArrowLeft className="w-4 h-4" /> Back
+//             </button>
+//             <div className="flex-1 text-center">
+//               <h2 className="text-sm font-semibold text-slate-900">Reschedule Session</h2>
+//             </div>
+//             <button onClick={onClose} className="text-slate-400 hover:text-slate-600"><X className="w-5 h-5" /></button>
+//           </div>
+
+//           <div className="flex-1 overflow-y-auto p-5">
+//             <div className="mb-5 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+//               <p className="text-xs text-slate-400 mb-1">Current Session</p>
+//               <p className="text-sm font-semibold text-slate-800">{getMentorName(booking)}</p>
+//               <p className="text-xs text-slate-500 mt-0.5">{fmtDate(booking.sessionDate)} at {formatCardTime(booking.startTime)}</p>
+//             </div>
+
+//             {step === "slots" && (
+//               <>
+//                 <p className="text-sm font-medium text-slate-700 mb-3">Choose a new slot</p>
+//                 {slotsLoading && <div className="flex items-center justify-center py-12"><Loader2 className="w-5 h-5 animate-spin text-blue-500" /></div>}
+//                 {slotsError && <div className="text-center py-10 text-sm text-slate-400">Could not load slots.</div>}
+//                 {!slotsLoading && !slotsError && availableSlots.length === 0 && <div className="text-center py-10 text-sm text-slate-400">No available slots right now.</div>}
+//                 {!slotsLoading && !slotsError && availableSlots.length > 0 && (
+//                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+//                     {availableSlots.map((slot, idx) => {
+//                       const dp = getSlotDateParts(slot.date);
+//                       const mins = slotDuration(slot.startTime, slot.endTime);
+//                       return (
+//                         <button key={slot._id || idx} onClick={() => { setSelectedSlot(slot); setStep("confirm"); }}
+//                           className="text-left p-3.5 rounded-xl border border-slate-200 hover:border-blue-400 hover:bg-blue-50/40 transition-all duration-150">
+//                           <div className="flex items-center gap-3">
+//                             <div className="w-12 h-12 rounded-lg bg-blue-50 flex flex-col items-center justify-center flex-shrink-0">
+//                               <span className="text-[9px] font-bold uppercase text-blue-400">{dp.month}</span>
+//                               <span className="text-lg font-bold text-blue-600 leading-none">{dp.day}</span>
+//                             </div>
+//                             <div>
+//                               <p className="text-xs font-semibold text-slate-700">{getSlotDayName(slot.date)}</p>
+//                               <p className="text-xs text-slate-500">{to12h(slot.startTime)} — {to12h(slot.endTime)}</p>
+//                               <p className="text-[11px] text-slate-400 mt-0.5">{mins} min</p>
+//                             </div>
+//                           </div>
+//                         </button>
+//                       );
+//                     })}
+//                   </div>
+//                 )}
+//               </>
+//             )}
+
+//             {step === "confirm" && selectedSlot && (
+//               <div>
+//                 <p className="text-sm font-medium text-slate-700 mb-4">Confirm Reschedule</p>
+//                 <div className="grid grid-cols-2 gap-3 mb-4">
+//                   <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+//                     <p className="text-[10px] text-slate-400 mb-1.5 uppercase font-semibold tracking-wide">Current</p>
+//                     <p className="text-sm font-semibold text-slate-700">{formatCardDate(booking.sessionDate)}</p>
+//                     <p className="text-xs text-slate-400 mt-0.5">{formatCardTime(booking.startTime)}</p>
+//                   </div>
+//                   <div className="p-3.5 rounded-xl bg-blue-50 border border-blue-200">
+//                     <p className="text-[10px] text-blue-500 mb-1.5 uppercase font-semibold tracking-wide">New Slot</p>
+//                     <p className="text-sm font-semibold text-blue-800">{formatSlotDate(selectedSlot.date)}</p>
+//                     <p className="text-xs text-blue-500 mt-0.5">{to12h(selectedSlot.startTime)} — {to12h(selectedSlot.endTime)}</p>
+//                   </div>
+//                 </div>
+//                 <p className="text-xs text-slate-400 bg-slate-50 border border-slate-200 rounded-lg p-3">
+//                   Your current slot will be released and the new one reserved. Updated calendar invites will be sent via email.
+//                 </p>
+//               </div>
+//             )}
+//           </div>
+
+//           {step === "confirm" && selectedSlot && (
+//             <div className="border-t border-slate-100 px-5 py-4 flex items-center justify-between bg-slate-50/60 rounded-b-2xl flex-shrink-0">
+//               <button onClick={() => setStep("slots")} className="text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1.5">
+//                 <ArrowLeft className="w-3.5 h-3.5" /> Change Slot
+//               </button>
+//               <button onClick={handleConfirm} disabled={isRescheduling}
+//                 className="flex items-center gap-2 text-white py-2.5 px-5 rounded-lg font-semibold text-sm bg-blue-600 hover:bg-blue-700 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed">
+//                 {isRescheduling ? <><Loader2 className="w-4 h-4 animate-spin" /> Rescheduling…</> : <><Check className="w-4 h-4" /> Confirm Reschedule</>}
+//               </button>
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     </>
+//   );
+// }
+
+
 function RescheduleModal({
   booking, isOpen, onClose, onConfirm, isRescheduling,
   getMentorName, getMentorInitials, formatCardDate, formatCardTime,
@@ -531,54 +656,97 @@ function RescheduleModal({
 
   return (
     <>
-      <div onClick={onClose}
+      {/* Backdrop */}
+      <div
+        onClick={onClose}
         className={`fixed inset-0 z-50 transition-opacity duration-200 bg-black/30
-          ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} />
+          ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+      />
+
+      {/* Modal */}
       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 pointer-events-none">
-        <div className={`bg-white w-full sm:rounded-2xl rounded-t-2xl sm:max-w-2xl max-h-[90vh] flex flex-col pointer-events-auto
-                        border border-slate-200 font-[DM_Sans,sans-serif]
-                        transition-all duration-200
-                        ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}>
-          <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-100 flex-shrink-0">
-            <button onClick={onClose} className="flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-slate-700">
+        <div
+          className={`bg-white w-full sm:rounded-2xl rounded-t-2xl sm:max-w-2xl max-h-[90vh] flex flex-col pointer-events-auto
+            border border-[#e2e8f0] font-[DM_Sans,sans-serif] transition-all duration-200
+            ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+        >
+          {/* Header */}
+          <div className="flex items-center gap-3 px-5 py-4 border-b border-[#e2e8f0] flex-shrink-0">
+            <button
+              onClick={onClose}
+              className="flex items-center gap-1.5 text-sm font-medium text-[#64748b] hover:text-[#1a1a2e] transition-colors"
+            >
               <ArrowLeft className="w-4 h-4" /> Back
             </button>
             <div className="flex-1 text-center">
-              <h2 className="text-sm font-semibold text-slate-900">Reschedule Session</h2>
+              <h2 className="text-sm font-semibold text-[#1a1a2e]">Reschedule Session</h2>
             </div>
-            <button onClick={onClose} className="text-slate-400 hover:text-slate-600"><X className="w-5 h-5" /></button>
+            <button
+              onClick={onClose}
+              className="text-[#94a3b8] hover:text-[#1a1a2e] transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
           </div>
 
+          {/* Body */}
           <div className="flex-1 overflow-y-auto p-5">
-            <div className="mb-5 p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-              <p className="text-xs text-slate-400 mb-1">Current Session</p>
-              <p className="text-sm font-semibold text-slate-800">{getMentorName(booking)}</p>
-              <p className="text-xs text-slate-500 mt-0.5">{fmtDate(booking.sessionDate)} at {formatCardTime(booking.startTime)}</p>
+
+            {/* Current session info */}
+            <div className="mb-5 p-3.5 rounded-xl bg-white border border-[#e2e8f0]">
+              <p className="text-xs text-[#94a3b8] mb-1">Current Session</p>
+              <p className="text-sm font-semibold text-[#1a1a2e]">{getMentorName(booking)}</p>
+              <p className="text-xs text-[#64748b] mt-0.5">
+                {fmtDate(booking.sessionDate)} at {formatCardTime(booking.startTime)}
+              </p>
             </div>
 
+            {/* ── Step: Slots ── */}
             {step === "slots" && (
               <>
-                <p className="text-sm font-medium text-slate-700 mb-3">Choose a new slot</p>
-                {slotsLoading && <div className="flex items-center justify-center py-12"><Loader2 className="w-5 h-5 animate-spin text-blue-500" /></div>}
-                {slotsError && <div className="text-center py-10 text-sm text-slate-400">Could not load slots.</div>}
-                {!slotsLoading && !slotsError && availableSlots.length === 0 && <div className="text-center py-10 text-sm text-slate-400">No available slots right now.</div>}
+                <p className="text-sm font-medium text-[#1a1a2e] mb-3">Choose a new slot</p>
+
+                {slotsLoading && (
+                  <div className="flex items-center justify-center py-12">
+                    <Loader2 className="w-5 h-5 animate-spin text-[#008dbe]" />
+                  </div>
+                )}
+
+                {slotsError && (
+                  <div className="text-center py-10 text-sm text-[#94a3b8]">
+                    Could not load slots.
+                  </div>
+                )}
+
+                {!slotsLoading && !slotsError && availableSlots.length === 0 && (
+                  <div className="text-center py-10 text-sm text-[#94a3b8]">
+                    No available slots right now.
+                  </div>
+                )}
+
                 {!slotsLoading && !slotsError && availableSlots.length > 0 && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2"
+                  >
                     {availableSlots.map((slot, idx) => {
                       const dp = getSlotDateParts(slot.date);
                       const mins = slotDuration(slot.startTime, slot.endTime);
                       return (
-                        <button key={slot._id || idx} onClick={() => { setSelectedSlot(slot); setStep("confirm"); }}
-                          className="text-left p-3.5 rounded-xl border border-slate-200 hover:border-blue-400 hover:bg-blue-50/40 transition-all duration-150">
-                          <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 rounded-lg bg-blue-50 flex flex-col items-center justify-center flex-shrink-0">
-                              <span className="text-[9px] font-bold uppercase text-blue-400">{dp.month}</span>
-                              <span className="text-lg font-bold text-blue-600 leading-none">{dp.day}</span>
+                        <button
+                          key={slot._id || idx}
+                          onClick={() => { setSelectedSlot(slot); setStep("confirm"); }}
+                          className="text-left p-2.5 rounded-xl border border-[#e2e8f0] hover:border-[#008dbe] hover:bg-[#008dbe0a] transition-all duration-150"
+                        >
+                          <div className="flex flex-col items-center gap-1.5 text-center">
+                            <div className="w-10 h-10 rounded-lg bg-[#e6f7fc] flex flex-col items-center justify-center w-full"
+                            >
+                              <span className="text-[9px] font-bold uppercase text-[#008dbe]">{dp.month}</span>
+                              <span className="text-lg font-bold text-[#1a1a2e] leading-none">{dp.day}</span>
                             </div>
                             <div>
-                              <p className="text-xs font-semibold text-slate-700">{getSlotDayName(slot.date)}</p>
-                              <p className="text-xs text-slate-500">{to12h(slot.startTime)} — {to12h(slot.endTime)}</p>
-                              <p className="text-[11px] text-slate-400 mt-0.5">{mins} min</p>
+                              <p className="text-xs font-semibold text-[#1a1a2e] text-center">{getSlotDayName(slot.date)}</p>
+                              <p className="text-[10px] text-[#64748b] text-center">{to12h(slot.startTime)}</p>
+                              <p className="text-[10px] text-[#64748b] text-center">— {to12h(slot.endTime)}</p>
+                              <p className="text-[10px] text-[#94a3b8] mt-0.5 text-center">{mins} min</p>
                             </div>
                           </div>
                         </button>
@@ -589,39 +757,56 @@ function RescheduleModal({
               </>
             )}
 
+            {/* ── Step: Confirm ── */}
             {step === "confirm" && selectedSlot && (
               <div>
-                <p className="text-sm font-medium text-slate-700 mb-4">Confirm Reschedule</p>
+                <p className="text-sm font-medium text-[#1a1a2e] mb-4">Confirm Reschedule</p>
                 <div className="grid grid-cols-2 gap-3 mb-4">
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-                    <p className="text-[10px] text-slate-400 mb-1.5 uppercase font-semibold tracking-wide">Current</p>
-                    <p className="text-sm font-semibold text-slate-700">{formatCardDate(booking.sessionDate)}</p>
-                    <p className="text-xs text-slate-400 mt-0.5">{formatCardTime(booking.startTime)}</p>
+                  {/* Current slot */}
+                  <div className="p-3.5 rounded-xl bg-[#f8fafc] border border-[#e2e8f0]">
+                    <p className="text-[10px] text-[#94a3b8] mb-1.5 uppercase font-semibold tracking-wide">Current</p>
+                    <p className="text-sm font-semibold text-[#1a1a2e]">{formatCardDate(booking.sessionDate)}</p>
+                    <p className="text-xs text-[#64748b] mt-0.5">{formatCardTime(booking.startTime)}</p>
                   </div>
-                  <div className="p-3.5 rounded-xl bg-blue-50 border border-blue-200">
-                    <p className="text-[10px] text-blue-500 mb-1.5 uppercase font-semibold tracking-wide">New Slot</p>
-                    <p className="text-sm font-semibold text-blue-800">{formatSlotDate(selectedSlot.date)}</p>
-                    <p className="text-xs text-blue-500 mt-0.5">{to12h(selectedSlot.startTime)} — {to12h(selectedSlot.endTime)}</p>
+                  {/* New slot */}
+                  <div className="p-3.5 rounded-xl bg-[#e6f7fc] border border-[#008dbe]/30">
+                    <p className="text-[10px] text-[#008dbe] mb-1.5 uppercase font-semibold tracking-wide">New Slot</p>
+                    <p className="text-sm font-semibold text-[#1a1a2e]">{formatSlotDate(selectedSlot.date)}</p>
+                    <p className="text-xs text-[#008dbe] mt-0.5">
+                      {to12h(selectedSlot.startTime)} — {to12h(selectedSlot.endTime)}
+                    </p>
                   </div>
                 </div>
-                <p className="text-xs text-slate-400 bg-slate-50 border border-slate-200 rounded-lg p-3">
+                <p className="text-xs text-[#64748b] bg-[#f8fafc] border border-[#e2e8f0] rounded-lg p-3">
                   Your current slot will be released and the new one reserved. Updated calendar invites will be sent via email.
                 </p>
               </div>
             )}
           </div>
 
+          {/* Footer */}
           {step === "confirm" && selectedSlot && (
-            <div className="border-t border-slate-100 px-5 py-4 flex items-center justify-between bg-slate-50/60 rounded-b-2xl flex-shrink-0">
-              <button onClick={() => setStep("slots")} className="text-sm text-slate-500 hover:text-slate-700 flex items-center gap-1.5">
+            <div className="border-t border-[#e2e8f0] px-5 py-4 flex items-center justify-between bg-white rounded-b-2xl flex-shrink-0">
+              <button
+                onClick={() => setStep("slots")}
+                className="text-sm text-[#64748b] hover:text-[#1a1a2e] transition-colors flex items-center gap-1.5"
+              >
                 <ArrowLeft className="w-3.5 h-3.5" /> Change Slot
               </button>
-              <button onClick={handleConfirm} disabled={isRescheduling}
-                className="flex items-center gap-2 text-white py-2.5 px-5 rounded-lg font-semibold text-sm bg-blue-600 hover:bg-blue-700 active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed">
-                {isRescheduling ? <><Loader2 className="w-4 h-4 animate-spin" /> Rescheduling…</> : <><Check className="w-4 h-4" /> Confirm Reschedule</>}
+              <button
+                onClick={handleConfirm}
+                disabled={isRescheduling}
+                className="flex items-center gap-2 text-white py-2.5 px-5 rounded-lg font-semibold text-sm
+                  bg-[#1a1a2e] hover:bg-[#2d2d4e] active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+              >
+                {isRescheduling
+                  ? <><Loader2 className="w-4 h-4 animate-spin" /> Rescheduling…</>
+                  : <><Check className="w-4 h-4" /> Confirm Reschedule</>
+                }
               </button>
             </div>
           )}
+
         </div>
       </div>
     </>
@@ -635,7 +820,7 @@ function RescheduleModal({
 function BookingCard({
   booking, onOpenPanel,
   getMentorName, getMentorInitials, getMentorSubtitle,
-  formatCardDate, formatCardTime,
+  formatCardDate, formatCardTime, onCompletePayment
 }) {
   const [now, setNow] = React.useState(new Date());
 
@@ -738,6 +923,15 @@ function BookingCard({
             <Eye className="w-3 h-3" /> View Details
           </button>
 
+          {booking.paymentStatus === "unpaid" && (
+            <button
+              onClick={() => onCompletePayment(booking)}
+              className="flex items-center gap-1 px-3 py-1.5 rounded-md text-[11px] font-semibold
+      text-white bg-[#1a1a2e]  active:scale-[0.97] transition-all"
+            >
+              <CreditCard className="w-3 h-3" /> Complete Payment
+            </button>
+          )}
 
           {isCancelled && (
             <span style={{ color: '#dc2626' }} className="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase bg-red-50 border border-red-200">
@@ -873,7 +1067,7 @@ export default function BookingsDashboard() {
   const [rescheduleTarget, setRescheduleTarget] = useState(null);
   const [rescheduleOpen, setRescheduleOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
-
+  console.log(selectedBooking, "selectedBooking1")
   // Initialize
   useEffect(() => {
     const pc = Cookies.get("profileData");
@@ -940,6 +1134,28 @@ export default function BookingsDashboard() {
       toast.success(selectedBooking.isFreeSession ? "Booking cancelled. Free session restored!" : "Booking cancelled.");
       closePanel();
     } catch (err) { toast.error("Failed to cancel: " + (err?.data?.message || "Please try again.")); }
+  };
+
+  const handleCompletePayment = (booking) => {
+    console.log(booking, "booking22")
+    const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+    navigate("/payment", {
+      state: {
+        bookingNumber: booking.bookingId,
+        mentorId: typeof booking.mentorId === "object" ? booking.mentorId?._id : booking.mentorId,
+        mentorName: getMentorName(booking),
+        mentorRole: getMentorRole(booking),
+        menteeId: userData._id,
+        menteeName: userData.name || userData.fullName || "",
+        paymentType: "bookingsession",   // ← updated
+        // basePrice: Number(booking.price) || 0,
+        bookingId: booking._id,
+
+        basePrice: Number(
+          String(booking.price).replace(/[^0-9.]/g, "")
+        ) || 0
+      },
+    });
   };
 
   const handleRescheduleBooking = async ({ bookingId, bookedMeetingSlot }) => {
@@ -1064,6 +1280,7 @@ export default function BookingsDashboard() {
                     getMentorSubtitle={getMentorSubtitle}
                     formatCardDate={formatCardDate}
                     formatCardTime={formatCardTime}
+                    onCompletePayment={handleCompletePayment}
                   />
                 ))}
               </div>
@@ -1132,8 +1349,8 @@ export default function BookingsDashboard() {
                     <p className="text-xs text-slate-400 truncate">{getMentorSubtitle(selectedBooking)}</p>
                   </div>
                   {/* <StatusBadge status={booking.status === "cancelled" ? "cancelled" : booking.paymentStatus} />             */}
-                  
-                      </div>
+
+                </div>
 
                 <div className="flex-1 overflow-y-auto px-5 py-4">
                   <DetailRow icon={Calendar} label="Date" value={formatDate(selectedBooking.sessionDate)} />
@@ -1157,6 +1374,17 @@ export default function BookingsDashboard() {
                 </div>
 
                 <div className="flex-shrink-0 px-5 py-4 border-t border-slate-100 space-y-2">
+
+
+                  {selectedBooking.paymentStatus === "unpaid" && (
+                    <button
+                      onClick={() => handleCompletePayment(selectedBooking)}
+                      className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg font-semibold text-sm
+      text-white bg-[#1a1a2e]  transition-all"
+                    >
+                      <CreditCard className="w-4 h-4" /> Complete Payment
+                    </button>
+                  )}
                   {selectedBooking.paymentStatus === "Approved" && selectedBooking.meetingLink && (
                     <a
                       href={selectedBooking.meetingLink}
