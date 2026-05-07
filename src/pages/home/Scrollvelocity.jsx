@@ -1,123 +1,181 @@
+import React from "react";
+import { TrendingUp } from "lucide-react";
 
-// import React from 'react';
+export default function MentorHero() {
+  const tags = [
+    "1-on-1 Sessions",
+    "Career Roadmaps",
+    "Peer Community",
+    "Live Workshops",
+  ];
 
-// export default function MentoHero() {
-//   return (
-//     <div className="w-full min-h-screen" style={{ backgroundColor: '#062117' }}>
-
-//       {/* ── MENTEE SECTION: Image Left, Text Right ── */}
-//       <div className="w-full flex flex-col-reverse md:flex-row items-center justify-between gap-12 px-6 sm:px-12 lg:px-20 py-20">
-
-//         {/* Left: Image — no shadow, no border, no glow */}
-//         <div className="flex-1 max-w-xl w-full">
-//           <div className="rounded-2xl overflow-hidden">
-//             <img
-//               src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=500&fit=crop"
-//               alt="Mentees collaborating"
-//               className="w-full h-72 sm:h-80 lg:h-96 object-cover"
-//             />
-//           </div>
-
-//         </div>
-
-//         {/* Right: Text */}
-//         <div className="flex-1 max-w-xl">
-
-//           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-//             Accelerate Your <br />
-//             <span style={{ color: '#0098cc' }}>Growth</span>
-//           </h1>
-
-//           <p className="text-white/70 text-base sm:text-lg leading-relaxed mb-5 max-w-md">
-//             Connect with industry experts who are ready to guide you through challenges, unlock new skills, and help you reach your career goals faster.
-//           </p>
-
-//           <p className="text-white/70 text-base sm:text-lg leading-relaxed mb-10 max-w-md">
-//             With personalized mentorship, curated learning paths and a thriving community, you'll gain the confidence and knowledge to stand out in your field.
-//           </p>
-
-//           {/* Feature pills */}
-//           <div className="flex flex-wrap gap-3 mb-10">
-//             {['1-on-1 Sessions', 'Career Roadmaps', 'Peer Community', 'Live Workshops'].map(tag => (
-//               <span
-//                 key={tag}
-//                 className="text-xs font-medium px-4 py-2 rounded-full border"
-//                 style={{
-//                   color: '#0098cc',
-//                   borderColor: 'rgba(0,152,204,0.4)',
-//                   backgroundColor: 'rgba(0,152,204,0.08)',
-//                 }}
-//               >
-//                 {tag}
-//               </span>
-//             ))}
-//           </div>
-
-//         </div>
-//       </div>
-
-//     </div>
-//   );
-// }
-
-
-
-import React from 'react';
-
-export default function MentoHero() {
   return (
-    <div className="w-full min-h-screen" style={{ backgroundColor: '#ffffff' }}>
+    <section
+      style={{
+        width: "100%",
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "60px 40px",
+        boxSizing: "border-box",
+        fontFamily: "'Sora', 'Segoe UI', sans-serif",
+        background: "#fff",
+      }}
+    >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap');
 
-      {/* ── MENTEE SECTION: Image Left, Text Right ── */}
-      <div className="w-full flex flex-col-reverse md:flex-row items-center justify-between gap-12 px-6 sm:px-12 lg:px-20 py-20">
+        .mh-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          align-items: center;
+          gap: 60px;
+          width: 100%;
+          max-width: 1100px;
+        }
 
-        {/* Left: Image */}
-        <div className="flex-1 max-w-xl w-full">
-          <div className="rounded-2xl overflow-hidden" style={{ border: '2px solid #e0f4fc' }}>
-            <img
-              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&h=500&fit=crop"
-              alt="Mentees collaborating"
-              className="w-full h-72 sm:h-80 lg:h-96 object-cover"
+        .mh-tag {
+          font-size: 12.5px;
+          font-weight: 500;
+          color: #00a6df;
+          border: 1.5px solid #00a6df;
+          border-radius: 999px;
+          padding: 6px 16px;
+          white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+          .mh-grid {
+            grid-template-columns: 1fr;
+            gap: 30px;
+          }
+        }
+      `}</style>
+
+      <div className="mh-grid">
+
+        {/* LEFT IMAGE */}
+        <div style={{ display: "flex", justifyContent: "center", position: "relative" }}>
+
+          {/* Blur background */}
+          <div
+            style={{
+              position: "absolute",
+              right: "-80px",
+              bottom: "-80px",
+              width: 300,
+              height: 300,
+              borderRadius: "50%",
+              background: "#dff5ff",
+              filter: "blur(60px)",
+              opacity: 0.5,
+            }}
+          />
+
+          {/* Circle wrapper */}
+          <div
+            style={{
+              position: "relative",
+              width: 320,
+              height: 320,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+
+            {/* Ring */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                borderRadius: "50%",
+                border: "2px solid #00a6df",
+              }}
             />
+
+            {/* Image */}
+            <div
+              style={{
+                width: 250,
+                height: 250,
+                borderRadius: "50%",
+                overflow: "hidden",
+                border: "6px solid white",
+
+              }}
+            >
+              <img
+                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=1200&fit=crop"
+                alt="Mentorship"
+                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+              />
+            </div>
+
+            {/* Badge */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: 15,
+                right: 0,
+                background: "#00a6df",
+                color: "white",
+                borderRadius: 20,
+                padding: "8px 12px",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              <TrendingUp size={16} />
+              <div style={{ lineHeight: 1.1 }}>
+                <div style={{ fontSize: 10, opacity: 0.8 }}>
+                  Career Growth
+                </div>
+                <div style={{ fontSize: 12, fontWeight: 600 }}>
+                  +10x Learning
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
-        {/* Right: Text */}
-        <div className="flex-1 max-w-xl">
-
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6" style={{ color: '#0a1a22' }}>
-            Accelerate Your <br />
-            <span style={{ color: '#0098cc' }}>Growth</span>
+        {/* RIGHT CONTENT */}
+        <div>
+          <h1
+            style={{
+              fontSize: 44,
+              fontWeight: 800,
+              color: "#08131d",
+              lineHeight: 1.1,
+              marginBottom: 20,
+            }}
+          >
+            Accelerate Your{" "}
+            <span style={{ color: "#00a6df" }}>Growth</span>
           </h1>
 
-          <p className="text-base sm:text-lg leading-relaxed mb-5 max-w-md" style={{ color: '#4b5563' }}>
-            Connect with industry experts who are ready to guide you through challenges, unlock new skills, and help you reach your career goals faster.
+          <p style={{ fontSize: 15, color: "#536471", lineHeight: 1.7, marginBottom: 12 }}>
+            Connect with industry experts who guide you through challenges, unlock skills, and accelerate your career growth.
           </p>
 
-          <p className="text-base sm:text-lg leading-relaxed mb-10 max-w-md" style={{ color: '#4b5563' }}>
-            With personalized mentorship, curated learning paths and a thriving community, you'll gain the confidence and knowledge to stand out in your field.
+          <p style={{ fontSize: 15, color: "#536471", lineHeight: 1.7, marginBottom: 20 }}>
+            With personalized mentorship and curated learning paths, you gain confidence and stand out in your field.
           </p>
 
-          {/* Feature pills */}
-          <div className="flex flex-wrap gap-3 mb-10">
-            {['1-on-1 Sessions', 'Career Roadmaps', 'Peer Community', 'Live Workshops'].map(tag => (
-              <span
-                key={tag}
-                className="text-xs font-medium px-4 py-2 rounded-full border"
-                style={{
-                  color: '#0098cc',
-                  borderColor: '#0098cc',
-                  backgroundColor: '#f0faff',
-                }}
-              >
+          {/* TAGS */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 10 }}>
+            {tags.map((tag, i) => (
+              <span className="mh-tag" key={i}>
                 {tag}
               </span>
             ))}
           </div>
-
         </div>
-      </div>
 
-    </div>
+      </div>
+    </section>
   );
 }

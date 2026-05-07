@@ -1,14 +1,10 @@
-
 import { useState, useEffect } from "react";
 import { FaClock } from "react-icons/fa";
 import {
     MapPin, X, ChevronDown, ChevronUp, CheckCircle,
     Search, Pencil, Briefcase, Target, Building2,
     SlidersHorizontal, Star, Trophy,
-    Users,
-    Calendar,
-
-
+    Users, Calendar, BookOpen, Video,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -32,11 +28,6 @@ const BLUE_LIGHT = "#f0faff";
 const BLUE_BORDER = "#cce9f5";
 const PRIMARY = "#1a1a2e";
 const FONT = "'DM Sans', sans-serif";
-
-// Card dimensions — change these two values to resize globally
-const CARD_H_DESKTOP = "280px";  // total card height on desktop
-const PHOTO_W = "40%";    // photo panel width on desktop
-const PHOTO_H_MOBILE = "200px";  // photo height on mobile
 
 // ── Static Data ────────────────────────────────────────────────────────────
 const DAY_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -127,8 +118,6 @@ function SubscribePanel({ mentor, onClose }) {
     return (
         <motion.div {...motionProps} transition={{ type: "spring", damping: 28, stiffness: 300 }} style={panelStyle}>
             {isMobile && <div style={{ width: "36px", height: "4px", background: "#e5e7eb", borderRadius: "2px", margin: "12px auto 4px", flexShrink: 0 }} />}
-
-            {/* Header */}
             <div style={{ background: "white", borderBottom: `3px solid ${BLUE}`, padding: "20px 24px", flexShrink: 0 }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }}>
                     <h2 style={{ color: BLUE, fontWeight: 800, fontSize: "17px", margin: 0 }}>Book A Free Trial</h2>
@@ -143,8 +132,6 @@ function SubscribePanel({ mentor, onClose }) {
                     </span>
                 </p>
             </div>
-
-            {/* Scrollable body */}
             <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px" }}>
                 <p style={{ fontSize: "11px", fontWeight: 700, color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: "10px" }}>Select Plan</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "24px" }}>
@@ -169,7 +156,6 @@ function SubscribePanel({ mentor, onClose }) {
                         );
                     })}
                 </div>
-
                 <p style={{ fontSize: "11px", fontWeight: 700, color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: "10px" }}>Select Availability</p>
                 {availability.length > 0 ? (
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -219,8 +205,6 @@ function SubscribePanel({ mentor, onClose }) {
                     </div>
                 )}
             </div>
-
-            {/* Footer */}
             <div style={{ borderTop: "1px solid #f0f0f0", padding: "16px 24px", background: "white", flexShrink: 0 }}>
                 <div style={{ marginBottom: "12px" }}>
                     <p style={{ fontSize: "11px", color: "#9ca3af", margin: "0 0 2px", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em" }}>
@@ -244,49 +228,56 @@ function SubscribePanel({ mentor, onClose }) {
     );
 }
 
+// ── MentorCard — rebuilt to match screenshot exactly ───────────────────────
 function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
     const width = useWindowWidth();
     const isMobile = width < 768;
-
     const [bioExpanded, setBioExpanded] = useState(false);
 
-    const areas = (mentor.areasOfInterest || mentor.currentSkills || "")
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean);
-
-    const bio =
-        mentor.motivationStatement ||
-        mentor.bio ||
-        mentor.about ||
-        "";
-
-    const fullName = toTitleCase(mentor.fullName || "Mentor");
-
-    const currentRole = toTitleCase(mentor.currentRole || "");
-    const companyName = toTitleCase(mentor.companyName || "");
-    const locationText = toTitleCase(mentor.location || "");
-
-    const languages = Array.isArray(mentor.languages)
+    // ── Data extraction ──────────────────────────────────────────────────
+    const fullName      = toTitleCase(mentor.fullName || "Mentor");
+    const currentRole   = toTitleCase(mentor.currentRole || "");
+    const companyName   = toTitleCase(mentor.companyName || "");
+    const locationText  = toTitleCase(mentor.location || "");
+    const languages     = Array.isArray(mentor.languages)
         ? mentor.languages.join(", ")
         : mentor.languages || "";
 
-    const hourlyRate =
-        mentor.pricing?.hourlyRate ??
-        mentor.hourlyRate ??
-        0;
+    const bio = mentor.motivationStatement || mentor.bio || mentor.about || "";
 
-    const planData = getPlanData(mentor, "1Month");
+    const areas = (mentor.areasOfInterest || mentor.currentSkills || "")
+        .split(",").map((s) => s.trim()).filter(Boolean);
 
-    const monthlyPrice =
-        planData?.totalPrice ?? hourlyRate;
+    const planData      = getPlanData(mentor.pricing, "1Month");
+    const monthlyPrice  = planData?.totalPrice ?? mentor.pricing?.hourlyRate ?? mentor.hourlyRate ?? 0;
+    const trialPrice    = mentor.trialPrice ?? 99;
+    const nextAvailable = mentor.nextAvailable ?? "";
 
-    const yearsExp = mentor.yearsOfExperience
-        ? `${mentor.yearsOfExperience}+ Years`
-        : "";
+    const positiveReviews = mentor.positiveReviews ?? mentor.reviewCount ?? "1+";
+    const placements      = mentor.placements ?? 0;
+    const menteeCount     = mentor.menteeCount ?? 0;
+    const yearsExp        = mentor.yearsOfExperience ? `${mentor.yearsOfExperience}+ Years of Exp.` : "0+ Years of Exp.";
+    const starBadge       = mentor.starMentorBadge || mentor.badge || "";
+    const referralCount   = mentor.referralCount ?? 0;
+    const hasCurriculum   = mentor.hasCurriculum ?? false;
+    const weeklySessions  = mentor.pricing?.weeklySessions ?? 4;
 
-    const placements = mentor.placements ?? 0;
-    const menteeCount = mentor.menteeCount ?? 0;
+    // "For:" list — could be array or comma string
+    const offeringForList = Array.isArray(mentor.offeringFor)
+        ? mentor.offeringFor
+        : mentor.offeringFor
+            ? String(mentor.offeringFor).split(",").map((s) => s.trim())
+            : [];
+
+    // "Domains:" list
+    const domainsList = Array.isArray(mentor.domains)
+        ? mentor.domains
+        : mentor.domains
+            ? String(mentor.domains).split(",").map((s) => s.trim())
+            : [];
+
+    // Previous company logos for experience row
+    const prevCompanies = Array.isArray(mentor.previousCompanies) ? mentor.previousCompanies : [];
 
     return (
         <motion.div
@@ -302,264 +293,401 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
                 overflow: "hidden",
                 marginBottom: "16px",
                 fontFamily: FONT,
+                borderRadius: "4px",
             }}
         >
-            {/* IMAGE */}
+            {/* ── LEFT: Photo + Reviews badge ─────────────────────────────── */}
             <div
                 style={{
-                    width: isMobile ? "100%" : "240px",
-                    minWidth: isMobile ? "100%" : "240px",
-                    height: isMobile ? "260px" : "100%",
+                    position: "relative",
+                    width: isMobile ? "100%" : "180px",
+                    minWidth: isMobile ? "100%" : "180px",
+                    height: isMobile ? "220px" : "auto",
                     background: "#f3f4f6",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    padding: "10px",
+                    overflow: "hidden",
+                    flexShrink: 0,
                 }}
             >
+                {/* Decorative corner sparkles */}
+                <span style={{ position: "absolute", top: "8px", left: "8px", fontSize: "12px", color: "#94a3b8", lineHeight: 1, userSelect: "none" }}>✦</span>
+                <span style={{ position: "absolute", top: "8px", right: "8px", fontSize: "9px", color: "#94a3b8", lineHeight: 1, userSelect: "none" }}>✦</span>
+                <span style={{ position: "absolute", bottom: "52px", left: "6px", fontSize: "8px", color: "#94a3b8", lineHeight: 1, userSelect: "none" }}>✦</span>
+                <span style={{ position: "absolute", bottom: "52px", right: "6px", fontSize: "10px", color: "#94a3b8", lineHeight: 1, userSelect: "none" }}>✦</span>
+
+                {/* Photo — full fill, no crop */}
                 <img
                     src={mentor.profilePhoto}
                     alt={fullName}
                     style={{
                         width: "100%",
                         height: "100%",
-                        objectFit: "cover",   // 🔥 CHANGE THIS
-                        borderRadius: "0px",  // ❌ remove rounding from image
+                        objectFit: "cover",
+                        objectPosition: "top center",
+                        display: "block",
+                        minHeight: isMobile ? "220px" : "220px",
                     }}
                 />
+
+                {/* Reviews badge overlay at bottom */}
+                <div
+                    style={{
+                        position: "absolute",
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        background: "rgba(255,255,255,0.92)",
+                        backdropFilter: "blur(2px)",
+                        textAlign: "center",
+                        padding: "6px 4px 8px",
+                        borderTop: "1px solid #e5e7eb",
+                    }}
+                >
+                    <div style={{ fontSize: "22px", fontWeight: 800, color: "#111827", lineHeight: 1.1 }}>
+                        {positiveReviews}
+                    </div>
+                    <div style={{ fontSize: "10px", fontWeight: 600, color: "#6b7280", marginTop: "1px" }}>
+                        Positive Reviews
+                    </div>
+                </div>
             </div>
 
-            {/* CENTER CONTENT */}
+            {/* ── CENTER: Main info ────────────────────────────────────────── */}
             <div
                 style={{
                     flex: 1,
-                    padding: "18px",
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRight: isMobile ? "none" : "1px solid #e5e7eb",
+                    minWidth: 0,
+                }}
+            >
+                {/* Top content with padding */}
+                <div style={{ padding: "16px 18px", display: "flex", flexDirection: "column", gap: "10px", flex: 1 }}>
+
+                    {/* NAME */}
+                    <h2 style={{ margin: 0, fontSize: "22px", fontWeight: 700, color: "#111827", lineHeight: 1.2 }}>
+                        {fullName}
+                    </h2>
+
+                    {/* LOCATION + LANGUAGE */}
+                    <div style={{ display: "flex", alignItems: "center", gap: "14px", flexWrap: "wrap", fontSize: "13px", color: "#6b7280" }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                            <MapPin size={13} color="#6b7280" />
+                            {locationText}
+                        </span>
+                        <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                            <Pencil size={12} color="#6b7280" />
+                            {languages}
+                        </span>
+                    </div>
+
+                    {/* BIO */}
+                    <div style={{ fontSize: "13px", color: "#4b5563", lineHeight: "1.6" }}>
+                        {bioExpanded ? bio : bio.slice(0, 160) + (bio.length > 160 ? "..." : "")}
+                        {bio.length > 160 && (
+                            <span
+                                onClick={() => setBioExpanded(!bioExpanded)}
+                                style={{ color: "#2563eb", marginLeft: "6px", cursor: "pointer", fontWeight: 600 }}
+                            >
+                                {bioExpanded ? "Show Less" : "Read More"}
+                            </span>
+                        )}
+                    </div>
+
+                    {/* SKILL CHIPS */}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                        {areas.slice(0, 7).map((skill, i) => (
+                            <div
+                                key={i}
+                                style={{
+                                    border: "1px solid #d1d5db",
+                                    padding: "4px 10px",
+                                    fontSize: "12px",
+                                    color: "#374151",
+                                    background: "#fff",
+                                    borderRadius: "4px",
+                                }}
+                            >
+                                {toTitleCase(skill)}
+                            </div>
+                        ))}
+                        {areas.length > 7 && (
+                            <div
+                                style={{
+                                    border: "1px solid #d1d5db",
+                                    padding: "4px 10px",
+                                    fontSize: "12px",
+                                    color: "#2563eb",
+                                    background: "#fff",
+                                    borderRadius: "4px",
+                                    fontWeight: 600,
+                                }}
+                            >
+                                +{areas.length - 7} More
+                            </div>
+                        )}
+                    </div>
+
+                    {/* EXPERIENCE ROW */}
+                    <div style={{ display: "flex", flexDirection: "row", gap: "10px", flexWrap: "wrap" }}>
+                        {/* Current role box */}
+                        <div
+                            style={{
+                                border: "1px solid #e5e7eb",
+                                padding: "10px 14px",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
+                                borderRadius: "6px",
+                                minWidth: "200px",
+                            }}
+                        >
+                            <div
+                                style={{
+                                    width: "36px",
+                                    height: "36px",
+                                    borderRadius: "50%",
+                                    background: "#1d4ed8",
+                                    color: "#fff",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    fontWeight: 800,
+                                    fontSize: "13px",
+                                    flexShrink: 0,
+                                }}
+                            >
+                                {fullName.charAt(0)}.
+                            </div>
+                            <div>
+                                <div style={{ fontSize: "13px", fontWeight: 700, color: "#111827" }}>{currentRole}</div>
+                                <div style={{ fontSize: "11px", color: "#6b7280" }}>{companyName}</div>
+                            </div>
+                        </div>
+
+                        {/* Years of exp + company logos */}
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                            {/* Overlapping company logos */}
+                            <div style={{ display: "flex", alignItems: "center" }}>
+                                {prevCompanies.slice(0, 3).map((c, i) => (
+                                    <div
+                                        key={i}
+                                        style={{
+                                            width: "28px",
+                                            height: "28px",
+                                            borderRadius: "50%",
+                                            border: "2px solid white",
+                                            background: "#e5e7eb",
+                                            overflow: "hidden",
+                                            marginLeft: i > 0 ? "-8px" : "0",
+                                            zIndex: 3 - i,
+                                            position: "relative",
+                                            flexShrink: 0,
+                                        }}
+                                    >
+                                        {c.logo ? (
+                                            <img src={c.logo} alt={c.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                        ) : (
+                                            <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: 700, color: "#374151", background: ["#fef3c7", "#dbeafe", "#d1fae5"][i % 3] }}>
+                                                {c.name?.charAt(0) || "C"}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                                {/* Fallback circles if no prevCompanies */}
+                                {prevCompanies.length === 0 && mentor.companyLogo && (
+                                    <div style={{ width: "28px", height: "28px", borderRadius: "50%", border: "2px solid white", overflow: "hidden" }}>
+                                        <img src={mentor.companyLogo} alt={companyName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                    </div>
+                                )}
+                            </div>
+                            <div>
+                                <div style={{ fontSize: "13px", fontWeight: 700, color: "#111827" }}>{yearsExp}</div>
+                                <div style={{ fontSize: "11px", color: "#6b7280" }}>
+                                    {prevCompanies.length > 0
+                                        ? prevCompanies.map((c) => c.name).join(" | ")
+                                        : companyName}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* BOTTOM BAR — "For:" + "Domains:" */}
+                <div
+                    style={{
+                        borderTop: "1px solid #f3f4f6",
+                        padding: "10px 18px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "20px",
+                        flexWrap: "wrap",
+                        background: "#fafafa",
+                    }}
+                >
+                    {/* For */}
+                    {offeringForList.length > 0 && (
+                        <div style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#374151" }}>
+                            <Briefcase size={13} color="#6b7280" />
+                            <span style={{ color: "#6b7280" }}>For:</span>
+                            <span style={{ fontWeight: 600 }}>{offeringForList.join(" | ")}</span>
+                        </div>
+                    )}
+                    {/* Domains */}
+                    {domainsList.length > 0 && (
+                        <div style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#374151" }}>
+                            <Target size={13} color="#6b7280" />
+                            <span style={{ color: "#6b7280" }}>Domains:</span>
+                            <span style={{ fontWeight: 600 }}>{domainsList[0]}</span>
+                            {domainsList.length > 1 && (
+                                <span style={{ color: "#2563eb", fontWeight: 600, cursor: "pointer" }}>| More</span>
+                            )}
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            {/* ── RIGHT: Stats + CTA ──────────────────────────────────────── */}
+            <div
+                style={{
+                    width: isMobile ? "100%" : "270px",
+                    minWidth: isMobile ? "100%" : "270px",
+                    padding: "16px 18px",
                     display: "flex",
                     flexDirection: "column",
                     gap: "10px",
-                    borderRight: isMobile ? "none" : "1px solid #e5e7eb",
+                    background: "#ffffff",
+                    flexShrink: 0,
                 }}
             >
-                {/* NAME */}
-                <h2
-                    style={{
-                        margin: 0,
-                        fontSize: "30px",
-                        fontWeight: 500,
-                        color: "#111827",
-                        lineHeight: 1.1,
-                    }}
-                >
-                    {fullName}
-                </h2>
-
-                {/* LOCATION */}
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "12px",
-                        flexWrap: "wrap",
-                        fontSize: "13px",
-                        color: "#4b5563",
-                    }}
-                >
-                    <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                        <MapPin size={13} />
-                        {locationText}
-                    </span>
-                    <span>{languages}</span>
-                </div>
-
-                {/* BIO */}
-                <div
-                    style={{
-                        fontSize: "14px",
-                        color: "#4b5563",
-                        lineHeight: "1.6",
-                    }}
-                >
-                    {bioExpanded ? bio : `${bio.slice(0, 160)}...`}
-
-                    {bio.length > 160 && (
-                        <span
-                            onClick={() => setBioExpanded(!bioExpanded)}
-                            style={{
-                                color: "#2563eb",
-                                marginLeft: "8px",
-                                cursor: "pointer",
-                                fontWeight: 500,
-                            }}
-                        >
-                            {bioExpanded ? "Show Less" : "Read More"}
+                {/* Star Mentor */}
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "14px" }}>
+                    <Star size={16} color="#f59e0b" fill="#f59e0b" style={{ flexShrink: 0 }} />
+                    <span style={{ fontWeight: 700, color: "#111827" }}>Star Mentor</span>
+                    {starBadge && (
+                        <span style={{ fontSize: "12px", color: "#6b7280", fontWeight: 400 }}>
+                            - {starBadge}
                         </span>
                     )}
                 </div>
 
-                {/* SKILLS */}
-                <div
-                    style={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        gap: "8px",
-                    }}
-                >
-                    {areas.slice(0, 6).map((skill, i) => (
-                        <div
-                            key={i}
-                            style={{
-                                border: "1px solid #d1d5db",
-                                padding: "6px 12px",
-                                fontSize: "12px",
-                                color: "#111827",
-                                background: "#fff",
-                            }}
-                        >
-                            {toTitleCase(skill)}
-                        </div>
-                    ))}
+                {/* Placements */}
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151" }}>
+                    <Trophy size={15} color="#d97706" style={{ flexShrink: 0 }} />
+                    <span>{placements} Placements</span>
+                </div>
 
-                    {areas.length > 6 && (
-                        <div
-                            style={{
-                                border: "1px solid #d1d5db",
-                                padding: "6px 12px",
-                                fontSize: "12px",
-                                color: "#2563eb",
-                                background: "#fff",
-                            }}
-                        >
-                            +{areas.length - 6} More
-                        </div>
+                {/* Mentees / Rating */}
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151" }}>
+                    <Users size={15} color="#0ea5e9" style={{ flexShrink: 0 }} />
+                    <span>5.0 ({menteeCount}+ mentees)</span>
+                </div>
+
+                {/* Sessions per month */}
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151" }}>
+                    <Video size={15} color="#10b981" style={{ flexShrink: 0 }} />
+                    <span>{weeklySessions * 4}x Sessions Per Month</span>
+                </div>
+
+                {/* Referrals */}
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151" }}>
+                    <Briefcase size={15} color="#8b5cf6" style={{ flexShrink: 0 }} />
+                    <span>Referrals in Top Companies</span>
+                    {referralCount > 0 && (
+                        <span style={{ color: "#2563eb", fontWeight: 600, fontSize: "12px", cursor: "pointer", whiteSpace: "nowrap" }}>
+                            +{referralCount} More
+                        </span>
                     )}
                 </div>
 
-                {/* EXPERIENCE */}
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        gap: "10px",
-                        flexWrap: "nowrap",
-                        overflowX: "auto",
-                    }}
-                >
-                    {/* ROLE */}
-                    <div
-                        style={{
-                            minWidth: "240px",
-                            border: "1px solid #e5e7eb",
-                            padding: "12px",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "10px",
-                        }}
-                    >
-                        <div
-                            style={{
-                                width: "40px",
-                                height: "40px",
-                                borderRadius: "50%",
-                                background: "#1d4ed8",
-                                color: "#fff",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                fontWeight: 700,
-                                fontSize: "16px",
-                            }}
-                        >
-                            B.
+                {/* Curriculum */}
+                {hasCurriculum && (
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "13px", color: "#374151" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                            <BookOpen size={15} color="#6b7280" style={{ flexShrink: 0 }} />
+                            <span>Detailed Curriculum Available</span>
                         </div>
-
-                        <div>
-                            <div style={{ fontSize: "14px", fontWeight: 700 }}>
-                                {currentRole}
-                            </div>
-                            <div style={{ fontSize: "12px", color: "#6b7280" }}>
-                                {companyName}
-                            </div>
-                        </div>
+                        <span style={{ color: "#2563eb", fontWeight: 600, fontSize: "12px", cursor: "pointer", whiteSpace: "nowrap" }}>
+                            View ↗
+                        </span>
                     </div>
+                )}
 
-                    {/* EXPERIENCE */}
-                    <div
-                        style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "10px",
-                        }}
-                    >
-                        {/* LOGO / LETTER */}
-                        <div
-                            style={{
-                                width: "36px",
-                                height: "36px",
-                                borderRadius: "50%",
-                                background: "#10b981",
-                                color: "#fff",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                fontWeight: 700,
-                                fontSize: "14px",
-                                overflow: "hidden",
-                            }}
-                        >
-                            {mentor.companyLogo ? (
-                                <img
-                                    src={mentor.companyLogo}
-                                    alt={companyName}
-                                    style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        objectFit: "cover",
-                                    }}
-                                />
-                            ) : (
-                                <span>
-                                    {companyName ? companyName.charAt(0).toUpperCase() : "E"}
-                                </span>
-                            )}
-                        </div>
+                {/* Divider */}
+                <div style={{ borderTop: "1px solid #f3f4f6", margin: "2px 0" }} />
 
-                        {/* TEXT */}
-                        <div>
-                            <div style={{ fontSize: "14px", fontWeight: 700 }}>
-                                {yearsExp || "0+ Years"}
-                            </div>
-                            <div style={{ fontSize: "12px", color: "#6b7280" }}>
-                                {companyName || "Experience"}
-                            </div>
-                        </div>
+                {/* Price */}
+                <div>
+                    <div style={{ fontSize: "11px", color: "#9ca3af", marginBottom: "2px" }}>Starting from</div>
+                    <div style={{ display: "flex", alignItems: "flex-end", gap: "4px" }}>
+                        <span style={{ fontSize: "28px", fontWeight: 800, color: "#111827", lineHeight: 1 }}>
+                            {fmtINR(monthlyPrice)}
+                        </span>
+                        <span style={{ fontSize: "12px", color: "#6b7280", marginBottom: "3px" }}>
+                            /Month
+                        </span>
+                        <span style={{ fontSize: "12px", color: "#9ca3af", marginBottom: "3px" }}>
+                            + taxes
+                        </span>
                     </div>
                 </div>
-            </div>
 
-            {/* RIGHT SIDE */}
-            <div style={{ width: isMobile ? "100%" : "320px", padding: "18px", display: "flex", flexDirection: "column", gap: "14px", background: "#ffffff", borderRadius: "18px",  }}>  <div style={{ fontSize: "14px", fontWeight: 700, display: "flex", alignItems: "center", gap: "10px", color: "#111827", }}  >    <Star size={18} color="#f59e0b" fill="#f59e0b" />    Star Mentor  </div>  <div style={{ fontSize: "13px", display: "flex", alignItems: "center", gap: "10px", color: "#374151", }}  >    <Trophy size={17} color="#d97706" />    <span>{placements} Placements</span>  </div>  <div style={{ fontSize: "13px", display: "flex", alignItems: "center", gap: "10px", color: "#374151", }}  >    <Users size={17} color="#0ea5e9" />    <span>5.0 ({menteeCount}+ mentees)</span>  </div>  <div style={{ fontSize: "13px", display: "flex", alignItems: "center", gap: "10px", color: "#374151", }}  >    <Calendar size={17} color="#10b981" />    <span>4x Sessions Per Month</span>  </div>  <div style={{ fontSize: "13px", display: "flex", alignItems: "center", gap: "10px", color: "#374151", }}  >    <Target size={17} color="#8b5cf6" />    <span>Referrals in Top Companies</span>  </div>  <div style={{ borderTop: "1px solid #f3f4f6", paddingTop: "16px", marginTop: "4px", }}  >    <div style={{ fontSize: "12px", color: "#6b7280", marginBottom: "4px", }}    >      Starting from    </div>    <div style={{ display: "flex", alignItems: "flex-end", gap: "4px", }}    >      <span style={{ fontSize: "36px", fontWeight: 800, color: "#111827", }}      >        {fmtINR(monthlyPrice)}      </span>      <span style={{ fontSize: "13px", color: "#6b7280", marginBottom: "6px", }}      >        /Month      </span>    </div>  </div>
-
+                {/* View Profile button */}
                 <button
                     onClick={() => onViewProfile(mentor)}
                     style={{
                         width: "100%",
-                        height: "50px",
+                        height: "42px",
                         border: "1px solid #d1d5db",
-                        borderRadius: "12px",
+                        borderRadius: "8px",
                         background: "#ffffff",
                         color: "#111827",
-                        fontSize: "15px",
-                        fontWeight: 700,
+                        fontSize: "14px",
+                        fontWeight: 600,
                         cursor: "pointer",
-                        transition: "0.3s ease",
+                        fontFamily: FONT,
+                        transition: "background 0.2s",
                     }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "#f9fafb")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "#ffffff")}
                 >
                     View Profile
                 </button>
-                </div>
+
+                {/* Book Trial button */}
+                <button
+                    onClick={() => onSubscribe(mentor)}
+                    style={{
+                        width: "100%",
+                        height: "46px",
+                        border: "none",
+                        borderRadius: "8px",
+                        background: "#111827",
+                        color: "#ffffff",
+                        fontSize: "14px",
+                        fontWeight: 700,
+                        cursor: "pointer",
+                        fontFamily: FONT,
+                        transition: "background 0.2s",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "#1f2937")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "#111827")}
+                >
+                    Book Trial Session for {fmtINR(trialPrice)}
+                </button>
+
+                {/* Next Available */}
+                {nextAvailable && (
+                    <p style={{ textAlign: "center", fontSize: "11px", color: "#9ca3af", margin: 0 }}>
+                        Next Available:{" "}
+                        <span style={{ color: "#374151", fontWeight: 600 }}>{nextAvailable}</span>
+                    </p>
+                )}
+            </div>
         </motion.div>
     );
 }
+
 // ── FilterSidebar ──────────────────────────────────────────────────────────
 function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
     const width = useWindowWidth();
@@ -592,7 +720,6 @@ function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
                 </div>
             </div>
 
-            {/* Domain */}
             <p style={{ fontWeight: 700, fontSize: "11px", color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", margin: "0 0 8px" }}>Domain</p>
             {selectedDomains.length > 0 && (
                 <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", border: `1px solid ${BLUE_BORDER}`, borderRadius: "8px", padding: "7px 9px", marginBottom: "8px" }}>
@@ -617,7 +744,6 @@ function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
 
             <div style={{ borderTop: "1px solid #f0f0f0", marginBottom: "16px" }} />
 
-            {/* Audience */}
             <p style={{ fontWeight: 700, fontSize: "11px", color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", margin: "0 0 8px" }}>Offering For</p>
             <select value={offeringFor} onChange={(e) => setOfferingFor(e.target.value)}
                 style={{ width: "100%", border: "1px solid #e5e7eb", borderRadius: "8px", padding: "9px 32px 9px 12px", fontSize: "13px", color: "#374151", background: "white", cursor: "pointer", outline: "none", appearance: "none", fontFamily: FONT, backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%230098cc' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`, backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center", boxSizing: "border-box", marginBottom: "18px" }}>
@@ -629,7 +755,6 @@ function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
 
             <div style={{ borderTop: "1px solid #f0f0f0", marginBottom: "16px" }} />
 
-            {/* Pricing */}
             <p style={{ fontWeight: 700, fontSize: "11px", color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", margin: "0 0 8px" }}>Pricing</p>
             <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#6b7280", marginBottom: "6px" }}>
                 <span>₹5,000</span><span>₹10,000</span>
@@ -668,8 +793,8 @@ export default function ExploreMentors() {
     const navigate = useNavigate();
     const location = useLocation();
     const width = useWindowWidth();
-    const isMobile = width < 640;       // < 640 → single column
-    const isTablet = width < 1024;      // < 1024 → hide sidebar, show filter btn
+    const isMobile = width < 640;
+    const isTablet = width < 1024;
 
     const { data, isLoading, isError } = useGetLtmAllMentorsQuery();
     const [searchMentors, { isLoading: isSearching }] = useSearchMentorMutation();
@@ -719,11 +844,6 @@ export default function ExploreMentors() {
         navigate(`/book-session?mentorId=${mentor._id}`);
     };
 
-    // ── Grid columns: 2 on md+, 1 on mobile ──────────────────────────────
-    // We use a CSS variable trick via inline style — simpler than a media query
-    // inside a style prop, and perfectly valid in React.
-    const gridCols = isMobile ? "1fr" : "repeat(2, 1fr)";
-
     return (
         <>
             {/* ── Header ── */}
@@ -771,9 +891,8 @@ export default function ExploreMentors() {
             <main style={{ minHeight: "100vh", background: "#f6f8fa", padding: isMobile ? "12px" : "20px 24px", fontFamily: FONT, boxSizing: "border-box" }}>
                 <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
 
-                    {/* ── Search + Sort bar ── */}
+                    {/* Search + Sort bar */}
                     <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "14px", flexWrap: isMobile ? "wrap" : "nowrap" }}>
-                        {/* Search input */}
                         <div style={{ flex: 1, minWidth: isMobile ? "100%" : "auto", position: "relative", boxSizing: "border-box" }}>
                             <Search size={14} color={BLUE} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
                             <input
@@ -786,8 +905,6 @@ export default function ExploreMentors() {
                                 onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
                             />
                         </div>
-
-                        {/* Sort + filter button row */}
                         <div style={{ display: "flex", alignItems: "center", gap: "8px", width: isMobile ? "100%" : "auto", boxSizing: "border-box" }}>
                             {!isMobile && <span style={{ fontSize: "13px", color: "#6b7280", fontWeight: 600, whiteSpace: "nowrap" }}>Sort:</span>}
                             <select value={sortBy} onChange={(e) => handleSortChange(e.target.value)}
@@ -813,43 +930,28 @@ export default function ExploreMentors() {
                         </p>
                     )}
 
-                    {/* ── Layout: sidebar left + card grid right ── */}
+                    {/* Layout */}
                     <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
-
-                        {/* Card grid area */}
                         <div style={{ flex: 1, minWidth: 0 }}>
-
-                            {/* Loading spinner */}
                             {isLoading && (
                                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "40vh" }}>
                                     <div style={{ width: "36px", height: "36px", borderRadius: "50%", border: `3px solid ${BLUE_LIGHT}`, borderTopColor: BLUE, animation: "spin .8s linear infinite" }} />
                                     <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
                                 </div>
                             )}
-
-                            {/* Error */}
                             {isError && !isLoading && (
                                 <div style={{ textAlign: "center", padding: "60px 0", background: "white", borderRadius: "14px", border: "1px solid #e5e7eb" }}>
                                     <p style={{ fontWeight: 700, color: "#0f172a" }}>No Mentors Available</p>
                                     <p style={{ fontSize: "13px", color: "#9ca3af", marginTop: "4px" }}>Please check back later</p>
                                 </div>
                             )}
-
-                            {/* Empty search */}
                             {!isLoading && !isError && searchEmpty && (
                                 <div style={{ textAlign: "center", padding: "60px 0" }}>
                                     <p style={{ fontWeight: 700, color: "#0f172a" }}>No mentors match your filters</p>
                                 </div>
                             )}
-
-                            {/* ── 2-column card grid ── */}
                             {!isLoading && !isError && !searchEmpty && mentors.length > 0 && (
-                                <div style={{
-                                    width: "100%",
-                                    display: "flex",
-                                    flexDirection: "column",
-                                    gap: "16px",
-                                }}>
+                                <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "0px" }}>
                                     {mentors.map((mentor, index) => (
                                         <MentorCard
                                             key={mentor._id || index}
@@ -861,8 +963,6 @@ export default function ExploreMentors() {
                                     ))}
                                 </div>
                             )}
-
-                            {/* No mentors at all */}
                             {!isLoading && !isError && !isFiltered && allMentors.length === 0 && (
                                 <div style={{ textAlign: "center", padding: "60px 0", border: "2px dashed #e5e7eb", borderRadius: "14px", background: "white" }}>
                                     <p style={{ fontSize: "32px", marginBottom: "8px" }}>👨‍🏫</p>
@@ -871,7 +971,6 @@ export default function ExploreMentors() {
                             )}
                         </div>
 
-                        {/* Desktop sidebar */}
                         {!isTablet && (
                             <FilterSidebar
                                 onSearch={handleSearch}
@@ -885,7 +984,6 @@ export default function ExploreMentors() {
                     </div>
                 </div>
 
-                {/* Mobile / tablet filter drawer */}
                 {isTablet && (
                     <FilterSidebar
                         onSearch={handleSearch}
@@ -896,8 +994,7 @@ export default function ExploreMentors() {
                         onClose={() => setFilterDrawerOpen(false)}
                     />
                 )}
-            </main >
+            </main>
         </>
     );
 }
-
