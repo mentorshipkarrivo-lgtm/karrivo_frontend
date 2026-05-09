@@ -1785,17 +1785,6 @@ export default function MentorLTMPlans() {
                     <p style={{ fontSize: 10, color: MUTED2, margin: '5px 0 0', paddingLeft: 2 }}>Find this in your UPI app under payment history</p>
                   </div>
 
-                  {/* ── Discount ── */}
-                  <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
-                    <input
-                      className="ltm-input"
-                      style={{ flex: 1, background: '#faf9f7', border: `1.5px solid ${BORDER_HI}`, borderRadius: 12, padding: '13px 16px', fontSize: 13, fontWeight: 600, color: CREAM, caretColor: ACCENT, fontFamily: FONT }}
-                      placeholder="Discount code (optional)"
-                      value={discountCode}
-                      onChange={e => setDiscountCode(e.target.value.toUpperCase())}
-                    />
-                    <button style={{ background: CREAM, color: '#fff', border: 'none', borderRadius: 12, padding: '0 22px', fontSize: 13, fontWeight: 700, cursor: 'pointer', fontFamily: FONT, flexShrink: 0, letterSpacing: '0.2px' }}>Apply</button>
-                  </div>
 
                   {/* ── Errors ── */}
                   {uploadError && (
