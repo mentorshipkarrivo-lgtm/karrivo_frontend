@@ -38,11 +38,11 @@ const MentorConnect = () => {
     const mentorLink = "https://www.karrivo.com/";
 
     return (
-        <section id="mentorship" className="py-14 relative overflow-hidden">
+        <section id="mentorship" className="py-14 relative overflow-hidden bg-white">
 
             {/* desktop-only angled slab */}
             <div
-                className="hidden lg:block absolute inset-y-0 right-0 w-[58%] bg-[#085259]/[0.05] pointer-events-none"
+                className="hidden lg:block absolute inset-y-0 right-0 w-[58%] bg-[#f5f5f0] pointer-events-none"
                 style={{ clipPath: "polygon(24% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
             />
 
@@ -58,19 +58,19 @@ const MentorConnect = () => {
                         className="text-center lg:text-left"
                     >
 
-                        <h2 className="text-4xl sm:text-5xl lg:text-[3.25rem] font-bold text-black leading-[1.1] tracking-tight mb-7">
+                        <h2 className="text-4xl sm:text-5xl lg:text-[3.25rem] font-bold text-[#1a1a2e] leading-[1.1] tracking-tight mb-7">
                             Empower Your Growth With{" "}
-                            <span className="text-[#085259]">Expert Mentorship</span>
+                            <span className="text-[#00a6df]">Expert Mentorship</span>
                         </h2>
 
-                        <p className="text-black/60 text-sm sm:text-base leading-relaxed mb-3 sm:mb-5">
+                        <p className="text-[#1a1a2e]/70 text-sm sm:text-base leading-relaxed mb-3 sm:mb-5">
                             Connect with industry professionals who can guide your career,
                             improve your skills, and help you make smarter decisions for your future.
                         </p>
 
-                        <p className="text-black/60 text-sm sm:text-base leading-relaxed mb-3 sm:mb-5">
+                        <p className="text-[#1a1a2e]/70 text-sm sm:text-base leading-relaxed mb-3 sm:mb-5">
                             Learn directly from{" "}
-                            <span className="font-semibold text-[#085259] hover:text-[#bfd22a]">
+                            <span className="font-semibold text-[#00a6df] hover:text-[#1a1a2e] transition-colors duration-300">
                                 <a href={mentorLink} target="_blank" rel="noopener noreferrer">
                                     trusted mentors
                                 </a>
@@ -79,7 +79,7 @@ const MentorConnect = () => {
                             support for every stage of your journey.
                         </p>
 
-                        <p className="text-black/60 text-sm sm:text-base leading-relaxed">
+                        <p className="text-[#1a1a2e]/70 text-sm sm:text-base leading-relaxed">
                             Whether you're a student, working professional, or entrepreneur,
                             this platform helps you grow faster with meaningful mentorship and
                             continuous learning opportunities.
@@ -89,7 +89,7 @@ const MentorConnect = () => {
                     {/* RIGHT: vertical stepper */}
                     <div
                         ref={ref}
-                        className="flex flex-col lg:pl-6 max-w-md mx-auto w-full lg:max-w-none lg:mx-0 bg-[#f5f5f0] rounded-3xl p-8 shadow-sm"
+                        className="flex flex-col lg:pl-6 max-w-md mx-auto w-full lg:max-w-none lg:mx-0"
                     >
                         {points.map(({ icon: Icon, title, desc }, i) => {
                             const isActive = active >= i;
@@ -103,9 +103,9 @@ const MentorConnect = () => {
 
                                         {/* icon circle */}
                                         <div className="relative w-12 h-12 flex-shrink-0">
-                                            <div className="absolute inset-0 rounded-full border-2 border-[#085259]/15" />
+                                            <div className="absolute inset-0 rounded-full border-2 border-[#00a6df]" />
                                             <motion.div
-                                                className="absolute inset-0 rounded-full bg-[#085259]"
+                                                className="absolute inset-0 rounded-full bg-gradient-to-br from-[#00a6df] to-[#1a1a2e]"
                                                 initial={{ scale: 0 }}
                                                 animate={isActive ? { scale: 1 } : { scale: 0 }}
                                                 transition={{
@@ -119,7 +119,7 @@ const MentorConnect = () => {
                                                     style={{
                                                         color: isActive
                                                             ? "#ffffff"
-                                                            : "rgba(8,82,89,0.35)",
+                                                            : "#00a6df",
                                                     }}
                                                     strokeWidth={1.75}
                                                 />
@@ -128,9 +128,9 @@ const MentorConnect = () => {
 
                                         {/* line */}
                                         {!isLast && (
-                                            <div className="relative w-px flex-1 my-1 bg-[#085259]/12 overflow-hidden min-h-[48px]">
+                                            <div className="relative w-px flex-1 my-1 bg-[#00a6df]/15 overflow-hidden min-h-[48px]">
                                                 <motion.div
-                                                    className="absolute top-0 left-0 w-full bg-[#085259]/50"
+                                                    className="absolute top-0 left-0 w-full bg-gradient-to-b from-[#00a6df] to-[#1a1a2e]"
                                                     initial={{ height: "0%" }}
                                                     animate={
                                                         active >= i + 1
@@ -163,12 +163,12 @@ const MentorConnect = () => {
                                         }}
                                     >
                                         <div className="flex items-center gap-2 mb-1.5 pl-5">
-                                            <p className="text-black font-semibold text-sm sm:text-[15px] leading-snug">
+                                            <p className="text-[#1a1a2e] font-semibold text-sm sm:text-[15px] leading-snug">
                                                 {title}
                                             </p>
                                         </div>
 
-                                        <p className="text-black/45 text-xs sm:text-sm leading-relaxed pl-5">
+                                        <p className="text-[#1a1a2e]/60 text-xs sm:text-sm leading-relaxed pl-5">
                                             {desc}
                                         </p>
                                     </motion.div>

@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import { TrendingUp } from "lucide-react";
 
 export default function MentorHero() {
@@ -20,7 +20,7 @@ export default function MentorHero() {
         padding: "60px 40px",
         boxSizing: "border-box",
         fontFamily: "'Sora', 'Segoe UI', sans-serif",
-        background: "#fff",
+        background: "#ffffff",
       }}
     >
       <style>{`
@@ -58,27 +58,12 @@ export default function MentorHero() {
         {/* LEFT IMAGE */}
         <div style={{ display: "flex", justifyContent: "center", position: "relative" }}>
 
-          {/* Blur background */}
-          <div
-            style={{
-              position: "absolute",
-              right: "-80px",
-              bottom: "-80px",
-              width: 300,
-              height: 300,
-              borderRadius: "50%",
-              background: "#dff5ff",
-              filter: "blur(60px)",
-              opacity: 0.5,
-            }}
-          />
-
           {/* Circle wrapper */}
           <div
             style={{
               position: "relative",
-              width: 320,
-              height: 320,
+              width: 450,
+              height: 450,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -98,12 +83,11 @@ export default function MentorHero() {
             {/* Image */}
             <div
               style={{
-                width: 250,
-                height: 250,
+                width: 380,
+                height: 380,
                 borderRadius: "50%",
                 overflow: "hidden",
                 border: "6px solid white",
-
               }}
             >
               <img
@@ -148,7 +132,7 @@ export default function MentorHero() {
             style={{
               fontSize: 44,
               fontWeight: 800,
-              color: "#08131d",
+              color: "#1a1a2e",
               lineHeight: 1.1,
               marginBottom: 20,
             }}
@@ -157,11 +141,11 @@ export default function MentorHero() {
             <span style={{ color: "#00a6df" }}>Growth</span>
           </h1>
 
-          <p style={{ fontSize: 15, color: "#536471", lineHeight: 1.7, marginBottom: 12 }}>
+          <p style={{ fontSize: 15, color: "#1a1a2e", opacity: 0.7, lineHeight: 1.7, marginBottom: 12 }}>
             Connect with industry experts who guide you through challenges, unlock skills, and accelerate your career growth.
           </p>
 
-          <p style={{ fontSize: 15, color: "#536471", lineHeight: 1.7, marginBottom: 20 }}>
+          <p style={{ fontSize: 15, color: "#1a1a2e", opacity: 0.7, lineHeight: 1.7, marginBottom: 20 }}>
             With personalized mentorship and curated learning paths, you gain confidence and stand out in your field.
           </p>
 
