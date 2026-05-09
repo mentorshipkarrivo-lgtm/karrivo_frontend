@@ -14,6 +14,7 @@ import HeroSection from './HeroSection ';
 import StepsSection from "./Stepsections";
 import MentorUI from "./mentorsections";
 import MentorHero from "./mentorsections";
+import MentorConnect from "./Subsectoin";
 
 const TYPING_CONFIG = {
   texts: ["ML & AI", "Data Science", "Web Development", "Mobile Apps", "Cloud Computing"],
@@ -134,7 +135,7 @@ const Home = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight"
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#1a1a2e] mb-6 leading-tight"
             >
               Connect with{" "}
               <span className="bg-[#0098cc] bg-clip-text text-transparent">
@@ -256,8 +257,7 @@ const Home = () => {
       <StepsSection />
       <TestimonialsSection />
       <FAQAccordion />
-      {/* <MentorGrid /> */}
-      {/* <MentorHero/> */}
+        <MentorConnect/>
       <MentoHero />
       {/* <FindMentor /> */}
 
