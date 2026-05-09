@@ -249,7 +249,7 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
         .split(",").map((s) => s.trim()).filter(Boolean);
 
     const planData      = getPlanData(mentor.pricing, "1Month");
-    const monthlyPrice  = planData?.totalPrice ?? mentor.pricing?.hourlyRate ?? mentor.hourlyRate ?? 0;
+    const monthlyPrice  =  mentor.hourlyRate ?? 0;
     const trialPrice    = mentor.trialPrice ?? 99;
     const nextAvailable = mentor.nextAvailable ?? "";
 
@@ -624,11 +624,9 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
                             {fmtINR(monthlyPrice)}
                         </span>
                         <span style={{ fontSize: "12px", color: "#6b7280", marginBottom: "3px" }}>
-                            /Month
+                            /Session
                         </span>
-                        <span style={{ fontSize: "12px", color: "#9ca3af", marginBottom: "3px" }}>
-                            + taxes
-                        </span>
+            
                     </div>
                 </div>
 
@@ -652,28 +650,6 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
                     onMouseLeave={(e) => (e.currentTarget.style.background = "#ffffff")}
                 >
                     View Profile
-                </button>
-
-                {/* Book Trial button */}
-                <button
-                    onClick={() => onSubscribe(mentor)}
-                    style={{
-                        width: "100%",
-                        height: "46px",
-                        border: "none",
-                        borderRadius: "8px",
-                        background: "#111827",
-                        color: "#ffffff",
-                        fontSize: "14px",
-                        fontWeight: 700,
-                        cursor: "pointer",
-                        fontFamily: FONT,
-                        transition: "background 0.2s",
-                    }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = "#1f2937")}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = "#111827")}
-                >
-                    Book Trial Session for {fmtINR(trialPrice)}
                 </button>
 
                 {/* Next Available */}

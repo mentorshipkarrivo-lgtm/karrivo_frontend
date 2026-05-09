@@ -1540,7 +1540,7 @@ const MentorSessionBookings = () => {
             {/* Inject container-query styles once */}
             <style>{containerStyles}</style>
 
-            <div className="msb-root flex flex-col min-h-full bg-white p-3 gap-3" style={{ padding: 'clamp(0.75rem, 2vw, 1.25rem)' }}>
+            <div className="msb-root flex flex-col min-h-full bg-white  gap-3" style={{ padding: 'clamp(0.75rem, 2vw, 1.25rem)' }}>
 
                 {/* ── Modal ── */}
                 {selectedSession && (

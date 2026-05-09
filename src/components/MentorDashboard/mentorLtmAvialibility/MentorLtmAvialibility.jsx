@@ -1273,7 +1273,7 @@ export default function MentorAvailability() {
             {!showView && (
               <div className="fade-up">
                 {editMode && (
-                  <div className="flex items-center gap-2 mb-4 bg-[#fffbeb] border border-[#fcd34d]/60 rounded-xl px-3.5 py-2.5 text-xs text-[#d97706]">
+                  <div className="flex items-center gap-2 mb-4 bg-[#fffbeb] border border-[#fcd34d]/60 rounded-xl  text-xs text-[#d97706]">
                     <AlertCircle size={13} className="flex-shrink-0" />Editing — unsaved changes won't be applied.
                   </div>
                 )}
