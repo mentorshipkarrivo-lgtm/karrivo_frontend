@@ -258,7 +258,7 @@ const Home = () => {
       <TestimonialsSection />
       <FAQAccordion />
         <MentorConnect/>
-      <MentoHero />
+      {/* <MentoHero /> */}
       {/* <FindMentor /> */}
 
       <style jsx>{`
