@@ -32,7 +32,20 @@ export default function MenteePayment() {
     bookingDetails,
     bookingNumber
   } = location.state || {};
-  console.log(basePrice, bookingNumber,"location.state")
+  console.log(subscription_id,
+    session_id,
+    mentorId,
+    menteeId,
+    mentorName,
+    menteeName,
+    mentorRole,
+    planMonths,
+    totalSessions,
+    basePrice,
+    createdBy,
+    paymentType,
+    bookingDetails,
+    bookingNumber, "location.state")
 
   const isSessionBooking = paymentType === "bookingsession";
   const total = basePrice;

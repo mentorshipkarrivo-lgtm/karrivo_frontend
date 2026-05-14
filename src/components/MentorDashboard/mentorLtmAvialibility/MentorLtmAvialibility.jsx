@@ -1110,6 +1110,7 @@ export default function MentorAvailability() {
     const userData = JSON.parse(localStorage.getItem("userData") || "{}");
     navigate("/payment", {
       state: {
+        session_id: response.bookingId || response.data?._id,
         mentorId: typeof booking.mentorId === "object" ? booking.mentorId?._id : booking.mentorId,
         mentorName: getMentorName(booking),
         mentorRole: getMentorRole(booking),

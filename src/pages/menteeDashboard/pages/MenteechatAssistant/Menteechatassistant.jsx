@@ -745,7 +745,7 @@ export default function MenteeSupport({ onclose }) {
                         padding: "20px 20px 16px",
                     }}>
                         <h2 style={{ fontSize: "17px", fontWeight: 700, color: "#0098cc", margin: "0 0 4px", letterSpacing: "-0.2px" }}>
-                            Hey there, Mentee! 👋
+                            Hey there, Mentee! 
                         </h2>
                         <p style={{ fontSize: "13px", color: "#6b7280", margin: 0, lineHeight: 1.5 }}>
                             How can we help you today?

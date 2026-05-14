@@ -26,17 +26,17 @@ const BookingSuccessScreen = ({ mentor, onClose }) => (
     animate={{ opacity: 1, scale: 1 }}
     exit={{ opacity: 0, scale: 0.96 }}
     transition={{ duration: 0.18, ease: "easeOut" }}
-    className="flex flex-col items-center justify-center px-6 py-5 text-center bg-[#021f1a]"
+    className="flex flex-col items-center justify-center px-6 py-5 text-center bg-white"
     style={{ minHeight: 240 }}
   >
     <motion.div
       initial={{ scale: 0.85, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ delay: 0.08, duration: 0.22 }}
-      className="w-12 h-12 rounded-full bg-[#123f38] border border-[#2f8f81]/40 flex items-center justify-center mb-3"
+      className="w-12 h-12 rounded-full bg-[#1a1a2e] border border-[#1a1a2e]/20 flex items-center justify-center mb-3"
     >
       <CheckCircle2
-        className="w-7 h-7 text-[#73f5c8]"
+        className="w-7 h-7 text-white"
         strokeWidth={2.2}
       />
     </motion.div>
@@ -47,13 +47,13 @@ const BookingSuccessScreen = ({ mentor, onClose }) => (
       transition={{ delay: 0.14 }}
       className="mb-5"
     >
-      <h2 className="text-[18px] font-semibold text-[#f4f7f6] tracking-[-0.02em] mb-1">
+      <h2 className="text-[18px] font-semibold text-[#1a1a2e] tracking-[-0.02em] mb-1">
         Session Confirmed
       </h2>
 
-      <p className="text-[13px] leading-5 text-[#7fb3a8] max-w-[260px] mx-auto">
+      <p className="text-[13px] leading-5 text-[#1a1a2e]/75 max-w-[260px] mx-auto">
         Your session with{" "}
-        <span className="font-semibold text-[#d8fff4]">
+        <span className="font-semibold text-[#1a1a2e]">
           {mentor?.fullName}
         </span>{" "}
         has been booked. Once the mentor confirms, the details will be
@@ -66,20 +66,27 @@ const BookingSuccessScreen = ({ mentor, onClose }) => (
       animate={{ opacity: 1 }}
       transition={{ delay: 0.22 }}
       onClick={onClose}
-      className="w-full max-w-[185px] h-10 rounded-full bg-[#1d8e85] text-white text-[13px] font-semibold hover:bg-[#27a398] active:scale-[0.98] transition-all duration-200"
+      className="w-full max-w-[185px] h-10 rounded-full bg-[#1a1a2e] text-white text-[13px] font-semibold hover:opacity-90 active:scale-[0.98] transition-all duration-200"
     >
       View Your Sessions →
     </motion.button> */}
   </motion.div>
 );
 
-
-const FreeSessionBanner = ({ hasFreeSession, freeSessionUsed, isLoading, usedSessionDetails, freeSessionCount }) => {
+const FreeSessionBanner = ({
+  hasFreeSession,
+  freeSessionUsed,
+  isLoading,
+  usedSessionDetails,
+  freeSessionCount
+}) => {
   if (isLoading) {
     return (
-      <div className="flex items-center gap-3 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
-        <Loader2 className="w-4 h-4 animate-spin text-gray-400 flex-shrink-0" />
-        <p className="text-xs text-gray-500 font-medium">Checking free session eligibility…</p>
+      <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
+        <Loader2 className="w-3.5 h-3.5 animate-spin text-gray-400 flex-shrink-0" />
+        <p className="text-[11px] text-gray-500 font-medium">
+          Checking free session eligibility…
+        </p>
       </div>
     );
   }
@@ -87,30 +94,32 @@ const FreeSessionBanner = ({ hasFreeSession, freeSessionUsed, isLoading, usedSes
   if (hasFreeSession) {
     return (
       <motion.div
-        initial={{ opacity: 0, y: -6 }}
+        initial={{ opacity: 0, y: -4 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-xl overflow-hidden border border-green-200"
+        className="rounded-lg overflow-hidden border border-green-200"
       >
         {/* Top bar */}
-        <div className="bg-green-600 px-4 py-2 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Gift className="w-3.5 h-3.5 text-[#1d3331] flex-shrink-0" />
-            <span className="text-white text-xs font-bold tracking-wide uppercase">
+        <div className="bg-[#1a1a2e] px-3 py-1.5 flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <Gift className="w-3 h-3 text-[#1d3331] flex-shrink-0" />
+            <span className="text-white text-[10px] font-bold tracking-wide uppercase">
               Free Session Available
             </span>
           </div>
-          <span className="bg-white text-green-700 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">
-            {freeSessionCount} remaining
+
+          <span className="bg-white text-green-700 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
+            {freeSessionCount} left
           </span>
         </div>
 
         {/* Body */}
-        <div className="bg-green-50 px-4 py-3 flex flex-col gap-1">
-          <p className="text-sm font-bold text-green-900">
-            Your first session is completely FREE
+        <div className="bg-gray-50 px-3 py-2 flex flex-col gap-0.5">
+          <p className="text-xs font-bold text-green-900">
+            Your first session is FREE
           </p>
-          <p className="text-xs text-green-700 leading-relaxed">
-            No payment needed. A Zoom link will be sent to your email right after confirming.
+
+          <p className="text-[11px] text-gray-700 leading-relaxed">
+            No payment needed. Zoom link will be sent after confirmation.
           </p>
         </div>
       </motion.div>
@@ -119,25 +128,31 @@ const FreeSessionBanner = ({ hasFreeSession, freeSessionUsed, isLoading, usedSes
 
   if (freeSessionUsed) {
     const usedDate = usedSessionDetails?.usedAt
-      ? new Date(usedSessionDetails.usedAt).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+      ? new Date(usedSessionDetails.usedAt).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric"
+      })
       : "a previous date";
+
     return (
-      <div className="rounded-xl overflow-hidden border border-blue-200">
+      <div className="rounded-lg overflow-hidden border border-blue-200">
         {/* Top bar */}
-        <div className="bg-[#7da5a2] px-4 py-2 flex items-center gap-2">
-          <AlertCircle className="w-3.5 h-3.5 text-[#0a211e] flex-shrink-0" />
-          <span className="text-[#0a211e] text-xs font-bold tracking-wide uppercase">
+        <div className="bg-[#7da5a2] px-3 py-1.5 flex items-center gap-1.5">
+          <AlertCircle className="w-3 h-3 text-[#0a211e] flex-shrink-0" />
+          <span className="text-[#0a211e] text-[10px] font-bold tracking-wide uppercase">
             Free Session Used
           </span>
         </div>
 
         {/* Body */}
-        <div className="bg-blue-50 px-4 py-3 flex flex-col gap-1">
-          <p className="text-sm font-bold text-[#0a211e]">
-            You've already used your free session
+        <div className="bg-blue-50 px-3 py-2 flex flex-col gap-0.5">
+          <p className="text-xs font-bold text-[#0a211e]">
+            Free session already used
           </p>
-          <p className="text-xs text-[#0a211e] leading-relaxed">
-            Used on <span className="font-semibold">{usedDate}</span>. This session will require payment to confirm.
+
+          <p className="text-[11px] text-[#0a211e] leading-relaxed">
+            Used on <span className="font-semibold">{usedDate}</span>. Payment is required now.
           </p>
         </div>
       </div>
@@ -277,28 +292,6 @@ const BookingModal = ({ mentor, isOpen, onClose, selectedSlot }) => {
         setBookingSuccess(true);
         showToast.success("Free session booked! Check your email for the Zoom link.");
       } else {
-        // navigate("/payment", {
-        //   state: {
-        //     bookingId: response.bookingId || response.data?._id,
-        //     mentorId: mentor._id,
-        //     mentorName: mentor.fullName,
-        //     paymentAmount: calculateAmount(),
-        //     bookingDetails: {
-        //       date: selectedSlot.date?.split("T")[0],
-        //       time: `${selectedSlot.startTime} - ${selectedSlot.endTime}`,
-        //       topic,
-        //       sessionType: "One-on-One",
-        //       duration: 60,
-        //     },
-        //     mentorDetails: {
-        //       fullName: mentor.fullName,
-        //       email: mentor.email,
-        //       _id: mentor._id,
-        //       profileImage: mentor.profileImage,
-        //       currentRole: mentor.currentRole,
-        //     },
-        //   },
-        // });
 
         navigate("/payment", {
           state: {

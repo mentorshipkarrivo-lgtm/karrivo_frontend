@@ -657,10 +657,15 @@ function RescheduleModal({
   return (
     <>
       {/* Backdrop */}
+      {/* Backdrop */}
       <div
         onClick={onClose}
-        className={`fixed inset-0 z-50 transition-opacity duration-200 bg-black/30
-          ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+        className={`fixed inset-0 z-50 transition-all duration-300
+    bg-black/30 backdrop-blur-md
+    ${isOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+          }`}
       />
 
       {/* Modal */}
@@ -1141,6 +1146,7 @@ export default function BookingsDashboard() {
     const userData = JSON.parse(localStorage.getItem("userData") || "{}");
     navigate("/payment", {
       state: {
+        session_id: response.bookingId || response.data?._id,
         bookingNumber: booking.bookingId,
         mentorId: typeof booking.mentorId === "object" ? booking.mentorId?._id : booking.mentorId,
         mentorName: getMentorName(booking),
@@ -1183,7 +1189,7 @@ export default function BookingsDashboard() {
     <main className="bg-white font-[DM_Sans,sans-serif] min-h-screen">
       <ToastContainer position="bottom-right" autoClose={3500} theme="light" />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-5 sm:py-6">
+      <div className="w-full px-4 sm:px-6 py-5 sm:py-6">
 
         {/* Heading */}
         <div className="mb-5">

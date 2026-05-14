@@ -225,7 +225,7 @@ const MyPricing = () => {
           onClick={(e) => e.stopPropagation()}
         >
           {/* Modal header */}
-          <div className="flex items-start justify-between  border-b border-gray-100">
+          <div className="flex items-start justify-between  p-6 border-b border-gray-100">
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-gray-900 text-sm font-semibold">{plan.label}</h2>
