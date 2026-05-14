@@ -516,7 +516,12 @@ function RescheduleModal({
   const [step, setStep] = useState("slots");
 
   const rawSlots = slotsData?.data?.[0]?.dayslots || [];
-  const today = new Date();
+
+
+  
+  const today = new Date();   
+
+
   today.setHours(0, 0, 0, 0);
   const availableSlots = rawSlots
     .filter((s) => !s.isBooked && new Date(s.date) >= today)
