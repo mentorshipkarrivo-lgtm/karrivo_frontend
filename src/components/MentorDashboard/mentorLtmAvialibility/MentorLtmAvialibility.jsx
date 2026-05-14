@@ -946,7 +946,7 @@ const TIMEZONES = [
   { label: "UTC-08:00 — America/Los_Angeles (PST)", value: "America/Los_Angeles" },
 ];
 
-const ALL_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
+const ALL_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri","Sun","Sat"];
 const DAY_IDX = { Mon: 0, Tue: 1, Wed: 2, Thu: 3, Fri: 4 };
 const TIMES = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, "0")}:00`);
 const REASONS = ["Family Emergency", "Health Reason", "Personal Reason", "Work Reason", "Travel Plans", "Public Holiday", "Conference / Event", "Other"];
