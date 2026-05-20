@@ -70,6 +70,7 @@ import MenteePerformanceDashboard from "./pages/menteeDashboard/pages/menteePerf
 // ─── Mentee Support Chat Widget ───
 import MenteeSupport from "./pages/menteeDashboard/pages/MenteechatAssistant/Menteechatassistant";
 import MentorReviews from "./components/MentorDashboard/Reviews/Reviews";
+import MentorDiscoveryUI from "./pages/exploreMentors/explorementorsSubSection";
 
 // ─── Routes where chat button should be HIDDEN ───
 const HIDE_CHAT_PATHS = ["/login", "/reset-password"];
@@ -321,7 +322,7 @@ const App = () => {
             <Route path="dashboard/mentor/sessions/:subscription_id" element={<MentorSessionDetails />} />
             <Route path="dashboard/my-mentee-sessions" element={<MentorSessions />} />
             <Route path="dashboard/Manage_Availability" element={<MentorAvailability />} />
-            {/* <Route path="dashboard/earnings" element={<Myearnings />} /> */}
+            <Route path="dashboard/earnings" element={<Myearnings />} />
             <Route path="dashboard/reviews" element={<MentorReviews />} />
           </Route>
         </Route>
@@ -333,6 +334,11 @@ const App = () => {
 
         <Route path="/mentor/:mentorId/ltm-plans" element={<MentorLTMPlans />} />
         <Route path="/explore-mentors" element={<ExploreMentors />} />
+
+        <Route path="/get-Mentors" element={<MentorDiscoveryUI />} />
+
+
+
 
         {/* PUBLIC MENTOR PROFILE */}
         <Route path="/mentor-profile/:mentorId" element={<ProfileModal />} />

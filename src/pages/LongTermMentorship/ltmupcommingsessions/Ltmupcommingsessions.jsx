@@ -1,62 +1,638 @@
 
 
 
+// import { useState, useMemo, useEffect } from "react";
+// import {
+//   Layers, ClipboardCheck, CheckCircle2, Circle, AlertCircle,
+//   Loader2, Send, X, BookOpen, ClipboardList, MessageSquare,
+//   ExternalLink, CheckCheck, Link2, Calendar,
+// } from "lucide-react";
+// import {
+//   useGetSessionsByMenteeQuery,
+//   useUpdateByMenteeSessionMutation,
+// } from "./ltmupcommingsessionsapislice";
+
+// const FONT = "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap";
+// const ff = "'Inter', sans-serif";
+
+// const fmtDate = (iso) =>
+//   iso ? new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—";
+
+// const iBase = {
+//   width: "100%", fontFamily: ff, fontSize: 13, color: "#1e293b",
+//   background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8,
+//   padding: "9px 12px", outline: "none", boxSizing: "border-box",
+// };
+// const iRO = { ...iBase, background: "#f8fafc", color: "#94a3b8", cursor: "default" };
+
+// function FInp({ value, onChange, placeholder, type = "text", readOnly }) {
+//   return (
+//     <input type={type} value={value} onChange={onChange} placeholder={placeholder}
+//       readOnly={readOnly} style={readOnly ? iRO : iBase} />
+//   );
+// }
+// function FTxt({ value, onChange, placeholder, rows = 3, readOnly }) {
+//   return (
+//     <textarea rows={rows} value={value} onChange={onChange} placeholder={placeholder}
+//       readOnly={readOnly} style={{ ...(readOnly ? iRO : iBase), resize: "none", lineHeight: 1.6 }} />
+//   );
+// }
+// function FSel({ value, onChange, children }) {
+//   return (
+//     <select value={value} onChange={onChange}
+//       style={{
+//         ...iBase, appearance: "none", cursor: "pointer", paddingRight: 32,
+//         backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+//         backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center",
+//       }}>
+//       {children}
+//     </select>
+//   );
+// }
+
+// function StarDisplay({ value, max = 5 }) {
+//   return (
+//     <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
+//       {Array.from({ length: max }).map((_, i) => (
+//         <span key={i} style={{ fontSize: 15, color: i < (value || 0) ? "#f59e0b" : "#e2e8f0" }}>★</span>
+//       ))}
+//       <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", marginLeft: 4 }}>{value || 0}/{max}</span>
+//     </div>
+//   );
+// }
+
+// function StarPicker({ value, onChange }) {
+//   const [hov, setHov] = useState(0);
+//   return (
+//     <div style={{ display: "flex", gap: 3 }}>
+//       {[1, 2, 3, 4, 5].map((n) => (
+//         <button key={n} type="button" onClick={() => onChange(n)}
+//           onMouseEnter={() => setHov(n)} onMouseLeave={() => setHov(0)}
+//           style={{ background: "none", border: "none", padding: 2, cursor: "pointer", fontSize: 22, lineHeight: 1, color: n <= (hov || value || 0) ? "#f59e0b" : "#e2e8f0" }}>
+//           ★
+//         </button>
+//       ))}
+//     </div>
+//   );
+// }
+
+// function SessionModal({ session, onClose, onSave, onToast }) {
+//   const [saving, setSaving] = useState(false);
+//   const [tab, setTab] = useState("details");
+//   const [form, setForm] = useState({
+//     session_title: session.session_title || "",
+//     session_date: session.session_date ? new Date(session.session_date).toISOString().slice(0, 16) : "",
+//     meeting_link: session.meeting_link || "",
+//     meeting_description: session.meeting_description || "",
+//     mentee_meeting_description: session.mentee_meeting_description || "",
+//     tasks_given: session.tasks_given || "",
+//     task_completed: session.task_completed || false,
+//     mentee_feedback: session.mentee_feedback || "",
+//     mentee_rating: session.mentee_rating || 0,
+//     status: session.status || "pending",
+//     task_submission: session.task_submission || "",
+//   });
+
+//   const set = (key) => (e) =>
+//     setForm((f) => ({ ...f, [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
+
+//   const handleSave = async () => {
+//     setSaving(true);
+//     await onSave(session._id, form);
+//     setSaving(false);
+//     onClose();
+//   };
+
+//   const TABS = [
+//     { id: "details", label: "Details", Icon: BookOpen },
+//     { id: "tasks", label: "Tasks", Icon: ClipboardList },
+//     { id: "feedback", label: "Feedback", Icon: MessageSquare },
+//   ];
+
+//   const num = String(session.session_number).padStart(2, "0");
+
+//   return (
+//     <>
+//       <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(15,23,42,.4)" }} />
+//       <div style={{
+//         position: "fixed", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
+//         zIndex: 101, width: "min(680px,calc(100vw - 32px))", maxHeight: "calc(100vh - 48px)",
+//         background: "#fff", borderRadius: 14, border: "1px solid #e2e8f0",
+//         display: "flex", flexDirection: "column", overflow: "hidden", fontFamily: ff,
+//       }}>
+//         {/* Header */}
+//         <div style={{ padding: "18px 22px 0", flexShrink: 0 }}>
+//           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+//             <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+//               <div style={{ width: 38, height: 38, borderRadius: 10, background: "#f1f5f9", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "#475569" }}>
+//                 {num}
+//               </div>
+//               <div>
+//                 <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#94a3b8", margin: "0 0 3px" }}>Session {session.session_number}</p>
+//                 <h2 style={{ fontSize: 15, fontWeight: 700, color: "#0f172a", margin: 0 }}>{form.session_title || `Session ${session.session_number}`}</h2>
+//               </div>
+//             </div>
+//             <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: 7, background: "#f8fafc", border: "1px solid #e2e8f0", color: "#64748b", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
+//               <X size={13} />
+//             </button>
+//           </div>
+//           <div style={{ display: "flex", borderBottom: "1px solid #e2e8f0" }}>
+//             {TABS.map(({ id, label, Icon }) => (
+//               <button key={id} onClick={() => setTab(id)} style={{
+//                 display: "flex", alignItems: "center", gap: 5, padding: "9px 14px",
+//                 fontSize: 12, fontWeight: 600, border: "none", background: "none", cursor: "pointer",
+//                 color: tab === id ? "#3b82f6" : "#94a3b8", fontFamily: ff,
+//                 borderBottom: tab === id ? "2px solid #3b82f6" : "2px solid transparent", marginBottom: -1,
+//               }}>
+//                 <Icon size={12} />{label}
+//               </button>
+//             ))}
+//           </div>
+//         </div>
+
+//         {/* Body */}
+//         <div style={{ flex: 1, overflowY: "auto", padding: "20px 22px" }}>
+//           {tab === "details" && (
+//             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+//               {[
+//                 ["col2", "Session Title", <FInp value={form.session_title} onChange={set("session_title")} placeholder="e.g. Goal Setting" />],
+//                 [null, "Date & Time", <FInp type="datetime-local" value={form.session_date} onChange={set("session_date")} />],
+//                 [null, "Status", <FSel value={form.status} onChange={set("status")}><option value="pending">Pending</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option><option value="missed">Missed</option></FSel>],
+//                 ["col2", "Meeting Link", <FInp value={form.meeting_link} onChange={set("meeting_link")} placeholder="https://meet.google.com/…" />],
+//                 ["col2", "Mentor's Description", <FTxt value={form.meeting_description} rows={3} readOnly />],
+//                 ["col2", "Your Description (Mentee)", <FTxt value={form.mentee_meeting_description} onChange={set("mentee_meeting_description")} placeholder="Add your notes about this session…" rows={3} />],
+//               ].map(([col2, lbl, child], i) => (
+//                 <div key={i} style={{ gridColumn: col2 ? "1 / -1" : "span 1" }}>
+//                   <label style={{ display: "block", fontSize: 10, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#94a3b8", marginBottom: 5, fontFamily: ff }}>{lbl}</label>
+//                   {child}
+//                 </div>
+//               ))}
+//             </div>
+//           )}
+
+//           {tab === "tasks" && (
+//             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+//               {session.tasks_given ? (
+//                 <div>
+//                   <label style={{ display: "block", fontSize: 10, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#94a3b8", marginBottom: 5, fontFamily: ff }}>Task by Mentor</label>
+//                   <FTxt value={form.tasks_given} rows={3} readOnly />
+//                 </div>
+//               ) : (
+//                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "28px 0", gap: 8 }}>
+//                   <ClipboardList size={28} color="#e2e8f0" />
+//                   <p style={{ fontSize: 13, color: "#94a3b8", fontFamily: ff }}>No task assigned yet.</p>
+//                 </div>
+//               )}
+
+//               <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 13px", borderRadius: 8, background: form.task_completed ? "#f0fdf4" : "#f8fafc", border: `1px solid ${form.task_completed ? "#bbf7d0" : "#e2e8f0"}` }}>
+//                 <input type="checkbox" id="tc" checked={form.task_completed} onChange={set("task_completed")} style={{ width: 15, height: 15, accentColor: "#10b981", cursor: "pointer" }} />
+//                 <label htmlFor="tc" style={{ fontSize: 13, color: form.task_completed ? "#059669" : "#64748b", cursor: "pointer", fontFamily: ff }}>
+//                   {form.task_completed ? "Task completed ✓" : "Mark task as completed"}
+//                 </label>
+//               </div>
+
+//               {session.tasks_given && (
+//                 <div style={{ border: "1px solid #e2e8f0", borderRadius: 10, overflow: "hidden" }}>
+//                   <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
+//                     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+//                       <ClipboardList size={13} color="#64748b" />
+//                       <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#64748b", fontFamily: ff }}>Submit Task</span>
+//                     </div>
+//                     {session.task_submission && (
+//                       <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+//                         <CheckCheck size={12} color="#10b981" />
+//                         <span style={{ fontSize: 11, fontWeight: 600, color: "#10b981", fontFamily: ff }}>Previously Submitted</span>
+//                       </div>
+//                     )}
+//                   </div>
+//                   <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 10 }}>
+//                     <div style={{ position: "relative" }}>
+//                       <Link2 size={12} color="#94a3b8" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
+//                       <input type="url" value={form.task_submission} onChange={set("task_submission")}
+//                         placeholder="Paste Google Drive or GitHub link…"
+//                         style={{ ...iBase, paddingLeft: 30, fontSize: 12 }} />
+//                     </div>
+//                     {form.task_submission && (
+//                       <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 11px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 7 }}>
+//                         <CheckCircle2 size={12} color="#10b981" style={{ flexShrink: 0 }} />
+//                         <a href={form.task_submission} target="_blank" rel="noopener noreferrer"
+//                           style={{ fontSize: 12, color: "#059669", textDecoration: "none", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: ff }}>
+//                           {form.task_submission}
+//                         </a>
+//                         <ExternalLink size={11} color="#059669" />
+//                       </div>
+//                     )}
+//                     <p style={{ fontSize: 11, color: "#94a3b8", margin: 0, fontFamily: ff }}>
+//                       Link will be saved when you click <strong>Save Changes</strong>.
+//                     </p>
+//                   </div>
+//                 </div>
+//               )}
+//             </div>
+//           )}
+
+//           {tab === "feedback" && (
+//             <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+//               <div>
+//                 <label style={{ display: "block", fontSize: 10, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#94a3b8", marginBottom: 5, fontFamily: ff }}>Your Feedback</label>
+//                 <FTxt value={form.mentee_feedback} onChange={set("mentee_feedback")} placeholder="Share your thoughts…" rows={4} />
+//               </div>
+//               <div>
+//                 <label style={{ display: "block", fontSize: 10, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#94a3b8", marginBottom: 8, fontFamily: ff }}>Provide a Rating for the Mento</label>
+//                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+//                   <StarPicker value={form.mentee_rating} onChange={(v) => setForm((f) => ({ ...f, mentee_rating: v }))} />
+//                   <span style={{ fontSize: 12, color: "#94a3b8", fontFamily: ff }}>{form.mentee_rating > 0 ? `${form.mentee_rating}/5` : "Not rated"}</span>
+//                 </div>
+//               </div>
+//               {session.mentor_feedback && (
+//                 <div style={{ padding: "13px 15px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 9 }}>
+//                   <p style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: 7, fontFamily: ff }}>Mentor's Feedback</p>
+//                   <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.6, margin: 0, fontFamily: ff }}>{session.mentor_feedback}</p>
+//                   {session.mentor_rating > 0 && <StarDisplay value={session.mentor_rating} />}
+//                 </div>
+//               )}
+//             </div>
+//           )}
+//         </div>
+
+//         {/* Footer */}
+//         <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, padding: "12px 22px", borderTop: "1px solid #e2e8f0", background: "#fafafa", flexShrink: 0 }}>
+//           <button onClick={onClose} style={{ padding: "8px 18px", borderRadius: 8, fontSize: 13, fontWeight: 500, background: "#fff", border: "1px solid #e2e8f0", color: "#64748b", cursor: "pointer", fontFamily: ff }}>
+//             Cancel
+//           </button>
+//           <button onClick={handleSave} disabled={saving} style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 20px", borderRadius: 8, fontSize: 13, fontWeight: 600, background: saving ? "#93c5fd" : "#3b82f6", color: "#fff", border: "none", cursor: saving ? "not-allowed" : "pointer", fontFamily: ff }}>
+//             {saving ? <><Loader2 size={12} style={{ animation: "ltm-spin .7s linear infinite" }} />Saving…</> : "Save Changes"}
+//           </button>
+//         </div>
+//       </div>
+//     </>
+//   );
+// }
+
+// function MobileCard({ session, onEdit }) {
+//   const num = String(session.session_number).padStart(2, "0");
+//   return (
+//     <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "14px", display: "flex", flexDirection: "column", gap: 10 }}>
+//       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+//         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+//           <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8" }}>#{num}</span>
+//           <span style={{ fontSize: 14, fontWeight: 600, color: "#1e293b", fontFamily: ff }}>{session.session_title || `Session ${session.session_number}`}</span>
+//         </div>
+//         <span style={{ fontSize: 11, fontWeight: 600, color: "#64748b", background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 99, padding: "3px 9px", textTransform: "capitalize" }}>{session.status}</span>
+//       </div>
+//       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 16px" }}>
+//         {[
+//           ["Date", fmtDate(session.session_date)],
+//           ["Task", session.tasks_given ? (session.task_submission ? "Submitted" : "Pending") : "—"],
+//           ["Rating", session.mentee_rating ? `${session.mentee_rating}/5` : "—"],
+//           ["Feedback", session.mentee_feedback ? session.mentee_feedback.slice(0, 40) + (session.mentee_feedback.length > 40 ? "…" : "") : "—"],
+//         ].map(([l, v]) => (
+//           <div key={l}>
+//             <div style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: 2, fontFamily: ff }}>{l}</div>
+//             <div style={{ fontSize: 12, color: "#475569", fontFamily: ff }}>{v}</div>
+//           </div>
+//         ))}
+//       </div>
+//       <button onClick={() => onEdit(session)} style={{ alignSelf: "flex-start", padding: "6px 14px", borderRadius: 7, background: "#f8fafc", color: "#475569", border: "1px solid #e2e8f0", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: ff }}>
+//         View Details
+//       </button>
+//     </div>
+//   );
+// }
+
+// function Toast({ toast }) {
+//   if (!toast) return null;
+//   const ok = toast.type === "success";
+//   return (
+//     <div style={{ position: "fixed", bottom: 24, right: 24, zIndex: 200, display: "flex", alignItems: "center", gap: 9, padding: "11px 16px", borderRadius: 10, fontSize: 13, fontWeight: 500, background: "#fff", border: `1px solid ${ok ? "#bbf7d0" : "#fca5a5"}`, color: ok ? "#059669" : "#ef4444", fontFamily: ff }}>
+//       {ok ? <CheckCircle2 size={14} /> : <AlertCircle size={14} />}
+//       {toast.msg}
+//     </div>
+//   );
+// }
+
+// export default function Ltmupcommingsessions() {
+//   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+//   const { data: result, isLoading, isError } = useGetSessionsByMenteeQuery(userData?._id);
+//   const [updateSession] = useUpdateByMenteeSessionMutation();
+//   const [perPage, setPerPage] = useState(10);
+//   const [currentPage, setCurrentPage] = useState(1);
+//   const [taskFilter, setTaskFilter] = useState("all");
+//   const [sortOrder, setSortOrder] = useState("newest");
+//   const [search, setSearch] = useState("");
+//   const [editSession, setEditSession] = useState(null);
+//   const [toast, setToast] = useState(null);
+
+//   const sessions = result?.data ?? [];
+//   const totalSessions = sessions.length;
+//   const tasksCompleted = sessions.filter((s) => s.task_completed).length;
+
+//   const displayed = useMemo(() => {
+//     let list = [...sessions];
+//     if (taskFilter === "done") list = list.filter((s) => s.task_completed);
+//     if (taskFilter === "pending") list = list.filter((s) => s.tasks_given && !s.task_completed);
+//     if (taskFilter === "none") list = list.filter((s) => !s.tasks_given);
+//     if (search.trim()) {
+//       const q = search.toLowerCase();
+//       list = list.filter((s) => (s.session_title || "").toLowerCase().includes(q) || (s.meeting_description || "").toLowerCase().includes(q));
+//     }
+//     list.sort((a, b) => {
+//       const da = new Date(a.session_date || 0), db = new Date(b.session_date || 0);
+//       return sortOrder === "newest" ? db - da : da - db;
+//     });
+//     return list;
+//   }, [sessions, taskFilter, sortOrder, search]);
+
+//   useEffect(() => setCurrentPage(1), [taskFilter, sortOrder, search, perPage]);
+//   const totalPages = Math.ceil(displayed.length / perPage);
+//   const paginated = displayed.slice((currentPage - 1) * perPage, currentPage * perPage);
+
+//   const showToast = (msg, type = "success") => { setToast({ msg, type }); setTimeout(() => setToast(null), 3500); };
+//   const handleSave = async (session_id, form) => {
+//     try { await updateSession({ session_id, ...form }).unwrap(); showToast("Session updated."); }
+//     catch { showToast("Failed to update session.", "error"); }
+//   };
+
+//   const selStyle = {
+//     ...iBase, width: "auto", fontSize: 13, paddingRight: 30, cursor: "pointer",
+//     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
+//     backgroundRepeat: "no-repeat", backgroundPosition: "right 9px center", appearance: "none",
+//   };
+
+//   const th = { padding: "10px 16px", fontSize: 11, fontWeight: 700, color: "#64748b", textAlign: "left", whiteSpace: "nowrap", letterSpacing: "0.06em", textTransform: "uppercase", background: "#f8fafc", borderBottom: "1px solid #e2e8f0" };
+//   const td = { padding: "11px 16px", borderBottom: "1px solid #f1f5f9", fontSize: 13, color: "#334155", verticalAlign: "middle" };
+
+//   return (
+//     <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: ff }}>
+//       <link rel="stylesheet" href={FONT} />
+//       <style>{`
+//         * { box-sizing: border-box; }
+//         @keyframes ltm-spin { to { transform: rotate(360deg); } }
+//         .ltm-tr:hover td { background: #f8fafc !important; }
+//         .ltm-show-mobile { display: none !important; }
+//         .ltm-show-desktop { display: block !important; }
+//         @media (max-width: 768px) {
+//           .ltm-show-mobile  { display: flex !important; }
+//           .ltm-show-desktop { display: none !important; }
+//         }
+//       `}</style>
+
+//       <div style={{ maxWidth: 1300, margin: "0 auto", padding: "28px 20px" }}>
+
+//         {/* Stat cards */}
+//         <div style={{ display: "flex", gap: 14, marginBottom: 22, flexWrap: "wrap" }}>
+//           {[
+//             { icon: Layers, label: "Total Sessions", value: totalSessions },
+//             { icon: ClipboardCheck, label: "Tasks Completed", value: `${tasksCompleted}/${totalSessions}` },
+//           ].map(({ icon: Icon, label, value }) => (
+//             <div key={label} style={{ display: "flex", alignItems: "center", gap: 14, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "16px 20px", minWidth: 170, flex: "1 1 170px" }}>
+//               <div style={{ width: 38, height: 38, borderRadius: 10, background: "#f1f5f9", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center" }}>
+//                 <Icon size={18} color="#475569" />
+//               </div>
+//               <div>
+//                 <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#94a3b8", margin: "0 0 3px", fontFamily: ff }}>{label}</p>
+//                 <p style={{ fontSize: 22, fontWeight: 700, color: "#0f172a", margin: 0, lineHeight: 1, fontFamily: ff }}>{value}</p>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* Main panel */}
+//         <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, overflow: "hidden" }}>
+
+//           {/* Panel header */}
+//           <div style={{ padding: "18px 20px 0", borderBottom: "1px solid #e2e8f0" }}>
+//             <h2 style={{ fontSize: 16, fontWeight: 700, color: "#0f172a", margin: "0 0 14px", fontFamily: ff }}>My Sessions</h2>
+
+//             {/* Toolbar */}
+//             <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", paddingBottom: 14 }}>
+//               <select value={perPage} onChange={(e) => setPerPage(Number(e.target.value))} style={{ ...selStyle, width: 72 }}>
+//                 <option value={10}>10</option>
+//                 <option value={30}>30</option>
+//                 <option value={50}>50</option>
+//               </select>
+//               <div style={{ flex: 1 }} />
+//               <select value={taskFilter} onChange={(e) => setTaskFilter(e.target.value)} style={{ ...selStyle, width: 140 }}>
+//                 <option value="all">All Tasks</option>
+//                 <option value="done">Completed</option>
+//                 <option value="pending">Pending</option>
+//                 <option value="none">No Task</option>
+//               </select>
+//               <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} style={{ ...selStyle, width: 140 }}>
+//                 <option value="newest">Newest First</option>
+//                 <option value="oldest">Oldest First</option>
+//               </select>
+//               <div style={{ position: "relative" }}>
+//                 <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="#94a3b8" strokeWidth={2} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
+//                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+//                 </svg>
+//                 <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search session…"
+//                   style={{ ...iBase, width: 180, paddingLeft: 30, fontSize: 13 }} />
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* States */}
+//           {isLoading && (
+//             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "56px 0", gap: 10 }}>
+//               <Loader2 size={24} color="#94a3b8" style={{ animation: "ltm-spin .8s linear infinite" }} />
+//               <p style={{ fontSize: 13, color: "#94a3b8", fontFamily: ff }}>Loading sessions…</p>
+//             </div>
+//           )}
+//           {isError && (
+//             <div style={{ display: "flex", alignItems: "center", gap: 10, margin: 20, padding: "12px 14px", background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 8 }}>
+//               <AlertCircle size={14} color="#ef4444" />
+//               <p style={{ fontSize: 13, color: "#ef4444", margin: 0, fontFamily: ff }}>Failed to load sessions. Please refresh.</p>
+//             </div>
+//           )}
+//           {!isLoading && !isError && paginated.length === 0 && (
+//             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "56px 0", gap: 8 }}>
+//               <Layers size={26} color="#e2e8f0" />
+//               <p style={{ fontSize: 13, color: "#94a3b8", fontFamily: ff }}>No sessions found.</p>
+//             </div>
+//           )}
+
+//           {/* Desktop Table */}
+//           {!isLoading && !isError && paginated.length > 0 && (
+//             <div className="ltm-show-desktop" style={{ overflowX: "auto" }}>
+//               <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: ff }}>
+//                 <thead>
+//                   <tr>
+//                     {["S.No", "Session", "Date", "Description", "Tasks Given", "Task Status", "Rating", "Feedback"].map((h) => (
+//                       <th key={h} style={th}>{h}</th>
+//                     ))}
+//                   </tr>
+//                 </thead>
+//                 <tbody>
+//                   {paginated.map((session, i) => {
+//                     const taskSubmitted = !!session.task_submission;
+//                     const hasTask = !!session.tasks_given;
+//                     return (
+//                       <tr key={session._id} className="ltm-tr" style={{ borderBottom: "1px solid #f1f5f9", cursor: "pointer" }} onClick={() => setEditSession(session)}>
+//                         <td style={{ ...td, color: "#94a3b8" }}>{(currentPage - 1) * perPage + i + 1}</td>
+//                         <td style={td}>
+//                           <span style={{ fontWeight: 600, color: "#1e293b" }}>{session.session_title || `Session ${session.session_number}`}</span>
+//                         </td>
+//                         <td style={{ ...td, whiteSpace: "nowrap" }}>{fmtDate(session.session_date)}</td>
+//                         <td style={{ ...td, maxWidth: 180 }}>
+//                           <p style={{ margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 160, color: session.meeting_description ? "#475569" : "#cbd5e1" }}>
+//                             {session.meeting_description || "—"}
+//                           </p>
+//                         </td>
+//                         <td style={{ ...td, maxWidth: 160 }}>
+//                           <p style={{ margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 140, color: session.tasks_given ? "#475569" : "#cbd5e1" }}>
+//                             {session.tasks_given || "—"}
+//                           </p>
+//                         </td>
+//                         <td style={td}>
+//                           {hasTask ? (
+//                             <span style={{
+//                               display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 600,
+//                               color: taskSubmitted ? "#059669" : "#64748b",
+//                               background: taskSubmitted ? "#f0fdf4" : "#f8fafc",
+//                               border: `1px solid ${taskSubmitted ? "#bbf7d0" : "#e2e8f0"}`,
+//                               borderRadius: 99, padding: "3px 10px", whiteSpace: "nowrap",
+//                             }}>
+//                               {taskSubmitted ? <><CheckCircle2 size={11} />Done</> : <><Circle size={11} />Pending</>}
+//                             </span>
+//                           ) : <span style={{ color: "#cbd5e1" }}>—</span>}
+//                         </td>
+//                         <td style={td}>
+//                           {session.mentee_rating > 0 ? <StarDisplay value={session.mentee_rating} /> : <span style={{ color: "#cbd5e1" }}>—</span>}
+//                         </td>
+//                         <td style={{ ...td, maxWidth: 180 }}>
+//                           <p style={{ margin: 0, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", maxWidth: 160, color: session.mentee_feedback ? "#475569" : "#cbd5e1" }}>
+//                             {session.mentee_feedback || "—"}
+//                           </p>
+//                         </td>
+//                       </tr>
+//                     );
+//                   })}
+//                 </tbody>
+//               </table>
+
+//               {/* Pagination */}
+//               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", borderTop: "1px solid #f1f5f9", flexWrap: "wrap", gap: 10 }}>
+//                 <span style={{ fontSize: 13, color: "#94a3b8", fontFamily: ff }}>
+//                   Showing {(currentPage - 1) * perPage + 1}–{Math.min(currentPage * perPage, displayed.length)} of {displayed.length}
+//                 </span>
+//                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+//                   <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1}
+//                     style={{ padding: "6px 14px", borderRadius: 7, fontSize: 13, fontWeight: 500, background: "#fff", color: currentPage === 1 ? "#cbd5e1" : "#475569", border: `1px solid ${currentPage === 1 ? "#f1f5f9" : "#e2e8f0"}`, cursor: currentPage === 1 ? "not-allowed" : "pointer", fontFamily: ff }}>
+//                     ← Prev
+//                   </button>
+//                   {Array.from({ length: totalPages }, (_, i) => i + 1)
+//                     .filter((p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
+//                     .reduce((acc, p, idx, arr) => { if (idx > 0 && p - arr[idx - 1] > 1) acc.push("..."); acc.push(p); return acc; }, [])
+//                     .map((p, idx) => p === "..." ? (
+//                       <span key={`e-${idx}`} style={{ fontSize: 13, color: "#94a3b8", padding: "0 4px" }}>…</span>
+//                     ) : (
+//                       <button key={p} onClick={() => setCurrentPage(p)}
+//                         style={{ width: 32, height: 32, borderRadius: 7, fontSize: 13, fontWeight: 600, background: currentPage === p ? "#0f172a" : "#fff", color: currentPage === p ? "#fff" : "#64748b", border: `1px solid ${currentPage === p ? "#0f172a" : "#e2e8f0"}`, cursor: "pointer", fontFamily: ff }}>
+//                         {p}
+//                       </button>
+//                     ))}
+//                   <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}
+//                     style={{ padding: "6px 14px", borderRadius: 7, fontSize: 13, fontWeight: 500, background: "#fff", color: currentPage === totalPages ? "#cbd5e1" : "#475569", border: `1px solid ${currentPage === totalPages ? "#f1f5f9" : "#e2e8f0"}`, cursor: currentPage === totalPages ? "not-allowed" : "pointer", fontFamily: ff }}>
+//                     Next →
+//                   </button>
+//                 </div>
+//               </div>
+//             </div>
+//           )}
+
+//           {/* Mobile Cards */}
+//           {!isLoading && !isError && paginated.length > 0 && (
+//             <div className="ltm-show-mobile" style={{ flexDirection: "column", gap: 10, padding: "14px" }}>
+//               {paginated.map((session) => (
+//                 <MobileCard key={session._id} session={session} onEdit={setEditSession} />
+//               ))}
+//             </div>
+//           )}
+//         </div>
+//       </div>
+
+//       {editSession && <SessionModal session={editSession} onClose={() => setEditSession(null)} onSave={handleSave} onToast={showToast} />}
+//       <Toast toast={toast} />
+//     </div>
+//   );
+// }
+
+
+
+
+
 import { useState, useMemo, useEffect } from "react";
 import {
   Layers, ClipboardCheck, CheckCircle2, Circle, AlertCircle,
-  Loader2, Send, X, BookOpen, ClipboardList, MessageSquare,
-  ExternalLink, CheckCheck, Link2, Calendar,
+  Loader2, X, BookOpen, ClipboardList, MessageSquare,
+  ExternalLink, CheckCheck, Link2,
 } from "lucide-react";
 import {
   useGetSessionsByMenteeQuery,
   useUpdateByMenteeSessionMutation,
 } from "./ltmupcommingsessionsapislice";
 
-const FONT = "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap";
-const ff = "'Inter', sans-serif";
-
 const fmtDate = (iso) =>
-  iso ? new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—";
+  iso
+    ? new Date(iso).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
+    : "—";
 
-const iBase = {
-  width: "100%", fontFamily: ff, fontSize: 13, color: "#1e293b",
-  background: "#fff", border: "1px solid #e2e8f0", borderRadius: 8,
-  padding: "9px 12px", outline: "none", boxSizing: "border-box",
-};
-const iRO = { ...iBase, background: "#f8fafc", color: "#94a3b8", cursor: "default" };
-
+/* ── Shared form primitives ── */
 function FInp({ value, onChange, placeholder, type = "text", readOnly }) {
   return (
-    <input type={type} value={value} onChange={onChange} placeholder={placeholder}
-      readOnly={readOnly} style={readOnly ? iRO : iBase} />
+    <input
+      type={type}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      readOnly={readOnly}
+      className={`w-full text-sm rounded-lg px-3 py-2 border outline-none transition-colors
+        ${readOnly
+          ? "bg-slate-50 text-slate-400 border-slate-200 cursor-default"
+          : "bg-white text-slate-800 border-slate-200 focus:border-[#0098cc] focus:ring-2 focus:ring-[#0098cc]/10"
+        }`}
+    />
   );
 }
+
 function FTxt({ value, onChange, placeholder, rows = 3, readOnly }) {
   return (
-    <textarea rows={rows} value={value} onChange={onChange} placeholder={placeholder}
-      readOnly={readOnly} style={{ ...(readOnly ? iRO : iBase), resize: "none", lineHeight: 1.6 }} />
+    <textarea
+      rows={rows}
+      value={value}
+      onChange={onChange}
+      placeholder={placeholder}
+      readOnly={readOnly}
+      className={`w-full text-sm rounded-lg px-3 py-2 border outline-none resize-none leading-relaxed transition-colors
+        ${readOnly
+          ? "bg-slate-50 text-slate-400 border-slate-200 cursor-default"
+          : "bg-white text-slate-800 border-slate-200 focus:border-[#0098cc] focus:ring-2 focus:ring-[#0098cc]/10"
+        }`}
+    />
   );
 }
+
 function FSel({ value, onChange, children }) {
   return (
-    <select value={value} onChange={onChange}
-      style={{
-        ...iBase, appearance: "none", cursor: "pointer", paddingRight: 32,
-        backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
-        backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center",
-      }}>
+    <select
+      value={value}
+      onChange={onChange}
+      className="w-full text-sm rounded-lg px-3 py-2 border border-slate-200 bg-white text-slate-800 outline-none cursor-pointer focus:border-[#0098cc] focus:ring-2 focus:ring-[#0098cc]/10 appearance-none"
+    >
       {children}
     </select>
   );
 }
 
+/* ── Star components ── */
 function StarDisplay({ value, max = 5 }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
+    <div className="flex items-center gap-1">
       {Array.from({ length: max }).map((_, i) => (
-        <span key={i} style={{ fontSize: 15, color: i < (value || 0) ? "#f59e0b" : "#e2e8f0" }}>★</span>
+        <span key={i} className={`text-base ${i < (value || 0) ? "text-amber-400" : "text-slate-200"}`}>★</span>
       ))}
-      <span style={{ fontSize: 12, fontWeight: 600, color: "#64748b", marginLeft: 4 }}>{value || 0}/{max}</span>
+      <span className="text-xs font-semibold text-slate-500 ml-1">{value || 0}/{max}</span>
     </div>
   );
 }
@@ -64,11 +640,17 @@ function StarDisplay({ value, max = 5 }) {
 function StarPicker({ value, onChange }) {
   const [hov, setHov] = useState(0);
   return (
-    <div style={{ display: "flex", gap: 3 }}>
+    <div className="flex gap-1">
       {[1, 2, 3, 4, 5].map((n) => (
-        <button key={n} type="button" onClick={() => onChange(n)}
-          onMouseEnter={() => setHov(n)} onMouseLeave={() => setHov(0)}
-          style={{ background: "none", border: "none", padding: 2, cursor: "pointer", fontSize: 22, lineHeight: 1, color: n <= (hov || value || 0) ? "#f59e0b" : "#e2e8f0" }}>
+        <button
+          key={n}
+          type="button"
+          onClick={() => onChange(n)}
+          onMouseEnter={() => setHov(n)}
+          onMouseLeave={() => setHov(0)}
+          className={`text-2xl leading-none bg-transparent border-none cursor-pointer transition-colors p-0.5
+            ${n <= (hov || value || 0) ? "text-amber-400" : "text-slate-200"}`}
+        >
           ★
         </button>
       ))}
@@ -76,7 +658,8 @@ function StarPicker({ value, onChange }) {
   );
 }
 
-function SessionModal({ session, onClose, onSave, onToast }) {
+/* ── Session Modal ── */
+function SessionModal({ session, onClose, onSave }) {
   const [saving, setSaving] = useState(false);
   const [tab, setTab] = useState("details");
   const [form, setForm] = useState({
@@ -113,37 +696,53 @@ function SessionModal({ session, onClose, onSave, onToast }) {
 
   return (
     <>
-      <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 100, background: "rgba(15,23,42,.4)" }} />
-      <div style={{
-        position: "fixed", top: "50%", left: "50%", transform: "translate(-50%,-50%)",
-        zIndex: 101, width: "min(680px,calc(100vw - 32px))", maxHeight: "calc(100vh - 48px)",
-        background: "#fff", borderRadius: 14, border: "1px solid #e2e8f0",
-        display: "flex", flexDirection: "column", overflow: "hidden", fontFamily: ff,
-      }}>
+      {/* Backdrop */}
+      <div
+        onClick={onClose}
+        className="fixed inset-0 z-[100] bg-slate-900/40 backdrop-blur-sm"
+      />
+
+      {/* Modal */}
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[101]
+        w-[min(680px,calc(100vw-32px))] max-h-[calc(100vh-48px)]
+        bg-white rounded-2xl border border-slate-200 shadow-2xl flex flex-col overflow-hidden">
+
         {/* Header */}
-        <div style={{ padding: "18px 22px 0", flexShrink: 0 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{ width: 38, height: 38, borderRadius: 10, background: "#f1f5f9", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "#475569" }}>
+        <div className="px-6 pt-5 flex-shrink-0">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-sm font-bold text-slate-600">
                 {num}
               </div>
               <div>
-                <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#94a3b8", margin: "0 0 3px" }}>Session {session.session_number}</p>
-                <h2 style={{ fontSize: 15, fontWeight: 700, color: "#0f172a", margin: 0 }}>{form.session_title || `Session ${session.session_number}`}</h2>
+                <p className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1">
+                  Session {session.session_number}
+                </p>
+                <h2 className="text-base font-bold text-slate-900">
+                  {form.session_title || `Session ${session.session_number}`}
+                </h2>
               </div>
             </div>
-            <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: 7, background: "#f8fafc", border: "1px solid #e2e8f0", color: "#64748b", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" }}>
-              <X size={13} />
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-500 flex items-center justify-center hover:bg-slate-100 transition-colors cursor-pointer"
+            >
+              <X size={14} />
             </button>
           </div>
-          <div style={{ display: "flex", borderBottom: "1px solid #e2e8f0" }}>
+
+          {/* Tabs */}
+          <div className="flex border-b border-slate-200">
             {TABS.map(({ id, label, Icon }) => (
-              <button key={id} onClick={() => setTab(id)} style={{
-                display: "flex", alignItems: "center", gap: 5, padding: "9px 14px",
-                fontSize: 12, fontWeight: 600, border: "none", background: "none", cursor: "pointer",
-                color: tab === id ? "#3b82f6" : "#94a3b8", fontFamily: ff,
-                borderBottom: tab === id ? "2px solid #3b82f6" : "2px solid transparent", marginBottom: -1,
-              }}>
+              <button
+                key={id}
+                onClick={() => setTab(id)}
+                className={`flex items-center gap-1.5 px-4 py-2.5 text-xs font-semibold border-b-2 -mb-px transition-colors cursor-pointer bg-transparent
+                  ${tab === id
+                    ? "text-[#0098cc] border-[#0098cc]"
+                    : "text-slate-400 border-transparent hover:text-slate-600"
+                  }`}
+              >
                 <Icon size={12} />{label}
               </button>
             ))}
@@ -151,78 +750,100 @@ function SessionModal({ session, onClose, onSave, onToast }) {
         </div>
 
         {/* Body */}
-        <div style={{ flex: 1, overflowY: "auto", padding: "20px 22px" }}>
+        <div className="flex-1 overflow-y-auto px-6 py-5">
+
+          {/* Details Tab */}
           {tab === "details" && (
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14 }}>
+            <div className="grid grid-cols-2 gap-4">
               {[
-                ["col2", "Session Title", <FInp value={form.session_title} onChange={set("session_title")} placeholder="e.g. Goal Setting" />],
-                [null, "Date & Time", <FInp type="datetime-local" value={form.session_date} onChange={set("session_date")} />],
-                [null, "Status", <FSel value={form.status} onChange={set("status")}><option value="pending">Pending</option><option value="completed">Completed</option><option value="cancelled">Cancelled</option><option value="missed">Missed</option></FSel>],
-                ["col2", "Meeting Link", <FInp value={form.meeting_link} onChange={set("meeting_link")} placeholder="https://meet.google.com/…" />],
-                ["col2", "Mentor's Description", <FTxt value={form.meeting_description} rows={3} readOnly />],
-                ["col2", "Your Description (Mentee)", <FTxt value={form.mentee_meeting_description} onChange={set("mentee_meeting_description")} placeholder="Add your notes about this session…" rows={3} />],
-              ].map(([col2, lbl, child], i) => (
-                <div key={i} style={{ gridColumn: col2 ? "1 / -1" : "span 1" }}>
-                  <label style={{ display: "block", fontSize: 10, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#94a3b8", marginBottom: 5, fontFamily: ff }}>{lbl}</label>
+                ["col-span-2", "Session Title",
+                  <FInp value={form.session_title} onChange={set("session_title")} placeholder="e.g. Goal Setting" />],
+                ["col-span-1", "Date & Time",
+                  <FInp type="datetime-local" value={form.session_date} onChange={set("session_date")} />],
+                ["col-span-1", "Status",
+                  <FSel value={form.status} onChange={set("status")}>
+                    <option value="pending">Pending</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                    <option value="missed">Missed</option>
+                  </FSel>],
+                ["col-span-2", "Meeting Link",
+                  <FInp value={form.meeting_link} onChange={set("meeting_link")} placeholder="https://meet.google.com/…" />],
+                ["col-span-2", "Mentor's Description",
+                  <FTxt value={form.meeting_description} rows={3} readOnly />],
+                ["col-span-2", "Your Description (Mentee)",
+                  <FTxt value={form.mentee_meeting_description} onChange={set("mentee_meeting_description")} placeholder="Add your notes about this session…" rows={3} />],
+              ].map(([colClass, lbl, child], i) => (
+                <div key={i} className={colClass}>
+                  <label className="block text-[10px] font-bold tracking-wider uppercase text-slate-400 mb-1.5">{lbl}</label>
                   {child}
                 </div>
               ))}
             </div>
           )}
 
+          {/* Tasks Tab */}
           {tab === "tasks" && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            <div className="flex flex-col gap-4">
               {session.tasks_given ? (
                 <div>
-                  <label style={{ display: "block", fontSize: 10, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#94a3b8", marginBottom: 5, fontFamily: ff }}>Task by Mentor</label>
+                  <label className="block text-[10px] font-bold tracking-wider uppercase text-slate-400 mb-1.5">Task by Mentor</label>
                   <FTxt value={form.tasks_given} rows={3} readOnly />
                 </div>
               ) : (
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "28px 0", gap: 8 }}>
-                  <ClipboardList size={28} color="#e2e8f0" />
-                  <p style={{ fontSize: 13, color: "#94a3b8", fontFamily: ff }}>No task assigned yet.</p>
+                <div className="flex flex-col items-center py-8 gap-2">
+                  <ClipboardList size={28} className="text-slate-200" />
+                  <p className="text-sm text-slate-400">No task assigned yet.</p>
                 </div>
               )}
 
-              <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "11px 13px", borderRadius: 8, background: form.task_completed ? "#f0fdf4" : "#f8fafc", border: `1px solid ${form.task_completed ? "#bbf7d0" : "#e2e8f0"}` }}>
-                <input type="checkbox" id="tc" checked={form.task_completed} onChange={set("task_completed")} style={{ width: 15, height: 15, accentColor: "#10b981", cursor: "pointer" }} />
-                <label htmlFor="tc" style={{ fontSize: 13, color: form.task_completed ? "#059669" : "#64748b", cursor: "pointer", fontFamily: ff }}>
+              <div className={`flex items-center gap-3 px-4 py-3 rounded-lg border transition-colors
+                ${form.task_completed ? "bg-emerald-50 border-emerald-200" : "bg-slate-50 border-slate-200"}`}>
+                <input
+                  type="checkbox" id="tc" checked={form.task_completed} onChange={set("task_completed")}
+                  className="w-4 h-4 accent-emerald-500 cursor-pointer"
+                />
+                <label htmlFor="tc" className={`text-sm cursor-pointer ${form.task_completed ? "text-emerald-600" : "text-slate-500"}`}>
                   {form.task_completed ? "Task completed ✓" : "Mark task as completed"}
                 </label>
               </div>
 
               {session.tasks_given && (
-                <div style={{ border: "1px solid #e2e8f0", borderRadius: 10, overflow: "hidden" }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 14px", background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <ClipboardList size={13} color="#64748b" />
-                      <span style={{ fontSize: 11, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#64748b", fontFamily: ff }}>Submit Task</span>
+                <div className="border border-slate-200 rounded-xl overflow-hidden">
+                  <div className="flex items-center justify-between px-4 py-2.5 bg-slate-50 border-b border-slate-200">
+                    <div className="flex items-center gap-2">
+                      <ClipboardList size={13} className="text-slate-500" />
+                      <span className="text-[11px] font-bold tracking-wider uppercase text-slate-500">Submit Task</span>
                     </div>
                     {session.task_submission && (
-                      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                        <CheckCheck size={12} color="#10b981" />
-                        <span style={{ fontSize: 11, fontWeight: 600, color: "#10b981", fontFamily: ff }}>Previously Submitted</span>
+                      <div className="flex items-center gap-1.5">
+                        <CheckCheck size={12} className="text-emerald-500" />
+                        <span className="text-[11px] font-semibold text-emerald-600">Previously Submitted</span>
                       </div>
                     )}
                   </div>
-                  <div style={{ padding: "12px 14px", display: "flex", flexDirection: "column", gap: 10 }}>
-                    <div style={{ position: "relative" }}>
-                      <Link2 size={12} color="#94a3b8" style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
-                      <input type="url" value={form.task_submission} onChange={set("task_submission")}
+                  <div className="px-4 py-3 flex flex-col gap-3">
+                    <div className="relative">
+                      <Link2 size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                      <input
+                        type="url" value={form.task_submission} onChange={set("task_submission")}
                         placeholder="Paste Google Drive or GitHub link…"
-                        style={{ ...iBase, paddingLeft: 30, fontSize: 12 }} />
+                        className="w-full text-xs rounded-lg pl-8 pr-3 py-2 border border-slate-200 bg-white text-slate-800 outline-none focus:border-[#0098cc] focus:ring-2 focus:ring-[#0098cc]/10 transition-colors"
+                      />
                     </div>
                     {form.task_submission && (
-                      <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "7px 11px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 7 }}>
-                        <CheckCircle2 size={12} color="#10b981" style={{ flexShrink: 0 }} />
-                        <a href={form.task_submission} target="_blank" rel="noopener noreferrer"
-                          style={{ fontSize: 12, color: "#059669", textDecoration: "none", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", fontFamily: ff }}>
+                      <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 border border-emerald-200 rounded-lg">
+                        <CheckCircle2 size={12} className="text-emerald-500 flex-shrink-0" />
+                        <a
+                          href={form.task_submission} target="_blank" rel="noopener noreferrer"
+                          className="text-xs text-emerald-700 no-underline flex-1 overflow-hidden text-ellipsis whitespace-nowrap"
+                        >
                           {form.task_submission}
                         </a>
-                        <ExternalLink size={11} color="#059669" />
+                        <ExternalLink size={11} className="text-emerald-600" />
                       </div>
                     )}
-                    <p style={{ fontSize: 11, color: "#94a3b8", margin: 0, fontFamily: ff }}>
+                    <p className="text-[11px] text-slate-400 m-0">
                       Link will be saved when you click <strong>Save Changes</strong>.
                     </p>
                   </div>
@@ -231,24 +852,25 @@ function SessionModal({ session, onClose, onSave, onToast }) {
             </div>
           )}
 
+          {/* Feedback Tab */}
           {tab === "feedback" && (
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+            <div className="flex flex-col gap-5">
               <div>
-                <label style={{ display: "block", fontSize: 10, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#94a3b8", marginBottom: 5, fontFamily: ff }}>Your Feedback</label>
+                <label className="block text-[10px] font-bold tracking-wider uppercase text-slate-400 mb-1.5">Your Feedback</label>
                 <FTxt value={form.mentee_feedback} onChange={set("mentee_feedback")} placeholder="Share your thoughts…" rows={4} />
               </div>
               <div>
-                <label style={{ display: "block", fontSize: 10, fontWeight: 700, letterSpacing: "0.07em", textTransform: "uppercase", color: "#94a3b8", marginBottom: 8, fontFamily: ff }}>Provide a Rating for the Mento</label>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <label className="block text-[10px] font-bold tracking-wider uppercase text-slate-400 mb-2">Rate Your Mentor</label>
+                <div className="flex items-center gap-3">
                   <StarPicker value={form.mentee_rating} onChange={(v) => setForm((f) => ({ ...f, mentee_rating: v }))} />
-                  <span style={{ fontSize: 12, color: "#94a3b8", fontFamily: ff }}>{form.mentee_rating > 0 ? `${form.mentee_rating}/5` : "Not rated"}</span>
+                  <span className="text-xs text-slate-400">{form.mentee_rating > 0 ? `${form.mentee_rating}/5` : "Not rated"}</span>
                 </div>
               </div>
               {session.mentor_feedback && (
-                <div style={{ padding: "13px 15px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 9 }}>
-                  <p style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: 7, fontFamily: ff }}>Mentor's Feedback</p>
-                  <p style={{ fontSize: 13, color: "#475569", lineHeight: 1.6, margin: 0, fontFamily: ff }}>{session.mentor_feedback}</p>
-                  {session.mentor_rating > 0 && <StarDisplay value={session.mentor_rating} />}
+                <div className="px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl">
+                  <p className="text-[10px] font-bold text-slate-400 tracking-wider uppercase mb-2">Mentor's Feedback</p>
+                  <p className="text-sm text-slate-600 leading-relaxed m-0">{session.mentor_feedback}</p>
+                  {session.mentor_rating > 0 && <div className="mt-2"><StarDisplay value={session.mentor_rating} /></div>}
                 </div>
               )}
             </div>
@@ -256,12 +878,20 @@ function SessionModal({ session, onClose, onSave, onToast }) {
         </div>
 
         {/* Footer */}
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: 8, padding: "12px 22px", borderTop: "1px solid #e2e8f0", background: "#fafafa", flexShrink: 0 }}>
-          <button onClick={onClose} style={{ padding: "8px 18px", borderRadius: 8, fontSize: 13, fontWeight: 500, background: "#fff", border: "1px solid #e2e8f0", color: "#64748b", cursor: "pointer", fontFamily: ff }}>
+        <div className="flex justify-end gap-2 px-6 py-3 border-t border-slate-100 bg-slate-50 flex-shrink-0">
+          <button
+            onClick={onClose}
+            className="px-5 py-2 rounded-lg text-sm font-medium bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer"
+          >
             Cancel
           </button>
-          <button onClick={handleSave} disabled={saving} style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 20px", borderRadius: 8, fontSize: 13, fontWeight: 600, background: saving ? "#93c5fd" : "#3b82f6", color: "#fff", border: "none", cursor: saving ? "not-allowed" : "pointer", fontFamily: ff }}>
-            {saving ? <><Loader2 size={12} style={{ animation: "ltm-spin .7s linear infinite" }} />Saving…</> : "Save Changes"}
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold text-white border-none transition-colors cursor-pointer
+              ${saving ? "bg-[#1a1a2e]/60 cursor-not-allowed" : "bg-[#1a1a2e] hover:bg-[#16213e]"}`}
+          >
+            {saving ? <><Loader2 size={12} className="animate-spin" />Saving…</> : "Save Changes"}
           </button>
         </div>
       </div>
@@ -269,52 +899,71 @@ function SessionModal({ session, onClose, onSave, onToast }) {
   );
 }
 
+/* ── Mobile Card ── */
 function MobileCard({ session, onEdit }) {
   const num = String(session.session_number).padStart(2, "0");
+  const taskSubmitted = !!session.task_submission;
+  const hasTask = !!session.tasks_given;
+
   return (
-    <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "14px", display: "flex", flexDirection: "column", gap: 10 }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: "#94a3b8" }}>#{num}</span>
-          <span style={{ fontSize: 14, fontWeight: 600, color: "#1e293b", fontFamily: ff }}>{session.session_title || `Session ${session.session_number}`}</span>
+    <div className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] font-bold text-slate-400">#{num}</span>
+          <span className="text-sm font-semibold text-slate-800">
+            {session.session_title || `Session ${session.session_number}`}
+          </span>
         </div>
-        <span style={{ fontSize: 11, fontWeight: 600, color: "#64748b", background: "#f1f5f9", border: "1px solid #e2e8f0", borderRadius: 99, padding: "3px 9px", textTransform: "capitalize" }}>{session.status}</span>
+        <span className="text-[11px] font-semibold text-slate-500 bg-slate-100 border border-slate-200 rounded-full px-2.5 py-0.5 capitalize">
+          {session.status}
+        </span>
       </div>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "6px 16px" }}>
+
+      <div className="grid grid-cols-2 gap-x-4 gap-y-2">
         {[
           ["Date", fmtDate(session.session_date)],
-          ["Task", session.tasks_given ? (session.task_submission ? "Submitted" : "Pending") : "—"],
+          ["Task", hasTask ? (taskSubmitted ? "Submitted" : "Pending") : "—"],
           ["Rating", session.mentee_rating ? `${session.mentee_rating}/5` : "—"],
-          ["Feedback", session.mentee_feedback ? session.mentee_feedback.slice(0, 40) + (session.mentee_feedback.length > 40 ? "…" : "") : "—"],
+          ["Feedback", session.mentee_feedback
+            ? session.mentee_feedback.slice(0, 40) + (session.mentee_feedback.length > 40 ? "…" : "")
+            : "—"],
         ].map(([l, v]) => (
           <div key={l}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", letterSpacing: "0.07em", textTransform: "uppercase", marginBottom: 2, fontFamily: ff }}>{l}</div>
-            <div style={{ fontSize: 12, color: "#475569", fontFamily: ff }}>{v}</div>
+            <div className="text-[10px] font-bold text-slate-400 tracking-wider uppercase mb-0.5">{l}</div>
+            <div className="text-xs text-slate-600">{v}</div>
           </div>
         ))}
       </div>
-      <button onClick={() => onEdit(session)} style={{ alignSelf: "flex-start", padding: "6px 14px", borderRadius: 7, background: "#f8fafc", color: "#475569", border: "1px solid #e2e8f0", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: ff }}>
+
+      <button
+        onClick={() => onEdit(session)}
+        className="self-start px-4 py-1.5 rounded-lg bg-[#1a1a2e] text-white text-xs font-semibold hover:bg-[#16213e] transition-colors cursor-pointer border-none"
+      >
         View Details
       </button>
     </div>
   );
 }
 
+/* ── Toast ── */
 function Toast({ toast }) {
   if (!toast) return null;
   const ok = toast.type === "success";
   return (
-    <div style={{ position: "fixed", bottom: 24, right: 24, zIndex: 200, display: "flex", alignItems: "center", gap: 9, padding: "11px 16px", borderRadius: 10, fontSize: 13, fontWeight: 500, background: "#fff", border: `1px solid ${ok ? "#bbf7d0" : "#fca5a5"}`, color: ok ? "#059669" : "#ef4444", fontFamily: ff }}>
+    <div className={`fixed bottom-6 right-6 z-[200] flex items-center gap-2.5 px-4 py-3 rounded-xl text-sm font-medium bg-white shadow-xl border
+      ${ok ? "border-emerald-200 text-emerald-700" : "border-red-200 text-red-500"}`}>
       {ok ? <CheckCircle2 size={14} /> : <AlertCircle size={14} />}
       {toast.msg}
     </div>
   );
 }
 
+/* ── Main Component ── */
 export default function Ltmupcommingsessions() {
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const { data: result, isLoading, isError } = useGetSessionsByMenteeQuery(userData?._id);
   const [updateSession] = useUpdateByMenteeSessionMutation();
+
   const [perPage, setPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
   const [taskFilter, setTaskFilter] = useState("all");
@@ -334,7 +983,10 @@ export default function Ltmupcommingsessions() {
     if (taskFilter === "none") list = list.filter((s) => !s.tasks_given);
     if (search.trim()) {
       const q = search.toLowerCase();
-      list = list.filter((s) => (s.session_title || "").toLowerCase().includes(q) || (s.meeting_description || "").toLowerCase().includes(q));
+      list = list.filter((s) =>
+        (s.session_title || "").toLowerCase().includes(q) ||
+        (s.meeting_description || "").toLowerCase().includes(q)
+      );
     }
     list.sort((a, b) => {
       const da = new Date(a.session_date || 0), db = new Date(b.session_date || 0);
@@ -347,119 +999,126 @@ export default function Ltmupcommingsessions() {
   const totalPages = Math.ceil(displayed.length / perPage);
   const paginated = displayed.slice((currentPage - 1) * perPage, currentPage * perPage);
 
-  const showToast = (msg, type = "success") => { setToast({ msg, type }); setTimeout(() => setToast(null), 3500); };
+  const showToast = (msg, type = "success") => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 3500);
+  };
+
   const handleSave = async (session_id, form) => {
-    try { await updateSession({ session_id, ...form }).unwrap(); showToast("Session updated."); }
-    catch { showToast("Failed to update session.", "error"); }
+    try {
+      await updateSession({ session_id, ...form }).unwrap();
+      showToast("Session updated.");
+    } catch {
+      showToast("Failed to update session.", "error");
+    }
   };
 
-  const selStyle = {
-    ...iBase, width: "auto", fontSize: 13, paddingRight: 30, cursor: "pointer",
-    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
-    backgroundRepeat: "no-repeat", backgroundPosition: "right 9px center", appearance: "none",
-  };
-
-  const th = { padding: "10px 16px", fontSize: 11, fontWeight: 700, color: "#64748b", textAlign: "left", whiteSpace: "nowrap", letterSpacing: "0.06em", textTransform: "uppercase", background: "#f8fafc", borderBottom: "1px solid #e2e8f0" };
-  const td = { padding: "11px 16px", borderBottom: "1px solid #f1f5f9", fontSize: 13, color: "#334155", verticalAlign: "middle" };
+  const selectCls = "text-sm rounded-lg px-3 py-2 border border-slate-200 bg-white text-slate-700 outline-none cursor-pointer focus:border-[#0098cc] appearance-none";
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f8fafc", fontFamily: ff }}>
-      <link rel="stylesheet" href={FONT} />
-      <style>{`
-        * { box-sizing: border-box; }
-        @keyframes ltm-spin { to { transform: rotate(360deg); } }
-        .ltm-tr:hover td { background: #f8fafc !important; }
-        .ltm-show-mobile { display: none !important; }
-        .ltm-show-desktop { display: block !important; }
-        @media (max-width: 768px) {
-          .ltm-show-mobile  { display: flex !important; }
-          .ltm-show-desktop { display: none !important; }
-        }
-      `}</style>
+    <div className="min-h-screen bg-slate-50 font-sans">
 
-      <div style={{ maxWidth: 1300, margin: "0 auto", padding: "28px 20px" }}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-7">
 
         {/* Stat cards */}
-        <div style={{ display: "flex", gap: 14, marginBottom: 22, flexWrap: "wrap" }}>
+        <div className="flex flex-wrap gap-4 mb-6">
           {[
-            { icon: Layers, label: "Total Sessions", value: totalSessions },
-            { icon: ClipboardCheck, label: "Tasks Completed", value: `${tasksCompleted}/${totalSessions}` },
-          ].map(({ icon: Icon, label, value }) => (
-            <div key={label} style={{ display: "flex", alignItems: "center", gap: 14, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, padding: "16px 20px", minWidth: 170, flex: "1 1 170px" }}>
-              <div style={{ width: 38, height: 38, borderRadius: 10, background: "#f1f5f9", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Icon size={18} color="#475569" />
+            { Icon: Layers, label: "Total Sessions", value: totalSessions },
+            { Icon: ClipboardCheck, label: "Tasks Completed", value: `${tasksCompleted}/${totalSessions}` },
+          ].map(({ Icon, label, value }) => (
+            <div
+              key={label}
+              className="flex items-center gap-4 bg-white border border-slate-200 rounded-xl px-5 py-4 flex-1 min-w-[160px]"
+            >
+              <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center flex-shrink-0">
+                <Icon size={18} className="text-[#0098cc]" />
               </div>
               <div>
-                <p style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.08em", textTransform: "uppercase", color: "#94a3b8", margin: "0 0 3px", fontFamily: ff }}>{label}</p>
-                <p style={{ fontSize: 22, fontWeight: 700, color: "#0f172a", margin: 0, lineHeight: 1, fontFamily: ff }}>{value}</p>
+                <p className="text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-1">{label}</p>
+                <p className="text-2xl font-bold text-slate-900 leading-none">{value}</p>
               </div>
             </div>
           ))}
         </div>
 
         {/* Main panel */}
-        <div style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 12, overflow: "hidden" }}>
+        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
 
           {/* Panel header */}
-          <div style={{ padding: "18px 20px 0", borderBottom: "1px solid #e2e8f0" }}>
-            <h2 style={{ fontSize: 16, fontWeight: 700, color: "#0f172a", margin: "0 0 14px", fontFamily: ff }}>My Sessions</h2>
+          <div className="px-5 pt-5 border-b border-slate-200">
+            <h2 className="text-base font-bold text-[#0098cc] mb-4">My Sessions</h2>
 
             {/* Toolbar */}
-            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap", paddingBottom: 14 }}>
-              <select value={perPage} onChange={(e) => setPerPage(Number(e.target.value))} style={{ ...selStyle, width: 72 }}>
+            <div className="flex flex-wrap items-center gap-2.5 pb-4">
+              <select value={perPage} onChange={(e) => setPerPage(Number(e.target.value))} className={`${selectCls} w-20`}>
                 <option value={10}>10</option>
                 <option value={30}>30</option>
                 <option value={50}>50</option>
               </select>
-              <div style={{ flex: 1 }} />
-              <select value={taskFilter} onChange={(e) => setTaskFilter(e.target.value)} style={{ ...selStyle, width: 140 }}>
+
+              <div className="flex-1" />
+
+              <select value={taskFilter} onChange={(e) => setTaskFilter(e.target.value)} className={`${selectCls} w-36`}>
                 <option value="all">All Tasks</option>
                 <option value="done">Completed</option>
                 <option value="pending">Pending</option>
                 <option value="none">No Task</option>
               </select>
-              <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} style={{ ...selStyle, width: 140 }}>
+
+              <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} className={`${selectCls} w-36`}>
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
               </select>
-              <div style={{ position: "relative" }}>
-                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="#94a3b8" strokeWidth={2} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }}>
+
+              <div className="relative">
+                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="#94a3b8" strokeWidth={2}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
                 </svg>
-                <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search session…"
-                  style={{ ...iBase, width: 180, paddingLeft: 30, fontSize: 13 }} />
+                <input
+                  value={search} onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search session…"
+                  className="w-44 text-sm rounded-lg pl-9 pr-3 py-2 border border-slate-200 bg-white text-slate-800 outline-none focus:border-[#0098cc] focus:ring-2 focus:ring-[#0098cc]/10 transition-colors"
+                />
               </div>
             </div>
           </div>
 
-          {/* States */}
+          {/* Loading */}
           {isLoading && (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "56px 0", gap: 10 }}>
-              <Loader2 size={24} color="#94a3b8" style={{ animation: "ltm-spin .8s linear infinite" }} />
-              <p style={{ fontSize: 13, color: "#94a3b8", fontFamily: ff }}>Loading sessions…</p>
-            </div>
-          )}
-          {isError && (
-            <div style={{ display: "flex", alignItems: "center", gap: 10, margin: 20, padding: "12px 14px", background: "#fef2f2", border: "1px solid #fca5a5", borderRadius: 8 }}>
-              <AlertCircle size={14} color="#ef4444" />
-              <p style={{ fontSize: 13, color: "#ef4444", margin: 0, fontFamily: ff }}>Failed to load sessions. Please refresh.</p>
-            </div>
-          )}
-          {!isLoading && !isError && paginated.length === 0 && (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "56px 0", gap: 8 }}>
-              <Layers size={26} color="#e2e8f0" />
-              <p style={{ fontSize: 13, color: "#94a3b8", fontFamily: ff }}>No sessions found.</p>
+            <div className="flex flex-col items-center py-16 gap-3">
+              <Loader2 size={24} className="text-slate-300 animate-spin" />
+              <p className="text-sm text-slate-400">Loading sessions…</p>
             </div>
           )}
 
-          {/* Desktop Table */}
+          {/* Error */}
+          {isError && (
+            <div className="flex items-center gap-2.5 m-5 px-4 py-3 bg-red-50 border border-red-200 rounded-lg">
+              <AlertCircle size={14} className="text-red-500" />
+              <p className="text-sm text-red-500 m-0">Failed to load sessions. Please refresh.</p>
+            </div>
+          )}
+
+          {/* Empty */}
+          {!isLoading && !isError && paginated.length === 0 && (
+            <div className="flex flex-col items-center py-16 gap-2">
+              <Layers size={26} className="text-slate-200" />
+              <p className="text-sm text-slate-400">No sessions found.</p>
+            </div>
+          )}
+
+          {/* Desktop table */}
           {!isLoading && !isError && paginated.length > 0 && (
-            <div className="ltm-show-desktop" style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse", fontFamily: ff }}>
+            <div className="hidden md:block overflow-x-auto">
+              <table className="w-full border-collapse">
                 <thead>
                   <tr>
                     {["S.No", "Session", "Date", "Description", "Tasks Given", "Task Status", "Rating", "Feedback"].map((h) => (
-                      <th key={h} style={th}>{h}</th>
+                      <th key={h}
+                        className="px-4 py-3 text-[11px] font-bold text-slate-500 text-left whitespace-nowrap tracking-wider uppercase bg-slate-50 border-b border-slate-200">
+                        {h}
+                      </th>
                     ))}
                   </tr>
                 </thead>
@@ -468,41 +1127,49 @@ export default function Ltmupcommingsessions() {
                     const taskSubmitted = !!session.task_submission;
                     const hasTask = !!session.tasks_given;
                     return (
-                      <tr key={session._id} className="ltm-tr" style={{ borderBottom: "1px solid #f1f5f9", cursor: "pointer" }} onClick={() => setEditSession(session)}>
-                        <td style={{ ...td, color: "#94a3b8" }}>{(currentPage - 1) * perPage + i + 1}</td>
-                        <td style={td}>
-                          <span style={{ fontWeight: 600, color: "#1e293b" }}>{session.session_title || `Session ${session.session_number}`}</span>
+                      <tr
+                        key={session._id}
+                        onClick={() => setEditSession(session)}
+                        className="border-b border-slate-100 cursor-pointer hover:bg-slate-50 transition-colors"
+                      >
+                        <td className="px-4 py-3 text-sm text-slate-400">
+                          {(currentPage - 1) * perPage + i + 1}
                         </td>
-                        <td style={{ ...td, whiteSpace: "nowrap" }}>{fmtDate(session.session_date)}</td>
-                        <td style={{ ...td, maxWidth: 180 }}>
-                          <p style={{ margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 160, color: session.meeting_description ? "#475569" : "#cbd5e1" }}>
-                            {session.meeting_description || "—"}
+                        <td className="px-4 py-3 text-sm font-semibold text-[#0098cc]">
+                          {session.session_title || `Session ${session.session_number}`}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-slate-600 whitespace-nowrap">
+                          {fmtDate(session.session_date)}
+                        </td>
+                        <td className="px-4 py-3 text-sm max-w-[180px]">
+                          <p className="m-0 overflow-hidden text-ellipsis whitespace-nowrap max-w-[160px] text-slate-500">
+                            {session.meeting_description || <span className="text-slate-300">—</span>}
                           </p>
                         </td>
-                        <td style={{ ...td, maxWidth: 160 }}>
-                          <p style={{ margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: 140, color: session.tasks_given ? "#475569" : "#cbd5e1" }}>
-                            {session.tasks_given || "—"}
+                        <td className="px-4 py-3 text-sm max-w-[160px]">
+                          <p className="m-0 overflow-hidden text-ellipsis whitespace-nowrap max-w-[140px] text-slate-500">
+                            {session.tasks_given || <span className="text-slate-300">—</span>}
                           </p>
                         </td>
-                        <td style={td}>
+                        <td className="px-4 py-3 text-sm">
                           {hasTask ? (
-                            <span style={{
-                              display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 600,
-                              color: taskSubmitted ? "#059669" : "#64748b",
-                              background: taskSubmitted ? "#f0fdf4" : "#f8fafc",
-                              border: `1px solid ${taskSubmitted ? "#bbf7d0" : "#e2e8f0"}`,
-                              borderRadius: 99, padding: "3px 10px", whiteSpace: "nowrap",
-                            }}>
+                            <span className={`inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-2.5 py-1 whitespace-nowrap border
+                              ${taskSubmitted
+                                ? "text-emerald-700 bg-emerald-50 border-emerald-200"
+                                : "text-slate-500 bg-slate-50 border-slate-200"
+                              }`}>
                               {taskSubmitted ? <><CheckCircle2 size={11} />Done</> : <><Circle size={11} />Pending</>}
                             </span>
-                          ) : <span style={{ color: "#cbd5e1" }}>—</span>}
+                          ) : <span className="text-slate-300">—</span>}
                         </td>
-                        <td style={td}>
-                          {session.mentee_rating > 0 ? <StarDisplay value={session.mentee_rating} /> : <span style={{ color: "#cbd5e1" }}>—</span>}
+                        <td className="px-4 py-3 text-sm">
+                          {session.mentee_rating > 0
+                            ? <StarDisplay value={session.mentee_rating} />
+                            : <span className="text-slate-300">—</span>}
                         </td>
-                        <td style={{ ...td, maxWidth: 180 }}>
-                          <p style={{ margin: 0, overflow: "hidden", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", maxWidth: 160, color: session.mentee_feedback ? "#475569" : "#cbd5e1" }}>
-                            {session.mentee_feedback || "—"}
+                        <td className="px-4 py-3 text-sm max-w-[180px]">
+                          <p className="m-0 overflow-hidden line-clamp-2 max-w-[160px] text-slate-500">
+                            {session.mentee_feedback || <span className="text-slate-300">—</span>}
                           </p>
                         </td>
                       </tr>
@@ -512,28 +1179,47 @@ export default function Ltmupcommingsessions() {
               </table>
 
               {/* Pagination */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 20px", borderTop: "1px solid #f1f5f9", flexWrap: "wrap", gap: 10 }}>
-                <span style={{ fontSize: 13, color: "#94a3b8", fontFamily: ff }}>
+              <div className="flex items-center justify-between px-5 py-3 border-t border-slate-100 flex-wrap gap-3">
+                <span className="text-sm text-slate-400">
                   Showing {(currentPage - 1) * perPage + 1}–{Math.min(currentPage * perPage, displayed.length)} of {displayed.length}
                 </span>
-                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <button onClick={() => setCurrentPage((p) => Math.max(1, p - 1))} disabled={currentPage === 1}
-                    style={{ padding: "6px 14px", borderRadius: 7, fontSize: 13, fontWeight: 500, background: "#fff", color: currentPage === 1 ? "#cbd5e1" : "#475569", border: `1px solid ${currentPage === 1 ? "#f1f5f9" : "#e2e8f0"}`, cursor: currentPage === 1 ? "not-allowed" : "pointer", fontFamily: ff }}>
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="px-3.5 py-1.5 rounded-lg text-sm font-medium bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  >
                     ← Prev
                   </button>
                   {Array.from({ length: totalPages }, (_, i) => i + 1)
                     .filter((p) => p === 1 || p === totalPages || Math.abs(p - currentPage) <= 1)
-                    .reduce((acc, p, idx, arr) => { if (idx > 0 && p - arr[idx - 1] > 1) acc.push("..."); acc.push(p); return acc; }, [])
-                    .map((p, idx) => p === "..." ? (
-                      <span key={`e-${idx}`} style={{ fontSize: 13, color: "#94a3b8", padding: "0 4px" }}>…</span>
-                    ) : (
-                      <button key={p} onClick={() => setCurrentPage(p)}
-                        style={{ width: 32, height: 32, borderRadius: 7, fontSize: 13, fontWeight: 600, background: currentPage === p ? "#0f172a" : "#fff", color: currentPage === p ? "#fff" : "#64748b", border: `1px solid ${currentPage === p ? "#0f172a" : "#e2e8f0"}`, cursor: "pointer", fontFamily: ff }}>
-                        {p}
-                      </button>
-                    ))}
-                  <button onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))} disabled={currentPage === totalPages}
-                    style={{ padding: "6px 14px", borderRadius: 7, fontSize: 13, fontWeight: 500, background: "#fff", color: currentPage === totalPages ? "#cbd5e1" : "#475569", border: `1px solid ${currentPage === totalPages ? "#f1f5f9" : "#e2e8f0"}`, cursor: currentPage === totalPages ? "not-allowed" : "pointer", fontFamily: ff }}>
+                    .reduce((acc, p, idx, arr) => {
+                      if (idx > 0 && p - arr[idx - 1] > 1) acc.push("...");
+                      acc.push(p);
+                      return acc;
+                    }, [])
+                    .map((p, idx) =>
+                      p === "..." ? (
+                        <span key={`e-${idx}`} className="text-sm text-slate-400 px-1">…</span>
+                      ) : (
+                        <button
+                          key={p}
+                          onClick={() => setCurrentPage(p)}
+                          className={`w-8 h-8 rounded-lg text-sm font-semibold border transition-colors cursor-pointer
+                            ${currentPage === p
+                              ? "bg-[#1a1a2e] text-white border-[#1a1a2e]"
+                              : "bg-white text-slate-600 border-slate-200 hover:bg-slate-50"
+                            }`}
+                        >
+                          {p}
+                        </button>
+                      )
+                    )}
+                  <button
+                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="px-3.5 py-1.5 rounded-lg text-sm font-medium bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  >
                     Next →
                   </button>
                 </div>
@@ -541,20 +1227,54 @@ export default function Ltmupcommingsessions() {
             </div>
           )}
 
-          {/* Mobile Cards */}
+          {/* Mobile cards */}
           {!isLoading && !isError && paginated.length > 0 && (
-            <div className="ltm-show-mobile" style={{ flexDirection: "column", gap: 10, padding: "14px" }}>
+            <div className="flex md:hidden flex-col gap-3 p-4">
               {paginated.map((session) => (
                 <MobileCard key={session._id} session={session} onEdit={setEditSession} />
               ))}
+              {/* Mobile pagination */}
+              <div className="flex items-center justify-between pt-2">
+                <button
+                  onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 rounded-lg text-sm font-medium bg-[#1a1a2e] text-white hover:bg-[#16213e] disabled:opacity-40 disabled:cursor-not-allowed border-none cursor-pointer"
+                >
+                  ← Prev
+                </button>
+                <span className="text-xs text-slate-400">{currentPage} / {totalPages}</span>
+                <button
+                  onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-4 py-2 rounded-lg text-sm font-medium bg-[#1a1a2e] text-white hover:bg-[#16213e] disabled:opacity-40 disabled:cursor-not-allowed border-none cursor-pointer"
+                >
+                  Next →
+                </button>
+              </div>
             </div>
           )}
         </div>
       </div>
 
-      {editSession && <SessionModal session={editSession} onClose={() => setEditSession(null)} onSave={handleSave} onToast={showToast} />}
+      {editSession && (
+        <SessionModal
+          session={editSession}
+          onClose={() => setEditSession(null)}
+          onSave={handleSave}
+          onToast={showToast}
+        />
+      )}
       <Toast toast={toast} />
     </div>
   );
 }
+
+
+
+
+
+
+
+
+
 

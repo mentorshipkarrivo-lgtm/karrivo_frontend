@@ -1,22 +1,32 @@
 
 
+
 import { useState, useEffect, useCallback } from "react";
 import {
   useGetMyPricingQuery,
   useSaveOrUpdatePricingMutation,
-  useGetSubscribersByMentorQuery,
   useGetCommissionTiersQuery,
+
+  useGetAllCouponsQuery,
+  useDeleteCouponMutation,
+  useUpdateCouponMutation,
+  useCreateCouponMutation
 } from "./Mentorpricingapislice";
 
-const PRICE_OPTIONS = [
-  2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000, 22500, 25000,
-  27500, 30000, 32500, 35000, 37500, 40000, 42500, 45000, 47500, 50000,
-];
-
-const TIER_LABELS = {
-  "1_to_5": "1–5 subscribers",
-  "6_to_20": "6–20 subscribers",
-  "21_plus": "21+ subscribers",
+// ─── Static config ────────────────────────────────────────────────────────────
+const PRICE_OPTIONS = {
+  one_month: {
+    experienced: [10000, 12500, 15000, 17500, 20000, 22500, 25000, 27500, 30000, 32500, 35000, 37500, 40000],
+    freshers: [7500, 10000, 12500, 15000, 17500, 20000, 22500, 25000, 27500, 30000, 32500, 35000],
+  },
+  three_months: {
+    experienced: [7500, 10000, 12500, 15000, 17500, 20000, 22500, 25000, 27500, 30000, 32500, 35000],
+    freshers: [5000, 7500, 10000, 12500],
+  },
+  six_months: {
+    experienced: [5000, 7500, 10000, 12500],
+    freshers: [2500, 5000, 7500, 10000],
+  },
 };
 
 const PLANS = [
@@ -31,519 +41,1537 @@ const EMPTY_PLANS = {
   six_months: { experienced: "", freshers: "" },
 };
 
+const EMPTY_BREAKDOWNS = {
+  one_month: { experienced: null, freshers: null },
+  three_months: { experienced: null, freshers: null },
+  six_months: { experienced: null, freshers: null },
+};
+
+// Map tier_name → human-readable label and subscriber range
+const TIER_META = {
+  "1_to_5": { label: "Starter", range: "1 – 5 subscribers", color: "blue" },
+  "6_to_20": { label: "Growing", range: "6 – 20 subscribers", color: "violet" },
+  "21_plus": { label: "Established", range: "21+ subscribers", color: "green" },
+};
+
+// Resolve tier name from subscriber count (mirrors backend logic)
+const resolveTierName = (count) => {
+  if (count <= 5) return "1_to_5";
+  if (count <= 20) return "6_to_20";
+  return "21_plus";
+};
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
 const fmtINR = (v) =>
   v != null && v !== ""
     ? new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(v)
     : "—";
 
-const resolveTier = (count, tiers) => {
-  if (!tiers?.length) return null;
-  const n = Number(count) || 0;
-  const name = n <= 5 ? "1_to_5" : n <= 20 ? "6_to_20" : "21_plus";
-  return tiers.find((t) => t.tier_name === name) || null;
+const fmtDate = (d) => {
+  if (!d) return null;
+  return new Intl.DateTimeFormat("en-IN", {
+    day: "2-digit", month: "short", year: "numeric",
+    hour: "2-digit", minute: "2-digit", hour12: true,
+  }).format(new Date(d));
 };
 
-// SVG icons
-const Icon = {
-  Check: () => (
-    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-    </svg>
-  ),
-  Close: () => (
-    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-    </svg>
-  ),
-  Users: () => (
-    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-    </svg>
-  ),
-  Warn: () => (
-    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-    </svg>
-  ),
-  Info: () => (
-    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z" />
-    </svg>
-  ),
-  Chevron: () => (
-    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-    </svg>
-  ),
+// ─── Tier Banner ──────────────────────────────────────────────────────────────
+/**
+ * Shows the mentor's current commission tier, subscriber count, and
+ * the commission % that applies per plan duration — all from API data.
+ *
+ * tierDoc  : the matching object from tiersData.data  (e.g. { tier_name, commission: { one_month, three_months, six_months } })
+ * subCount : subscriberCountAtSave from the pricing document
+ * isEditing: hides the banner while the form is in edit mode (avoids confusion)
+ */
+const TierBanner = ({ tierDoc, subCount, isEditing }) => {
+  if (!tierDoc || isEditing) return null;
+
+  const meta = TIER_META[tierDoc.tier_name] || { label: tierDoc.tier_name, range: "", color: "gray" };
+
+  const colorMap = {
+    blue: { bg: "bg-blue-50", border: "border-blue-200", text: "text-blue-700", badge: "bg-blue-100 text-blue-700", dot: "bg-blue-500" },
+    violet: { bg: "bg-violet-50", border: "border-violet-200", text: "text-violet-700", badge: "bg-violet-100 text-violet-700", dot: "bg-violet-500" },
+    green: { bg: "bg-emerald-50", border: "border-emerald-200", text: "text-emerald-700", badge: "bg-emerald-100 text-emerald-700", dot: "bg-emerald-500" },
+    gray: { bg: "bg-gray-50", border: "border-gray-200", text: "text-gray-700", badge: "bg-gray-100 text-gray-700", dot: "bg-gray-400" },
+  };
+  const c = colorMap[meta.color];
+
+  const rates = [
+    { label: "1 Month", pct: tierDoc.commission?.one_month },
+    { label: "3 Months", pct: tierDoc.commission?.three_months },
+    { label: "6 Months", pct: tierDoc.commission?.six_months },
+  ];
+
+  return (
+    <div className={`rounded-xl border ${c.border} ${c.bg} px-4 py-3 mb-5`}>
+      {/* Top row */}
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <div className="flex items-center gap-2">
+          <span className={`w-2 h-2 rounded-full ${c.dot} shrink-0`} />
+          <p className={`text-sm font-bold ${c.text}`}>
+            Commission Tier: {meta.label}
+          </p>
+          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${c.badge}`}>
+            {meta.range}
+          </span>
+        </div>
+        <p className="text-[11px] text-gray-400">
+          {subCount === 0
+            ? "No active subscribers yet"
+            : `${subCount} active subscriber${subCount !== 1 ? "s" : ""}`}
+        </p>
+      </div>
+
+      {/* Commission rates per plan */}
+      <div className="flex items-center gap-3 mt-2.5 flex-wrap">
+        <p className="text-[11px] text-gray-500 font-medium shrink-0">Platform commission:</p>
+        {rates.map(({ label, pct }) => (
+          <span key={label} className="flex items-center gap-1 text-[11px] text-gray-600 bg-white border border-gray-200 rounded-full px-2.5 py-0.5">
+            <span className="font-semibold text-gray-800">{pct}%</span>
+            <span className="text-gray-400">{label}</span>
+          </span>
+        ))}
+        <p className="text-[10px] text-gray-400 ml-auto">
+          + 9% CGST + 9% SGST on total amount
+        </p>
+      </div>
+    </div>
+  );
 };
 
+// // ─── Coupon Modal ─────────────────────────────────────────────────────────────
+// const CouponModal = ({ onClose }) => {
+//   const [mentee,     setMentee]     = useState("All Mentees");
+//   const [code,       setCode]       = useState("");
+//   const [discount,   setDiscount]   = useState(10);
+//   const [durations,  setDurations]  = useState({ one: true, three: true, six: true });
+//   const [expiry,     setExpiry]     = useState(false);
+//   const [expiryDate, setExpiryDate] = useState("");
+
+//   const toggleDuration = (k) => setDurations((p) => ({ ...p, [k]: !p[k] }));
+
+//   return (
+//     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={onClose}>
+//       <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+//         <div className="px-6 pt-6 pb-4">
+//           <h2 className="text-gray-900 text-lg font-bold">Create a New Coupon Code</h2>
+//         </div>
+//         <div className="px-6 pb-6 flex flex-col gap-4">
+
+//           <div className="flex flex-col gap-1.5">
+//             <label className="text-gray-700 text-sm">Select Mentee</label>
+//             <div className="relative">
+//               <select value={mentee} onChange={(e) => setMentee(e.target.value)}
+//                 className="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-800 appearance-none bg-white outline-none focus:border-gray-400">
+//                 <option>All Mentees</option>
+//                 <option>Specific Mentee</option>
+//               </select>
+//               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">▾</span>
+//             </div>
+//           </div>
+
+//           <div className="flex flex-col gap-1.5">
+//             <label className="text-gray-700 text-sm">Coupon Code</label>
+//             <input type="text" placeholder="eg: ROHAN30" value={code}
+//               onChange={(e) => setCode(e.target.value.toUpperCase())}
+//               className="border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-gray-400 placeholder:text-gray-300" />
+//           </div>
+
+//           <div className="flex flex-col gap-1.5">
+//             <label className="text-gray-700 text-sm">Discount Value in %</label>
+//             <input type="number" min={1} max={100} value={discount}
+//               onChange={(e) => setDiscount(e.target.value)}
+//               className="border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-gray-400" />
+//           </div>
+
+//           <div className="flex flex-col gap-2">
+//             <label className="text-gray-700 text-sm">Applies For LTM With Duration Of:</label>
+//             <div className="flex items-center gap-5">
+//               {[
+//                 { k: "one",   label: "1 Month"  },
+//                 { k: "three", label: "3 Months" },
+//                 { k: "six",   label: "6 Months" },
+//               ].map(({ k, label }) => (
+//                 <label key={k} className="flex items-center gap-1.5 cursor-pointer select-none">
+//                   <input type="checkbox" checked={durations[k]} onChange={() => toggleDuration(k)}
+//                     className="w-4 h-4 accent-blue-600 cursor-pointer" />
+//                   <span className="text-sm text-gray-700">{label}</span>
+//                 </label>
+//               ))}
+//             </div>
+//           </div>
+
+//           <div className="flex items-center justify-between">
+//             <label className="text-gray-700 text-sm">Set Expiry Date</label>
+//             <button onClick={() => setExpiry(!expiry)}
+//               className={`relative w-11 h-6 rounded-full transition-colors ${expiry ? "bg-blue-600" : "bg-gray-300"}`}>
+//               <span className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${expiry ? "translate-x-5" : ""}`} />
+//             </button>
+//           </div>
+//           {expiry && (
+//             <input type="date" value={expiryDate} onChange={(e) => setExpiryDate(e.target.value)}
+//               className="border border-gray-300 rounded-lg px-3 py-2.5 text-sm text-gray-800 outline-none focus:border-gray-400" />
+//           )}
+
+//           <div className="flex gap-3 pt-1">
+//             <button onClick={onClose}
+//               className="flex-1 border border-gray-300 text-red-500 font-semibold text-sm py-3 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer">
+//               Cancel
+//             </button>
+//             <button onClick={() => { alert(`Coupon "${code}" created!`); onClose(); }}
+//               className="flex-1 bg-[#1a1a2e] text-white font-semibold text-sm py-3 rounded-xl hover:bg-[#16213e] transition-colors cursor-pointer">
+//               Create Code
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// ─── Details Modal ────────────────────────────────────────────────────────────
+
+
+
+
+// ─── Coupon Modal ─────────────────────────────────────────────────────────────
+// ─── Coupon Modal ─────────────────────────────────────────────────────────────
+
+// ─── Coupon Modal ─────────────────────────────────────────────────────────────
+
+// ─── Coupon Modal ─────────────────────────────────────────────────────────────
+// const CouponModal = ({ onClose, mentorId }) => {
+//   const [createCoupon, { isLoading }] = useCreateCouponMutation();
+//   const [updateCoupon] = useUpdateCouponMutation();
+//   const [deleteCoupon] = useDeleteCouponMutation();
+//   console.log(mentorId, "mentorId")
+
+//   const {
+//     data: couponData,
+//     refetch,
+//   } = useGetAllCouponsQuery();
+
+//   const [code, setCode] = useState("");
+//   const [discount, setDiscount] = useState(10);
+
+//   const [durations, setDurations] = useState({
+//     one: false,
+//     three: false,
+//     six: false,
+//   });
+
+//   const [startDate, setStartDate] = useState("");
+//   const [expiry, setExpiry] = useState(false);
+//   const [expiryDate, setExpiryDate] = useState("");
+
+//   const [showCoupons, setShowCoupons] = useState(false);
+//   const [editingId, setEditingId] = useState(null);
+
+//   // selected duration array
+//   const getSelectedDuration = () => {
+//     const selected = [];
+
+//     if (durations.one) selected.push(1);
+//     if (durations.three) selected.push(3);
+//     if (durations.six) selected.push(6);
+
+//     return selected;
+//   };
+
+//   // reset form
+//   const resetForm = () => {
+//     setCode("");
+//     setDiscount(10);
+//     setStartDate("");
+//     setExpiry(false);
+//     setExpiryDate("");
+//     setEditingId(null);
+
+//     setDurations({
+//       one: false,
+//       three: false,
+//       six: false,
+//     });
+//   };
+
+//   // create + update
+//   const handleSubmit = async () => {
+//     try {
+//       const totalCoupons = couponData?.data?.length || 0;
+
+//       if (!editingId && totalCoupons >= 3) {
+//         alert("You can only create maximum 3 coupons");
+//         return;
+//       }
+
+//       if (
+//         !code ||
+//         !discount ||
+//         !startDate ||
+//         getSelectedDuration().length === 0 ||
+//         (expiry && !expiryDate)
+//       ) {
+//         alert("Please fill all required fields");
+//         return;
+//       }
+
+//       const payload = {
+//         mentorId,
+//         couponCode: code,
+//         discountValue: Number(discount),
+//         appliesForDuration: getSelectedDuration(), // [1,3,6]
+//         startDate, // REQUIRED
+//         expiryDate,
+//       };
+//       if (editingId) {
+//         await updateCoupon({
+//           couponId: editingId,
+//           ...payload,
+//         }).unwrap();
+
+//         alert("Coupon updated successfully");
+//       } else {
+//         await createCoupon(payload).unwrap();
+//         alert("Coupon created successfully");
+//       }
+
+//       resetForm();
+//       refetch();
+//     } catch (error) {
+//       alert(error?.data?.message || "Something went wrong");
+//     }
+//   };
+
+//   // edit
+//   const handleEdit = (coupon) => {
+//     setEditingId(coupon._id);
+//     setCode(coupon.couponCode);
+//     setDiscount(coupon.discountValue);
+//     setStartDate(coupon.startDate?.split("T")[0]);
+
+//     if (coupon.expiryDate) {
+//       setExpiry(true);
+//       setExpiryDate(coupon.expiryDate.split("T")[0]);
+//     } else {
+//       setExpiry(false);
+//       setExpiryDate("");
+//     }
+
+//     setDurations({
+//       one: coupon.appliesForDuration?.includes(1) || false,
+//       three: coupon.appliesForDuration?.includes(3) || false,
+//       six: coupon.appliesForDuration?.includes(6) || false,
+//     });
+//   };
+
+//   // delete
+//   const handleDelete = async (couponId) => {
+//     try {
+//       const confirmDelete = window.confirm(
+//         "Are you sure you want to delete this coupon?"
+//       );
+
+//       if (!confirmDelete) return;
+
+//       await deleteCoupon(couponId).unwrap();
+
+//       alert("Coupon deleted successfully");
+
+//       if (editingId === couponId) {
+//         resetForm();
+//       }
+
+//       refetch();
+//     } catch (error) {
+//       alert(error?.data?.message || "Delete failed");
+//     }
+//   };
+
+//   return (
+//     <div
+//       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+//       onClick={onClose}
+//     >
+//       <div
+//         className="w-full max-w-sm bg-white rounded-xl shadow-xl overflow-hidden"
+//         onClick={(e) => e.stopPropagation()}
+//       >
+//         <div className="px-5 pt-5 pb-3">
+//           <h2 className="text-gray-900 text-base font-bold">
+//             {editingId
+//               ? "Update Coupon Code"
+//               : "Create a New Coupon Code"}
+//           </h2>
+//         </div>
+
+//         <div className="px-5 pb-5 flex flex-col gap-3">
+
+//           {/* Coupon Code */}
+//           <div className="flex flex-col gap-1">
+//             <label className="text-sm text-gray-700">
+//               Coupon Code
+//             </label>
+
+//             <input
+//               type="text"
+//               placeholder="eg: ROHAN30"
+//               value={code}
+//               onChange={(e) =>
+//                 setCode(e.target.value.toUpperCase())
+//               }
+//               className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+//             />
+//           </div>
+
+//           {/* Discount */}
+//           <div className="flex flex-col gap-1">
+//             <label className="text-sm text-gray-700">
+//               Discount Value in %
+//             </label>
+
+//             <input
+//               type="number"
+//               min={1}
+//               max={100}
+//               value={discount}
+//               onChange={(e) => setDiscount(e.target.value)}
+//               className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+//             />
+//           </div>
+
+//           {/* Duration */}
+//           <div className="flex flex-col gap-2">
+//             <label className="text-sm text-gray-700">
+//               Applies For LTM With Duration Of:
+//             </label>
+
+//             <div className="flex items-center gap-4 flex-wrap">
+//               {[
+//                 { key: "one", label: "1 Month" },
+//                 { key: "three", label: "3 Months" },
+//                 { key: "six", label: "6 Months" },
+//               ].map(({ key, label }) => (
+//                 <label
+//                   key={key}
+//                   className="flex items-center gap-1.5 cursor-pointer"
+//                 >
+//                   <input
+//                     type="checkbox"
+//                     checked={durations[key]}
+//                     onChange={() =>
+//                       setDurations((prev) => ({
+//                         ...prev,
+//                         [key]: !prev[key],
+//                       }))
+//                     }
+//                     className="w-4 h-4 accent-blue-600"
+//                   />
+
+//                   <span className="text-sm text-gray-700">
+//                     {label}
+//                   </span>
+//                 </label>
+//               ))}
+//             </div>
+//           </div>
+
+//           {/* Start Date */}
+//           <div className="flex flex-col gap-1">
+//             <label className="text-sm text-gray-700">
+//               Start Date
+//             </label>
+
+//             <input
+//               type="date"
+//               value={startDate}
+//               onChange={(e) => setStartDate(e.target.value)}
+//               className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+//             />
+//           </div>
+
+//           {/* Expiry Toggle */}
+//           <div className="flex items-center justify-between">
+//             <label className="text-sm text-gray-700">
+//               Set Expiry Date
+//             </label>
+
+//             <button
+//               onClick={() => setExpiry(!expiry)}
+//               className={`relative w-10 h-5 rounded-full ${expiry ? "bg-blue-600" : "bg-gray-300"
+//                 }`}
+//             >
+//               <span
+//                 className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full transition-transform ${expiry ? "translate-x-5" : ""
+//                   }`}
+//               />
+//             </button>
+//           </div>
+
+//           {/* Expiry Date */}
+//           {expiry && (
+//             <input
+//               type="date"
+//               value={expiryDate}
+//               onChange={(e) => setExpiryDate(e.target.value)}
+//               className="border border-gray-300 rounded-md px-3 py-2 text-sm"
+//             />
+//           )}
+
+//           {/* Buttons */}
+//           <div className="flex gap-2 pt-1">
+//             <button
+//               onClick={onClose}
+//               className="flex-1 border border-gray-300 text-red-500 font-semibold text-sm py-2.5 rounded-lg"
+//             >
+//               Cancel
+//             </button>
+
+//             <button
+//               onClick={handleSubmit}
+//               disabled={isLoading}
+//               className="flex-1 bg-[#1a1a2e] text-white font-semibold text-sm py-2.5 rounded-lg"
+//             >
+//               {editingId
+//                 ? "Update Code"
+//                 : isLoading
+//                   ? "Saving..."
+//                   : "Create Code"}
+//             </button>
+//           </div>
+
+//           {/* View Coupons */}
+//           <button
+//             onClick={() => setShowCoupons(!showCoupons)}
+//             className="w-full border border-[#1a1a2e] text-[#1a1a2e] font-semibold text-sm py-2.5 rounded-lg"
+//           >
+//             {showCoupons
+//               ? "Hide Created Coupons"
+//               : "View Coupons Created"}
+//           </button>
+
+//           {/* Coupon List */}
+//           {showCoupons && (
+//             <div className="border rounded-lg p-3 max-h-64 overflow-y-auto">
+//               {couponData?.data?.length > 0 ? (
+//                 couponData.data.map((coupon) => (
+//                   <div
+//                     key={coupon._id}
+//                     className="border-b py-3 last:border-none"
+//                   >
+//                     <p className="font-semibold text-sm">
+//                       {coupon.couponCode}
+//                     </p>
+
+//                     <p className="text-sm text-gray-600">
+//                       {coupon.discountValue}% OFF
+//                     </p>
+
+//                     <p className="text-sm text-gray-600">
+//                       Duration:{" "}
+//                       {coupon.appliesForDuration?.join(", ")} Months
+//                     </p>
+
+//                     <div className="flex gap-2 mt-2">
+//                       <button
+//                         onClick={() => handleEdit(coupon)}
+//                         className="px-3 py-1 rounded bg-blue-100 text-sm"
+//                       >
+//                         Edit
+//                       </button>
+
+//                       <button
+//                         onClick={() =>
+//                           handleDelete(coupon._id)
+//                         }
+//                         className="px-3 py-1 rounded bg-red-100 text-sm"
+//                       >
+//                         Delete
+//                       </button>
+//                     </div>
+//                   </div>
+//                 ))
+//               ) : (
+//                 <p className="text-sm text-gray-500">
+//                   No coupons created yet
+//                 </p>
+//               )}
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+
+
+const CouponModal = ({ onClose, mentorId }) => {
+  const [createCoupon, { isLoading }] = useCreateCouponMutation();
+  const [updateCoupon] = useUpdateCouponMutation();
+  const [deleteCoupon] = useDeleteCouponMutation();
+
+  const { data: couponData, refetch } = useGetAllCouponsQuery();
+
+  const [code, setCode] = useState("");
+  const [discount, setDiscount] = useState(10);
+  const [durations, setDurations] = useState({ one: false, three: false, six: false });
+  const [startDate, setStartDate] = useState("");
+  const [expiry, setExpiry] = useState(false);
+  const [expiryDate, setExpiryDate] = useState("");
+  const [showCoupons, setShowCoupons] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+
+  const getSelectedDuration = () => {
+    const selected = [];
+    if (durations.one) selected.push(1);
+    if (durations.three) selected.push(3);
+    if (durations.six) selected.push(6);
+    return selected;
+  };
+
+  const resetForm = () => {
+    setCode("");
+    setDiscount(10);
+    setStartDate("");
+    setExpiry(false);
+    setExpiryDate("");
+    setEditingId(null);
+    setDurations({ one: false, three: false, six: false });
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const totalCoupons = couponData?.data?.length || 0;
+
+      if (!editingId && totalCoupons >= 3) {
+        alert("You can only create a maximum of 3 coupons");
+        return;
+      }
+
+      if (
+        !code ||
+        !discount ||
+        !startDate ||
+        getSelectedDuration().length === 0 ||
+        (expiry && !expiryDate)
+      ) {
+        alert("Please fill all required fields");
+        return;
+      }
+
+      const payload = {
+        mentorId,
+        couponCode: code,
+        discountValue: Number(discount),
+        appliesForDuration: getSelectedDuration(),
+        startDate,
+        expiryDate: expiry ? expiryDate : undefined,
+      };
+
+      if (editingId) {
+        await updateCoupon({ couponId: editingId, ...payload }).unwrap();
+        alert("Coupon updated successfully");
+      } else {
+        await createCoupon(payload).unwrap();
+        alert("Coupon created successfully");
+      }
+
+      resetForm();
+      refetch();
+    } catch (error) {
+      alert(error?.data?.message || "Something went wrong");
+    }
+  };
+
+  const handleEdit = (coupon) => {
+    setEditingId(coupon._id);
+    setCode(coupon.couponCode);
+    setDiscount(coupon.discountValue);
+    setStartDate(coupon.startDate?.split("T")[0] || "");
+
+    if (coupon.expiryDate) {
+      setExpiry(true);
+      setExpiryDate(coupon.expiryDate.split("T")[0]);
+    } else {
+      setExpiry(false);
+      setExpiryDate("");
+    }
+
+    setDurations({
+      one: coupon.appliesForDuration?.includes(1) || false,
+      three: coupon.appliesForDuration?.includes(3) || false,
+      six: coupon.appliesForDuration?.includes(6) || false,
+    });
+
+    // On mobile, scroll the form panel into view
+    document.getElementById("coupon-form-top")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleDelete = async (couponId) => {
+    if (!window.confirm("Are you sure you want to delete this coupon?")) return;
+    try {
+      await deleteCoupon(couponId).unwrap();
+      alert("Coupon deleted successfully");
+      if (editingId === couponId) resetForm();
+      refetch();
+    } catch (error) {
+      alert(error?.data?.message || "Delete failed");
+    }
+  };
+
+  const coupons = couponData?.data || [];
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-3 sm:p-4"
+      onClick={onClose}
+    >
+      {/*
+        Modal wrapper:
+        - On mobile (< sm): single column, scrollable
+        - On sm+: side-by-side row when coupons panel is open
+        - max-h-[90vh] prevents overflow past viewport
+      */}
+      <div
+        className={[
+          "relative bg-white rounded-2xl shadow-2xl overflow-hidden",
+          "w-full flex",
+          "transition-all duration-300 ease-in-out",
+          showCoupons
+            ? "max-w-2xl flex-col sm:flex-row"
+            : "max-w-sm flex-col",
+          "max-h-[90vh]",
+        ].join(" ")}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* ── FORM PANEL ── */}
+        <div
+          id="coupon-form-top"
+          className={[
+            "flex flex-col gap-3 overflow-y-auto",
+            "p-5",
+            // When side panel is open on sm+, fix form width; otherwise full width
+            showCoupons ? "sm:w-72 sm:flex-shrink-0 sm:border-r sm:border-gray-100" : "w-full",
+          ].join(" ")}
+        >
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <h2 className="text-gray-900 text-[15px] font-semibold">
+              {editingId ? "Update coupon code" : "Create a new coupon code"}
+            </h2>
+            <button
+              onClick={onClose}
+              className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-md hover:bg-gray-100"
+              aria-label="Close"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Coupon Code */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+              Coupon code
+            </label>
+            <input
+              type="text"
+              placeholder="eg: ROHAN30"
+              value={code}
+              onChange={(e) => setCode(e.target.value.toUpperCase())}
+              className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1a1a2e]/20 focus:border-[#1a1a2e] transition-all"
+            />
+          </div>
+
+          {/* Discount */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+              Discount (%)
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                min={1}
+                max={100}
+                value={discount}
+                onChange={(e) => setDiscount(e.target.value)}
+                className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-[#1a1a2e]/20 focus:border-[#1a1a2e] transition-all pr-8"
+              />
+              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none">%</span>
+            </div>
+          </div>
+
+          {/* Duration checkboxes */}
+          <div className="flex flex-col gap-2">
+            <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+              Applies for duration
+            </label>
+            <div className="flex items-center gap-4 flex-wrap">
+              {[
+                { key: "one", label: "1 month" },
+                { key: "three", label: "3 months" },
+                { key: "six", label: "6 months" },
+              ].map(({ key, label }) => (
+                <label key={key} className="flex items-center gap-1.5 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={durations[key]}
+                    onChange={() => setDurations((prev) => ({ ...prev, [key]: !prev[key] }))}
+                    className="w-4 h-4 rounded accent-[#1a1a2e] cursor-pointer"
+                  />
+                  <span className="text-sm text-gray-700 group-hover:text-gray-900 transition-colors">
+                    {label}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Start Date */}
+          <div className="flex flex-col gap-1">
+            <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+              Start date
+            </label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1a1a2e]/20 focus:border-[#1a1a2e] transition-all"
+            />
+          </div>
+
+          {/* Expiry Toggle */}
+          <div className="flex items-center justify-between py-0.5">
+            <label className="text-sm text-gray-700">Set expiry date</label>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={expiry}
+              onClick={() => setExpiry(!expiry)}
+              className={[
+                "relative w-10 h-[22px] rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1a1a2e]/30",
+                expiry ? "bg-[#1a1a2e]" : "bg-gray-200",
+              ].join(" ")}
+            >
+              <span
+                className={[
+                  "absolute top-[3px] left-[3px] w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-200",
+                  expiry ? "translate-x-[18px]" : "translate-x-0",
+                ].join(" ")}
+              />
+            </button>
+          </div>
+
+          {/* Expiry Date — animated reveal */}
+          <div
+            className={[
+              "overflow-hidden transition-all duration-200",
+              expiry ? "max-h-20 opacity-100" : "max-h-0 opacity-0",
+            ].join(" ")}
+          >
+            <input
+              type="date"
+              value={expiryDate}
+              onChange={(e) => setExpiryDate(e.target.value)}
+              className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-[#1a1a2e]/20 focus:border-[#1a1a2e] transition-all"
+            />
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex gap-2 pt-1">
+            <button
+              type="button"
+              onClick={resetForm}
+              className="flex-1 border border-gray-200 text-red-500 font-medium text-sm py-2.5 rounded-xl hover:bg-red-50 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={isLoading}
+              className="flex-1 bg-[#1a1a2e] text-white font-medium text-sm py-2.5 rounded-xl hover:bg-[#2d2d4e] active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {editingId ? "Update code" : isLoading ? "Saving…" : "Create code"}
+            </button>
+          </div>
+
+          {/* View/hide toggle button */}
+          <button
+            type="button"
+            onClick={() => setShowCoupons(!showCoupons)}
+            className="w-full border border-[#1a1a2e] text-[#1a1a2e] font-medium text-sm py-2.5 rounded-xl hover:bg-[#1a1a2e]/5 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5"
+          >
+            <svg
+              className={`w-4 h-4 transition-transform duration-200 ${showCoupons ? "rotate-180" : ""}`}
+              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+            {showCoupons ? "Hide coupons" : `View coupons created${coupons.length ? ` (${coupons.length})` : ""}`}
+          </button>
+        </div>
+
+        {/* ── COUPON SIDE / BOTTOM PANEL ── */}
+        {showCoupons && (
+          <div className="flex flex-col overflow-hidden flex-1 sm:min-w-0">
+            {/* Sticky header inside the panel */}
+            <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-gray-50/80 flex-shrink-0">
+              <span className="text-sm font-semibold text-gray-800">Your coupons</span>
+              <span className="text-xs text-gray-400 bg-white border border-gray-200 rounded-full px-2.5 py-0.5">
+                {coupons.length} / 3
+              </span>
+            </div>
+
+            {/* Scrollable list */}
+            <div className="overflow-y-auto flex-1 px-4 py-3 flex flex-col gap-3">
+              {coupons.length > 0 ? (
+                coupons.map((coupon) => (
+                  <div
+                    key={coupon._id}
+                    className={[
+                      "rounded-xl border p-3.5 transition-all",
+                      editingId === coupon._id
+                        ? "border-[#1a1a2e] bg-[#1a1a2e]/[0.03] ring-2 ring-[#1a1a2e]/10"
+                        : "border-gray-200 bg-white hover:border-gray-300",
+                    ].join(" ")}
+                  >
+                    {/* Code + discount badge */}
+                    <div className="flex items-start justify-between gap-2 mb-2">
+                      <span className="font-mono font-semibold text-sm text-gray-900 tracking-widest">
+                        {coupon.couponCode}
+                      </span>
+                      <span className="bg-emerald-50 text-emerald-700 text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0">
+                        {coupon.discountValue}% off
+                      </span>
+                    </div>
+
+                    {/* Meta */}
+                    <div className="space-y-1 mb-3">
+                      <p className="text-xs text-gray-500 flex items-center gap-1">
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        {coupon.appliesForDuration?.join(", ")} month{coupon.appliesForDuration?.length > 1 ? "s" : ""}
+                      </p>
+                      {coupon.expiryDate ? (
+                        <p className="text-xs text-gray-500 flex items-center gap-1">
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          Expires {coupon.expiryDate.split("T")[0]}
+                        </p>
+                      ) : (
+                        <p className="text-xs text-gray-400">No expiry</p>
+                      )}
+                    </div>
+
+                    {/* Edit / Delete */}
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleEdit(coupon)}
+                        className="flex-1 text-xs font-medium py-1.5 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(coupon._id)}
+                        className="flex-1 text-xs font-medium py-1.5 rounded-lg border border-red-100 text-red-500 hover:bg-red-50 transition-colors"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center py-10 gap-2 text-center">
+                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                    <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 14l-4-4m0 0l4-4m-4 4h16m-4 4l4-4m0 0l-4-4" />
+                    </svg>
+                  </div>
+                  <p className="text-sm text-gray-400">No coupons created yet</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+
+/**
+ * Every number displayed here is read directly from the API `breakdown` object.
+ * There are zero calculations in this component.
+ *
+ * Props:
+ *   plan       – active plan key that was clicked ("one_month" | "three_months" | "six_months")
+ *   breakdowns – { one_month: { experienced: {...}, freshers: {...} }, three_months: {...}, six_months: {...} }
+ *   onClose    – close handler
+ */
+const DetailsModal = ({ plan, breakdowns, onClose }) => {
+  if (!plan) return null;
+
+  const p = PLANS.find((x) => x.key === plan);
+  const tabs = ["1 Month", "3 Months", "6 Months"];
+  const [activeTab, setActiveTab] = useState(p.label);
+
+  const activeKey =
+    activeTab === "1 Month" ? "one_month"
+      : activeTab === "3 Months" ? "three_months"
+        : "six_months";
+
+  const activePlan = PLANS.find((x) => x.key === activeKey);
+
+  // Read straight from stored breakdown — no math here
+  const bd = breakdowns[activeKey];
+  const exp = bd?.experienced;   // { totalPrice, platformFee, platformPct, cgst, sgst, totalDeducted, mentorReceive, perMonthReceive }
+  const fre = bd?.freshers;
+  const noData = !exp || !fre;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm" onClick={onClose}>
+      <div className="w-full max-w-lg bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+
+        {/* Header */}
+        <div className="px-5 pt-5 pb-3">
+          <p className="text-gray-900 text-sm font-bold">
+            Final Payout Breakdown — {activePlan.label} LTM
+          </p>
+          <p className="text-gray-400 text-xs mt-0.5">
+            All figures are calculated by the server based on your commission tier at the time of saving.
+          </p>
+        </div>
+
+        {/* Tabs */}
+        <div className="mx-5 flex rounded-xl border border-gray-200 overflow-hidden mb-4 bg-gray-50">
+          {tabs.map((t) => (
+            <button key={t} onClick={() => setActiveTab(t)}
+              className={`flex-1 text-xs font-semibold py-2 transition-colors cursor-pointer
+                ${activeTab === t
+                  ? "bg-white text-gray-900 shadow-sm rounded-xl"
+                  : "text-gray-400 hover:text-gray-600"}`}>
+              {t}
+            </button>
+          ))}
+        </div>
+
+        {/* Breakdown table */}
+        <div className="px-5 pb-5">
+          {noData ? (
+            <p className="text-center text-gray-400 text-xs py-8">
+              No breakdown data available for this plan.
+            </p>
+          ) : (
+            <table className="w-full">
+              <thead>
+                <tr>
+                  <td className="pb-3 w-[46%]" />
+                  <td className="pb-3 text-center">
+                    <span className="bg-pink-50 text-pink-500 text-xs font-semibold px-3 py-1 rounded-full">
+                      Experienced
+                    </span>
+                  </td>
+                  <td className="pb-3 text-center">
+                    <span className="bg-purple-50 text-purple-500 text-xs font-semibold px-3 py-1 rounded-full">
+                      Freshers
+                    </span>
+                  </td>
+                </tr>
+              </thead>
+              <tbody>
+
+                {/* ── Mentee pays ── */}
+                <tr className="border-t border-gray-100">
+                  <td className="py-2.5 text-gray-600 text-xs">
+                    Mentee pays ({activePlan.months}mo total):
+                  </td>
+                  <td className="py-2.5 text-center text-gray-800 text-xs font-semibold">
+                    ₹{fmtINR(exp.totalPrice)}
+                  </td>
+                  <td className="py-2.5 text-center text-gray-800 text-xs font-semibold">
+                    ₹{fmtINR(fre.totalPrice)}
+                  </td>
+                </tr>
+
+                {/* ── Platform fee ── */}
+                <tr className="border-t border-gray-100">
+                  <td className="py-2.5 text-gray-600 text-xs">
+                    Platform fee ({exp.platformPct}%):
+                  </td>
+                  <td className="py-2.5 text-center text-red-400 text-xs">
+                    − ₹{fmtINR(exp.platformFee)}
+                  </td>
+                  <td className="py-2.5 text-center text-red-400 text-xs">
+                    − ₹{fmtINR(fre.platformFee)}
+                  </td>
+                </tr>
+
+                {/* ── CGST ── */}
+                <tr className="border-t border-gray-100">
+                  <td className="py-2.5 text-gray-600 text-xs">CGST (9%):</td>
+                  <td className="py-2.5 text-center text-red-400 text-xs">
+                    − ₹{fmtINR(exp.cgst)}
+                  </td>
+                  <td className="py-2.5 text-center text-red-400 text-xs">
+                    − ₹{fmtINR(fre.cgst)}
+                  </td>
+                </tr>
+
+                {/* ── SGST ── */}
+                <tr className="border-t border-gray-100">
+                  <td className="py-2.5 text-gray-600 text-xs">SGST (9%):</td>
+                  <td className="py-2.5 text-center text-red-400 text-xs">
+                    − ₹{fmtINR(exp.sgst)}
+                  </td>
+                  <td className="py-2.5 text-center text-red-400 text-xs">
+                    − ₹{fmtINR(fre.sgst)}
+                  </td>
+                </tr>
+
+                {/* ── Total deducted sub-total ── */}
+                <tr className="border-t border-dashed border-gray-200 bg-gray-50/70">
+                  <td className="py-2 text-gray-400 text-[11px] italic pl-1">Total deducted:</td>
+                  <td className="py-2 text-center text-gray-500 text-[11px]">
+                    − ₹{fmtINR(exp.totalDeducted)}
+                  </td>
+                  <td className="py-2 text-center text-gray-500 text-[11px]">
+                    − ₹{fmtINR(fre.totalDeducted)}
+                  </td>
+                </tr>
+
+                {/* ── Final payout ── */}
+                <tr className="border-t-2 border-gray-200">
+                  <td className="py-3 text-gray-700 text-sm font-bold">You receive:</td>
+                  <td className="py-3 text-center">
+                    <p className="text-green-600 text-base font-bold">
+                      ₹{fmtINR(exp.mentorReceive)}
+                    </p>
+                    {activePlan.months > 1 && (
+                      <p className="text-green-400 text-[10px] mt-0.5">
+                        (₹{fmtINR(exp.perMonthReceive)}/mo)
+                      </p>
+                    )}
+                  </td>
+                  <td className="py-3 text-center">
+                    <p className="text-green-600 text-base font-bold">
+                      ₹{fmtINR(fre.mentorReceive)}
+                    </p>
+                    {activePlan.months > 1 && (
+                      <p className="text-green-400 text-[10px] mt-0.5">
+                        (₹{fmtINR(fre.perMonthReceive)}/mo)
+                      </p>
+                    )}
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        <div className="px-5 pb-5">
+          <button onClick={onClose}
+            className="w-full bg-[#1a1a2e] text-white font-semibold text-sm py-3 rounded-xl hover:bg-[#16213e] transition-colors cursor-pointer">
+            I Understood
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// ─── Pricing Not Set Empty State ──────────────────────────────────────────────
+const PricingNotSetState = ({ onStartSetup }) => (
+  <div className="w-full min-h-screen bg-white p-6 font-sans">
+    <div className="w-full max-w-3xl mx-auto">
+      <h1 className="text-gray-900 text-lg font-bold mb-8">My Pricing</h1>
+      <div className="space-y-6">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Set Your Pricing</h2>
+          <p className="text-gray-600 text-sm leading-relaxed">
+            You haven't set your pricing yet. Set up your rates for different mentoring plans to start earning.
+          </p>
+        </div>
+        <div>
+          <p className="text-gray-800 text-sm font-semibold mb-4">You'll be able to set pricing for:</p>
+          <ul className="space-y-4 text-sm text-gray-700">
+            <li><strong>1 Month Plan</strong> — Different rates for experienced mentors and freshers</li>
+            <li><strong>3 Months Plan</strong> — Offer discounted rates for longer commitments</li>
+            <li><strong>6 Months Plan</strong> — Best rates for long-term mentoring relationships</li>
+          </ul>
+        </div>
+        <p className="text-sm text-gray-700">
+          <strong>Tip:</strong> Freshers pricing should always be lower than experienced pricing.
+        </p>
+        <div className="pt-4">
+          <button onClick={onStartSetup}
+            className="bg-[#1a1a2e] text-white font-medium px-5 py-2 rounded-md hover:bg-[#16213e] transition text-sm">
+            Start Setting Pricing
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// ─── Main Component ───────────────────────────────────────────────────────────
 const MyPricing = () => {
-  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
-  const mentorId = userData?._id || null;
-
   const [plans, setPlans] = useState(EMPTY_PLANS);
-  const [fullPlansData, setFullPlansData] = useState(null);
+  const [breakdowns, setBreakdowns] = useState(EMPTY_BREAKDOWNS);
+  const [subCount, setSubCount] = useState(0);
+  const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
   const [modalPlan, setModalPlan] = useState(null);
-  const [saved, setSaved] = useState(false);
-  // per-field mode: { one_month_experienced: 'dropdown', ... }
-  const [modes, setModes] = useState({});
-  const [customVals, setCustomVals] = useState({});
-  const [fieldErrors, setFieldErrors] = useState({});
+  const [showCoupon, setShowCoupon] = useState(false);
+  const [isEditingNew, setIsEditingNew] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
 
-  const { data, isLoading, isError } = useGetMyPricingQuery(mentorId, { skip: !mentorId });
-  const [saveOrUpdate, { isLoading: saving }] = useSaveOrUpdatePricingMutation();
-  const { data: subscribersData } = useGetSubscribersByMentorQuery(mentorId, { skip: !mentorId });
-  const { data: tiersData, isLoading: tiersLoading } = useGetCommissionTiersQuery();
+  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
+  const mentorId = userData?._id;
 
-  const subscriberCount = subscribersData?.data?.length ?? subscribersData?.count ?? 0;
-  const tiers = tiersData?.data || [];
-  const activeTier = resolveTier(subscriberCount, tiers);
+  // ─── Queries ───────────────────────────────────────────────────────────────
+  const {
+    data: pricingData,
+    isLoading: pricingLoading,
+    error: pricingError,
+    refetch: refetchPricing,
+  } = useGetMyPricingQuery(mentorId, { skip: !mentorId });
 
+  const {
+    data: tiersData,
+    isLoading: tiersLoading,
+    error: tiersError,
+  } = useGetCommissionTiersQuery();
+
+  const [saveOrUpdatePricing, { isLoading: savingPricing }] = useSaveOrUpdatePricingMutation();
+
+  // ─── Derive current tier doc from tiersData + subCount ────────────────────
+  // tiersData.data = [{ tier_name, commission: { one_month, three_months, six_months }, ... }]
+  const currentTierName = resolveTierName(subCount);
+  const currentTierDoc = tiersData?.data?.find((t) => t.tier_name === currentTierName) ?? null;
+
+  // ─── Load saved pricing ────────────────────────────────────────────────────
   useEffect(() => {
-    if (data?.plans?.plans) {
-      const bp = data.plans.plans;
-      setFullPlansData(bp);
-      setPlans({
-        one_month: { experienced: bp.one_month?.experienced ?? "", freshers: bp.one_month?.freshers ?? "" },
-        three_months: { experienced: bp.three_months?.experienced ?? "", freshers: bp.three_months?.freshers ?? "" },
-        six_months: { experienced: bp.six_months?.experienced ?? "", freshers: bp.six_months?.freshers ?? "" },
-      });
-      setSaved(true);
-    }
-  }, [data]);
+    if (!pricingData) return;
 
+    /**
+     * Response shape:
+     *   { success, plans: <MentorPricingDocument> }
+     *
+     * Document shape:
+     *   {
+     *     plans: {
+     *       one_month:    { experienced, freshers, breakdown: { experienced: {...}, freshers: {...} } },
+     *       three_months: { ... },
+     *       six_months:   { ... },
+     *     },
+     *     subscriberCountAtSave: 0,
+     *     updatedAtDate: "...",
+     *     updatedAt: "...",
+     *   }
+     */
+    const doc = pricingData?.plans;          // MentorPricingDocument
+    const planDoc = doc?.plans;                  // nested plans object
+
+    const hasPricing =
+      planDoc?.one_month?.experienced && planDoc?.one_month?.freshers &&
+      planDoc?.three_months?.experienced && planDoc?.three_months?.freshers &&
+      planDoc?.six_months?.experienced && planDoc?.six_months?.freshers;
+
+    if (hasPricing) {
+      // ── Prices (for dropdowns) ──
+      setPlans({
+        one_month: { experienced: planDoc.one_month.experienced, freshers: planDoc.one_month.freshers },
+        three_months: { experienced: planDoc.three_months.experienced, freshers: planDoc.three_months.freshers },
+        six_months: { experienced: planDoc.six_months.experienced, freshers: planDoc.six_months.freshers },
+      });
+
+      // ── Breakdowns — straight from API, no recalculation ──
+      setBreakdowns({
+        one_month: planDoc.one_month.breakdown ?? { experienced: null, freshers: null },
+        three_months: planDoc.three_months.breakdown ?? { experienced: null, freshers: null },
+        six_months: planDoc.six_months.breakdown ?? { experienced: null, freshers: null },
+      });
+
+      // ── Subscriber count saved at the time of last save ──
+      setSubCount(doc?.subscriberCountAtSave ?? 0);
+
+      setSaved(true);
+      setIsEditingNew(false);
+      setLastUpdated(doc?.updatedAtDate ?? doc?.updatedAt ?? null);
+    } else {
+      setPlans(EMPTY_PLANS);
+      setBreakdowns(EMPTY_BREAKDOWNS);
+      setSubCount(0);
+      setSaved(false);
+      setIsEditingNew(false);
+      setLastUpdated(null);
+    }
+  }, [pricingData]);
+
+  // ─── Handlers ─────────────────────────────────────────────────────────────
   const showToast = useCallback((type, msg) => {
     setToast({ type, msg });
     setTimeout(() => setToast(null), 3500);
   }, []);
 
-  const getMode = (planKey, tier) => modes[`${planKey}_${tier}`] || "dropdown";
-  const setMode = (planKey, tier, m) => setModes((prev) => ({ ...prev, [`${planKey}_${tier}`]: m }));
-  const getCustomVal = (planKey, tier) => customVals[`${planKey}_${tier}`] || "";
-  const setCustomVal = (planKey, tier, v) => setCustomVals((prev) => ({ ...prev, [`${planKey}_${tier}`]: v }));
-  const getError = (planKey, tier) => fieldErrors[`${planKey}_${tier}`] || "";
-  const setError = (planKey, tier, e) => setFieldErrors((prev) => ({ ...prev, [`${planKey}_${tier}`]: e }));
-
   const handleDropdown = (planKey, tier, val) => {
-    if (saved) return;
+    if (saved && !isEditingNew) return;
     setPlans((prev) => ({ ...prev, [planKey]: { ...prev[planKey], [tier]: Number(val) } }));
   };
 
-  const handleCustomChange = (planKey, tier, raw) => {
-    if (saved) return;
-    const clean = raw.replace(/[^0-9]/g, "");
-    setCustomVal(planKey, tier, clean);
-    setError(planKey, tier, "");
-    const num = Number(clean);
-    if (clean && num < 500) setError(planKey, tier, "Minimum ₹500");
-    else if (clean && num > 200000) setError(planKey, tier, "Maximum ₹2,00,000");
-    else if (clean) setPlans((prev) => ({ ...prev, [planKey]: { ...prev[planKey], [tier]: num } }));
-  };
-
-  const handleCustomBlur = (planKey, tier) => {
-    if (saved) return;
-    const v = getCustomVal(planKey, tier);
-    if (!v || Number(v) < 500) setError(planKey, tier, "Enter valid amount (min ₹500)");
-  };
-
-  const switchFieldMode = (planKey, tier, newMode) => {
-    if (saved) return;
-    setMode(planKey, tier, newMode);
-    setError(planKey, tier, "");
-    if (newMode === "dropdown") {
-      setCustomVal(planKey, tier, "");
-      const cur = plans[planKey][tier];
-      if (!PRICE_OPTIONS.includes(Number(cur))) {
-        setPlans((prev) => ({ ...prev, [planKey]: { ...prev[planKey], [tier]: "" } }));
-      }
-    } else {
-      const cur = plans[planKey][tier];
-      setCustomVal(planKey, tier, cur ? String(cur) : "");
-    }
-  };
-
   const handleSave = async () => {
-    if (!mentorId) return showToast("error", "Session expired. Please log in again.");
+    // Client-side validation only — no price calculations
     for (const plan of PLANS) {
       const exp = Number(plans[plan.key].experienced) || 0;
-      const fres = Number(plans[plan.key].freshers) || 0;
-      if (!exp || !fres) return showToast("error", `Fill both prices for ${plan.label}`);
-      if (fres >= exp) return showToast("error", `${plan.label}: Freshers must be less than Experienced`);
+      const fre = Number(plans[plan.key].freshers) || 0;
+      if (!exp || !fre) return showToast("error", `Fill both prices for ${plan.label}`);
+      if (fre >= exp) return showToast("error", `${plan.label}: Freshers price must be less than Experienced`);
     }
+
+    setSaving(true);
     try {
-      const sanitized = Object.fromEntries(
-        Object.entries(plans).map(([k, v]) => [k, { experienced: Number(v.experienced) || 0, freshers: Number(v.freshers) || 0 }])
-      );
-      const result = await saveOrUpdate({ mentorId, plans: sanitized }).unwrap();
-      if (result?.plans?.plans) setFullPlansData(result.plans.plans);
+      const result = await saveOrUpdatePricing({
+        mentorId,
+        plans: {
+          one_month: { experienced: Number(plans.one_month.experienced), freshers: Number(plans.one_month.freshers) },
+          three_months: { experienced: Number(plans.three_months.experienced), freshers: Number(plans.three_months.freshers) },
+          six_months: { experienced: Number(plans.six_months.experienced), freshers: Number(plans.six_months.freshers) },
+        },
+      }).unwrap();
+
+      /**
+       * Save response: { success, message, plans: <MentorPricingDocument> }
+       * Pull fresh breakdown + meta immediately from the save response
+       * so UI updates without needing to wait for refetch.
+       */
+      const savedDoc = result?.plans;
+      const savedPlan = savedDoc?.plans;
+
+      if (savedPlan) {
+        setBreakdowns({
+          one_month: savedPlan.one_month?.breakdown ?? { experienced: null, freshers: null },
+          three_months: savedPlan.three_months?.breakdown ?? { experienced: null, freshers: null },
+          six_months: savedPlan.six_months?.breakdown ?? { experienced: null, freshers: null },
+        });
+        setSubCount(savedDoc?.subscriberCountAtSave ?? 0);
+      }
+      if (savedDoc?.updatedAtDate ?? savedDoc?.updatedAt) {
+        setLastUpdated(savedDoc.updatedAtDate ?? savedDoc.updatedAt);
+      }
+
+      setSaving(false);
       setSaved(true);
-      showToast("success", "Pricing saved successfully!");
-    } catch {
-      showToast("error", "Failed to save. Please try again.");
+      setIsEditingNew(false);
+      showToast("success", "Pricing saved successfully! 🎉");
+      refetchPricing();
+    } catch (error) {
+      setSaving(false);
+      showToast("error", error?.data?.message || "Failed to save pricing. Please try again.");
     }
   };
 
-  // Guard states
-  if (!mentorId) return (
-    <div className="w-full min-h-screen bg-white flex items-center justify-center p-6">
-      <div className="text-center">
-        <p className="text-red-500 text-xs font-semibold">Session expired.</p>
-        <p className="text-gray-400 text-[11px] mt-1">Please log in again to manage pricing.</p>
-      </div>
-    </div>
-  );
+  const handleCancel = () => {
+    setIsEditingNew(false);
+    const planDoc = pricingData?.plans?.plans;
+    if (planDoc?.one_month?.experienced) {
+      setPlans({
+        one_month: { experienced: planDoc.one_month.experienced, freshers: planDoc.one_month.freshers },
+        three_months: { experienced: planDoc.three_months.experienced, freshers: planDoc.three_months.freshers },
+        six_months: { experienced: planDoc.six_months.experienced, freshers: planDoc.six_months.freshers },
+      });
+      setSaved(true);
+    } else {
+      setPlans(EMPTY_PLANS);
+      setSaved(false);
+    }
+  };
 
-  if (isLoading) return (
-    <div className="w-full min-h-screen bg-white flex items-center justify-center">
-      <div className="flex flex-col items-center gap-4">
-        <div className="w-8 h-8 border-2 border-gray-200 border-t-[#0098cc] rounded-full animate-spin" />
-        <p className="text-gray-400 text-[11px]">Loading your pricing...</p>
-      </div>
-    </div>
-  );
-
-  // Modal content
-  const renderModal = () => {
-    if (!modalPlan) return null;
-    const plan = PLANS.find((p) => p.key === modalPlan);
-    const bd = fullPlansData?.[modalPlan];
-    const exp = bd?.breakdown?.experienced;
-    const fre = bd?.breakdown?.freshers;
-    const hasBreakdown = exp && exp.totalPrice > 0;
-    const platformPct = exp?.platformPct ?? 0;
-    const tierName = data?.plans?.commissionTierName || activeTier?.tier_name;
-
+  // ─── Loading ───────────────────────────────────────────────────────────────
+  if (pricingLoading || tiersLoading) {
     return (
-      <div
-        className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm "
-        onClick={() => setModalPlan(null)}
-      >
-        <div
-          className="w-full sm:max-w-lg bg-white rounded-t-2xl sm:rounded-2xl border border-gray-200 shadow-xl flex flex-col overflow-hidden"
-          style={{ maxHeight: "90vh" }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {/* Modal header */}
-          <div className="flex items-start justify-between  p-6 border-b border-gray-100">
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-gray-900 text-sm font-semibold">{plan.label}</h2>
-                <span className="text-[9px] bg-[#0098cc]/10 text-[#0098cc] font-semibold px-2 py-0.5 rounded-full">
-                  {plan.sublabel}
-                </span>
-              </div>
-              {tierName && (
-                <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-                  <span className="text-[9px] bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full border border-gray-200">
-                    {TIER_LABELS[tierName] || tierName}
-                  </span>
-                  <span className="text-[9px] text-gray-400">Platform {platformPct}%</span>
-                  <span className="text-[9px] text-gray-300">·</span>
-                  <span className="text-[9px] text-[#0098cc] font-semibold">You keep ~{100 - platformPct}%</span>
-                  <span className="text-[9px] text-gray-300">·</span>
-                  <span className="text-[9px] text-gray-400">
-                    {data?.plans?.subscriberCountAtSave ?? subscriberCount} subscriber{(data?.plans?.subscriberCountAtSave ?? subscriberCount) !== 1 ? "s" : ""}
-                  </span>
-                </div>
-              )}
-            </div>
-            <button
-              onClick={() => setModalPlan(null)}
-              className="w-8 h-8 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-500 transition-colors cursor-pointer"
-            >
-              <Icon.Close />
-            </button>
-          </div>
-
-          {/* Modal body */}
-          <div className="overflow-y-auto flex-1 p-5">
-            {!hasBreakdown ? (
-              <div className="flex flex-col items-center justify-center py-12 gap-3">
-                <div className="w-12 h-12 rounded-xl bg-gray-50 border border-gray-200 flex items-center justify-center">
-                  <Icon.Info />
-                </div>
-                <p className="text-gray-400 text-xs text-center max-w-xs">
-                  Save your pricing to generate a full earnings breakdown.
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-3">
-                {[{ label: "Experienced", data: exp }, { label: "Freshers", data: fre }].map(({ label, data: d }) => (
-                  <div key={label} className="bg-gray-50 border border-gray-200 rounded-xl overflow-hidden">
-                    <div className="px-4 py-2.5 bg-white border-b border-gray-100">
-                      <span className="text-[#0098cc] text-[8px] font-bold uppercase tracking-widest">{label}</span>
-                    </div>
-                    <div className="p-4 flex flex-col gap-3">
-                      <div>
-                        <p className="text-gray-400 text-[8px] uppercase tracking-widest font-semibold mb-1">Mentee Pays</p>
-                        <p className="text-gray-900 text-base font-bold leading-none">₹{fmtINR(d.totalPrice)}</p>
-                        {plan.months > 1 && (
-                          <p className="text-gray-400 text-[9px] mt-0.5">₹{fmtINR(Math.round(d.totalPrice / plan.months))}/session</p>
-                        )}
-                      </div>
-                      <div className="h-px bg-gray-200" />
-                      <div className="flex flex-col gap-1.5">
-                        <p className="text-gray-400 text-[8px] uppercase tracking-widest font-semibold">Deductions</p>
-                        {[
-                          { label: `Platform (${d.platformPct}%)`, val: d.platformFee },
-                          { label: "CGST (9%)", val: d.cgst },
-                          { label: "SGST (9%)", val: d.sgst },
-                        ].map(({ label: dl, val }) => (
-                          <div key={dl} className="flex justify-between items-center">
-                            <span className="text-gray-400 text-[9px]">{dl}</span>
-                            <span className="text-red-400 text-[9px] font-semibold">-₹{fmtINR(val)}</span>
-                          </div>
-                        ))}
-                        <div className="flex justify-between items-center pt-1.5 border-t border-gray-200 mt-0.5">
-                          <span className="text-gray-500 text-[9px] font-semibold">Total</span>
-                          <span className="text-red-500 text-[9px] font-bold">-₹{fmtINR(d.totalDeducted)}</span>
-                        </div>
-                      </div>
-                      <div className="h-px bg-gray-200" />
-                      <div className="bg-[#0098cc]/8 border border-[#0098cc]/20 rounded-xl p-3">
-                        <p className="text-gray-400 text-[8px] uppercase tracking-widest font-semibold mb-1.5">You Receive</p>
-                        <p className="text-[#0098cc] text-base font-bold leading-none">₹{fmtINR(d.mentorReceive)}</p>
-                        {plan.months > 1 && (
-                          <p className="text-[#0098cc]/60 text-[9px] font-semibold mt-0.5">₹{fmtINR(d.perMonthReceive)}/session</p>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="px-5 py-4 border-t border-gray-100">
-            <button
-              onClick={() => setModalPlan(null)}
-              className="w-full bg-[#1a1a2e] hover:bg-[#16213e] text-white text-xs font-semibold py-3 rounded-xl transition-colors cursor-pointer"
-            >
-              Got it
-            </button>
-          </div>
+      <div className="w-full min-h-screen bg-white p-4 sm:p-6 font-sans flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#1a1a2e]" />
+          <p className="text-gray-600 mt-2">Loading pricing data...</p>
         </div>
       </div>
     );
-  };
+  }
 
+  // ─── Error (ignore 400 = "Pricing not set yet") ───────────────────────────
+  const realPricingError = pricingError?.status !== 400 ? pricingError : null;
+  if (realPricingError || tiersError) {
+    return (
+      <div className="w-full min-h-screen bg-white p-4 sm:p-6 font-sans flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 font-semibold">Error loading pricing data</p>
+          <p className="text-gray-600 text-sm mt-1">
+            {realPricingError?.data?.message || tiersError?.data?.message || "Please try again later"}
+          </p>
+          <button onClick={() => refetchPricing()}
+            className="mt-4 bg-[#1a1a2e] text-white font-semibold px-6 py-2 rounded-lg hover:bg-[#16213e]">
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── Empty state ───────────────────────────────────────────────────────────
+  if (
+    !isEditingNew && !saved &&
+    (!plans.one_month.experienced || !plans.three_months.experienced || !plans.six_months.experienced)
+  ) {
+    return <PricingNotSetState onStartSetup={() => setIsEditingNew(true)} />;
+  }
+
+  const isLocked = saved && !isEditingNew;
+
+  // ─── Main UI ───────────────────────────────────────────────────────────────
   return (
-    <div className="w-full min-h-screen bg-white">
-      <div className="w-full max-w-7xl mx-auto ">
+    <div className="w-full min-h-screen bg-white p-4 sm:p-6 font-sans">
+      <div className="w-full max-w-2xl mx-auto">
 
-        {/* Page Header */}
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-5 mb-8">
-          <div className="flex flex-col gap-2.5">
-            <div>
-              <h1 className="text-gray-900 text-xl font-bold tracking-tight">My Pricing</h1>
-              {userData.name && <p className="text-gray-400 text-xs mt-0.5">{userData.name}</p>}
-            </div>
-
-            {tiersLoading ? (
-              <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg w-fit border border-gray-200">
-                <div className="w-3 h-3 border-2 border-gray-200 border-t-[#0098cc] rounded-full animate-spin" />
-                <span className="text-gray-400 text-[10px]">Loading tier...</span>
-              </div>
-            ) : activeTier ? (
-              <div className="flex items-center gap-2 bg-[#0098cc]/8 border border-[#0098cc]/20 px-3 py-1.5 rounded-xl w-fit">
-                <Icon.Users />
-                <span className="text-[#0098cc] text-[10px] font-semibold">
-                  {subscriberCount} subscriber{subscriberCount !== 1 ? "s" : ""}
-                </span>
-                <span className="text-[#0098cc]/30 text-[9px]">·</span>
-                <span className="text-[#0098cc]/70 text-[10px]">
-                  {TIER_LABELS[activeTier.tier_name] || activeTier.tier_name}
-                </span>
-              </div>
-            ) : null}
-          </div>
-
-          <div className="sm:pt-1">
+        {/* ── Page header ── */}
+        <div className="flex items-center justify-between mb-1">
+          <h1 className="text-gray-900 text-lg font-bold">My Pricing</h1>
+          <div className="flex items-center gap-2">
+            <button onClick={() => setShowCoupon(true)}
+              className="text-xs font-semibold border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
+              + Create Coupon
+            </button>
             <button
-              onClick={handleSave}
-              disabled={saving || saved}
-              className={`flex items-center gap-2 bg-[#1a1a2e] text-white text-xs font-semibold px-5 py-2.5 rounded-xl transition-colors
-                ${saving || saved ? "opacity-40 cursor-not-allowed" : "hover:bg-[#16213e] cursor-pointer"}`}
-            >
-              {saving ? (
-                <>
-                  <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Icon.Check />
-                  Save Pricing
-                </>
-              )}
+              onClick={isLocked ? () => setIsEditingNew(true) : handleSave}
+              disabled={saving || savingPricing}
+              className={`text-xs font-semibold px-4 py-2 rounded-lg transition-colors cursor-pointer
+                ${saving || savingPricing
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : isLocked
+                    ? "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                    : "bg-[#1a1a2e] text-white hover:bg-[#16213e]"}`}>
+              {saving || savingPricing ? "Saving…" : isLocked ? "Edit" : "Save"}
             </button>
           </div>
         </div>
 
-        {/* Info Banner */}
-        {(isError || !fullPlansData) && (
-          <div className="flex items-start gap-3 bg-gray-50 border border-gray-200 rounded-2xl px-5 py-4 mb-6">
-            <span className="text-gray-400 mt-0.5 shrink-0"><Icon.Info /></span>
-            <div>
-              <p className="text-gray-700 text-xs font-medium">No pricing set yet</p>
-              <p className="text-gray-400 text-[10px] mt-0.5">
-                Fill in your prices below and click <strong className="text-gray-700">Save Pricing</strong> to publish.
-              </p>
-            </div>
-          </div>
+        {/* Last updated */}
+        {lastUpdated && isLocked ? (
+          <p className="text-[11px] text-gray-400 mb-4">Last updated: {fmtDate(lastUpdated)}</p>
+        ) : (
+          <div className="mb-4" />
         )}
 
-        {/* Plan Cards */}
-        <div className="flex flex-col gap-4">
+        {/* ── Tier Banner — shown only in view mode (not while editing) ── */}
+        <TierBanner
+          tierDoc={currentTierDoc}
+          subCount={subCount}
+          isEditing={!isLocked}
+        />
+
+        {/* ── Plan cards ── */}
+        <div className="flex flex-col gap-3">
           {PLANS.map((plan) => {
             const s = plans[plan.key];
-            const savedData = fullPlansData?.[plan.key];
-            const hasValues = s.experienced !== "" || s.freshers !== "";
-            const hasBreakdown = savedData?.breakdown?.experienced?.mentorReceive > 0;
-            const bd = savedData?.breakdown;
-            const fresWarn = hasValues && s.freshers !== "" && s.experienced !== "" && Number(s.freshers) >= Number(s.experienced);
+            const exp = Number(s.experienced) || 0;
+            const fre = Number(s.freshers) || 0;
+            const hasValues = exp > 0 && fre > 0;
+            const fresWarn = hasValues && fre >= exp;
+            const opts = PRICE_OPTIONS[plan.key];
+
+            // Read perMonthReceive directly from API breakdown — no frontend math
+            const bdExp = breakdowns[plan.key]?.experienced;
+            const bdFre = breakdowns[plan.key]?.freshers;
+            const expReceive = bdExp?.perMonthReceive ?? null;
+            const freReceive = bdFre?.perMonthReceive ?? null;
 
             return (
-              <div
-                key={plan.key}
-                className="w-full bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm"
-              >
-                {/* Card Header */}
-                <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100">
-                  <div className="flex items-center gap-3">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-gray-900 text-xs font-semibold">{plan.label}</span>
-                        {hasValues && saved && (
-                          <span className="flex items-center gap-1 text-[9px] text-green-600 font-semibold bg-green-50 border border-green-100 px-2 py-0.5 rounded-full">
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                            Active
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-gray-400 text-[9px]">{plan.sublabel}</span>
-                    </div>
-                  </div>
-                  {hasBreakdown && (
-                    <button
-                      onClick={() => setModalPlan(plan.key)}
-                      className="text-[10px] font-semibold text-[#0098cc] bg-[#0098cc]/8 hover:bg-[#0098cc]/15 border border-[#0098cc]/20 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-                    >
-                      View Details →
-                    </button>
+              <div key={plan.key} className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+
+                {/* Card header */}
+                <div className="px-5 py-3.5 border-b border-gray-100 flex items-center gap-2">
+                  <span className="text-gray-800 text-sm font-bold">{plan.label}</span>
+                  <span className="text-gray-400 text-xs">{plan.sublabel}</span>
+                  {hasValues && saved && !fresWarn && isLocked && (
+                    <span className="ml-auto flex items-center gap-1 text-[9px] text-green-600 bg-green-50 border border-green-100 px-2 py-0.5 rounded-full font-semibold">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                      Active
+                    </span>
                   )}
                 </div>
 
-                {/* Price Fields */}
-                <div className="flex flex-col sm:flex-row gap-4 p-5">
+                {/* Price selectors */}
+                <div className="flex flex-col sm:flex-row">
                   {["experienced", "freshers"].map((tier, idx) => {
-                    const mode = getMode(plan.key, tier);
+                    const label = tier === "experienced" ? "For Experienced" : "For Freshers";
                     const value = s[tier];
-                    const err = getError(plan.key, tier);
-                    const label = tier === "experienced" ? "Experienced" : "Freshers";
-                    const isCustom = mode === "custom";
-                    const displayValue = value !== "" && value != null ? Number(value) : "";
+                    const tierOpts = opts[tier];
 
                     return (
-                      <>
-                        {idx === 1 && <div className="hidden sm:block w-px bg-gray-100 self-stretch" />}
-                        <div key={tier} className="flex-1 min-w-0 flex flex-col gap-1.5">
-                          <div className="flex items-center justify-between">
-                            <label className="text-gray-500 text-[10px] font-semibold tracking-wide uppercase">{label}</label>
-                            <div className="flex rounded-lg overflow-hidden border border-gray-200">
-                              {["dropdown", "custom"].map((m) => (
-                                <button
-                                  key={m}
-                                  type="button"
-                                  onClick={() => switchFieldMode(plan.key, tier, m)}
-                                  disabled={saved}
-                                  className={`text-[9px] px-2.5 py-1 font-semibold capitalize transition-colors
-                                    ${saved ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}
-                                    ${mode === m ? "bg-[#1a1a2e] text-white" : "bg-white text-gray-400 hover:text-gray-600"}`}
-                                >
-                                  {m === "dropdown" ? "Select" : "Custom"}
-                                </button>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className={`flex items-center h-11 rounded-xl px-3.5 gap-2 border transition-colors
-                            ${saved ? "bg-gray-50 border-gray-100 cursor-not-allowed"
-                              : err ? "bg-white border-red-300 ring-1 ring-red-100"
-                                : isCustom ? "bg-white border-[#0098cc]/40 ring-1 ring-[#0098cc]/10"
-                                  : "bg-white border-gray-200 hover:border-gray-300"}`}
-                          >
-                            <span className="text-[#0098cc] text-sm font-bold shrink-0">₹</span>
-                            {isCustom ? (
-                              <>
-                                <input
-                                  type="text"
-                                  inputMode="numeric"
-                                  placeholder="Enter amount"
-                                  value={getCustomVal(plan.key, tier)}
-                                  onChange={(e) => handleCustomChange(plan.key, tier, e.target.value)}
-                                  onBlur={() => handleCustomBlur(plan.key, tier)}
-                                  disabled={saved}
-                                  className={`flex-1 bg-transparent border-none outline-none text-xs font-semibold placeholder:text-gray-300
-                                    ${saved ? "text-gray-300 cursor-not-allowed" : "text-gray-900"}`}
-                                />
-                                <span className="text-gray-300 text-[9px] font-medium shrink-0">/session</span>
-                              </>
-                            ) : (
-                              <>
-                                <select
-                                  value={displayValue}
-                                  onChange={(e) => handleDropdown(plan.key, tier, e.target.value)}
-                                  disabled={saved}
-                                  className={`flex-1 bg-transparent border-none outline-none text-xs font-semibold appearance-none
-                                    ${saved ? "text-gray-300 cursor-not-allowed" : "text-gray-900 cursor-pointer"}`}
-                                >
-                                  <option value="" disabled className="bg-white text-gray-400">Choose price</option>
-                                  {PRICE_OPTIONS.map((p) => (
-                                    <option key={p} value={p} className="bg-white text-gray-900">
-                                      {new Intl.NumberFormat("en-IN").format(p)} / session
-                                    </option>
-                                  ))}
-                                </select>
-                                <span className="text-gray-300 shrink-0"><Icon.Chevron /></span>
-                              </>
-                            )}
-                          </div>
-
-                          {err && (
-                            <p className="text-red-400 text-[9px] font-medium flex items-center gap-1">
-                              <Icon.Warn />
-                              {err}
-                            </p>
+                      <div key={tier}
+                        className={`flex-1 px-5 py-4 ${idx === 0 ? "sm:border-r border-b sm:border-b-0 border-gray-100" : ""}`}>
+                        <p className="text-gray-500 text-xs mb-2">{label}</p>
+                        <div className={`relative flex items-center border rounded-lg px-3 h-11
+                          ${isLocked ? "bg-gray-50 border-gray-100" : "bg-white border-gray-300 hover:border-gray-400"}`}>
+                          <span className="text-gray-500 text-sm shrink-0">₹</span>
+                          <select
+                            value={value}
+                            onChange={(e) => handleDropdown(plan.key, tier, e.target.value)}
+                            disabled={isLocked}
+                            className={`flex-1 bg-transparent border-none outline-none text-sm font-semibold appearance-none pl-1
+                              ${isLocked ? "text-gray-500 cursor-not-allowed" : "text-gray-900 cursor-pointer"}`}>
+                            <option value="" disabled className="text-gray-400">Select price</option>
+                            {tierOpts.map((p) => (
+                              <option key={p} value={p} className="text-gray-900">
+                                ₹{new Intl.NumberFormat("en-IN").format(p)}/month
+                              </option>
+                            ))}
+                          </select>
+                          {!isLocked && (
+                            <svg className="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                            </svg>
                           )}
                         </div>
-                      </>
+                      </div>
                     );
                   })}
                 </div>
 
+                {/* Fresher price warning */}
                 {fresWarn && (
-                  <div className="mx-5 mb-4 flex items-center gap-2 px-4 py-2.5 bg-amber-50 border border-amber-200 rounded-xl">
-                    <span className="text-amber-500 shrink-0"><Icon.Warn /></span>
-                    <span className="text-amber-600 text-[10px] font-medium">Freshers price must be less than Experienced</span>
+                  <div className="mx-5 mb-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-amber-600 text-xs font-medium">
+                    ⚠ Freshers price must be less than Experienced
                   </div>
                 )}
 
-                {hasBreakdown && (
-                  <div className="flex items-center justify-between gap-3 mx-5 mb-5 px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl">
-                    <div>
-                      <p className="text-gray-400 text-[8px] uppercase tracking-widest font-semibold mb-1.5">You receive / month</p>
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                        <span className="text-[10px] text-gray-400">
-                          Exp:&nbsp;<strong className="text-[#0098cc] text-sm font-bold">₹{fmtINR(bd.experienced.perMonthReceive)}</strong>
-                        </span>
-                        <span className="text-gray-200">|</span>
-                        <span className="text-[10px] text-gray-400">
-                          Fresh:&nbsp;<strong className="text-[#0098cc] text-sm font-bold">₹{fmtINR(bd.freshers.perMonthReceive)}</strong>
-                        </span>
-                      </div>
-                    </div>
+                {/* Earnings row — perMonthReceive from API breakdown */}
+                {hasValues && saved && !fresWarn && isLocked && (
+                  <div className="mx-5 mb-4 flex items-center justify-between bg-gray-50 border border-gray-100 rounded-xl px-4 py-3">
+                    <p className="text-gray-500 text-xs">
+                      You receive per month:&nbsp;
+                      <strong className="text-gray-700">
+                        {expReceive != null ? `₹${fmtINR(expReceive)}` : "—"}
+                      </strong>
+                      <span className="text-gray-400"> (Experienced)</span>
+                      &nbsp;|&nbsp;
+                      <strong className="text-gray-700">
+                        {freReceive != null ? `₹${fmtINR(freReceive)}` : "—"}
+                      </strong>
+                      <span className="text-gray-400"> (Freshers)</span>
+                    </p>
+                    <button onClick={() => setModalPlan(plan.key)}
+                      className="text-blue-500 text-xs font-semibold hover:underline shrink-0 ml-3 cursor-pointer">
+                      View Details
+                    </button>
                   </div>
                 )}
               </div>
@@ -551,23 +1579,46 @@ const MyPricing = () => {
           })}
         </div>
 
-        {activeTier && (
-          <p className="mt-6 text-center text-[9px] text-gray-300 font-medium">
-            Commission tier: {TIER_LABELS[activeTier.tier_name] || activeTier.tier_name} · Breakdown calculated on save
-          </p>
+        {/* ── Footer (edit mode only) ── */}
+        {!isLocked && (
+          <div className="flex items-center justify-end gap-3 mt-5 pt-4 border-t border-gray-100">
+            <button onClick={handleCancel}
+              className="border border-gray-300 text-gray-600 text-sm font-semibold px-6 py-2.5 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer">
+              Cancel
+            </button>
+            <button onClick={handleSave} disabled={saving || savingPricing}
+              className={`text-sm font-semibold px-6 py-2.5 rounded-xl transition-colors cursor-pointer
+                ${saving || savingPricing
+                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  : "bg-[#1a1a2e] text-white hover:bg-[#16213e]"}`}>
+              {saving || savingPricing ? "Saving…" : "Save Pricing"}
+            </button>
+          </div>
         )}
       </div>
 
-      {/* Modal */}
-      {renderModal()}
+      {/* Details Modal */}
+      {modalPlan && (
+        <DetailsModal
+          plan={modalPlan}
+          breakdowns={breakdowns}
+          onClose={() => setModalPlan(null)}
+        />
+      )}
+
+      {/* Coupon Modal */}
+      {showCoupon && (
+        <CouponModal
+          onClose={() => setShowCoupon(false)}
+          mentorId={mentorId}
+        />
+      )}
 
       {/* Toast */}
       {toast && (
-        <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2.5 text-white text-xs font-semibold px-5 py-3 rounded-2xl shadow-xl z-50 whitespace-nowrap transition-all duration-300
-          ${toast.type === "success" ? "bg-[#1a1a2e]" : "bg-red-500"}`}
-        >
-          {toast.type === "success" ? <Icon.Check /> : <Icon.Close />}
-          {toast.msg}
+        <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 text-white text-xs font-semibold px-5 py-3 rounded-2xl shadow-xl z-50 whitespace-nowrap
+          ${toast.type === "success" ? "bg-[#1a1a2e]" : "bg-red-500"}`}>
+          {toast.type === "success" ? "✓" : "✕"} {toast.msg}
         </div>
       )}
     </div>
@@ -575,9 +1626,5 @@ const MyPricing = () => {
 };
 
 export default MyPricing;
-
-
-
-
 
 
