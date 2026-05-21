@@ -2392,8 +2392,8 @@ const ProfileModal = () => {
               key={opt}
               onClick={() => setSelectedOption(opt)}
               className={`py-2 text-sm font-semibold rounded-lg transition-all ${selectedOption === opt
-                  ? "bg-white text-gray-900 shadow-sm"
-                  : "text-gray-500 hover:text-gray-700"
+                ? "bg-white text-gray-900 shadow-sm"
+                : "text-gray-500 hover:text-gray-700"
                 }`}
             >
               {opt === "trial" ? "Book Free Trial" : "View Plans"}
@@ -2441,10 +2441,10 @@ const ProfileModal = () => {
                         disabled={isDisabled}
                         onClick={() => !isDisabled && setSelectedSlot(chosen ? null : slot)}
                         className={`flex items-center gap-1 px-2 py-1 text-[10px] font-medium border rounded-full transition-all ${isDisabled
-                            ? "opacity-40 cursor-not-allowed border-black/10 bg-black/5 text-black/40"
-                            : chosen
-                              ? "border-black bg-black text-white"
-                              : "border-black/20 bg-white text-black hover:border-black"
+                          ? "opacity-40 cursor-not-allowed border-black/10 bg-black/5 text-black/40"
+                          : chosen
+                            ? "border-black bg-black text-white"
+                            : "border-black/20 bg-white text-black hover:border-black"
                           }`}
                       >
                         <Clock size={10} />
@@ -2462,8 +2462,8 @@ const ProfileModal = () => {
                 disabled={!selectedSlot}
                 onClick={() => setBookingOpen(true)}
                 className={`w-full py-2 text-xs font-semibold rounded-lg flex items-center justify-center gap-2 transition-all ${selectedSlot
-                    ? "bg-black text-white hover:bg-black/90"
-                    : "bg-black text-white opacity-40 cursor-not-allowed"
+                  ? "bg-black text-white hover:bg-black/90"
+                  : "bg-black text-white opacity-40 cursor-not-allowed"
                   }`}
               >
                 <Calendar size={13} />
@@ -2577,8 +2577,7 @@ const ProfileModal = () => {
 
       {/* ─── Page wrapper ───────────────────────────────────── */}
       <div className="w-full bg-white" style={{ minHeight: "calc(100vh - 57px)" }}>
-        <div className="max-w-[1400px] px-8 flex flex-col lg:flex-row lg:h-[calc(100vh-57px)]">
-
+        <div className="max-w-[1400px] px-0 sm:px-0 lg:px-8 flex flex-col lg:flex-row lg:h-[calc(100vh-57px)]">
           {/* ══ LEFT — scrollable ══ */}
           <div
             className="flex-1 min-w-0 lg:overflow-y-auto bg-white"
