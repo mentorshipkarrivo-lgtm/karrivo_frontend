@@ -21,7 +21,7 @@ export default function HeroSection() {
   const goals = ['CAREER GROWTH', 'LEADERSHIP', 'NETWORKING', 'SKILL-BUILDING'];
 
   return (
-    <div className="min-h-screen w-full py-12 px-4 sm:px-6 lg:px-8 bg-white">
+    <div className="min-h-screen w-full py-12 bg-white">
 
       <style>{`
         @keyframes scroll-left {

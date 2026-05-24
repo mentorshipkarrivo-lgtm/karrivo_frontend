@@ -16,17 +16,17 @@ import Loader from "../../../global/Loader";
 const getPaymentStatusStyle = (status) => {
   switch (status) {
     case "Completed": return "bg-green-50 text-green-700 border border-green-200";
-    case "Pending":   return "bg-yellow-50 text-yellow-700 border border-yellow-200";
-    case "Failed":    return "bg-red-50 text-red-700 border border-red-200";
-    default:          return "bg-gray-100 text-gray-500 border border-gray-200";
+    case "Pending": return "bg-yellow-50 text-yellow-700 border border-yellow-200";
+    case "Failed": return "bg-red-50 text-red-700 border border-red-200";
+    default: return "bg-gray-100 text-gray-500 border border-gray-200";
   }
 };
 
 const SESSION_BADGES = {
   inprogress: { label: "In Progress", className: "bg-orange-50 text-orange-700 border border-orange-200" },
-  completed:  { label: "Completed",   className: "bg-green-50 text-green-700 border border-green-200" },
-  cancelled:  { label: "Cancelled",   className: "bg-red-50 text-red-700 border border-red-200" },
-  scheduled:  { label: "Scheduled",   className: "bg-blue-50 text-blue-700 border border-blue-200" },
+  completed: { label: "Completed", className: "bg-green-50 text-green-700 border border-green-200" },
+  cancelled: { label: "Cancelled", className: "bg-red-50 text-red-700 border border-red-200" },
+  scheduled: { label: "Scheduled", className: "bg-blue-50 text-blue-700 border border-blue-200" },
 };
 const getSessionBadge = (status = "") =>
   SESSION_BADGES[status.toLowerCase()] || { label: status || "—", className: "bg-gray-100 text-gray-500 border border-gray-200" };
@@ -81,15 +81,15 @@ const maskAccount = (num) =>
 ══════════════════════════════════════════════════ */
 const PayoutDetailsPage = ({ userId, onClose }) => {
   const { data: fetchedData, isLoading: loadingDetails } =
-    useGetPayoutDetailsQuery(userId, );
+    useGetPayoutDetailsQuery(userId,);
 
   const [savePayoutDetails, { isLoading: saving }] =
     useSavePayoutDetailsMutation();
 
-  const [form, setForm]       = useState(EMPTY_FORM);
-  const [errors, setErrors]   = useState({});
-  const [saved, setSaved]     = useState(false);
-  const [upiEditing, setUpiEditing]   = useState(false);
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [errors, setErrors] = useState({});
+  const [saved, setSaved] = useState(false);
+  const [upiEditing, setUpiEditing] = useState(false);
   const [bankEditing, setBankEditing] = useState(false);
 
   /* Pre-fill from API */
@@ -101,17 +101,17 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
       return;
     }
     setForm({
-      upiId:             pd.upiId || "",
-      confirmUpiId:      pd.upiId || "",
+      upiId: pd.upiId || "",
+      confirmUpiId: pd.upiId || "",
       accountHolderName: pd.bankDetails?.accountHolderName || "",
-      accountNumber:     pd.bankDetails?.accountNumber || "",
-      confirmAccountNo:  pd.bankDetails?.accountNumber || "",
-      ifscCode:          pd.bankDetails?.ifscCode || "",
-      bankName:          pd.bankDetails?.bankName || "",
-      branchName:        pd.bankDetails?.branchName || "",
-      accountType:       pd.bankDetails?.accountType || "Savings",
-      nameOnPancard:     pd.panDetails?.nameOnPancard || "",
-      panNumber:         pd.panDetails?.panNumber || "",
+      accountNumber: pd.bankDetails?.accountNumber || "",
+      confirmAccountNo: pd.bankDetails?.accountNumber || "",
+      ifscCode: pd.bankDetails?.ifscCode || "",
+      bankName: pd.bankDetails?.bankName || "",
+      branchName: pd.bankDetails?.branchName || "",
+      accountType: pd.bankDetails?.accountType || "Savings",
+      nameOnPancard: pd.panDetails?.nameOnPancard || "",
+      panNumber: pd.panDetails?.panNumber || "",
     });
     // Show saved view if data exists, edit mode if not
     setUpiEditing(!pd.upiId);
@@ -138,8 +138,8 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
     // Only validate bank section if it's open for editing and has input
     if (bankEditing && (form.accountHolderName.trim() || form.accountNumber.trim() || form.ifscCode.trim() || form.bankName.trim())) {
       if (!form.accountHolderName.trim()) e.accountHolderName = "Account holder name is required";
-      if (!form.accountNumber.trim())     e.accountNumber = "Account number is required";
-      if (!form.confirmAccountNo.trim())  e.confirmAccountNo = "Please confirm account number";
+      if (!form.accountNumber.trim()) e.accountNumber = "Account number is required";
+      if (!form.confirmAccountNo.trim()) e.confirmAccountNo = "Please confirm account number";
       else if (form.accountNumber !== form.confirmAccountNo) e.confirmAccountNo = "Account numbers do not match";
       if (!form.ifscCode.trim()) e.ifscCode = "IFSC code is required";
       else if (!/^[A-Z]{4}0[A-Z0-9]{6}$/i.test(form.ifscCode.trim())) e.ifscCode = "Invalid IFSC (e.g. HDFC0001234)";
@@ -157,20 +157,20 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
     // Always send everything — backend uses $set with dot-notation so
     // only provided fields are updated, nothing gets wiped
     const payload = {
-        userId: userId,
+      userId: userId,
 
       upiId: form.upiId.trim() || undefined,
       bankDetails: form.accountNumber.trim() ? {
         accountHolderName: form.accountHolderName.trim(),
-        accountNumber:     form.accountNumber.trim(),
-        ifscCode:          form.ifscCode.toUpperCase().trim(),
-        bankName:          form.bankName.trim(),
-        branchName:        form.branchName.trim() || undefined,
-        accountType:       form.accountType,
+        accountNumber: form.accountNumber.trim(),
+        ifscCode: form.ifscCode.toUpperCase().trim(),
+        bankName: form.bankName.trim(),
+        branchName: form.branchName.trim() || undefined,
+        accountType: form.accountType,
       } : undefined,
       panDetails: {
         nameOnPancard: form.nameOnPancard.trim() || undefined,
-        panNumber:     form.panNumber.toUpperCase().trim() || undefined,
+        panNumber: form.panNumber.toUpperCase().trim() || undefined,
       },
     };
 
@@ -178,7 +178,7 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
       await savePayoutDetails(payload).unwrap();
       setSaved(true);
       // Flip edited sections to view mode after save
-      if (form.upiId.trim())         setUpiEditing(false);
+      if (form.upiId.trim()) setUpiEditing(false);
       if (form.accountNumber.trim()) setBankEditing(false);
       setTimeout(() => setSaved(false), 2000);
     } catch (err) {
@@ -224,7 +224,7 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
                   {!upiEditing && form.upiId ? (
                     /* VIEW MODE */
                     <div className="flex items-center gap-3">
-                     
+
                       <div>
                         <p className="text-[11px] text-gray-400 font-medium">Saved UPI ID</p>
                         <p className="text-sm font-semibold text-gray-800">{form.upiId}</p>
@@ -264,8 +264,8 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
                       {[
                         { label: "Account Holder", value: form.accountHolderName },
                         { label: "Account Number", value: maskAccount(form.accountNumber) },
-                        { label: "IFSC Code",       value: form.ifscCode },
-                        { label: "Bank Name",       value: form.bankName },
+                        { label: "IFSC Code", value: form.ifscCode },
+                        { label: "Bank Name", value: form.bankName },
                       ].map(({ label, value }) => (
                         <div key={label} className="bg-gray-50 rounded-lg px-3 py-2.5">
                           <p className="text-[10px] text-gray-400 font-medium mb-0.5">{label}</p>
@@ -322,7 +322,7 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
           >
             {saving ? <><Loader2 size={14} className="animate-spin" />Saving…</>
               : saved ? <><Check size={14} strokeWidth={2.5} />Saved!</>
-              : "Save"}
+                : "Save"}
           </button>
         </div>
 
@@ -340,8 +340,8 @@ const ROWS_OPTIONS = [5, 10, 20, 50];
 const Myearnings = () => {
   const mentor_id = JSON.parse(localStorage.getItem("userData"))?._id;
 
-  const [currentPage, setCurrentPage]     = useState(1);
-  const [rowsPerPage, setRowsPerPage]     = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [showPayoutPage, setShowPayoutPage] = useState(false);
 
   const { data: earningsData, isLoading, isFetching, error } =
@@ -422,10 +422,10 @@ const Myearnings = () => {
         <div className="mb-8">
           <h2 className="text-sm font-bold mb-4" style={{ color: "#1a1a2e" }}>Earnings Summary</h2>
           <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
-            <StatCard icon={DollarSign} label="Session Earnings"     value={`₹${totalSessionEarnings.toLocaleString("en-IN")}`} />
+            <StatCard icon={DollarSign} label="Session Earnings" value={`₹${totalSessionEarnings.toLocaleString("en-IN")}`} />
             <StatCard icon={DollarSign} label="Subscription Revenue" value={`₹${totalSubscriptionRevenue.toLocaleString("en-IN")}`} />
-            <StatCard icon={AlertTriangle} label="Total Discount"    value={`₹${totalSubscriptionDiscount.toLocaleString("en-IN")}`} />
-            <StatCard icon={Clock}      label="Overall Revenue"      value={`₹${totalOverallRevenue.toLocaleString("en-IN")}`} />
+            <StatCard icon={AlertTriangle} label="Total Discount" value={`₹${totalSubscriptionDiscount.toLocaleString("en-IN")}`} />
+            <StatCard icon={Clock} label="Overall Revenue" value={`₹${totalOverallRevenue.toLocaleString("en-IN")}`} />
           </div>
         </div>
 
@@ -439,7 +439,7 @@ const Myearnings = () => {
               <table className="min-w-full text-xs">
                 <thead>
                   <tr style={{ backgroundColor: "#1a1a2e" }}>
-                    {["Mentee ID","Plan Type","Total Sessions","Status","Original Amount","Discount","You Receive","Subscribed At"].map((h) => (
+                    {["Mentee ID", "Plan Type", "Total Sessions", "Status", "Original Amount", "Discount", "You Receive", "Subscribed At"].map((h) => (
                       <th key={h} className="px-4 py-2.5 text-left text-[11px] font-semibold whitespace-nowrap text-white">{h}</th>
                     ))}
                   </tr>
@@ -504,7 +504,7 @@ const Myearnings = () => {
               <table className="min-w-full text-xs">
                 <thead>
                   <tr style={{ backgroundColor: "#1a1a2e" }}>
-                    {["S.No","Booking ID","Topic","Mentee","Date","Time Slot","Amount","Payment Status","Session Status","Transaction ID"].map((h) => (
+                    {["S.No", "Booking ID", "Topic", "Mentee", "Date", "Time Slot", "Amount", "Payment Status", "Transaction ID"].map((h) => (
                       <th key={h} className="px-4 py-2.5 text-left text-[11px] font-semibold whitespace-nowrap text-white">{h}</th>
                     ))}
                   </tr>
@@ -534,9 +534,9 @@ const Myearnings = () => {
                         <td className="px-4 py-2.5 whitespace-nowrap">
                           <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold ${getPaymentStatusStyle(paymentStatus)}`}>{paymentStatus || "—"}</span>
                         </td>
-                        <td className="px-4 py-2.5 whitespace-nowrap">
-                          <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold ${sessionBadge.className}`}>{sessionBadge.label}</span>
-                        </td>
+                          {/* <td className="px-4 py-2.5 whitespace-nowrap">
+                            <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold ${sessionBadge.className}`}>{sessionBadge.label}</span>
+                          </td> */}
                         <td className="px-4 py-2.5 whitespace-nowrap text-gray-400">{booking.paymentDetails?.transactionId || "—"}</td>
                       </tr>
                     );
