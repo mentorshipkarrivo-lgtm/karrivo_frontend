@@ -1,4 +1,99 @@
-// mysubcriberspislice.js — RTK Query slice with pagination support
+// // // mysubcriberspislice.js — RTK Query slice with pagination support
+
+// // import { apiSlice } from "../../../ApiSliceComponent/karrivoApi";
+
+// // export const sessionsApi = apiSlice.injectEndpoints({
+// //     endpoints: (builder) => ({
+
+// //         // GET paginated sessions for a mentor
+// //         // Usage: useGetSessionsByMentorQuery({ mentorId, page: 1, pageSize: 10, status: 'all' })
+// //         getSessionsByMentor: builder.query({
+// //             query: ({ mentorId, page = 1, pageSize = 10, status = null }) => {
+// //                 const params = new URLSearchParams({ page, pageSize });
+// //                 if (status && status !== "all") params.set("status", status);
+// //                 return `sessions/get-all-sessions-mentor/${mentorId}?${params.toString()}`;
+// //             },
+// //             // Cache separately per page/filter combo
+// //             serializeQueryArgs: ({ queryArgs }) => {
+// //                 const { mentorId } = queryArgs;
+// //                 return mentorId; // base cache key
+// //             },
+// //             // Merge pages if you want infinite scroll — keep separate for table pagination
+// //             forceRefetch: ({ currentArg, previousArg }) =>
+// //                 currentArg?.page !== previousArg?.page ||
+// //                 currentArg?.pageSize !== previousArg?.pageSize ||
+// //                 currentArg?.status !== previousArg?.status,
+// //         }),
+
+// //         // GET all subscribers for a mentor (no pagination — typically small list)
+// //         getSubscribersByMentor: builder.query({
+// //             query: (mentor_id) => `subscription/subcription-plans-mentor/${mentor_id}`,
+// //         }),
+
+// //         // UPDATE session (shared by both mentor & mentee)
+// //         updateByMentorSession: builder.mutation({
+// //             query: ({ session_id, ...body }) => ({
+// //                 url: `/sessions/update-session/${session_id}`,
+// //                 method: "POST",
+// //                 body,
+// //             }),
+// //         }),
+// //     }),
+// // });
+
+// // export const {
+// //     useGetSessionsByMentorQuery,
+// //     useGetSubscribersByMentorQuery,
+// //     useUpdateByMentorSessionMutation,
+// // } = sessionsApi;
+
+// // slice.js — RTK Query slice for mentor sessions & subscribers
+
+// import { apiSlice } from "../../../ApiSliceComponent/karrivoApi";
+
+// export const sessionsApi = apiSlice.injectEndpoints({
+//     endpoints: (builder) => ({
+//         // GET paginated sessions for a mentor
+//         getSessionsByMentor: builder.query({
+//             query: ({ mentorId, page = 1, pageSize = 10, status = null }) => {
+//                 const params = new URLSearchParams({ page, pageSize });
+//                 if (status && status !== "all") params.set("status", status);
+//                 return `sessions/get-all-sessions-mentor/${mentorId}?${params.toString()}`;
+//             },
+//             providesTags: (result, error, { mentorId }) => [
+//                 { type: "Sessions", id: mentorId },
+//             ],
+//         }),
+
+//         // GET all subscribers for a mentor
+//         getSubscribersByMentor: builder.query({
+//             query: (mentor_id) =>
+//                 `subscription/subcription-plans-mentor/${mentor_id}`,
+//             providesTags: (result, error, mentor_id) => [
+//                 { type: "Subscribers", id: mentor_id },
+//             ],
+//         }),
+
+//         // UPDATE session
+//         updateByMentorSession: builder.mutation({
+//             query: ({ session_id, ...body }) => ({
+//                 url: `/sessions/update-session/${session_id}`,
+//                 method: "POST",
+//                 body,
+//             }),
+//             invalidatesTags: (result, error, { mentor_id }) => [
+//                 { type: "Sessions", id: mentor_id },
+//             ],
+//         }),
+//     }),
+// });
+
+// export const {
+//     useGetSessionsByMentorQuery,
+//     useGetSubscribersByMentorQuery,
+//     useUpdateByMentorSessionMutation,
+// } = sessionsApi;
+
 
 import { apiSlice } from "../../../ApiSliceComponent/karrivoApi";
 
@@ -6,37 +101,38 @@ export const sessionsApi = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
 
         // GET paginated sessions for a mentor
-        // Usage: useGetSessionsByMentorQuery({ mentorId, page: 1, pageSize: 10, status: 'all' })
         getSessionsByMentor: builder.query({
             query: ({ mentorId, page = 1, pageSize = 10, status = null }) => {
                 const params = new URLSearchParams({ page, pageSize });
                 if (status && status !== "all") params.set("status", status);
                 return `sessions/get-all-sessions-mentor/${mentorId}?${params.toString()}`;
             },
-            // Cache separately per page/filter combo
-            serializeQueryArgs: ({ queryArgs }) => {
-                const { mentorId } = queryArgs;
-                return mentorId; // base cache key
-            },
-            // Merge pages if you want infinite scroll — keep separate for table pagination
-            forceRefetch: ({ currentArg, previousArg }) =>
-                currentArg?.page !== previousArg?.page ||
-                currentArg?.pageSize !== previousArg?.pageSize ||
-                currentArg?.status !== previousArg?.status,
+            providesTags: (result, error, { mentorId }) => [
+                { type: "Sessions", id: mentorId },
+            ],
         }),
 
-        // GET all subscribers for a mentor (no pagination — typically small list)
+        // GET all subscribers for a mentor
         getSubscribersByMentor: builder.query({
-            query: (mentor_id) => `subscription/subcription-plans-mentor/${mentor_id}`,
+            query: (mentor_id) =>
+                `subscription/subcription-plans-mentor/${mentor_id}`,
+            providesTags: (result, error, mentor_id) => [
+                { type: "Subscribers", id: mentor_id },
+            ],
         }),
 
-        // UPDATE session (shared by both mentor & mentee)
+        // UPDATE session — only mentor-editable fields
+        // POST /sessions/update-session/:session_id
         updateByMentorSession: builder.mutation({
             query: ({ session_id, ...body }) => ({
-                url: `/sessions/update-session/${session_id}`,
+                url: `sessions/update-session/${session_id}`,
                 method: "POST",
                 body,
             }),
+            // Invalidate by mentorId so the sessions list refetches
+            invalidatesTags: (result, error, { mentor_id }) => [
+                { type: "Sessions", id: mentor_id },
+            ],
         }),
     }),
 });
@@ -46,3 +142,5 @@ export const {
     useGetSubscribersByMentorQuery,
     useUpdateByMentorSessionMutation,
 } = sessionsApi;
+
+

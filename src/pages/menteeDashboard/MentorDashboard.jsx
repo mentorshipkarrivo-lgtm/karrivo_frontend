@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -14,6 +15,19 @@ import {
     Star, Zap, ChevronRight, Phone, Megaphone, Wrench, Bug
 } from 'lucide-react';
 import Loader from '../../global/Loader';
+
+/* ── Global Styles for Cambria Font ──────────────────────────────────────── */
+const globalStyles = `
+    * {
+        font-family: Cambria, Georgia, serif !important;
+    }
+    body, html {
+        font-family: Cambria, Georgia, serif !important;
+    }
+    button, input, select, textarea {
+        font-family: Cambria, Georgia, serif !important;
+    }
+`;
 
 /* ── Helpers ──────────────────────────────────────────────────────────────── */
 const getCookie = (name) => {
@@ -63,13 +77,14 @@ const NoSubscriptionPopup = ({ isOpen, onClose, onSubscribe }) => {
     if (!isOpen) return null;
     return (
         <>
-            <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(0,0,0,0.18)' }} />
+            <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(0,0,0,0.18)', fontFamily: 'Cambria, Georgia, serif' }} />
             <div style={{
                 position: 'fixed', top: '50%', left: '50%',
                 transform: 'translate(-50%,-50%)', zIndex: 301,
                 width: '90%', maxWidth: 340, background: '#fff',
                 border: '1px solid #e4e8ee', borderRadius: 14,
                 padding: '18px 20px', boxSizing: 'border-box',
+                fontFamily: 'Cambria, Georgia, serif',
             }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
                     <div style={{
@@ -80,8 +95,8 @@ const NoSubscriptionPopup = ({ isOpen, onClose, onSubscribe }) => {
                         <Lock size={16} color="#3b6be0" />
                     </div>
                     <div style={{ flex: 1 }}>
-                        <p style={{ fontSize: 13, fontWeight: 700, color: '#212c3d', marginBottom: 3 }}>No active subscription</p>
-                        <p style={{ fontSize: 12, color: '#5a6a82', lineHeight: 1.5 }}>
+                        <p style={{ fontSize: 13, fontWeight: 700, color: '#212c3d', marginBottom: 3, fontFamily: 'Cambria, Georgia, serif' }}>No active subscription</p>
+                        <p style={{ fontSize: 12, color: '#5a6a82', lineHeight: 1.5, fontFamily: 'Cambria, Georgia, serif' }}>
                             Subscribe to a mentorship plan to unlock long-term mentorship features.
                         </p>
                     </div>
@@ -93,10 +108,12 @@ const NoSubscriptionPopup = ({ isOpen, onClose, onSubscribe }) => {
                     <button onClick={onClose} style={{
                         flex: 1, padding: '8px 0', fontSize: 12, fontWeight: 600,
                         background: '#f8fafc', border: '1px solid #e4e8ee', borderRadius: 8, cursor: 'pointer', color: '#5a6a82',
+                        fontFamily: 'Cambria, Georgia, serif',
                     }}>Cancel</button>
                     <button onClick={onSubscribe} style={{
                         flex: 1, padding: '8px 0', fontSize: 12, fontWeight: 700,
                         background: '#212c3d', border: 'none', borderRadius: 8, cursor: 'pointer', color: '#fff',
+                        fontFamily: 'Cambria, Georgia, serif',
                     }}>View Plans →</button>
                 </div>
             </div>
@@ -108,14 +125,14 @@ const NoSubscriptionPopup = ({ isOpen, onClose, onSubscribe }) => {
 const LogoutModal = ({ isOpen, onClose, onConfirm }) => {
     if (!isOpen) return null;
     return (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center">
+        <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
             <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-            <div className="relative bg-white rounded-lg p-6 w-80 shadow-xl mx-4">
+            <div className="relative bg-white rounded-lg p-6 w-80 shadow-xl mx-4" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                 <h2 className="text-lg font-bold mb-2">Confirm Logout</h2>
                 <p className="text-gray-600 mb-6 text-sm">Are you sure you want to logout?</p>
                 <div className="flex gap-3 justify-end">
-                    <button onClick={onClose} className="px-4 py-2 border rounded-lg hover:bg-gray-50 text-sm">Cancel</button>
-                    <button onClick={onConfirm} className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm">Logout</button>
+                    <button onClick={onClose} className="px-4 py-2 border rounded-lg hover:bg-gray-50 text-sm" style={{ fontFamily: 'Cambria, Georgia, serif' }}>Cancel</button>
+                    <button onClick={onConfirm} className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm" style={{ fontFamily: 'Cambria, Georgia, serif' }}>Logout</button>
                 </div>
             </div>
         </div>
@@ -127,7 +144,7 @@ const ProfileDropdown = ({ userData, onProfileClick, onLogoutClick, isOpen, prof
     if (!isOpen) return null;
     const initials = userData?.name?.split(' ').slice(0, 2).map(n => n?.[0]?.toUpperCase()).join('') || 'U';
     return (
-        <div className="absolute right-0 top-12 w-64 bg-white rounded-lg shadow-lg border py-2 z-50">
+        <div className="absolute right-0 top-12 w-64 bg-white rounded-lg shadow-lg border py-2 z-50" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
             <div className="px-4 py-3 border-b">
                 <div className="flex items-center gap-3">
                     {profilePhotoUrl ? (
@@ -137,17 +154,17 @@ const ProfileDropdown = ({ userData, onProfileClick, onLogoutClick, isOpen, prof
                         />
                     ) : null}
                     <div className="w-10 h-10 bg-[#0098cc] rounded-full flex items-center justify-center text-white flex-shrink-0 font-semibold text-sm"
-                        style={{ display: profilePhotoUrl ? 'none' : 'flex' }}>{initials}</div>
+                        style={{ display: profilePhotoUrl ? 'none' : 'flex', fontFamily: 'Cambria, Georgia, serif' }}>{initials}</div>
                     <div className="min-w-0">
-                        <div className="font-medium text-sm truncate">{userData?.name}</div>
-                        <div className="text-xs text-gray-500 truncate">{userData?.email}</div>
+                        <div className="font-medium text-sm truncate" style={{ fontFamily: 'Cambria, Georgia, serif' }}>{userData?.name}</div>
+                        <div className="text-xs text-gray-500 truncate" style={{ fontFamily: 'Cambria, Georgia, serif' }}>{userData?.email}</div>
                     </div>
                 </div>
             </div>
-            <button onClick={onProfileClick} className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2">
+            <button onClick={onProfileClick} className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                 <User size={16} /> View Profile
             </button>
-            <button onClick={onLogoutClick} className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2 text-red-600">
+            <button onClick={onLogoutClick} className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2 text-red-600" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                 <LogOut size={16} /> Logout
             </button>
         </div>
@@ -191,7 +208,7 @@ const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
     const errors = { ...serverErrors, ...clientErrors };
 
     const FieldError = ({ field }) => errors[field]
-        ? <p style={{ fontSize: 11, color: '#ef4444', marginTop: 4 }}>{errors[field]}</p> : null;
+        ? <p style={{ fontSize: 11, color: '#ef4444', marginTop: 4, fontFamily: 'Cambria, Georgia, serif' }}>{errors[field]}</p> : null;
 
     const inputStyle = (field) => ({
         width: '100%', padding: '8px 11px',
@@ -199,7 +216,7 @@ const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
         borderRadius: 8, fontSize: 13, color: '#0f172a',
         outline: 'none', boxSizing: 'border-box',
         background: errors[field] ? '#fff8f8' : '#fff',
-        fontFamily: 'inherit', transition: 'border-color 0.15s',
+        fontFamily: 'Cambria, Georgia, serif', transition: 'border-color 0.15s',
     });
 
     const toggleStyle = (active) => ({
@@ -208,20 +225,22 @@ const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
         background: active ? '#f0f9ff' : '#fff',
         color: active ? '#0098cc' : '#64748b',
         cursor: 'pointer', transition: 'all 0.15s', textAlign: 'center',
+        fontFamily: 'Cambria, Georgia, serif',
     });
 
     const labelStyle = {
         display: 'block', fontSize: 11, fontWeight: 500,
         color: '#64748b', letterSpacing: '0.04em',
         textTransform: 'uppercase', marginBottom: 5,
+        fontFamily: 'Cambria, Georgia, serif',
     };
 
     return (
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '1rem' }}>
-            <div style={{ background: '#fff', borderRadius: 14, border: '0.5px solid #e2e8f0', width: '100%', maxWidth: 440, overflow: 'hidden' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '1rem', fontFamily: 'Cambria, Georgia, serif' }}>
+            <div style={{ background: '#fff', borderRadius: 14, border: '0.5px solid #e2e8f0', width: '100%', maxWidth: 440, overflow: 'hidden', fontFamily: 'Cambria, Georgia, serif' }}>
                 <div style={{ padding: '20px 24px 16px', borderBottom: '0.5px solid #f0f4f8', textAlign: 'center' }}>
-                    <p style={{ fontSize: 15, fontWeight: 500, color: '#0098cc', margin: '0 0 3px' }}>Complete your profile</p>
-                    <p style={{ fontSize: 11, color: '#94a3b8', margin: '0 0 14px' }}>3 quick steps to get matched with the right mentor</p>
+                    <p style={{ fontSize: 15, fontWeight: 500, color: '#0098cc', margin: '0 0 3px', fontFamily: 'Cambria, Georgia, serif' }}>Complete your profile</p>
+                    <p style={{ fontSize: 11, color: '#94a3b8', margin: '0 0 14px', fontFamily: 'Cambria, Georgia, serif' }}>3 quick steps to get matched with the right mentor</p>
                     <div style={{ display: 'flex', gap: 5 }}>
                         {[1, 2, 3].map(i => (
                             <div key={i} style={{
@@ -232,13 +251,14 @@ const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
                         ))}
                     </div>
                 </div>
-                <div style={{ padding: '18px 24px' }}>
+                <div style={{ padding: '18px 24px', fontFamily: 'Cambria, Georgia, serif' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 14 }}>
                         <span style={{
                             width: 20, height: 20, borderRadius: '50%', background: '#0098cc', color: '#fff',
                             fontSize: 11, fontWeight: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                            fontFamily: 'Cambria, Georgia, serif',
                         }}>{currentStep}</span>
-                        <span style={{ fontSize: 13, fontWeight: 500, color: '#0098cc' }}>
+                        <span style={{ fontSize: 13, fontWeight: 500, color: '#0098cc', fontFamily: 'Cambria, Georgia, serif' }}>
                             {currentStep === 1 ? 'Personal information' : currentStep === 2 ? 'Experience & education' : 'Mentor preference'}
                         </span>
                     </div>
@@ -298,21 +318,21 @@ const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
                         </div>
                     )}
                 </div>
-                <div style={{ padding: '12px 24px', background: '#fafbfc', borderTop: '0.5px solid #f0f4f8', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: 11, color: '#94a3b8' }}>Step {currentStep} of 3</span>
+                <div style={{ padding: '12px 24px', background: '#fafbfc', borderTop: '0.5px solid #f0f4f8', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'Cambria, Georgia, serif' }}>
+                    <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'Cambria, Georgia, serif' }}>Step {currentStep} of 3</span>
                     <div style={{ display: 'flex', gap: 8 }}>
                         <button onClick={() => setCurrentStep(s => s - 1)} disabled={currentStep === 1} style={{
                             padding: '7px 16px', border: '1.5px solid #e2e8f0', borderRadius: 8,
                             background: '#fff', color: '#64748b', fontSize: 13, fontWeight: 500,
-                            cursor: currentStep === 1 ? 'default' : 'pointer', opacity: currentStep === 1 ? 0.35 : 1, fontFamily: 'inherit',
+                            cursor: currentStep === 1 ? 'default' : 'pointer', opacity: currentStep === 1 ? 0.35 : 1, fontFamily: 'Cambria, Georgia, serif',
                         }}>Back</button>
                         {currentStep < 3 ? (
-                            <button onClick={handleNext} style={{ padding: '7px 18px', border: 'none', borderRadius: 8, background: '#0098cc', color: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'inherit' }}>Continue →</button>
+                            <button onClick={handleNext} style={{ padding: '7px 18px', border: 'none', borderRadius: 8, background: '#0098cc', color: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'Cambria, Georgia, serif' }}>Continue →</button>
                         ) : (
                             <button onClick={handleSubmit} disabled={saving} style={{
                                 padding: '7px 18px', border: 'none', borderRadius: 8, background: '#0098cc', color: '#fff', fontSize: 13, fontWeight: 500,
                                 cursor: saving ? 'default' : 'pointer', opacity: saving ? 0.5 : 1,
-                                display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'inherit',
+                                display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'Cambria, Georgia, serif',
                             }}>
                                 {saving && <Loader2 size={13} className="animate-spin" />}
                                 {saving ? 'Saving...' : 'Complete profile'}
@@ -339,16 +359,16 @@ const Header = ({
             <div style={{
                 background: "#1a1a2e", color: "#e5e7eb", fontSize: 12,
                 textAlign: "center", padding: "7px 12px", flexShrink: 0,
-                whiteSpace: 'nowrap', overflowX: 'auto',
+                whiteSpace: 'nowrap', overflowX: 'auto', fontFamily: 'Cambria, Georgia, serif',
             }}>
                 Your Trials are switched off&nbsp;
                 <button
                     onClick={() => { }}
-                    style={{ color: "#ffffff", fontWeight: 600, background: "none", border: "none", cursor: "pointer", fontSize: 12, padding: 0 }}
+                    style={{ color: "#ffffff", fontWeight: 600, background: "none", border: "none", cursor: "pointer", fontSize: 12, padding: 0, fontFamily: 'Cambria, Georgia, serif' }}
                 >Go to Trial Settings</button>
             </div>
 
-            <header className="bg-white border-b px-3 sm:px-4 flex items-center justify-between sticky top-0 z-40 h-[52px] sm:h-[56px] flex-shrink-0">
+            <header className="bg-white border-b px-3 sm:px-4 flex items-center justify-between sticky top-0 z-40 h-[52px] sm:h-[56px] flex-shrink-0" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                 {/* Left: hamburger + logo */}
                 <div className="flex items-center gap-2">
                     {/* Hamburger — visible on ALL screen sizes */}
@@ -359,7 +379,7 @@ const Header = ({
                     >
                         <Menu size={20} />
                     </button>
-                    <span className="text-[14px] sm:text-[15px] font-bold text-gray-900 tracking-tight whitespace-nowrap">
+                    <span className="text-[14px] sm:text-[15px] font-bold text-gray-900 tracking-tight whitespace-nowrap" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                         Mentee hub
                     </span>
                 </div>
@@ -378,7 +398,7 @@ const Header = ({
                         className="flex items-center gap-1 rounded-full focus:outline-none"
                     >
                         <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-medium overflow-hidden"
-                            style={{ background: profilePhotoUrl ? 'transparent' : '#0098cc' }}>
+                            style={{ background: profilePhotoUrl ? 'transparent' : '#0098cc', fontFamily: 'Cambria, Georgia, serif' }}>
                             {profilePhotoUrl ? (
                                 <img src={profilePhotoUrl} alt={userData?.name} className="w-8 h-8 rounded-full object-cover"
                                     onError={e => { e.target.style.display = 'none'; }}
@@ -405,7 +425,7 @@ const Header = ({
 const BottomBar = () => {
     const navigate = useNavigate()
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#1a1a1a] border-t border-[#2e2e2e] h-[44px] sm:h-[42px]">
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#1a1a1a] border-t border-[#2e2e2e] h-[44px] sm:h-[42px]" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
             <div className="h-full flex items-center justify-between px-2 sm:px-4 overflow-hidden">
 
                 {/* Left Section */}
@@ -415,6 +435,7 @@ const BottomBar = () => {
                     <button
                         onClick={() => navigate("/mentee/support")}
                         className="flex items-center gap-1 h-[28px] px-2 sm:px-3 rounded-md border border-gray-600 text-[10px] sm:text-[11px] text-gray-200 hover:bg-gray-700 transition whitespace-nowrap flex-shrink-0"
+                        style={{ fontFamily: 'Cambria, Georgia, serif' }}
                     >
                         <BookOpen size={12} />
                         <span>Support</span>
@@ -425,6 +446,7 @@ const BottomBar = () => {
                     <button
                         onClick={() => navigate("/feature-request")}
                         className="hidden sm:flex items-center gap-1 text-[11px] text-gray-300 hover:text-white transition whitespace-nowrap"
+                        style={{ fontFamily: 'Cambria, Georgia, serif' }}
                     >
                         <Star
                             size={11}
@@ -440,6 +462,7 @@ const BottomBar = () => {
                     <button
                         onClick={() => navigate("/changelog")}
                         className="hidden lg:flex items-center gap-1 text-[11px] text-gray-300 hover:text-white transition whitespace-nowrap"
+                        style={{ fontFamily: 'Cambria, Georgia, serif' }}
                     >
                         <Megaphone size={11} className="flex-shrink-0" />
                         Changelog
@@ -455,6 +478,7 @@ const BottomBar = () => {
                     <button
                         onClick={() => navigate("/report-bug")}
                         className="flex items-center gap-1 text-[10px] sm:text-[11px] text-gray-300 hover:text-white transition whitespace-nowrap flex-shrink-0"
+                        style={{ fontFamily: 'Cambria, Georgia, serif' }}
                     >
                         <Bug size={11} className="flex-shrink-0" />
                         <span className="hidden xs:inline">Report</span>
@@ -465,6 +489,7 @@ const BottomBar = () => {
                     <a
                         href="mailto:mentee-support@preplaced.in"
                         className="hidden xl:flex items-center gap-1 text-[11px] text-gray-300 hover:text-white transition whitespace-nowrap truncate max-w-[220px]"
+                        style={{ fontFamily: 'Cambria, Georgia, serif' }}
                     >
                         <Mail size={11} className="flex-shrink-0" />
                         wecare.karrivo@gmail.com
@@ -478,10 +503,10 @@ const BottomBar = () => {
 /* ── Right Panel ──────────────────────────────────────────────────────────── */
 const RightPanel = ({ navigate }) => (
     <aside className="hidden xl:flex flex-col flex-shrink-0 bg-white border-l overflow-y-auto"
-        style={{ width: '280px' }}>
+        style={{ width: '280px', fontFamily: 'Cambria, Georgia, serif' }}>
 
         {/* Remaining trials card */}
-        <div className="m-4 p-4 rounded-xl border border-green-200 bg-green-50">
+        <div className="m-4 p-4 rounded-xl border border-green-200 bg-green-50" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
             <p className="text-sm font-bold text-gray-800 mb-1">Your remaining trials: 10/10</p>
             <p className="text-xs text-gray-500 leading-relaxed mb-3">
                 Explore from a list of 600+ mentors, book trials and try to find the perfect mentor for you.
@@ -489,13 +514,14 @@ const RightPanel = ({ navigate }) => (
             <button
                 onClick={() => navigate('/explore-mentors')}
                 className="w-full py-2 text-xs font-semibold border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700"
+                style={{ fontFamily: 'Cambria, Georgia, serif' }}
             >
                 Explore All Mentors
             </button>
         </div>
 
         {/* Relationship Manager card */}
-        <div className="mx-4 mb-4 p-4 rounded-xl border border-gray-200 bg-gray-50">
+        <div className="mx-4 mb-4 p-4 rounded-xl border border-gray-200 bg-gray-50" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
             <p className="text-sm font-bold text-gray-800 mb-1 leading-snug">
                 Planning to purchase and confused about which plan is right for you?
             </p>
@@ -529,7 +555,7 @@ const RightPanel = ({ navigate }) => (
         <div className="flex-1" />
 
         {/* Bottom Banner */}
-        <div className="m-4 rounded-xl overflow-hidden border border-[#0098cc]/20 bg-gradient-to-br from-[#e8f7fc] via-[#f0fbff] to-[#ddf4fc]">
+        <div className="m-4 rounded-xl overflow-hidden border border-[#0098cc]/20 bg-gradient-to-br from-[#e8f7fc] via-[#f0fbff] to-[#ddf4fc]" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
             <div className="p-4">
                 <div className="flex items-center gap-2 mb-2">
                     <div className="w-7 h-7 rounded-lg bg-[#0098cc]/10 flex items-center justify-center">
@@ -546,7 +572,7 @@ const RightPanel = ({ navigate }) => (
                 <button
                     onClick={() => navigate('/explore-mentors')}
                     className="w-full py-2 text-xs font-bold text-white rounded-lg transition-colors"
-                    style={{ background: '#0098cc' }}
+                    style={{ background: '#0098cc', fontFamily: 'Cambria, Georgia, serif' }}
                 >
                     Explore Plans →
                 </button>
@@ -586,11 +612,12 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, currentPath, onLogout, hasSu
                             : 'text-gray-700 hover:bg-gray-50'
                     }
                 `}
+                style={{ fontFamily: 'Cambria, Georgia, serif' }}
             >
                 <Icon size={17} className="flex-shrink-0" />
                 <span className="whitespace-nowrap flex-1 text-left text-[13px] leading-snug">{item.label}</span>
                 {item.badge ? (
-                    <span className="bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center flex-shrink-0">
+                    <span className="bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center flex-shrink-0" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                         {item.badge}
                     </span>
                 ) : null}
@@ -605,7 +632,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, currentPath, onLogout, hasSu
                 <NavItem key={item.id} item={item} locked={false} />
             ))}
 
-            <p className="text-[10px] font-semibold text-gray-400 uppercase px-3 pt-4 pb-1.5 tracking-widest">
+            <p className="text-[10px] font-semibold text-gray-400 uppercase px-3 pt-4 pb-1.5 tracking-widest" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                 Long Term Mentorship
             </p>
 
@@ -620,13 +647,13 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, currentPath, onLogout, hasSu
             {/* Desktop sidebar — slides in/out via width */}
             <aside
                 className={`hidden sm:flex flex-col flex-shrink-0 bg-white border-r z-50 overflow-hidden transition-[width] duration-300 ease-in-out`}
-                style={{ width: isSidebarOpen ? '220px' : '0px' }}
+                style={{ width: isSidebarOpen ? '220px' : '0px', fontFamily: 'Cambria, Georgia, serif' }}
             >
                 <nav className="flex-1 overflow-y-auto overflow-x-hidden py-3 px-2 min-h-0">
                     <NavContent />
                 </nav>
                 <div className="px-2 py-3 border-t flex-shrink-0">
-                    <button onClick={onLogout} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-500 hover:bg-red-50 w-full transition-all">
+                    <button onClick={onLogout} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-500 hover:bg-red-50 w-full transition-all" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                         <LogOut size={17} />
                         <span className="whitespace-nowrap">Logout</span>
                     </button>
@@ -634,9 +661,9 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, currentPath, onLogout, hasSu
             </aside>
 
             {/* Mobile drawer — slides in from left, overlays content */}
-            <aside className={`fixed top-0 left-0 h-screen bg-white border-r z-50 w-56 transition-transform duration-300 ease-in-out flex flex-col sm:hidden ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+            <aside className={`fixed top-0 left-0 h-screen bg-white border-r z-50 w-56 transition-transform duration-300 ease-in-out flex flex-col sm:hidden ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`} style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                 <div className="flex items-center justify-between px-4 border-b h-[52px] flex-shrink-0">
-                    <span className="text-base font-bold text-gray-900">preplaced</span>
+                    <span className="text-base font-bold text-gray-900" style={{ fontFamily: 'Cambria, Georgia, serif' }}>preplaced</span>
                     <button onClick={() => setIsSidebarOpen(false)} className="p-1 rounded hover:bg-gray-100">
                         <X size={18} className="text-gray-500" />
                     </button>
@@ -645,7 +672,7 @@ const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, currentPath, onLogout, hasSu
                     <NavContent />
                 </nav>
                 <div className="px-2 py-3 border-t flex-shrink-0">
-                    <button onClick={onLogout} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-500 hover:bg-red-50 w-full transition-all">
+                    <button onClick={onLogout} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-red-500 hover:bg-red-50 w-full transition-all" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                         <LogOut size={17} />
                         <span>Logout</span>
                     </button>
@@ -665,6 +692,16 @@ const MenteeDashboard = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
+
+    // Inject global Cambria font styles
+    useEffect(() => {
+        const style = document.createElement('style');
+        style.textContent = globalStyles;
+        document.head.appendChild(style);
+        return () => {
+            if (style.parentNode) document.head.removeChild(style);
+        };
+    }, []);
 
     const getUserId = () => {
         try {
@@ -775,7 +812,7 @@ const MenteeDashboard = () => {
 
     if (isLoading) {
         return (
-            <div className="h-screen flex items-center justify-center bg-gray-50">
+            <div className="h-screen flex items-center justify-center bg-gray-50" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                 <Loader />
             </div>
         );
@@ -784,7 +821,7 @@ const MenteeDashboard = () => {
     return (
         <>
             {/* Full-page wrapper — leave 34px at bottom for the fixed bar */}
-            <div className="flex flex-col overflow-hidden bg-white" style={{ height: 'calc(100vh - 34px)' }}>
+            <div className="flex flex-col overflow-hidden bg-white" style={{ height: 'calc(100vh - 34px)', fontFamily: 'Cambria, Georgia, serif' }}>
 
                 {/* ── Top header (full width) ── */}
                 <Header
@@ -800,7 +837,7 @@ const MenteeDashboard = () => {
                 />
 
                 {/* ── Body row ── */}
-                <div className="flex flex-1 overflow-hidden" style={{ background: '#f0f2f5' }}>
+                <div className="flex flex-1 overflow-hidden" style={{ background: '#f0f2f5', fontFamily: 'Cambria, Georgia, serif' }}>
 
                     {/* Left sidebar */}
                     <Sidebar
@@ -814,16 +851,16 @@ const MenteeDashboard = () => {
 
                     {/* Center white content column */}
                     <div className="flex-1 flex flex-col min-w-0 overflow-hidden bg-white"
-                        style={{ borderLeft: '1px solid #e5e7eb', borderRight: '1px solid #e5e7eb' }}>
+                        style={{ borderLeft: '1px solid #e5e7eb', borderRight: '1px solid #e5e7eb', fontFamily: 'Cambria, Georgia, serif' }}>
 
                         {/* Mini topbar: page title (desktop only — hamburger is in header for mobile) */}
-                        <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white border-b flex-shrink-0">
-                            <span className="text-sm font-medium text-gray-700">
+                        <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white border-b flex-shrink-0" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
+                            <span className="text-sm font-medium text-gray-700" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                                 {getPageLabel(location.pathname)}
                             </span>
                         </div>
 
-                        <main className="flex-1 overflow-y-auto bg-white">
+                        <main className="flex-1 overflow-y-auto bg-white" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                             <Outlet context={{ userData, profile }} />
                         </main>
                     </div>
@@ -835,7 +872,7 @@ const MenteeDashboard = () => {
             </div>
 
             {/* Fixed bottom bar */}
-            <BottomBar navigate={navigate} />
+            {/* <BottomBar navigate={navigate} /> */}
 
             {/* Close dropdown on outside click */}
             {isProfileDropdownOpen && (
@@ -855,7 +892,7 @@ const MenteeDashboard = () => {
             />
 
             {showOnboarding && (
-                <div className="fixed inset-0 z-[100]">
+                <div className="fixed inset-0 z-[100]" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                     <div className="absolute inset-0 backdrop-blur-md bg-black/50" />
                     <div className="relative z-10">
                         <ProfileCompletionForm
@@ -871,5 +908,3 @@ const MenteeDashboard = () => {
 };
 
 export default MenteeDashboard;
-
-
