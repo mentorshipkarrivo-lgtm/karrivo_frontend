@@ -38,10 +38,8 @@ export const mentorSectionApiSlice = apiSlice.injectEndpoints({
                 url: `/Mentor/view/${mentorId}`,   // ✅ param
                 params: { currentStatus },         // ✅ query
             }),
-            transformResponse: (response) => response.data,
-            providesTags: (result, error, arg) => [
-                { type: "Mentor", id: arg.mentorId },
-            ],
+            transformResponse: (response) => response,
+          
         }),
 
 

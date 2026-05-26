@@ -28,7 +28,7 @@ const steps = [
 export default function StepsSection() {
   const handleButtonClick = (action) => {
     if (action === "find" || action === "start") {
-      window.location.href = "/explore-mentors";
+      window.location.href = "/get-Mentors";
     } else if (action === "book") {
       const token = localStorage.getItem("token");
       window.location.href = token ? "/mentee/bookings" : "/login";
