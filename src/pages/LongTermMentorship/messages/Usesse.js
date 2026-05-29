@@ -1,8 +1,4 @@
-// hooks/useSSE.js
-// Server-Sent Events hook — fires onMessage callback when server pushes data
-// Backend must implement: GET /api/messages/stream/:sessionId
-// Headers: Authorization Bearer token
-// Each push: data: { type: 'NEW_MESSAGE', payload: messageObject }\n\n
+
 
 import { useEffect, useRef } from 'react';
 
