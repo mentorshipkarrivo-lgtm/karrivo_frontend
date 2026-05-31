@@ -40,7 +40,7 @@ const AllMentorsDiscovery = () => {
     };
 
     const handleViewProfile = (mentor) => {
-        navigate(`/mentor-profile/${mentor._id}`);
+        navigate(`/mentor-profile/${mentor.userId}`);
     };
 
     if (isLoading) {

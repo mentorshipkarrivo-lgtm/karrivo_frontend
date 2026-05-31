@@ -159,7 +159,7 @@ const Navbar = () => {
               {/* Find your mentor button — DESKTOP ONLY */}
               <button
                 className="px-5 py-2 bg-gray-900 text-white text-[14px] font-semibold rounded-md hover:bg-gray-800 transition-colors border-none cursor-pointer"
-                onClick={() => navigate("/mentors")}
+                onClick={() => navigate("/get-Mentors")}
               >
                 Find your mentor
               </button>
@@ -225,7 +225,7 @@ const Navbar = () => {
               {/* Find your mentor button — DESKTOP ONLY */}
               <button
                 className="px-5 py-2 bg-gray-900 text-white text-[14px] font-semibold rounded-md hover:bg-gray-800 transition-colors border-none cursor-pointer"
-                onClick={() => navigate("/explore-mentors")}
+                onClick={() => navigate("/get-Mentors")}
               >
                 Find your mentor
               </button>

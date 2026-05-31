@@ -261,14 +261,14 @@ export default function FooterLinks() {
               © 2026 Karrivo. All Rights Reserved.
             </p>
 
-            <p
+            {/* <p
               style={{
                 fontSize: "12px",
                 color: "#9ca3af",
               }}
             >
               Karrivo Technologies Private Limited
-            </p>
+            </p> */}
           </div>
 
           <div
