@@ -288,6 +288,8 @@ const BookingModal = ({ mentor, isOpen, onClose, selectedSlot, appliedCoupon: ex
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
+  console.log(mentor, "1ws2d3f4g5")
+
   const [userId, setUserId] = useState("");
   const [username, setUsername] = useState("");
   const [bookingSuccess, setBookingSuccess] = useState(false);
@@ -323,7 +325,7 @@ const BookingModal = ({ mentor, isOpen, onClose, selectedSlot, appliedCoupon: ex
       return;
     }
 
-    console.log(mentor,"me34r5tentor")
+    console.log(mentor, "me34r5tentor")
     const authToken = localStorage.getItem("authToken");
     if (!authToken) {
       // ── NEW: store pending booking intent so LoginPage can redirect back ──
@@ -343,6 +345,7 @@ const BookingModal = ({ mentor, isOpen, onClose, selectedSlot, appliedCoupon: ex
     if (raw) {
       try {
         const user = JSON.parse(raw);
+        console.log(user, 'userw2e3r4t5')
         setUserId(user._id || user.id || "");
         setUsername(user.username || "");
       } catch {
@@ -418,7 +421,10 @@ const BookingModal = ({ mentor, isOpen, onClose, selectedSlot, appliedCoupon: ex
         })),
       };
 
+
+      console.log(payload, "payload`q1w2e3r4t5")
       const response = await createBooking(payload).unwrap();
+      console.log(response.isFreeSession, "response.isFreeSession ")
 
       if (response.isFreeSession === true) {
         setBookingSuccess(true);

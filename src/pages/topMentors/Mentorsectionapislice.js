@@ -35,11 +35,10 @@ export const mentorSectionApiSlice = apiSlice.injectEndpoints({
 
         fetchMentorById: builder.query({
             query: ({ mentorId, currentStatus }) => ({
-                url: `/Mentor/view/${mentorId}`,   // ✅ param
-                params: { currentStatus },         // ✅ query
+                url: `/Mentor/view/${mentorId}`,
+                params: { currentStatus },
             }),
-            transformResponse: (response) => response,
-          
+            transformResponse: (response) => response.data,
         }),
 
 

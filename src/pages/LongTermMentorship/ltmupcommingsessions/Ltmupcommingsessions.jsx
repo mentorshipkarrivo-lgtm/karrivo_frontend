@@ -1178,15 +1178,7 @@ export default function Ltmupcommingsessions() {
                               </td>
                               <td style={{ padding: "13px 16px" }}>
                                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                                  <div style={{
-                                    width: 28, height: 28, borderRadius: 7,
-                                    background: "#0098cc", color: "#fff",
-                                    fontSize: 11, fontWeight: 700, fontFamily: FONT,
-                                    display: "flex", alignItems: "center",
-                                    justifyContent: "center", flexShrink: 0,
-                                  }}>
-                                    {session.session_number}
-                                  </div>
+                                  
                                   <span style={{
                                     fontSize: 13, fontWeight: 600, color: "#1a1a2e",
                                     overflow: "hidden", textOverflow: "ellipsis",

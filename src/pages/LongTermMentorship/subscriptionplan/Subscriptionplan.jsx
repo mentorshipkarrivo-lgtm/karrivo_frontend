@@ -218,15 +218,7 @@ const Subscriptionplan = () => {
         <div className="min-h-screen bg-slate-50 px-4 py-8 pb-20">
             <div className="max-w-5xl mx-auto">
 
-                {/* Page header */}
-                {/* <div className="mb-8">
-          <h1 className="text-2xl font-extrabold text-[#1a1a2e] tracking-tight">
-            My Subscriptions
-          </h1>
-          <p className="text-sm text-slate-500 mt-1">
-            Your active and past mentorship plans
-          </p>
-        </div> */}
+
 
                 {/* Error / not logged in */}
                 {(!menteeId || isError) && (

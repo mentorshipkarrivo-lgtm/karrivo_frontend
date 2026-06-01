@@ -4,9 +4,9 @@ import { useGetMentorSessionsQuery } from "./sessionsapislice";
 const StatusBadge = ({ status, isExpired }) => {
     if (isExpired) return <Badge bg="#fef2f2" color="#dc2626" border="#fecaca" label="Expired" />;
     const map = {
-        inprogress: { bg: "#fffbeb", color: "#d97706", border: "#fde68a", label: "In Progress" },
-        completed: { bg: "#f0fdf4", color: "#16a34a", border: "#bbf7d0", label: "Completed" },
-        cancelled: { bg: "#f9fafb", color: "#6b7280", border: "#e5e7eb", label: "Cancelled" },
+        inprogress: { bg: "#e0f5fc", color: "#0091c3", border: "#b3e5f7", label: "In Progress" },
+        completed:  { bg: "#f0fdf4", color: "#16a34a", border: "#bbf7d0", label: "Completed" },
+        cancelled:  { bg: "#f9fafb", color: "#6b7280", border: "#e5e7eb", label: "Cancelled" },
     };
     const s = map[status] || map.inprogress;
     return <Badge {...s} />;
@@ -14,9 +14,9 @@ const StatusBadge = ({ status, isExpired }) => {
 
 const PaymentBadge = ({ status }) => {
     const map = {
-        inprogress: { bg: "#eff6ff", color: "#2563eb", border: "#bfdbfe", label: "Pending" },
-        paid: { bg: "#f0fdf4", color: "#16a34a", border: "#bbf7d0", label: "Paid" },
-        failed: { bg: "#fef2f2", color: "#dc2626", border: "#fecaca", label: "Failed" },
+        inprogress: { bg: "#f8fafc", color: "#0091c3", border: "#b3e5f7", label: "Pending" },
+        Approved:       { bg: "#f0fdf4", color: "#16a34a", border: "#bbf7d0", label: "Paid" },
+        failed:     { bg: "#fef2f2", color: "#dc2626", border: "#fecaca", label: "Failed" },
     };
     const s = map[status] || map.inprogress;
     return <Badge {...s} />;
@@ -37,32 +37,38 @@ const formatDate = (d) => d
     : "—";
 
 const COLS = [
-    { key: "bookingId", label: "Booking ID" },
-    { key: "menteeName", label: "Mentee" },
-    { key: "topic", label: "Topic" },
+    { key: "menteeName",  label: "Mentee" },
+    { key: "topic",       label: "Topic" },
     { key: "sessionDate", label: "Date" },
-    { key: "time", label: "Time" },
+    { key: "time",        label: "Time" },
     { key: "sessionType", label: "Type" },
-    { key: "price", label: "Amount" },
-    { key: "payment", label: "Payment" },
-    { key: "meeting", label: "Join" },
+    { key: "price",       label: "Amount" },
+    { key: "payment",     label: "Payment" },
+    { key: "meeting",     label: "Join" },
 ];
 
 const PBtn = ({ onClick, disabled, children, active }) => (
-    <button onClick={onClick} disabled={disabled} style={{
-        padding: "4px 9px", fontSize: "11px", fontWeight: active ? 700 : 500,
-        color: disabled ? "#cbd5e1" : active ? "#fff" : "#374151",
-        background: active ? "#2563eb" : "#fff",
-        border: `1px solid ${active ? "#2563eb" : "#e2e8f0"}`,
-        borderRadius: "5px", cursor: disabled ? "not-allowed" : "pointer",
-        opacity: disabled ? 0.6 : 1, whiteSpace: "nowrap",
-        minWidth: "28px",
-    }}>{children}</button>
+    <button
+        onClick={onClick}
+        disabled={disabled}
+        style={{
+            padding: "4px 9px", fontSize: "11px",
+            fontWeight: active ? 700 : 500,
+            color: disabled ? "#b0c4ce" : active ? "#fff" : "#0091c3",
+            background: active ? "#1a1a2e" : "#fff",
+            border: `1px solid ${active ? "#1a1a2e" : "#b3e5f7"}`,
+            borderRadius: "5px",
+            cursor: disabled ? "not-allowed" : "pointer",
+            opacity: disabled ? 0.5 : 1,
+            whiteSpace: "nowrap",
+            minWidth: "28px",
+        }}
+    >{children}</button>
 );
 
 export default function SessionsTable() {
     const [mentorId, setMentorId] = useState(null);
-    const [page, setPage] = useState(1);
+    const [page, setPage]         = useState(1);
     const limit = 10;
 
     useEffect(() => {
@@ -79,59 +85,66 @@ export default function SessionsTable() {
         { skip: !mentorId }
     );
 
-    const sessions = data?.data || [];
-    const totalPages = data?.totalPages || 1;
-    const totalCount = data?.count || 0;
-    const hasNext = data?.hasNextPage;
-    const hasPrev = data?.hasPrevPage;
+    const sessions    = data?.data       || [];
+    const totalPages  = data?.totalPages || 1;
+    const totalCount  = data?.count      || 0;
+    const hasNext     = data?.hasNextPage;
+    const hasPrev     = data?.hasPrevPage;
 
     const cell = {
         padding: "9px 10px", fontSize: "12px",
-        color: "#334155", whiteSpace: "nowrap", verticalAlign: "middle",
+        color: "#0091c3", whiteSpace: "nowrap", verticalAlign: "middle",
     };
 
     return (
-        <div style={{ fontFamily: "'DM Sans','Segoe UI',sans-serif", padding: "16px" }}>
+        <div style={{ fontFamily: "'DM Sans','Segoe UI',sans-serif", padding: "16px", background: "#ffffff", minHeight: "100vh" }}>
+
             {/* Header */}
             <div style={{ marginBottom: "14px" }}>
-                <h1 style={{ fontSize: "16px", fontWeight: 700, color: "#0f172a", margin: 0 }}>
+                <h1 style={{ fontSize: "16px", fontWeight: 700, color: "#1a1a2e", margin: 0 }}>
                     Session Bookings
                 </h1>
-                <p style={{ color: "#64748b", fontSize: "11px", margin: "3px 0 0" }}>
+                <p style={{ color: "#0091c3", fontSize: "11px", margin: "3px 0 0" }}>
                     {isLoading ? "Loading…" : `${totalCount} total sessions`}
                 </p>
             </div>
 
             {/* Table card */}
             <div style={{
-                background: "#fff", borderRadius: "10px",
-                border: "1px solid #e2e8f0",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.05)", overflow: "hidden",
+                background: "#ffffff",
+                borderRadius: "10px",
+                border: "1px solid #b3e5f7",
+                boxShadow: "0 1px 6px rgba(0,145,195,0.08)",
+                overflow: "hidden",
             }}>
-                {/* ✅ scroll-hide class hides scrollbar but keeps scroll working */}
                 <div className="scroll-hide" style={{ overflowX: "auto" }}>
                     <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "12px" }}>
+
+                        {/* Head */}
                         <thead>
-                            <tr style={{ background: "#f8fafc", borderBottom: "1px solid #e2e8f0" }}>
+                            <tr style={{ background: "#f8fafc", borderBottom: "1px solid #b3e5f7" }}>
                                 {COLS.map(c => (
                                     <th key={c.key} style={{
                                         padding: "9px 10px", textAlign: "left",
                                         fontSize: "10px", fontWeight: 700,
-                                        color: "#64748b", letterSpacing: "0.5px",
+                                        color: "#1a1a2e", letterSpacing: "0.5px",
                                         textTransform: "uppercase", whiteSpace: "nowrap",
                                     }}>{c.label}</th>
                                 ))}
                             </tr>
                         </thead>
 
+                        {/* Body */}
                         <tbody>
                             {isLoading
                                 ? Array.from({ length: 5 }).map((_, i) => (
-                                    <tr key={i} style={{ borderBottom: "1px solid #f1f5f9" }}>
+                                    <tr key={i} style={{ borderBottom: "1px solid #f8fafc" }}>
                                         {COLS.map(c => (
                                             <td key={c.key} style={{ padding: "10px" }}>
                                                 <div style={{
-                                                    height: "11px", background: "#e2e8f0", borderRadius: "3px",
+                                                    height: "11px",
+                                                    background: "#b3e5f7",
+                                                    borderRadius: "3px",
                                                     width: c.key === "meeting" ? "32px" : "70%",
                                                     animation: "pulse 1.5s ease-in-out infinite",
                                                 }} />
@@ -141,40 +154,32 @@ export default function SessionsTable() {
                                 ))
                                 : isError
                                     ? (
-                                        <tr><td colSpan={COLS.length} style={{ textAlign: "center", padding: "40px", color: "#ef4444", fontSize: "12px" }}>
-                                            Failed to load sessions.
-                                        </td></tr>
+                                        <tr>
+                                            <td colSpan={COLS.length} style={{ textAlign: "center", padding: "40px", color: "#ef4444", fontSize: "12px" }}>
+                                                Failed to load sessions.
+                                            </td>
+                                        </tr>
                                     )
                                     : sessions.length === 0
                                         ? (
-                                            <tr><td colSpan={COLS.length} style={{ textAlign: "center", padding: "40px", color: "#94a3b8", fontSize: "12px" }}>
-                                                No sessions found.
-                                            </td></tr>
+                                            <tr>
+                                                <td colSpan={COLS.length} style={{ textAlign: "center", padding: "40px", color: "#0091c3", fontSize: "12px" }}>
+                                                    No sessions found.
+                                                </td>
+                                            </tr>
                                         )
                                         : sessions.map((s, idx) => (
-                                            <tr key={s._id}
+                                            <tr
+                                                key={s._id}
                                                 style={{
-                                                    borderBottom: "1px solid #f1f5f9",
-                                                    background: isFetching ? "#fafafa" : idx % 2 === 0 ? "#fff" : "#fafcff",
-                                                    transition: "background 0.12s",
+                                                    borderBottom: "1px solid #e0f5fc",
+                                                    background: isFetching ? "#f7fdff" : idx % 2 === 0 ? "#ffffff" : "#f8fafc",
                                                 }}
-                                                onMouseEnter={e => e.currentTarget.style.background = "#f0f9ff"}
-                                                onMouseLeave={e => e.currentTarget.style.background = idx % 2 === 0 ? "#fff" : "#fafcff"}
                                             >
-                                                {/* Booking ID */}
-                                                <td style={cell}>
-                                                    <span style={{
-                                                        fontFamily: "monospace", fontSize: "10px",
-                                                        color: "#475569", background: "#f1f5f9",
-                                                        padding: "2px 6px", borderRadius: "3px",
-                                                    }}>{s.bookingId}</span>
-                                                </td>
-
                                                 {/* Mentee */}
                                                 <td style={cell}>
                                                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                                                        
-                                                        <span style={{ fontSize: "12px", color: "#0f172a", fontWeight: 500 }}>
+                                                        <span style={{ fontSize: "12px", color: "#1a1a2e", fontWeight: 500 }}>
                                                             {s.menteeName}
                                                         </span>
                                                     </div>
@@ -185,30 +190,29 @@ export default function SessionsTable() {
                                                     <span style={{
                                                         maxWidth: "90px", overflow: "hidden",
                                                         textOverflow: "ellipsis", display: "block",
-                                                        color: "#475569", fontSize: "11px",
+                                                        color: "#0091c3", fontSize: "11px",
                                                     }} title={s.topic}>{s.topic || "—"}</span>
                                                 </td>
 
                                                 {/* Date */}
-                                                <td style={cell}>{formatDate(s.sessionDate)}</td>
+                                                <td style={{ ...cell, color: "#1a1a2e" }}>{formatDate(s.sessionDate)}</td>
 
                                                 {/* Time */}
-                                                <td style={cell}>{s.startTime} – {s.endTime}</td>
+                                                <td style={{ ...cell, color: "#0091c3" }}>{s.startTime} – {s.endTime}</td>
 
                                                 {/* Type */}
                                                 <td style={cell}>
                                                     <span style={{
-                                                        fontSize: "10px", color: "#6366f1",
-                                                        background: "#eef2ff", border: "1px solid #c7d2fe",
+                                                        fontSize: "10px", color: "#0091c3",
+                                                        background: "#f8fafc", border: "1px solid #b3e5f7",
                                                         padding: "2px 7px", borderRadius: "20px", fontWeight: 600,
                                                     }}>{s.sessionType}</span>
                                                 </td>
 
                                                 {/* Amount */}
-                                                <td style={{ ...cell, fontWeight: 600, color: "#0f172a" }}>
+                                                <td style={{ ...cell, fontWeight: 700, color: "#1a1a2e" }}>
                                                     ₹{s.price}
                                                 </td>
-
 
                                                 {/* Payment */}
                                                 <td style={cell}><PaymentBadge status={s.paymentStatus} /></td>
@@ -216,14 +220,19 @@ export default function SessionsTable() {
                                                 {/* Join */}
                                                 <td style={cell}>
                                                     {s.meetingLink && !s.isExpired ? (
-                                                        <a href={s.meetingLink} target="_blank" rel="noopener noreferrer" style={{
-                                                            background: "#2563eb", color: "#fff",
-                                                            padding: "4px 10px", borderRadius: "5px",
-                                                            fontSize: "11px", fontWeight: 600,
-                                                            textDecoration: "none", display: "inline-block",
-                                                        }}>Join</a>
+                                                        <a
+                                                            href={s.meetingLink}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            style={{
+                                                                background: "#1a1a2e", color: "#ffffff",
+                                                                padding: "4px 10px", borderRadius: "5px",
+                                                                fontSize: "11px", fontWeight: 600,
+                                                                textDecoration: "none", display: "inline-block",
+                                                            }}
+                                                        >Join</a>
                                                     ) : (
-                                                        <span style={{ color: "#cbd5e1", fontSize: "11px" }}>—</span>
+                                                        <span style={{ color: "#b3e5f7", fontSize: "11px" }}>—</span>
                                                     )}
                                                 </td>
                                             </tr>
@@ -237,18 +246,19 @@ export default function SessionsTable() {
                 {!isLoading && !isError && sessions.length > 0 && (
                     <div style={{
                         display: "flex", alignItems: "center", justifyContent: "space-between",
-                        padding: "10px 14px", borderTop: "1px solid #e2e8f0",
+                        padding: "10px 14px", borderTop: "1px solid #b3e5f7",
                         flexWrap: "wrap", gap: "8px",
+                        background: "#ffffff",
                     }}>
-                        <span style={{ fontSize: "11px", color: "#64748b" }}>
-                            Page <b style={{ color: "#0f172a" }}>{page}</b> of{" "}
-                            <b style={{ color: "#0f172a" }}>{totalPages}</b>
+                        <span style={{ fontSize: "11px", color: "#0091c3" }}>
+                            Page <b style={{ color: "#1a1a2e" }}>{page}</b> of{" "}
+                            <b style={{ color: "#1a1a2e" }}>{totalPages}</b>
                             &nbsp;·&nbsp;
-                            <b style={{ color: "#0f172a" }}>{totalCount}</b> sessions
+                            <b style={{ color: "#1a1a2e" }}>{totalCount}</b> sessions
                         </span>
 
                         <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap" }}>
-                            <PBtn onClick={() => setPage(1)} disabled={!hasPrev || isFetching}>«</PBtn>
+                            <PBtn onClick={() => setPage(1)}           disabled={!hasPrev || isFetching}>«</PBtn>
                             <PBtn onClick={() => setPage(p => p - 1)} disabled={!hasPrev || isFetching}>‹ Prev</PBtn>
 
                             {Array.from({ length: totalPages }, (_, i) => i + 1)
@@ -260,7 +270,7 @@ export default function SessionsTable() {
                                 }, [])
                                 .map((item, i) =>
                                     item === "…"
-                                        ? <span key={`d${i}`} style={{ color: "#94a3b8", fontSize: "11px", padding: "0 2px" }}>…</span>
+                                        ? <span key={`d${i}`} style={{ color: "#0091c3", fontSize: "11px", padding: "0 2px" }}>…</span>
                                         : <PBtn key={item} onClick={() => setPage(item)} disabled={isFetching} active={page === item}>{item}</PBtn>
                                 )
                             }
@@ -273,13 +283,10 @@ export default function SessionsTable() {
             </div>
 
             <style>{`
-                /* ✅ Hide scrollbar — Chrome/Safari */
                 .scroll-hide::-webkit-scrollbar { display: none; }
-                /* ✅ Hide scrollbar — Firefox & IE */
                 .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
                 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
             `}</style>
         </div>
     );
 }
-

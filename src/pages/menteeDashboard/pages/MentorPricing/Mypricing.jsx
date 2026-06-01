@@ -108,11 +108,10 @@ const TierBanner = ({ tierDoc, subCount, isEditing }) => {
       {/* Top row */}
       <div className="flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full ${c.dot} shrink-0`} />
-          <p className={`text-sm font-bold ${c.text}`}>
+          <p className={`text-sm font-bold text-[#1a1a2e]`}>
             Commission Tier: {meta.label}
           </p>
-          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${c.badge}`}>
+          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full text-[#1a1a2e]`}>
             {meta.range}
           </span>
         </div>
@@ -573,7 +572,7 @@ const DetailsModal = ({ plan, breakdowns, onClose }) => {
           <p className="text-gray-900 text-sm font-bold">
             Final Payout Breakdown — {activePlan.label} LTM
           </p>
-          <p className="text-gray-400 text-xs mt-0.5">
+          <p className="text-[#1a1a2e] text-xs mt-0.5">
             All figures are calculated by the server based on your commission tier at the time of saving.
           </p>
         </div>

@@ -36,19 +36,19 @@ const SUCCESS_L = 'rgba(16,185,129,0.10)';
 const PLAN_META = {
   1: {
     label: '1 Month Plan', badge: null, featured: false,
-    tabSub: 'No discount & EMI',
+    tabSub: '1 Month Plan',
     description: 'Perfect for getting started with focused 1-on-1 mentorship sessions.',
     features: ['Direct 1-on-1 sessions', 'Personalised roadmap', 'Chat support between sessions', 'Progress check-in reports'],
   },
   3: {
     label: 'Professional Plan', badge: null, featured: true,
-    tabSub: '6 Months ',
+    tabSub: '3 Month Plan',
     description: 'Ideal for growing professionals looking to build deep skills and get structured guidance.',
     features: ['All 1-Month Plan features', 'Weekly structured milestones', 'Mock interviews (2 sessions)', 'Priority scheduling', 'Community access'],
   },
   6: {
     label: 'Business Plan', badge: 'Most Popular', featured: false,
-    tabSub: 'Lowest per-month rate',
+    tabSub: '6 Month plan',
     description: 'For serious career transformation needing advanced tools and full mentor support.',
     features: ['All Professional Plan features', 'Unlimited mock interviews', 'Job referral support', 'Dedicated mentor hotline', 'Live project collaboration', 'Multi-channel support', 'Phone & Email support'],
   },
@@ -60,19 +60,36 @@ const MONTHS_TO_KEY = { 1: 'one_month', 3: 'three_months', 6: 'six_months' };
 const UPI_PRIMARY = 'karrivo2024@upi';
 const UPI_SECONDARY = 'example.174327728615@sbi';
 
-function normalizePlans(formattedPlans = {}) {
-  if (!formattedPlans || Object.keys(formattedPlans).length === 0) return [];
-  return Object.entries(formattedPlans)
+function normalizePlans(plans, currentStatus = '') {
+  if (!plans || Object.keys(plans).length === 0) return [];
+
+  // Map currentStatus to pricing key
+  const priceKey = currentStatus?.toLowerCase() === 'experienced' ? 'experienced' : 'freshers';
+
+  return Object.entries(plans)
     .map(([key, value]) => {
       const months = KEY_TO_MONTHS[key];
       const meta = PLAN_META[months];
       if (!meta || !value) return null;
+
+      const totalPrice = value[priceKey] ?? 0;
+      const breakdown = value.breakdown?.[priceKey];
+
+      // Derive sessionsPerWeek & perSession from hourlyRate if not available
+      // Using rough estimates: 4 sessions/month standard
+      const totalSessions = months * 4;
+      const sessionsPerWeek = 1;
+      const perSession = totalSessions > 0 ? Math.round(totalPrice / totalSessions) : 0;
+
       return {
-        ...meta, key: `${months}Month`, months,
-        sessionsPerWeek: value.sessionsPerWeek ?? 0,
-        totalSessions: value.totalSessions ?? 0,
-        perSession: value.perSession ?? 0,
-        totalPrice: value.totalAmount ?? 0,
+        ...meta,
+        key: `${months}Month`,
+        months,
+        sessionsPerWeek,
+        totalSessions,
+        perSession,
+        totalPrice,
+        breakdown, // available if you want to show fee breakdown
       };
     })
     .filter(Boolean)
@@ -96,6 +113,7 @@ export default function MentorLTMPlans() {
   const [createSubscription, { isLoading: isSubscribing }] = useCreateSubscriptionMutation();
   const [submitPayment, { isLoading: isSubmitting, isSuccess, isError: payError, error: payErrorData, data: payResponse }] = useSubmitPaymentMutation();
 
+  console.log(mentor,"mentorss");
   // ── Plan UI state ────────────────────────────────────────────
   const [selected, setSelected] = useState(null);
   const [paymentPlan, setPaymentPlan] = useState(null);
@@ -311,7 +329,10 @@ export default function MentorLTMPlans() {
     );
   }
 
-  const PLANS = normalizePlans(mentor?.pricing?.formattedPlans);
+
+  const PLANS = normalizePlans(mentor?.pricing?.plans, currentStatus);
+
+  console.log(mentor?.pricing?.plans, PLANS, "OPLADD")
   const effectiveSelected = selected ?? (PLANS.length === 1 ? PLANS[0].key : null);
 
   // ── Success screen ───────────────────────────────────────────
@@ -754,16 +775,13 @@ export default function MentorLTMPlans() {
                           ₹{plan.totalPrice.toLocaleString('en-IN')}
                         </span>
                         <span style={{ fontSize: 'clamp(9px, 1.5vw, 10px)', color: MUTED2, paddingBottom: 2 }}>
-                          /total
-                        </span>
+                         / {plan.months}month                        </span>
                       </div>
 
-                      <p style={{ fontSize: 'clamp(9px, 1.5vw, 11px)', color: MUTED, margin: '0 0 1px' }}>
-                        ₹{plan.perSession.toLocaleString('en-IN')}/session · {plan.totalSessions}
-                      </p>
+{/*                      
                       <p style={{ fontSize: 'clamp(8px, 1.5vw, 9px)', color: MUTED2, margin: '0 0 12px' }}>
                         {plan.sessionsPerWeek}s/week
-                      </p>
+                      </p> */}
 
                       <div style={{ height: 1, background: BORDER, margin: '0 0 12px' }} />
 

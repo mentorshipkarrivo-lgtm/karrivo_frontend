@@ -1,20 +1,971 @@
 
-import React, {
-  useState,
-  useMemo,
-  useCallback,
-  useEffect,
-} from "react";
+
+// import React, { useState, useMemo, useCallback, useEffect } from "react";
+// import {
+//   useGetSessionsByMentorQuery,
+//   useGetSubscribersByMentorQuery,
+//   useUpdateByMentorSessionMutation,
+// } from "./mysubcriberspislice";
+
+// // ── Constants ─────────────────────────────────────────────────────────────────
+
+// const PAGE_SIZE_OPTIONS = [5, 10, 20];
+// const DEFAULT_PAGE_SIZE = 10;
+
+// const PLAN_LABELS = {
+//   one_month: "1 Month",
+//   three_months: "3 Months",
+//   six_months: "6 Months",
+// };
+
+// const STATUS_META = {
+//   pending: { label: "Pending", bg: "#eff9fd", color: "#0098cc", dot: "#0098cc" },
+//   completed: { label: "Completed", bg: "#f0fdf6", color: "#16a34a", dot: "#16a34a" },
+//   cancelled: { label: "Cancelled", bg: "#fff5f5", color: "#dc2626", dot: "#dc2626" },
+//   missed: { label: "Missed", bg: "#fffbeb", color: "#d97706", dot: "#d97706" },
+//   active: { label: "Active", bg: "#f0fdf6", color: "#16a34a", dot: "#16a34a" },
+//   approved: { label: "Approved", bg: "#f0fdf6", color: "#16a34a", dot: "#16a34a" },
+//   onprocess: { label: "On Process", bg: "#eff6ff", color: "#2563eb", dot: "#2563eb" },
+// };
+
+// // ── Utils ─────────────────────────────────────────────────────────────────────
+
+// const getMentorId = () =>
+//   JSON.parse(localStorage.getItem("userData") || "{}")?._id ?? null;
+
+// const fmt = {
+//   date: (d) =>
+//     d ? new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—",
+//   amount: (a) => (a != null ? `₹${a.toLocaleString("en-IN")}` : "—"),
+//   shortId: (id) => (id ? `…${id.slice(-6)}` : "—"),
+// };
+
+// // ── Base UI ───────────────────────────────────────────────────────────────────
+
+// function StatusBadge({ status }) {
+//   const m = STATUS_META[status] ?? { label: status ?? "—", bg: "#f5f5f5", color: "#6b7280", dot: "#9ca3af" };
+//   return (
+//     <span style={{ display: "inline-flex", alignItems: "center", gap: 5, background: m.bg, color: m.color, fontSize: 11, fontWeight: 600, padding: "3px 9px 3px 7px", borderRadius: 20, letterSpacing: "0.02em", whiteSpace: "nowrap" }}>
+//       <span style={{ width: 6, height: 6, borderRadius: "50%", background: m.dot, flexShrink: 0 }} />
+//       {m.label}
+//     </span>
+//   );
+// }
+
+// function Stars({ value = 0 }) {
+//   return (
+//     <div style={{ display: "flex", gap: 3 }}>
+//       {[1, 2, 3, 4, 5].map((s) => (
+//         <span key={s} style={{ fontSize: 18, color: s <= value ? "#f59e0b" : "#e2e8f0" }}>★</span>
+//       ))}
+//     </div>
+//   );
+// }
+
+// function Th({ children }) {
+//   return (
+//     <th style={{ padding: "11px 18px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.06em", whiteSpace: "nowrap", background: "#fafbfc", borderBottom: "1.5px solid #f1f5f9" }}>
+//       {children}
+//     </th>
+//   );
+// }
+
+// function Td({ children, style }) {
+//   return (
+//     <td style={{ padding: "13px 18px", borderBottom: "1px solid #f8fafc", verticalAlign: "middle", ...style }}>
+//       {children}
+//     </td>
+//   );
+// }
+
+// function SkeletonRows({ cols, rows = 6 }) {
+//   return Array.from({ length: rows }).map((_, i) => (
+//     <tr key={i}>
+//       {Array.from({ length: cols }).map((_, j) => (
+//         <td key={j} style={{ padding: "13px 18px" }}>
+//           <div style={{ height: 11, borderRadius: 6, background: "linear-gradient(90deg,#f1f5f9 25%,#e2e8f0 50%,#f1f5f9 75%)", backgroundSize: "200% 100%", animation: "shimmer 1.4s infinite", width: j === 0 ? 24 : j === 1 ? "60%" : "45%" }} />
+//         </td>
+//       ))}
+//     </tr>
+//   ));
+// }
+
+// function EmptyState({ message, cols = 10 }) {
+//   return (
+//     <tr>
+//       <td colSpan={cols} style={{ textAlign: "center", padding: "56px 20px" }}>
+//         <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="1.5" style={{ display: "block", margin: "0 auto 10px" }}>
+//           <rect x="3" y="3" width="18" height="18" rx="3" /><path d="M3 9h18M9 21V9" />
+//         </svg>
+//         <p style={{ fontSize: 13, color: "#94a3b8", fontWeight: 500, margin: 0 }}>{message}</p>
+//       </td>
+//     </tr>
+//   );
+// }
+
+// function TableCard({ children }) {
+//   return (
+//     <div style={{ background: "#fff", border: "1.5px solid #e9edf2", borderRadius: 16, overflow: "hidden", boxShadow: "0 1px 6px rgba(0,0,0,0.04)" }}>
+//       {children}
+//     </div>
+//   );
+// }
+
+// function Pagination({ page, total, pageSize, onPage, onPageSize, isFetching }) {
+//   const totalPages = Math.ceil(total / pageSize) || 1;
+//   const pages = useMemo(() => {
+//     const arr = [];
+//     for (let i = 1; i <= totalPages; i++) {
+//       if (i === 1 || i === totalPages || Math.abs(i - page) <= 1) arr.push(i);
+//       else if (arr[arr.length - 1] !== "…") arr.push("…");
+//     }
+//     return arr;
+//   }, [page, totalPages]);
+
+//   if (totalPages <= 1 && total <= PAGE_SIZE_OPTIONS[0]) return null;
+
+//   const btnStyle = (active, disabled) => ({
+//     minWidth: 30, height: 30, borderRadius: 7,
+//     border: active ? "1.5px solid #0098cc" : "1.5px solid #e2e8f0",
+//     background: active ? "#0098cc" : "#fff",
+//     color: active ? "#fff" : "#64748b",
+//     fontSize: 12, fontWeight: 600, cursor: disabled ? "not-allowed" : "pointer",
+//     display: "inline-flex", alignItems: "center", justifyContent: "center",
+//     opacity: disabled ? 0.4 : 1,
+//   });
+
+//   return (
+//     <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "12px 18px", borderTop: "1px solid #f1f5f9" }}>
+//       <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+//         <span style={{ fontSize: 12, color: "#94a3b8" }}>Rows:</span>
+//         <select value={pageSize} onChange={(e) => { onPageSize(Number(e.target.value)); onPage(1); }} style={{ border: "1.5px solid #e2e8f0", borderRadius: 7, fontSize: 12, color: "#1a1a2e", padding: "3px 8px", background: "#fff" }}>
+//           {PAGE_SIZE_OPTIONS.map((s) => <option key={s} value={s}>{s}</option>)}
+//         </select>
+//         <span style={{ fontSize: 12, color: "#94a3b8" }}>
+//           {total === 0 ? "0" : `${(page - 1) * pageSize + 1}–${Math.min(page * pageSize, total)}`} of {total}
+//         </span>
+//         {isFetching && <span style={{ fontSize: 11, color: "#0098cc", fontWeight: 600 }}>Loading…</span>}
+//       </div>
+//       <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
+//         <button style={btnStyle(false, page === 1)} disabled={page === 1 || isFetching} onClick={() => onPage(page - 1)}>‹</button>
+//         {pages.map((p, i) =>
+//           p === "…"
+//             ? <span key={`e${i}`} style={{ padding: "0 4px", color: "#94a3b8", fontSize: 12 }}>…</span>
+//             : <button key={p} style={btnStyle(p === page, isFetching)} disabled={isFetching} onClick={() => onPage(p)}>{p}</button>
+//         )}
+//         <button style={btnStyle(false, page === totalPages)} disabled={page === totalPages || isFetching} onClick={() => onPage(page + 1)}>›</button>
+//       </div>
+//     </div>
+//   );
+// }
+
+// // ── Session Modal ─────────────────────────────────────────────────────────────
+
+// function SessionModal({ session, onClose, onSave }) {
+//   const [saving, setSaving] = useState(false);
+//   const [saved, setSaved] = useState(false);
+//   const [error, setError] = useState(null);
+//   const isMobile = window.innerWidth < 768;
+
+//   const [form, setForm] = useState({
+//     session_title: session.session_title || "",
+//     session_date: session.session_date ? new Date(session.session_date).toISOString().slice(0, 16) : "",
+//     meeting_link: session.meeting_link || "",
+//     meeting_description: session.meeting_description || "",
+//     tasks_given: session.tasks_given || "",
+//     task_completed: session.task_completed || false,
+//     mentor_feedback: session.mentor_feedback || "",
+//     status: session.status || "pending",
+//   });
+
+//   useEffect(() => {
+//     document.body.style.overflow = "hidden";
+//     return () => { document.body.style.overflow = ""; };
+//   }, []);
+
+//   useEffect(() => {
+//     const fn = (e) => { if (e.key === "Escape") onClose(); };
+//     document.addEventListener("keydown", fn);
+//     return () => document.removeEventListener("keydown", fn);
+//   }, [onClose]);
+
+//   const set = useCallback((key) => (e) =>
+//     setForm((p) => ({ ...p, [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value })), []);
+
+//   const handleSave = useCallback(async () => {
+//     setSaving(true); setError(null);
+//     const ok = await onSave(session._id, form);
+//     setSaving(false);
+//     if (ok) { setSaved(true); setTimeout(() => setSaved(false), 2200); }
+//     else setError("Failed to save. Please try again.");
+//   }, [form, onSave, session._id]);
+
+//   const inp = { width: "100%", padding: "11px 13px", borderRadius: 10, border: "1px solid #dbe3ea", background: "#fff", fontSize: 14, color: "#1a1a2e", outline: "none", boxSizing: "border-box" };
+//   const ro = { ...inp, background: "#f8fafc", border: "1px solid #e5e7eb", color: "#475569", cursor: "not-allowed" };
+
+//   const Field = ({ label, children, span2 }) => (
+//     <div style={{ gridColumn: span2 ? "span 2" : "span 1", width: "100%", minWidth: 0 }}>
+//       <label style={{ display: "block", fontSize: 11, fontWeight: 800, color: "#0098cc", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 7 }}>{label}</label>
+//       {children}
+//     </div>
+//   );
+
+//   const Section = ({ title, children, top }) => (
+//     <section style={top ? { borderTop: "1px solid #f1f5f9", paddingTop: 22 } : {}}>
+//       <p style={{ fontSize: 11, fontWeight: 800, color: "#0098cc", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14, marginTop: 0 }}>{title}</p>
+//       <div style={{ display: "grid", gap: 14, gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr" }}>{children}</div>
+//     </section>
+//   );
+
+//   return (
+//     <div style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 14, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)" }}
+//       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+//       <div style={{ width: "100%", maxWidth: 840, maxHeight: "95vh", background: "#fff", border: "1px solid #e5e7eb", borderRadius: isMobile ? 16 : 22, overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 20px 70px rgba(0,0,0,0.14)" }}>
+
+//         {/* Header */}
+//         <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "16px 20px", borderBottom: "1px solid #f1f5f9" }}>
+//           <div style={{ width: 40, height: 40, borderRadius: 10, background: "#1a1a2e", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 14, flexShrink: 0 }}>
+//             {session.session_number}
+//           </div>
+//           <div style={{ flex: 1, minWidth: 0 }}>
+//             <p style={{ margin: 0, fontWeight: 700, color: "#0098cc", fontSize: isMobile ? 14 : 17, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+//               {form.session_title || `Session ${session.session_number}`}
+//             </p>
+//             <p style={{ margin: "3px 0 0", color: "#94a3b8", fontSize: 12 }}>
+//               {form.session_date ? new Date(form.session_date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" }) : "No date set"}
+//             </p>
+//           </div>
+//           {/* <StatusBadge status={form.status} /> */}
+//           <button onClick={onClose} style={{ width: 34, height: 34, borderRadius: 9, border: "1px solid #e5e7eb", background: "#fff", color: "#64748b", fontSize: 15, cursor: "pointer" }}>✕</button>
+//         </div>
+
+//         {/* Body */}
+//         <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: 24, padding: isMobile ? 14 : 22 }}>
+
+//           <Section title="Session Details">
+//             <Field label="Session Title" span2={!isMobile}>
+//               <input style={inp} value={form.session_title} onChange={set("session_title")} placeholder="Introduction & Goal Setting" />
+//             </Field>
+//             <Field label="Date & Time">
+//               <input type="datetime-local" style={inp} value={form.session_date} onChange={set("session_date")} />
+//             </Field>
+//             <Field label="Status">
+//               <select style={inp} value={form.status} onChange={set("status")}>
+//                 <option value="pending">Pending</option>
+//                 <option value="completed">Completed</option>
+//                 <option value="cancelled">Cancelled</option>
+//                 <option value="missed">Missed</option>
+//               </select>
+//             </Field>
+//             <Field label="Meeting Link" span2={!isMobile}>
+//               <input style={inp} value={form.meeting_link} onChange={set("meeting_link")} placeholder="https://meet.google.com" />
+//             </Field>
+//             <Field label="Agenda / Description" span2={!isMobile}>
+//               <textarea rows={4} style={{ ...inp, resize: "vertical", minHeight: 100 }} value={form.meeting_description} onChange={set("meeting_description")} placeholder="Topics to discuss..." />
+//             </Field>
+//           </Section>
+
+//           <Section title="Tasks" top>
+//             <Field label="Assign Tasks" span2={!isMobile}>
+//               <textarea rows={4} style={{ ...inp, resize: "vertical", minHeight: 110 }} value={form.tasks_given} onChange={set("tasks_given")} placeholder="Assign tasks for mentee..." />
+//             </Field>
+//             <Field label="Task Completion" span2={!isMobile}>
+//               <label style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", padding: "11px 13px", border: "1px solid #dbe3ea", borderRadius: 10, background: "#fff", cursor: "pointer" }}>
+//                 <input type="checkbox" checked={form.task_completed} onChange={set("task_completed")} style={{ width: 17, height: 17, accentColor: "#0098cc" }} />
+//                 <span style={{ color: "#475569", fontSize: 14, fontWeight: 500 }}>Mark task as completed</span>
+//                 {session.task_submission && (
+//                   <a href={session.task_submission} target="_blank" rel="noreferrer" style={{ marginLeft: "auto", fontSize: 11, color: "#0098cc", fontWeight: 700, textDecoration: "none", padding: "3px 10px", border: "1px solid #0098cc", borderRadius: 7 }}>View Submission →</a>
+//                 )}
+//               </label>
+//             </Field>
+//           </Section>
+
+//           <Section title="Feedback" top>
+//             <Field label="Mentor Notes / Feedback" span2={!isMobile}>
+//               <textarea rows={5} style={{ ...inp, resize: "vertical", minHeight: 130 }} value={form.mentor_feedback} onChange={set("mentor_feedback")} placeholder="Write session summary, guidance, notes..." />
+//             </Field>
+//             <div style={{ gridColumn: !isMobile ? "span 1" : "span 1", width: "100%", minWidth: 0 }}>
+//               <label style={{ display: "block", fontSize: 11, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 7 }}>Mentee Feedback (read-only)</label>
+//               <textarea rows={5} readOnly style={{ ...ro, resize: "vertical", minHeight: 130 }} value={session.mentee_feedback || "No mentee feedback submitted yet."} />
+//             </div>
+//           </Section>
+
+//           <Section title="Ratings" top>
+//             {[["Mentor Rating", session.mentor_rating], ["Mentee Rating", session.mentee_rating]].map(([label, val]) => (
+//               <div key={label}>
+//                 <label style={{ display: "block", fontSize: 11, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 7 }}>{label}</label>
+//                 <div style={{ padding: "13px 15px", borderRadius: 10, background: "#f8fafc", border: "1px solid #e5e7eb", display: "flex", alignItems: "center", gap: 10 }}>
+//                   <Stars value={val || 0} />
+//                   <span style={{ fontSize: 13, fontWeight: 700, color: "#64748b" }}>{val || 0}/5</span>
+//                 </div>
+//               </div>
+//             ))}
+//           </Section>
+//         </div>
+
+//         {/* Footer */}
+//         <div style={{ borderTop: "1px solid #f1f5f9", padding: "14px 20px", background: "#fff", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+//           <div>
+//             {saved && <span style={{ fontSize: 13, fontWeight: 600, color: "#16a34a" }}>✓ Saved successfully</span>}
+//             {error && <span style={{ fontSize: 13, fontWeight: 600, color: "#dc2626" }}>✕ {error}</span>}
+//           </div>
+//           <div style={{ display: "flex", gap: 8 }}>
+//             <button onClick={onClose} style={{ padding: "10px 18px", borderRadius: 10, border: "1px solid #dbe3ea", background: "#fff", color: "#475569", fontWeight: 600, cursor: "pointer", fontSize: 13 }}>Cancel</button>
+//             <button onClick={handleSave} disabled={saving} style={{ padding: "10px 20px", borderRadius: 10, border: "none", background: "#1a1a2e", color: "#fff", fontWeight: 700, cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.7 : 1, fontSize: 13 }}>
+//               {saving ? "Saving..." : "Save Changes"}
+//             </button>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// import { X, User, Mail, Phone, CalendarDays, CalendarX2, BadgeCheck } from "lucide-react";
+
+// function SubscriberModal({ sub, onClose }) {
+//   useEffect(() => {
+//     document.body.style.overflow = "hidden";
+//     return () => { document.body.style.overflow = ""; };
+//   }, []);
+//   useEffect(() => {
+//     const fn = (e) => { if (e.key === "Escape") onClose(); };
+//     document.addEventListener("keydown", fn);
+//     return () => document.removeEventListener("keydown", fn);
+//   }, [onClose]);
+
+//   const mentee = sub.mentee || {};
+//   const name = mentee.name || "Unknown";
+//   const initials = name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
+
+//   const iconBox = {
+//     width: 28, height: 28, borderRadius: 7,
+//     background: "#f0f9ff", border: "1px solid #e0f2fe",
+//     display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+//   };
+
+//   const Row = ({ icon: Icon, label, value, valueStyle }) => (
+//     <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 18px", borderBottom: "1px solid #f1f5f9" }}>
+//       <div style={iconBox}>
+//         <Icon size={14} stroke="#0098cc" strokeWidth={2} />
+//       </div>
+//       <div style={{ flex: 1, minWidth: 0 }}>
+//         <p style={{ margin: 0, fontSize: 10, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</p>
+//         <p style={{ margin: "1px 0 0", fontSize: 13, color: "#1a1a2e", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", ...valueStyle }}>{value || "—"}</p>
+//       </div>
+//     </div>
+//   );
+
+//   return (
+//     <div
+//       onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+//       role="dialog" aria-modal="true"
+//       style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, background: "rgba(15,23,42,0.4)", backdropFilter: "blur(4px)" }}
+//     >
+//       <div style={{ background: "#fff", borderRadius: 16, width: "100%", maxWidth: 400, border: "1.5px solid #e2e8f0", overflow: "hidden", display: "flex", flexDirection: "column" }}>
+
+//         {/* Header */}
+//         <div style={{ padding: "14px 18px 12px", display: "flex", alignItems: "center", gap: 11, borderBottom: "1px solid #f1f5f9" }}>
+//           <div style={{ width: 38, height: 38, borderRadius: 11, background: "#e0f2fe", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "#0098cc", flexShrink: 0 }}>
+//             {initials}
+//           </div>
+//           <div style={{ flex: 1, minWidth: 0 }}>
+//             <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#1a1a2e" }}>{name}</p>
+//             <p style={{ margin: "2px 0 0", fontSize: 12, color: "#94a3b8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{mentee.email || "—"}</p>
+//           </div>
+//           <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: 7, border: "1.5px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#64748b" }}>
+//             <X size={14} strokeWidth={2} />
+//           </button>
+//         </div>
+
+//         {/* Status strip */}
+//         <div style={{ padding: "8px 18px", background: "#f0f9ff", borderBottom: "1px solid #e0f2fe", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+//           <span style={{ fontSize: 10, fontWeight: 700, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.07em" }}>Subscription status</span>
+//           <StatusBadge status={sub.status} />
+//         </div>
+
+//         {/* Metrics */}
+//         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", borderBottom: "1px solid #f1f5f9" }}>
+//           {[
+//             { label: "Plan", value: PLAN_LABELS[sub.plan_type] || sub.plan_type, color: "#0098cc" },
+//             { label: "Sessions", value: sub.total_sessions, color: "#1a1a2e" },
+//             { label: "Amount", value: fmt.amount(sub.amount), color: "#1a1a2e" },
+//           ].map(({ label, value, color }, i) => (
+//             <div key={label} style={{ padding: "10px 14px", borderRight: i < 2 ? "1px solid #f1f5f9" : "none" }}>
+//               <p style={{ margin: "0 0 2px", fontSize: 10, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</p>
+//               <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color }}>{value ?? "—"}</p>
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* Detail rows */}
+//         <Row icon={User} label="Name" value={name} />
+//         <Row icon={Mail} label="Email" value={mentee.email} valueStyle={{ color: "#0098cc" }} />
+//         <Row icon={Phone} label="Phone" value={mentee.phone ? `+${mentee.countryCode || ""} ${mentee.phone}` : "—"} />
+
+//         {/* Date split */}
+//         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", borderBottom: "1px solid #f1f5f9" }}>
+//           {[
+//             { icon: CalendarDays, label: "Start date", value: fmt.date(sub.subscribed_at), border: true },
+//             { icon: CalendarX2, label: "End date", value: fmt.date(sub.subscription_end_date), border: false },
+//           ].map(({ icon: Icon, label, value, border }) => (
+//             <div key={label} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 18px", borderRight: border ? "1px solid #f1f5f9" : "none" }}>
+//               <div style={iconBox}><Icon size={14} stroke="#0098cc" strokeWidth={2} /></div>
+//               <div>
+//                 <p style={{ margin: 0, fontSize: 10, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</p>
+//                 <p style={{ margin: "1px 0 0", fontSize: 13, fontWeight: 600, color: "#1a1a2e" }}>{value}</p>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* Mentee ID */}
+//         <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 18px" }}>
+//           <div style={iconBox}><BadgeCheck size={14} stroke="#0098cc" strokeWidth={2} /></div>
+//           <div>
+//             <p style={{ margin: 0, fontSize: 10, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Mentee ID</p>
+//             <p style={{ margin: "1px 0 0", fontSize: 12, fontWeight: 700, color: "#0098cc", fontFamily: "monospace", background: "#f0f9ff", border: "1px solid #e0f2fe", padding: "1px 8px", borderRadius: 5, display: "inline-block" }}>
+//               {fmt.shortId(sub.mentee_id)}
+//             </p>
+//           </div>
+//         </div>
+
+//         {/* Footer */}
+//         <div style={{ padding: "11px 18px", borderTop: "1px solid #f1f5f9", display: "flex", justifyContent: "flex-end" }}>
+//           <button onClick={onClose} style={{ padding: "7px 22px", borderRadius: 8, border: "none", background: "#1a1a2e", color: "#fff", fontWeight: 700, fontSize: 12, cursor: "pointer" }}>Close</button>
+//         </div>
+
+//       </div>
+//     </div>
+//   );
+// }
+// // ── Subscribers Table ─────────────────────────────────────────────────────────
+
+// function SubscribersTable({ subscribers, isLoading }) {
+//   const [page, setPage] = useState(1);
+//   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+//   const [selected, setSelected] = useState(null);
+
+//   const paged = useMemo(() => subscribers.slice((page - 1) * pageSize, page * pageSize), [subscribers, page, pageSize]);
+
+//   return (
+//     <>
+//       <TableCard>
+//         <div style={{ overflowX: "auto" }}>
+//           <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+//             <colgroup>
+//               <col style={{ width: "8%" }} />
+//               <col style={{ width: "22%" }} />
+//               <col style={{ width: "15%" }} />
+//               <col style={{ width: "12%" }} />
+//               <col style={{ width: "15%" }} />
+//               <col style={{ width: "14%" }} />
+//               <col style={{ width: "14%" }} />
+//             </colgroup>
+//             <thead>
+//               <tr>{["S NO", "Mentee", "Plan", "Sessions", "Amount", "Start Date", "Status"].map((h) => <Th key={h}>{h}</Th>)}</tr>
+//             </thead>
+//             <tbody>
+//               {isLoading ? <SkeletonRows cols={7} /> : paged.length === 0 ? <EmptyState message="No subscribers found" cols={7} /> : (
+//                 paged.map((sub, idx) => (
+//                   <tr key={sub._id} style={{ cursor: "pointer" }} onClick={() => setSelected(sub)}>
+//                     <Td><span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>{(page - 1) * pageSize + idx + 1}</span></Td>
+//                     <Td><span style={{ fontSize: 13, color: "#0098cc", fontWeight: 700 }}>{sub.mentee.name}</span></Td>
+//                     <Td><span style={{ fontSize: 12, fontWeight: 700, color: "#0098cc" }}>{PLAN_LABELS[sub.plan_type] || sub.plan_type || "—"}</span></Td>
+//                     <Td><span style={{ fontSize: 13, fontWeight: 600, color: "#1a1a2e" }}>{sub.total_sessions ?? "—"}</span></Td>
+//                     <Td><span style={{ fontSize: 13, fontWeight: 700, color: "#16a34a" }}>{fmt.amount(sub.amount)}</span></Td>
+//                     <Td><span style={{ fontSize: 12, color: "#64748b" }}>{fmt.date(sub.subscribed_at)}</span></Td>
+//                     <Td><StatusBadge status={sub.status} /></Td>
+//                   </tr>
+//                 ))
+//               )}
+//             </tbody>
+//           </table>
+//         </div>
+//         <Pagination page={page} total={subscribers.length} pageSize={pageSize} onPage={setPage} onPageSize={(s) => { setPageSize(s); setPage(1); }} isFetching={false} />
+//       </TableCard>
+//       {selected && <SubscriberModal sub={selected} onClose={() => setSelected(null)} />}
+//     </>
+//   );
+// }
+
+// // ── Mentee Card ───────────────────────────────────────────────────────────────
+
+// function MenteeCard({ sub, onClick }) {
+//   const name = sub.mentee.name || "Unknown User";
+//   const initials = name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2);
+//   const planColor = { one_month: { bg: "#eff9fd", color: "#0098cc" }, three_months: { bg: "#f0fdf6", color: "#16a34a" }, six_months: { bg: "#fdf4ff", color: "#9333ea" } }[sub.plan_type] ?? { bg: "#f1f5f9", color: "#64748b" };
+
+//   return (
+//     <div onClick={onClick} style={{ background: "#fff", border: "1.5px solid #e9edf2", borderRadius: 14, padding: "18px", cursor: "pointer", display: "flex", flexDirection: "column", gap: 12 }}>
+//       <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
+//         <div style={{ width: 42, height: 42, borderRadius: 11, background: "linear-gradient(135deg,#0098cc 0%,#006e99 100%)", color: "#fff", fontSize: 13, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{initials}</div>
+//         <div style={{ flex: 1, minWidth: 0 }}>
+//           <p style={{ fontSize: 14, fontWeight: 700, color: "#1a1a2e", margin: 0, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</p>
+//           <p style={{ fontSize: 11, color: "#94a3b8", margin: "2px 0 0" }}>{fmt.date(sub.subscribed_at)} — {fmt.date(sub.subscription_end_date)}</p>
+//         </div>
+//         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6" /></svg>
+//       </div>
+//       <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
+//         <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 9px", borderRadius: 20, background: planColor.bg, color: planColor.color }}>{PLAN_LABELS[sub.plan_type] || sub.plan_type}</span>
+//         <span style={{ fontSize: 11, fontWeight: 600, padding: "3px 9px", borderRadius: 20, background: "#f8fafc", color: "#64748b" }}>{sub.total_sessions ?? 0} sessions</span>
+//         <span style={{ fontSize: 11, fontWeight: 700, padding: "3px 9px", borderRadius: 20, background: "#f0fdf4", color: "#16a34a" }}>{fmt.amount(sub.amount)}</span>
+//       </div>
+//       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+//         <StatusBadge status={sub.status} />
+//         <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>View sessions →</span>
+//       </div>
+//     </div>
+//   );
+// }
+
+// // ── Mentee Sessions View ──────────────────────────────────────────────────────
+
+// function MenteeSessionsView({ sub, mentorId, onBack }) {
+//   const [page, setPage] = useState(1);
+//   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+//   const [selectedSession, setSelectedSession] = useState(null);
+//   const [updateSession] = useUpdateByMentorSessionMutation();
+
+//   const { data, isLoading, isFetching, refetch } = useGetSessionsByMentorQuery(
+//     { mentorId, page, pageSize }, { skip: !mentorId }
+//   );
+
+//   const sessions = data?.data ?? [];
+//   const pagination = data?.pagination ?? { total: 0 };
+
+//   const handleSave = useCallback(async (session_id, form) => {
+//     try {
+//       await updateSession({ session_id, ...form }).unwrap();
+//       setSelectedSession((p) => p ? { ...p, ...form } : p);
+//       refetch();
+//       return true;
+//     } catch { return false; }
+//   }, [updateSession, refetch]);
+
+//   return (
+//     <>
+//       {/* Breadcrumb */}
+//       <div
+//         style={{
+//           display: "flex",
+//           alignItems: "center",
+//           gap: 8,
+//           marginBottom: 18,
+//           flexWrap: "wrap",
+//         }}
+//       >
+//         <button
+//           onClick={onBack}
+//           style={{
+//             display: "inline-flex",
+//             alignItems: "center",
+//             gap: 6,
+//             padding: "8px 14px",
+//             borderRadius: 8,
+//             border: "1.5px solid #e2e8f0",
+//             background: "#fff",
+//             color: "#0098cc",
+//             fontSize: 12,
+//             fontWeight: 700,
+//             cursor: "pointer",
+//             flexShrink: 0,
+//           }}
+//         >
+//           <svg
+//             width="13"
+//             height="13"
+//             viewBox="0 0 24 24"
+//             fill="none"
+//             stroke="currentColor"
+//             strokeWidth="2.5"
+//             strokeLinecap="round"
+//             strokeLinejoin="round"
+//           >
+//             <path d="M15 18l-6-6 6-6" />
+//           </svg>
+//           All Mentees
+//         </button>
+//         <div
+//           style={{
+//             display: "flex",
+//             alignItems: "center",
+//             gap: 12,
+//             flexWrap: "wrap",
+//             padding: "8px 14px",
+//             borderRadius: 8,
+//             border: "1.5px solid #e2e8f0",
+//             padding: "8px 14px",
+//             color: "#5a98cc",
+//           }}
+//         >
+//           <span
+//             style={{
+//               fontSize: 13,
+//               fontWeight: 700,
+//               color: "#5a98cc",
+//             }}
+//           >
+//             {sub?.user || sub?.mentee?.name}
+//           </span>
+
+//           <span
+//             style={{
+//               fontSize: 11,
+//               fontWeight: 600,
+//               borderLeft: "1px solid rgba(255,255,255,0.3)",
+//               paddingLeft: 12,
+//             }}
+//           >
+//             {PLAN_LABELS[sub.plan_type]} • {sub.total_sessions} Sessions
+//           </span>
+//         </div>
+//       </div>
+
+//       {/* Summary strip */}
+//       <div style={{ background: "#eff9fd", border: "1.5px solid #bae6fd", borderRadius: 10, padding: "11px 16px", display: "flex", alignItems: "center", gap: 18, marginBottom: 16, flexWrap: "wrap" }}>
+//         {[
+//           ["Plan", PLAN_LABELS[sub.plan_type] || sub.plan_type, null],
+//           ["Total Sessions", pagination.total || sub.total_sessions, null],
+//           ["Amount", fmt.amount(sub.amount), "#16a34a"],
+//           ["Valid Until", fmt.date(sub.subscription_end_date), null],
+//         ].map(([label, value, color], i) => (
+//           <React.Fragment key={label}>
+//             {i > 0 && <div style={{ width: 1, height: 28, background: "#bae6fd" }} />}
+//             <div>
+//               <p style={{ fontSize: 10, color: "#0098cc", fontWeight: 700, margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</p>
+//               <p style={{ fontSize: 13, color: color || "#1a1a2e", fontWeight: 700, margin: "2px 0 0" }}>{value}</p>
+//             </div>
+//           </React.Fragment>
+//         ))}
+//         <div style={{ marginLeft: "auto" }}><StatusBadge status={sub.status} /></div>
+//       </div>
+
+//       {/* Sessions Table */}
+//       {/* Sessions Table */}
+//       <TableCard>
+//         <div style={{ overflowX: "auto" }}>
+//           <table
+//             style={{
+//               width: "100%",
+//               borderCollapse: "collapse",
+//               tableLayout: "auto",
+//             }}
+//           >
+//             <colgroup>
+//               <col style={{ width: 50 }} />
+//               <col style={{ width: "40%" }} />
+//               <col style={{ width: 130 }} />
+//               <col style={{ width: 100 }} />
+//               <col style={{ width: 120 }} />
+//               <col style={{ width: 100 }} />
+//             </colgroup>
+
+//             <thead>
+//               <tr>
+//                 {["S NO", "Session", "Date", "Duration", "Status", "Action"].map(
+//                   (h) => (
+//                     <Th key={h}>{h}</Th>
+//                   )
+//                 )}
+//               </tr>
+//             </thead>
+
+//             <tbody>
+//               {isLoading || isFetching ? (
+//                 <SkeletonRows cols={6} rows={pageSize} />
+//               ) : sessions.length === 0 ? (
+//                 <EmptyState message="No sessions found" cols={6} />
+//               ) : (
+//                 sessions.map((item, idx) => (
+//                   <tr
+//                     key={item._id}
+//                     style={{ cursor: "pointer" }}
+//                     onClick={() => setSelectedSession(item)}
+//                   >
+//                     <Td>
+//                       <span
+//                         style={{
+//                           fontSize: 12,
+//                           color: "#94a3b8",
+//                           fontWeight: 600,
+//                         }}
+//                       >
+//                         {(page - 1) * pageSize + idx + 1}
+//                       </span>
+//                     </Td>
+
+//                     <Td>
+//                       <div
+//                         style={{
+//                           display: "flex",
+//                           alignItems: "flex-start",
+//                           gap: 9,
+//                         }}
+//                       >
+
+
+//                         <div
+//                           style={{
+//                             fontSize: 13,
+//                             fontWeight: 600,
+//                             color: "#1a1a2e",
+//                             whiteSpace: "normal",
+//                             wordBreak: "break-word",
+//                             overflowWrap: "break-word",
+//                             lineHeight: "20px",
+//                             flex: 1,
+//                           }}
+//                         >
+//                           {item.session_title ||
+//                             `Session ${item.session_number}`}
+//                         </div>
+//                       </div>
+//                     </Td>
+
+//                     <Td>
+//                       <span
+//                         style={{
+//                           fontSize: 12,
+//                           color: "#64748b",
+//                           whiteSpace: "normal",
+//                           wordBreak: "break-word",
+//                         }}
+//                       >
+//                         {fmt.date(item.session_date)}
+//                       </span>
+//                     </Td>
+
+//                     <Td>
+//                       <span
+//                         style={{
+//                           fontSize: 12,
+//                           color: "#64748b",
+//                         }}
+//                       >
+//                         {item.duration
+//                           ? `${item.duration} min`
+//                           : "—"}
+//                       </span>
+//                     </Td>
+
+//                     <Td>
+//                       <StatusBadge status={item.status} />
+//                     </Td>
+
+//                     <Td>
+//                       <button
+//                         onClick={(e) => {
+//                           e.stopPropagation();
+//                           setSelectedSession(item);
+//                         }}
+//                         style={{
+//                           padding: "5px 13px",
+//                           borderRadius: 7,
+//                           border: "1.5px solid #0098cc",
+//                           background: "#fff",
+//                           color: "#0098cc",
+//                           fontSize: 11,
+//                           fontWeight: 700,
+//                           cursor: "pointer",
+//                         }}
+//                       >
+//                         View
+//                       </button>
+//                     </Td>
+//                   </tr>
+//                 ))
+//               )}
+//             </tbody>
+//           </table>
+//         </div>
+
+//         <Pagination
+//           page={page}
+//           total={pagination.total}
+//           pageSize={pageSize}
+//           onPage={setPage}
+//           onPageSize={(s) => {
+//             setPageSize(s);
+//             setPage(1);
+//           }}
+//           isFetching={isFetching}
+//         />
+//       </TableCard>
+//       {/* <TableCard>
+//         <div style={{ overflowX: "auto" }}>
+//           <table style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}>
+//             <colgroup>
+//               <col style={{ width: 42 }} /><col /><col style={{ width: 130 }} />
+//               <col style={{ width: 90 }} /><col style={{ width: 110 }} /><col style={{ width: 90 }} />
+//             </colgroup>
+//             <thead>
+//               <tr>{["#", "Session", "Date", "Duration", "Status", "Action"].map((h) => <Th key={h}>{h}</Th>)}</tr>
+//             </thead>
+//             <tbody>
+//               {isLoading || isFetching ? <SkeletonRows cols={6} rows={pageSize} /> : sessions.length === 0 ? <EmptyState message="No sessions found" cols={6} /> : (
+//                 sessions.map((item, idx) => (
+//                   <tr key={item._id} style={{ cursor: "pointer" }} onClick={() => setSelectedSession(item)}>
+//                     <Td><span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>{(page - 1) * pageSize + idx + 1}</span></Td>
+//                     <Td>
+//                       <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+//                         <div style={{ width: 28, height: 28, borderRadius: 7, background: "#0098cc", color: "#fff", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>{item.session_number ?? "?"}</div>
+//                         <span style={{ fontSize: 13, fontWeight: 600, color: "#1a1a2e", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.session_title || `Session ${item.session_number}`}</span>
+//                       </div>
+//                     </Td>
+//                     <Td><span style={{ fontSize: 12, color: "#64748b" }}>{fmt.date(item.session_date)}</span></Td>
+//                     <Td><span style={{ fontSize: 12, color: "#64748b" }}>{item.duration ? `${item.duration} min` : "—"}</span></Td>
+//                     <Td><StatusBadge status={item.status} /></Td>
+//                     <Td>
+//                       <button onClick={(e) => { e.stopPropagation(); setSelectedSession(item); }} style={{ padding: "5px 13px", borderRadius: 7, border: "1.5px solid #0098cc", background: "#fff", color: "#0098cc", fontSize: 11, fontWeight: 700, cursor: "pointer", whiteSpace: "nowrap" }}>View</button>
+//                     </Td>
+//                   </tr>
+//                 ))
+//               )}
+//             </tbody>
+//           </table>
+//         </div>
+//         <Pagination page={page} total={pagination.total} pageSize={pageSize} onPage={setPage} onPageSize={(s) => { setPageSize(s); setPage(1); }} isFetching={isFetching} />
+//       </TableCard> */}
+
+//       {selectedSession && <SessionModal session={selectedSession} onClose={() => setSelectedSession(null)} onSave={handleSave} />}
+//     </>
+//   );
+// }
+
+// // ── Sessions Tab ──────────────────────────────────────────────────────────────
+
+// function SessionsTab({ mentorId, subscribers, subLoading }) {
+//   const [selectedMentee, setSelectedMentee] = useState(null);
+
+//   if (selectedMentee) {
+//     return <MenteeSessionsView sub={selectedMentee} mentorId={mentorId} onBack={() => setSelectedMentee(null)} />;
+//   }
+
+//   if (subLoading) {
+//     return (
+//       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(270px,1fr))", gap: 14 }}>
+//         {Array.from({ length: 4 }).map((_, i) => (
+//           <div key={i} style={{ background: "#fff", border: "1.5px solid #e9edf2", borderRadius: 14, padding: 18, height: 170 }}>
+//             {[60, 40, 80, 100, 40].map((w, j) => (
+//               <div key={j} style={{ height: 10, borderRadius: 6, background: "linear-gradient(90deg,#f1f5f9 25%,#e2e8f0 50%,#f1f5f9 75%)", backgroundSize: "200% 100%", animation: "shimmer 1.4s infinite", width: `${w}%`, marginBottom: 11 }} />
+//             ))}
+//           </div>
+//         ))}
+//       </div>
+//     );
+//   }
+
+//   if (subscribers.length === 0) {
+//     return (
+//       <div style={{ textAlign: "center", padding: "70px 20px", background: "#fff", border: "1.5px solid #e9edf2", borderRadius: 16 }}>
+//         <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" strokeWidth="1.5" style={{ margin: "0 auto 12px", display: "block" }}>
+//           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+//           <circle cx="9" cy="7" r="4" />
+//           <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+//         </svg>
+//         <p style={{ fontSize: 14, color: "#94a3b8", fontWeight: 500, margin: 0 }}>No mentees yet</p>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(270px,1fr))", gap: 14 }}>
+//       {subscribers.map((sub) => <MenteeCard key={sub._id} sub={sub} onClick={() => setSelectedMentee(sub)} />)}
+//     </div>
+//   );
+// }
+
+// // ── Main Dashboard ────────────────────────────────────────────────────────────
+
+// export default function MentorSessionsDashboard() {
+//   const [activeTab, setActiveTab] = useState("sessions");
+//   const mentorId = useMemo(() => getMentorId(), []);
+
+//   const { data: subscribersResult, isLoading: subLoading } = useGetSubscribersByMentorQuery(mentorId, { skip: !mentorId });
+//   const { data: sessionsOverview } = useGetSessionsByMentorQuery({ mentorId, page: 1, pageSize: DEFAULT_PAGE_SIZE }, { skip: !mentorId });
+
+//   const subscribers = useMemo(() => subscribersResult?.data ?? subscribersResult?.subscriptions ?? [], [subscribersResult]);
+//   console.log(subscribers, "subscribers")
+//   const totalSessions = sessionsOverview?.pagination?.total ?? 0;
+//   const completedSessions = useMemo(() => (sessionsOverview?.data ?? []).filter((s) => s.status === "completed").length, [sessionsOverview]);
+//   const pendingSessions = useMemo(() => (sessionsOverview?.data ?? []).filter((s) => s.status === "pending").length, [sessionsOverview]);
+
+//   const metrics = [
+//     { label: "Mentees", value: subscribers.length, color: "#0098cc" },
+//     { label: "Total Sessions", value: totalSessions, color: "#1a1a2e" },
+//     // { label: "Completed", value: completedSessions, color: "#16a34a" },
+//     // { label: "Pending", value: pendingSessions, color: "#d97706" },
+//   ];
+
+//   return (
+//     <>
+//       <style>{`
+//         @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+//         @keyframes spin    { to{transform:rotate(360deg)} }
+//         * { box-sizing: border-box; }
+//         body { margin: 0; }
+//         ::-webkit-scrollbar { width: 0; height: 0; }
+//         * { scrollbar-width: none; }
+//       `}</style>
+
+//       <div style={{ minHeight: "100vh", padding: "24px 18px", fontFamily: "'DM Sans','Segoe UI',sans-serif" }}>
+//         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+
+//           {/* Header */}
+//           <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 24 }}>
+//             <div style={{ width: 38, height: 38, borderRadius: 11, background: "#0098cc", display: "flex", alignItems: "center", justifyContent: "center" }}>
+//               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+//                 <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
+//               </svg>
+//             </div>
+//             <div>
+//               <h1 style={{ fontSize: 20, fontWeight: 800, color: "#1a1a2e", margin: 0, letterSpacing: "-0.02em" }}>Sessions Overview</h1>
+//               <p style={{ fontSize: 12, color: "#94a3b8", margin: 0 }}>Manage your mentee sessions and subscriptions</p>
+//             </div>
+//           </div>
+
+//           {/* Metrics */}
+//           {/* <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(125px,1fr))", gap: 11, marginBottom: 22 }}>
+//             {metrics.map((m) => (
+//               <div key={m.label} style={{ background: "#fff", border: "1.5px solid #e9edf2", borderRadius: 13, padding: "13px 18px" }}>
+//                 <p style={{ fontSize: 10, color: "#94a3b8", fontWeight: 700, margin: "0 0 4px", letterSpacing: "0.04em", textTransform: "uppercase" }}>{m.label}</p>
+//                 <p style={{ fontSize: 24, fontWeight: 800, color: m.color, lineHeight: 1.1, margin: 0 }}>{m.value}</p>
+//               </div>
+//             ))}
+//           </div> */}
+
+//           {/* Tabs */}
+//           <div style={{ display: "flex", gap: 4, background: "#fff", border: "1.5px solid #e9edf2", borderRadius: 11, padding: 4, width: "fit-content", marginBottom: 20 }}>
+//             {["sessions", "subscribers"].map((tab) => (
+//               <button key={tab} onClick={() => setActiveTab(tab)} style={{ padding: "7px 18px", borderRadius: 8, border: "none", background: activeTab === tab ? "#1a1a2e" : "transparent", color: activeTab === tab ? "#fff" : "#64748b", fontWeight: 700, fontSize: 13, cursor: "pointer", letterSpacing: "0.01em" }}>
+//                 {tab === "sessions" ? `Sessions${totalSessions ? ` (${totalSessions})` : ""}` : `Subscribers${subscribers.length ? ` (${subscribers.length})` : ""}`}
+//               </button>
+//             ))}
+//           </div>
+
+//           {/* Content */}
+//           {activeTab === "subscribers" && <SubscribersTable subscribers={subscribers} isLoading={subLoading} />}
+//           {activeTab === "sessions" && <SessionsTab mentorId={mentorId} subscribers={subscribers} subLoading={subLoading} />}
+//         </div>
+//       </div>
+//     </>
+//   );
+// }
+
+
+import React, { useState, useMemo, useCallback, useEffect } from "react";
+import { X, User, Mail, Phone, CalendarDays, CalendarX2, BadgeCheck } from "lucide-react";
 import {
   useGetSessionsByMentorQuery,
   useGetSubscribersByMentorQuery,
   useUpdateByMentorSessionMutation,
 } from "./mysubcriberspislice";
 
-// ─── Constants ────────────────────────────────────────────────────────────────
+// ── Constants ─────────────────────────────────────────────────────────────────
 
-const DEFAULT_PAGE_SIZE = 10;
 const PAGE_SIZE_OPTIONS = [5, 10, 20];
+const DEFAULT_PAGE_SIZE = 10;
 
 const PLAN_LABELS = {
   one_month: "1 Month",
@@ -23,7 +974,7 @@ const PLAN_LABELS = {
 };
 
 const STATUS_META = {
-  pending: { label: "Pending", bg: "#eff9fd", color: "#0083b1", dot: "#0083b1" },
+  pending: { label: "Pending", bg: "#eff9fd", color: "#0098cc", dot: "#0098cc" },
   completed: { label: "Completed", bg: "#f0fdf6", color: "#16a34a", dot: "#16a34a" },
   cancelled: { label: "Cancelled", bg: "#fff5f5", color: "#dc2626", dot: "#dc2626" },
   missed: { label: "Missed", bg: "#fffbeb", color: "#d97706", dot: "#d97706" },
@@ -32,49 +983,25 @@ const STATUS_META = {
   onprocess: { label: "On Process", bg: "#eff6ff", color: "#2563eb", dot: "#2563eb" },
 };
 
-// ─── Utilities ────────────────────────────────────────────────────────────────
+// ── Utils ─────────────────────────────────────────────────────────────────────
 
 const getMentorId = () =>
   JSON.parse(localStorage.getItem("userData") || "{}")?._id ?? null;
 
-const formatDate = (d) =>
-  d
-    ? new Date(d).toLocaleDateString("en-IN", {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-    })
-    : "—";
+const fmt = {
+  date: (d) =>
+    d
+      ? new Date(d).toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      })
+      : "—",
+  amount: (a) => (a != null ? `₹${a.toLocaleString("en-IN")}` : "—"),
+  shortId: (id) => (id ? `…${id.slice(-6)}` : "—"),
+};
 
-const formatAmount = (a) =>
-  a != null ? `₹${a.toLocaleString("en-IN")}` : "—";
-
-const shortId = (id) => (id ? `…${id.slice(-6)}` : "—");
-
-const paginate = (arr, page, size) =>
-  arr.slice((page - 1) * size, page * size);
-
-// ─── Stars (read-only display only) ──────────────────────────────────────────
-
-function Stars({ value }) {
-  return (
-    <div style={{ display: "flex", gap: 4 }}>
-      {[1, 2, 3, 4, 5].map((star) => (
-        <span
-          key={star}
-          style={{
-            fontSize: 20,
-            color: star <= value ? "#f59e0b" : "#e2e8f0",
-          }}
-        >
-          ★
-        </span>
-      ))}
-    </div>
-  );
-}
-
-// ─── StatusBadge ─────────────────────────────────────────────────────────────
+// ── Base UI ───────────────────────────────────────────────────────────────────
 
 function StatusBadge({ status }) {
   const m = STATUS_META[status] ?? {
@@ -113,215 +1040,17 @@ function StatusBadge({ status }) {
   );
 }
 
-// ─── MetricCard ───────────────────────────────────────────────────────────────
-
-function MetricCard({ label, value, color, icon }) {
+function Stars({ value = 0 }) {
   return (
-    <div
-      style={{
-        background: "#fff",
-        border: "1.5px solid #e9edf2",
-        borderRadius: 14,
-        padding: "14px 20px",
-        minWidth: 120,
-        display: "flex",
-        flexDirection: "column",
-        gap: 4,
-      }}
-    >
-      <p
-        style={{
-          fontSize: 11,
-          color: "#94a3b8",
-          fontWeight: 600,
-          marginBottom: 2,
-          letterSpacing: "0.04em",
-          textTransform: "uppercase",
-          display: "flex",
-          alignItems: "center",
-          gap: 5,
-        }}
-      >
-        {icon && (
-          <span style={{ fontSize: 14, color: color ?? "#1a1a2e" }}>
-            {icon}
-          </span>
-        )}
-        {label}
-      </p>
-      <p
-        style={{
-          fontSize: 24,
-          fontWeight: 800,
-          color: color ?? "#1a1a2e",
-          lineHeight: 1.1,
-          margin: 0,
-        }}
-      >
-        {value}
-      </p>
-    </div>
-  );
-}
-
-// ─── Pagination ───────────────────────────────────────────────────────────────
-
-function Pagination({ page, total, pageSize, onPage, onPageSize, isFetching }) {
-  const totalPages = Math.ceil(total / pageSize) || 1;
-
-  const pageNumbers = useMemo(() => {
-    const pages = [];
-    for (let i = 1; i <= totalPages; i++) {
-      if (i === 1 || i === totalPages || Math.abs(i - page) <= 1)
-        pages.push(i);
-      else if (pages[pages.length - 1] !== "…") pages.push("…");
-    }
-    return pages;
-  }, [page, totalPages]);
-
-  if (totalPages <= 1 && total <= PAGE_SIZE_OPTIONS[0]) return null;
-
-  const btn = (active, disabled) => ({
-    minWidth: 32,
-    height: 32,
-    borderRadius: 8,
-    border: active ? "1.5px solid #0083b1" : "1.5px solid #e2e8f0",
-    background: active ? "#0083b1" : "#fff",
-    color: active ? "#fff" : "#64748b",
-    fontSize: 12,
-    fontWeight: 600,
-    cursor: disabled ? "not-allowed" : "pointer",
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    transition: "all 0.15s",
-    opacity: disabled ? 0.4 : 1,
-  });
-
-  return (
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        alignItems: "center",
-        justifyContent: "space-between",
-        gap: 10,
-        padding: "14px 20px",
-        borderTop: "1px solid #f1f5f9",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-        <span style={{ fontSize: 12, color: "#94a3b8" }}>Rows:</span>
-        <select
-          value={pageSize}
-          onChange={(e) => {
-            onPageSize(Number(e.target.value));
-            onPage(1);
-          }}
-          style={{
-            border: "1.5px solid #e2e8f0",
-            borderRadius: 8,
-            fontSize: 12,
-            color: "#1a1a2e",
-            padding: "4px 8px",
-            background: "#fff",
-            cursor: "pointer",
-          }}
+    <div style={{ display: "flex", gap: 3 }}>
+      {[1, 2, 3, 4, 5].map((s) => (
+        <span
+          key={s}
+          style={{ fontSize: 18, color: s <= value ? "#f59e0b" : "#e2e8f0" }}
         >
-          {PAGE_SIZE_OPTIONS.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
-        <span style={{ fontSize: 12, color: "#94a3b8" }}>
-          {total === 0
-            ? "0"
-            : `${(page - 1) * pageSize + 1}–${Math.min(
-              page * pageSize,
-              total
-            )}`}{" "}
-          of {total}
+          ★
         </span>
-        {isFetching && (
-          <span
-            style={{
-              fontSize: 11,
-              color: "#0083b1",
-              fontWeight: 600,
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 4,
-            }}
-          >
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              style={{ animation: "spin 0.8s linear infinite" }}
-            >
-              <path d="M21 12a9 9 0 1 1-6.219-8.56" strokeLinecap="round" />
-            </svg>
-            Loading…
-          </span>
-        )}
-      </div>
-      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-        <button
-          style={btn(false, page === 1)}
-          disabled={page === 1 || isFetching}
-          onClick={() => onPage(page - 1)}
-        >
-          ‹
-        </button>
-        {pageNumbers.map((p, i) =>
-          p === "…" ? (
-            <span
-              key={`e${i}`}
-              style={{ padding: "0 4px", color: "#94a3b8", fontSize: 12 }}
-            >
-              …
-            </span>
-          ) : (
-            <button
-              key={p}
-              style={btn(p === page, isFetching)}
-              disabled={isFetching}
-              onClick={() => onPage(p)}
-            >
-              {p}
-            </button>
-          )
-        )}
-        <button
-          style={btn(false, page === totalPages)}
-          disabled={page === totalPages || isFetching}
-          onClick={() => onPage(page + 1)}
-        >
-          ›
-        </button>
-      </div>
-    </div>
-  );
-}
-
-// ─── Table helpers ────────────────────────────────────────────────────────────
-
-function TableCard({ children }) {
-  return (
-    <div
-      style={{
-        background: "#fff",
-        border: "1.5px solid #e9edf2",
-        borderRadius: 18,
-        overflow: "hidden",
-        boxShadow: "0 1px 8px rgba(0,0,0,0.05)",
-      }}
-    >
-      {children}
+      ))}
     </div>
   );
 }
@@ -330,7 +1059,7 @@ function Th({ children }) {
   return (
     <th
       style={{
-        padding: "12px 20px",
+        padding: "11px 18px",
         textAlign: "left",
         fontSize: 11,
         fontWeight: 700,
@@ -351,7 +1080,7 @@ function Td({ children, style }) {
   return (
     <td
       style={{
-        padding: "14px 20px",
+        padding: "13px 18px",
         borderBottom: "1px solid #f8fafc",
         verticalAlign: "middle",
         ...style,
@@ -362,14 +1091,14 @@ function Td({ children, style }) {
   );
 }
 
-function SkeletonRows({ cols, rows = DEFAULT_PAGE_SIZE }) {
+function SkeletonRows({ cols, rows = 6 }) {
   return Array.from({ length: rows }).map((_, i) => (
     <tr key={i}>
       {Array.from({ length: cols }).map((_, j) => (
-        <td key={j} style={{ padding: "14px 20px" }}>
+        <td key={j} style={{ padding: "13px 18px" }}>
           <div
             style={{
-              height: 12,
+              height: 11,
               borderRadius: 6,
               background:
                 "linear-gradient(90deg,#f1f5f9 25%,#e2e8f0 50%,#f1f5f9 75%)",
@@ -384,53 +1113,194 @@ function SkeletonRows({ cols, rows = DEFAULT_PAGE_SIZE }) {
   ));
 }
 
-function EmptyState({ message }) {
+function EmptyState({ message, cols = 10 }) {
   return (
     <tr>
-      <td colSpan={10} style={{ textAlign: "center", padding: "60px 20px" }}>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 10,
-          }}
+      <td colSpan={cols} style={{ textAlign: "center", padding: "56px 20px" }}>
+        <svg
+          width="36"
+          height="36"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="#cbd5e1"
+          strokeWidth="1.5"
+          style={{ display: "block", margin: "0 auto 10px" }}
         >
-          <svg
-            width="40"
-            height="40"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#cbd5e1"
-            strokeWidth="1.5"
-          >
-            <rect x="3" y="3" width="18" height="18" rx="3" />
-            <path d="M3 9h18M9 21V9" />
-          </svg>
-          <p style={{ fontSize: 14, color: "#94a3b8", fontWeight: 500 }}>
-            {message}
-          </p>
-        </div>
+          <rect x="3" y="3" width="18" height="18" rx="3" />
+          <path d="M3 9h18M9 21V9" />
+        </svg>
+        <p style={{ fontSize: 13, color: "#94a3b8", fontWeight: 500, margin: 0 }}>
+          {message}
+        </p>
       </td>
     </tr>
   );
 }
 
-// ─── Read-only field display ──────────────────────────────────────────────────
-
-function ReadonlyField({ label, children }) {
+function TableCard({ children }) {
   return (
-    <div style={{ width: "100%", minWidth: 0 }}>
+    <div
+      style={{
+        background: "#fff",
+        border: "1.5px solid #e9edf2",
+        borderRadius: 16,
+        overflow: "hidden",
+        boxShadow: "0 1px 6px rgba(0,0,0,0.04)",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+function Pagination({
+  page,
+  total,
+  pageSize,
+  onPage,
+  onPageSize,
+  isFetching,
+}) {
+  const totalPages = Math.ceil(total / pageSize) || 1;
+  const pages = useMemo(() => {
+    const arr = [];
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || Math.abs(i - page) <= 1) arr.push(i);
+      else if (arr[arr.length - 1] !== "…") arr.push("…");
+    }
+    return arr;
+  }, [page, totalPages]);
+
+  if (totalPages <= 1 && total <= PAGE_SIZE_OPTIONS[0]) return null;
+
+  const btnStyle = (active, disabled) => ({
+    minWidth: 30,
+    height: 30,
+    borderRadius: 7,
+    border: active ? "1.5px solid #0098cc" : "1.5px solid #e2e8f0",
+    background: active ? "#0098cc" : "#fff",
+    color: active ? "#fff" : "#64748b",
+    fontSize: 12,
+    fontWeight: 600,
+    cursor: disabled ? "not-allowed" : "pointer",
+    display: "inline-flex",
+    alignItems: "center",
+    justifyContent: "center",
+    opacity: disabled ? 0.4 : 1,
+  });
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        flexWrap: "wrap",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: 10,
+        padding: "12px 18px",
+        borderTop: "1px solid #f1f5f9",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <span style={{ fontSize: 12, color: "#94a3b8" }}>Rows:</span>
+        <select
+          value={pageSize}
+          onChange={(e) => {
+            onPageSize(Number(e.target.value));
+            onPage(1);
+          }}
+          style={{
+            border: "1.5px solid #e2e8f0",
+            borderRadius: 7,
+            fontSize: 12,
+            color: "#1a1a2e",
+            padding: "3px 8px",
+            background: "#fff",
+          }}
+        >
+          {PAGE_SIZE_OPTIONS.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+        <span style={{ fontSize: 12, color: "#94a3b8" }}>
+          {total === 0
+            ? "0"
+            : `${(page - 1) * pageSize + 1}–${Math.min(
+              page * pageSize,
+              total
+            )}`}{" "}
+          of {total}
+        </span>
+        {isFetching && (
+          <span style={{ fontSize: 11, color: "#0098cc", fontWeight: 600 }}>
+            Loading…
+          </span>
+        )}
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: 3 }}>
+        <button
+          style={btnStyle(false, page === 1)}
+          disabled={page === 1 || isFetching}
+          onClick={() => onPage(page - 1)}
+        >
+          ‹
+        </button>
+        {pages.map((p, i) =>
+          p === "…" ? (
+            <span
+              key={`e${i}`}
+              style={{ padding: "0 4px", color: "#94a3b8", fontSize: 12 }}
+            >
+              …
+            </span>
+          ) : (
+            <button
+              key={p}
+              style={btnStyle(p === page, isFetching)}
+              disabled={isFetching}
+              onClick={() => onPage(p)}
+            >
+              {p}
+            </button>
+          )
+        )}
+        <button
+          style={btnStyle(false, page === totalPages)}
+          disabled={page === totalPages || isFetching}
+          onClick={() => onPage(page + 1)}
+        >
+          ›
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Session Modal Field & Section ─────────────────────────────────────────────
+// IMPORTANT: These are defined at the TOP LEVEL (outside SessionModal) so they
+// have a stable component identity. Defining them inside SessionModal caused
+// React to unmount/remount inputs on every keystroke, losing focus.
+
+function ModalField({ label, children, span2, isMobile }) {
+  return (
+    <div
+      style={{
+        gridColumn: span2 && !isMobile ? "span 2" : "span 1",
+        width: "100%",
+        minWidth: 0,
+      }}
+    >
       <label
         style={{
           display: "block",
           fontSize: 11,
           fontWeight: 800,
-          color: "#94a3b8",
+          color: "#0098cc",
           textTransform: "uppercase",
           letterSpacing: "0.08em",
-          marginBottom: 8,
-          lineHeight: 1.5,
+          marginBottom: 7,
         }}
       >
         {label}
@@ -440,17 +1310,43 @@ function ReadonlyField({ label, children }) {
   );
 }
 
-// ─── SESSION MODAL ────────────────────────────────────────────────────────────
+function ModalSection({ title, children, top, isMobile }) {
+  return (
+    <section style={top ? { borderTop: "1px solid #f1f5f9", paddingTop: 22 } : {}}>
+      <p
+        style={{
+          fontSize: 11,
+          fontWeight: 800,
+          color: "#0098cc",
+          textTransform: "uppercase",
+          letterSpacing: "0.1em",
+          marginBottom: 14,
+          marginTop: 0,
+        }}
+      >
+        {title}
+      </p>
+      <div
+        style={{
+          display: "grid",
+          gap: 14,
+          gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
+        }}
+      >
+        {children}
+      </div>
+    </section>
+  );
+}
+
+// ── Session Modal ─────────────────────────────────────────────────────────────
 
 function SessionModal({ session, onClose, onSave }) {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState(null);
-
   const isMobile = window.innerWidth < 768;
-  const isSmallMobile = window.innerWidth < 480;
 
-  // Only mentor-editable fields in form state
   const [form, setForm] = useState({
     session_title: session.session_title || "",
     session_date: session.session_date
@@ -466,31 +1362,33 @@ function SessionModal({ session, onClose, onSave }) {
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, []);
 
   useEffect(() => {
-    const handleEsc = (e) => { if (e.key === "Escape") onClose(); };
-    document.addEventListener("keydown", handleEsc);
-    return () => document.removeEventListener("keydown", handleEsc);
+    const fn = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", fn);
+    return () => document.removeEventListener("keydown", fn);
   }, [onClose]);
 
-  const updateField = useCallback(
-    (key) => (e) => {
-      setForm((prev) => ({
-        ...prev,
-        [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value,
-      }));
-    },
-    []
-  );
+  // Stable change handler — does NOT recreate on each render
+  const handleChange = useCallback((key) => (e) => {
+    setForm((prev) => ({
+      ...prev,
+      [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value,
+    }));
+  }, []);
 
   const handleSave = useCallback(async () => {
     setSaving(true);
     setError(null);
-    const success = await onSave(session._id, form);
+    const ok = await onSave(session._id, form);
     setSaving(false);
-    if (success) {
+    if (ok) {
       setSaved(true);
       setTimeout(() => setSaved(false), 2200);
     } else {
@@ -498,10 +1396,10 @@ function SessionModal({ session, onClose, onSave }) {
     }
   }, [form, onSave, session._id]);
 
-  const inputStyle = {
+  const inp = {
     width: "100%",
-    padding: "12px 14px",
-    borderRadius: 12,
+    padding: "11px 13px",
+    borderRadius: 10,
     border: "1px solid #dbe3ea",
     background: "#fff",
     fontSize: 14,
@@ -510,16 +1408,11 @@ function SessionModal({ session, onClose, onSave }) {
     boxSizing: "border-box",
   };
 
-  const readonlyStyle = {
-    width: "100%",
-    padding: "12px 14px",
-    borderRadius: 12,
-    border: "1px solid #e5e7eb",
+  const ro = {
+    ...inp,
     background: "#f8fafc",
-    fontSize: 14,
+    border: "1px solid #e5e7eb",
     color: "#475569",
-    outline: "none",
-    boxSizing: "border-box",
     cursor: "not-allowed",
   };
 
@@ -533,42 +1426,42 @@ function SessionModal({ session, onClose, onSave }) {
         alignItems: "center",
         justifyContent: "center",
         padding: 14,
-        background: "rgba(0,0,0,0.45)",
+        background: "rgba(0,0,0,0.4)",
         backdropFilter: "blur(4px)",
       }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       <div
         style={{
           width: "100%",
-          maxWidth: 850,
+          maxWidth: 840,
           maxHeight: "95vh",
           background: "#fff",
           border: "1px solid #e5e7eb",
-          borderRadius: isMobile ? 18 : 24,
+          borderRadius: isMobile ? 16 : 22,
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
-          boxShadow: "0 24px 80px rgba(0,0,0,0.16)",
+          boxShadow: "0 20px 70px rgba(0,0,0,0.14)",
         }}
       >
-        {/* HEADER */}
+        {/* Header */}
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 14,
-            padding: "18px 22px",
+            gap: 12,
+            padding: "16px 20px",
             borderBottom: "1px solid #f1f5f9",
-            background: "#fff",
-            flexWrap: isMobile ? "wrap" : "nowrap",
           }}
         >
           <div
             style={{
-              width: 44,
-              height: 44,
-              borderRadius: 12,
+              width: 40,
+              height: 40,
+              borderRadius: 10,
               background: "#1a1a2e",
               color: "#fff",
               display: "flex",
@@ -581,14 +1474,13 @@ function SessionModal({ session, onClose, onSave }) {
           >
             {session.session_number}
           </div>
-
           <div style={{ flex: 1, minWidth: 0 }}>
             <p
               style={{
                 margin: 0,
                 fontWeight: 700,
-                color: "#0083b1",
-                fontSize: isMobile ? 15 : 18,
+                color: "#0098cc",
+                fontSize: isMobile ? 14 : 17,
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
@@ -596,7 +1488,7 @@ function SessionModal({ session, onClose, onSave }) {
             >
               {form.session_title || `Session ${session.session_number}`}
             </p>
-            <p style={{ margin: "4px 0 0", color: "#94a3b8", fontSize: 12 }}>
+            <p style={{ margin: "3px 0 0", color: "#94a3b8", fontSize: 12 }}>
               {form.session_date
                 ? new Date(form.session_date).toLocaleDateString("en-US", {
                   weekday: "short",
@@ -607,231 +1499,203 @@ function SessionModal({ session, onClose, onSave }) {
                 : "No date set"}
             </p>
           </div>
-
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <StatusBadge status={form.status} />
-            <button
-              onClick={onClose}
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: 10,
-                border: "1px solid #e5e7eb",
-                background: "#fff",
-                color: "#64748b",
-                fontSize: 16,
-                cursor: "pointer",
-              }}
-            >
-              ✕
-            </button>
-          </div>
+          <button
+            onClick={onClose}
+            style={{
+              width: 34,
+              height: 34,
+              borderRadius: 9,
+              border: "1px solid #e5e7eb",
+              background: "#fff",
+              color: "#64748b",
+              fontSize: 15,
+              cursor: "pointer",
+            }}
+          >
+            ✕
+          </button>
         </div>
 
-        {/* BODY */}
+        {/* Body */}
         <div
           style={{
             flex: 1,
             overflowY: "auto",
             display: "flex",
             flexDirection: "column",
-            gap: 28,
-            padding: isMobile ? 16 : 24,
+            gap: 24,
+            padding: isMobile ? 14 : 22,
           }}
         >
-          {/* ── SECTION: Session Details (mentor editable) ── */}
-          <section>
-            <SectionTitle color="#0083b1">Session Details</SectionTitle>
-            <div
-              style={{
-                display: "grid",
-                gap: 16,
-                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-              }}
-            >
-              {/* Session Title — editable */}
-              <ModalField label="Session Title" span2={!isMobile}>
-                <input
-                  style={inputStyle}
-                  value={form.session_title}
-                  onChange={updateField("session_title")}
-                  placeholder="Introduction & Goal Setting"
-                />
-              </ModalField>
+          {/* Session Details */}
+          <ModalSection title="Session Details" isMobile={isMobile}>
+            <ModalField label="Session Title" span2 isMobile={isMobile}>
+              <input
+                style={inp}
+                value={form.session_title}
+                onChange={handleChange("session_title")}
+                placeholder="Introduction & Goal Setting"
+              />
+            </ModalField>
+            <ModalField label="Date & Time" isMobile={isMobile}>
+              <input
+                type="datetime-local"
+                style={inp}
+                value={form.session_date}
+                onChange={handleChange("session_date")}
+              />
+            </ModalField>
+            <ModalField label="Status" isMobile={isMobile}>
+              <select
+                style={inp}
+                value={form.status}
+                onChange={handleChange("status")}
+              >
+                <option value="pending">Pending</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="missed">Missed</option>
+              </select>
+            </ModalField>
+            <ModalField label="Meeting Link" span2 isMobile={isMobile}>
+              <input
+                style={inp}
+                value={form.meeting_link}
+                onChange={handleChange("meeting_link")}
+                placeholder="https://meet.google.com"
+              />
+            </ModalField>
+            <ModalField label="Agenda / Description" span2 isMobile={isMobile}>
+              <textarea
+                rows={4}
+                style={{ ...inp, resize: "vertical", minHeight: 100 }}
+                value={form.meeting_description}
+                onChange={handleChange("meeting_description")}
+                placeholder="Topics to discuss..."
+              />
+            </ModalField>
+          </ModalSection>
 
-              {/* Date & Time — editable */}
-              <ModalField label="Date & Time">
+          {/* Tasks */}
+          <ModalSection title="Tasks" top isMobile={isMobile}>
+            <ModalField label="Assign Tasks" span2 isMobile={isMobile}>
+              <textarea
+                rows={4}
+                style={{ ...inp, resize: "vertical", minHeight: 110 }}
+                value={form.tasks_given}
+                onChange={handleChange("tasks_given")}
+                placeholder="Assign tasks for mentee..."
+              />
+            </ModalField>
+            <ModalField label="Task Completion" span2 isMobile={isMobile}>
+              <label
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  flexWrap: "wrap",
+                  padding: "11px 13px",
+                  border: "1px solid #dbe3ea",
+                  borderRadius: 10,
+                  background: "#fff",
+                  cursor: "pointer",
+                }}
+              >
                 <input
-                  type="datetime-local"
-                  style={inputStyle}
-                  value={form.session_date}
-                  onChange={updateField("session_date")}
+                  type="checkbox"
+                  checked={form.task_completed}
+                  onChange={handleChange("task_completed")}
+                  style={{ width: 17, height: 17, accentColor: "#0098cc" }}
                 />
-              </ModalField>
-
-              {/* Status — editable */}
-              <ModalField label="Status">
-                <select
-                  style={inputStyle}
-                  value={form.status}
-                  onChange={updateField("status")}
+                <span
+                  style={{ color: "#475569", fontSize: 14, fontWeight: 500 }}
                 >
-                  <option value="pending">Pending</option>
-                  <option value="completed">Completed</option>
-                  <option value="cancelled">Cancelled</option>
-                  <option value="missed">Missed</option>
-                </select>
-              </ModalField>
+                  Mark task as completed
+                </span>
+                {session.task_submission && (
+                  <a
+                    href={session.task_submission}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{
+                      marginLeft: "auto",
+                      fontSize: 11,
+                      color: "#0098cc",
+                      fontWeight: 700,
+                      textDecoration: "none",
+                      padding: "3px 10px",
+                      border: "1px solid #0098cc",
+                      borderRadius: 7,
+                    }}
+                  >
+                    View Submission →
+                  </a>
+                )}
+              </label>
+            </ModalField>
+          </ModalSection>
 
-              {/* Meeting Link — editable */}
-              <ModalField label="Meeting Link" span2={!isMobile}>
-                <input
-                  style={inputStyle}
-                  value={form.meeting_link}
-                  onChange={updateField("meeting_link")}
-                  placeholder="https://meet.google.com"
-                />
-              </ModalField>
-
-              {/* Meeting Description — editable by mentor */}
-              <ModalField label="Agenda / Description" span2={!isMobile}>
-                <textarea
-                  rows={4}
-                  style={{ ...inputStyle, resize: "vertical", minHeight: 110 }}
-                  value={form.meeting_description}
-                  onChange={updateField("meeting_description")}
-                  placeholder="Topics to discuss..."
-                />
-              </ModalField>
+          {/* Feedback */}
+          <ModalSection title="Feedback" top isMobile={isMobile}>
+            <ModalField label="Mentor Notes / Feedback" span2 isMobile={isMobile}>
+              <textarea
+                rows={5}
+                style={{ ...inp, resize: "vertical", minHeight: 130 }}
+                value={form.mentor_feedback}
+                onChange={handleChange("mentor_feedback")}
+                placeholder="Write session summary, guidance, notes..."
+              />
+            </ModalField>
+            <div style={{ width: "100%", minWidth: 0 }}>
+              <label
+                style={{
+                  display: "block",
+                  fontSize: 11,
+                  fontWeight: 800,
+                  color: "#94a3b8",
+                  textTransform: "uppercase",
+                  letterSpacing: "0.08em",
+                  marginBottom: 7,
+                }}
+              >
+                Mentee Feedback (read-only)
+              </label>
+              <textarea
+                rows={5}
+                readOnly
+                style={{ ...ro, resize: "vertical", minHeight: 130 }}
+                value={
+                  session.mentee_feedback ||
+                  "No mentee feedback submitted yet."
+                }
+              />
             </div>
-          </section>
+          </ModalSection>
 
-          {/* ── SECTION: Tasks (mentor editable) ── */}
-          <section style={{ borderTop: "1px solid #f1f5f9", paddingTop: 24 }}>
-            <SectionTitle color="#0083b1">Tasks</SectionTitle>
-            <div
-              style={{
-                display: "grid",
-                gap: 16,
-                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-              }}
-            >
-              {/* Assign Tasks — editable */}
-              <ModalField label="Assign Tasks" span2={!isMobile}>
-                <textarea
-                  rows={4}
-                  style={{ ...inputStyle, resize: "vertical", minHeight: 120 }}
-                  value={form.tasks_given || ""}
-                  onChange={updateField("tasks_given")}
-                  placeholder="Assign tasks for mentee..."
-                />
-              </ModalField>
-
-              {/* Task Completion — editable */}
-              <ModalField label="Task Completion" span2={!isMobile}>
+          {/* Ratings */}
+          <ModalSection title="Ratings" top isMobile={isMobile}>
+            {[
+              ["Mentor Rating", session.mentor_rating],
+              ["Mentee Rating", session.mentee_rating],
+            ].map(([label, val]) => (
+              <div key={label}>
                 <label
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 12,
-                    flexWrap: "wrap",
-                    padding: "12px 14px",
-                    border: "1px solid #dbe3ea",
-                    borderRadius: 12,
-                    background: "#fff",
-                    cursor: "pointer",
+                    display: "block",
+                    fontSize: 11,
+                    fontWeight: 800,
+                    color: "#94a3b8",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
+                    marginBottom: 7,
                   }}
                 >
-                  <input
-                    type="checkbox"
-                    checked={form.task_completed}
-                    onChange={updateField("task_completed")}
-                    style={{ width: 18, height: 18, accentColor: "#0083b1" }}
-                  />
-                  <span style={{ color: "#475569", fontSize: 14, fontWeight: 500 }}>
-                    Mark task as completed
-                  </span>
-                  {session.task_submission && (
-                    <a
-                      href={session.task_submission}
-                      target="_blank"
-                      rel="noreferrer"
-                      style={{
-                        marginLeft: "auto",
-                        fontSize: 11,
-                        color: "#0083b1",
-                        fontWeight: 700,
-                        textDecoration: "none",
-                        padding: "4px 10px",
-                        border: "1px solid #0083b1",
-                        borderRadius: 8,
-                      }}
-                    >
-                      View Submission →
-                    </a>
-                  )}
+                  {label}
                 </label>
-              </ModalField>
-            </div>
-          </section>
-
-          {/* ── SECTION: Feedback ── */}
-          <section style={{ borderTop: "1px solid #f1f5f9", paddingTop: 24 }}>
-            <SectionTitle color="#0083b1">Feedback</SectionTitle>
-            <div
-              style={{
-                display: "grid",
-                gap: 16,
-                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-              }}
-            >
-              {/* Mentor Feedback — EDITABLE */}
-              <ModalField label="Mentor Notes / Feedback" span2={!isMobile}>
-                <textarea
-                  rows={5}
-                  style={{ ...inputStyle, resize: "vertical", minHeight: 140 }}
-                  value={form.mentor_feedback}
-                  onChange={updateField("mentor_feedback")}
-                  placeholder="Write session summary, guidance, notes..."
-                />
-              </ModalField>
-
-              {/* Mentee Feedback — READ ONLY from API */}
-              <ReadonlyField label="Mentee Feedback (read-only)">
-                <textarea
-                  rows={5}
-                  readOnly
-                  style={{
-                    ...readonlyStyle,
-                    resize: "vertical",
-                    minHeight: 140,
-                  }}
-                  value={
-                    session.mentee_feedback
-                      ? session.mentee_feedback
-                      : "No mentee feedback submitted yet."
-                  }
-                />
-              </ReadonlyField>
-            </div>
-          </section>
-
-          {/* ── SECTION: Ratings (both read-only from API) ── */}
-          <section style={{ borderTop: "1px solid #f1f5f9", paddingTop: 24 }}>
-            <SectionTitle color="#0083b1">Ratings</SectionTitle>
-            <div
-              style={{
-                display: "grid",
-                gap: 16,
-                gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
-              }}
-            >
-              {/* Mentor Rating — read-only from API */}
-              <ReadonlyField label="Mentor Rating">
                 <div
                   style={{
-                    padding: "14px 16px",
-                    borderRadius: 12,
+                    padding: "13px 15px",
+                    borderRadius: 10,
                     background: "#f8fafc",
                     border: "1px solid #e5e7eb",
                     display: "flex",
@@ -839,99 +1703,80 @@ function SessionModal({ session, onClose, onSave }) {
                     gap: 10,
                   }}
                 >
-                  <Stars value={session.mentor_rating || 0} />
-                  <span style={{ fontSize: 13, fontWeight: 700, color: "#64748b" }}>
-                    {session.mentor_rating || 0}/5
+                  <Stars value={val || 0} />
+                  <span
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: "#64748b",
+                    }}
+                  >
+                    {val || 0}/5
                   </span>
                 </div>
-              </ReadonlyField>
-
-              {/* Mentee Rating — read-only from API */}
-              <ReadonlyField label="Mentee Rating">
-                <div
-                  style={{
-                    padding: "14px 16px",
-                    borderRadius: 12,
-                    background: "#f8fafc",
-                    border: "1px solid #e5e7eb",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  <Stars value={session.mentee_rating || 0} />
-                  <span style={{ fontSize: 13, fontWeight: 700, color: "#64748b" }}>
-                    {session.mentee_rating || 0}/5
-                  </span>
-                </div>
-              </ReadonlyField>
-            </div>
-          </section>
+              </div>
+            ))}
+          </ModalSection>
         </div>
 
-        {/* FOOTER */}
+        {/* Footer */}
         <div
           style={{
             borderTop: "1px solid #f1f5f9",
-            padding: "16px 22px",
+            padding: "14px 20px",
             background: "#fff",
             display: "flex",
             justifyContent: "space-between",
-            alignItems: isSmallMobile ? "stretch" : "center",
-            flexDirection: isSmallMobile ? "column" : "row",
-            gap: 14,
+            alignItems: "center",
+            gap: 12,
+            flexWrap: "wrap",
           }}
         >
           <div>
             {saved && (
-              <span style={{ fontSize: 13, fontWeight: 600, color: "#16a34a" }}>
+              <span
+                style={{ fontSize: 13, fontWeight: 600, color: "#16a34a" }}
+              >
                 ✓ Saved successfully
               </span>
             )}
             {error && (
-              <span style={{ fontSize: 13, fontWeight: 600, color: "#dc2626" }}>
+              <span
+                style={{ fontSize: 13, fontWeight: 600, color: "#dc2626" }}
+              >
                 ✕ {error}
               </span>
             )}
           </div>
-
-          <div
-            style={{
-              display: "flex",
-              gap: 10,
-              width: isSmallMobile ? "100%" : "auto",
-              flexDirection: isSmallMobile ? "column" : "row",
-            }}
-          >
+          <div style={{ display: "flex", gap: 8 }}>
             <button
               onClick={onClose}
               style={{
-                padding: "12px 18px",
-                borderRadius: 12,
+                padding: "10px 18px",
+                borderRadius: 10,
                 border: "1px solid #dbe3ea",
                 background: "#fff",
                 color: "#475569",
                 fontWeight: 600,
                 cursor: "pointer",
-                width: isSmallMobile ? "100%" : "auto",
+                fontSize: 13,
               }}
             >
               Cancel
             </button>
-
             <button
               onClick={handleSave}
               disabled={saving}
               style={{
-                padding: "12px 20px",
-                borderRadius: 12,
+                padding: "10px 20px",
+                borderRadius: 10,
                 border: "none",
                 background: "#1a1a2e",
                 color: "#fff",
                 fontWeight: 700,
                 cursor: saving ? "not-allowed" : "pointer",
                 opacity: saving ? 0.7 : 1,
-                width: isSmallMobile ? "100%" : "auto",
+                fontSize: 13,
               }}
             >
               {saving ? "Saving..." : "Save Changes"}
@@ -943,108 +1788,96 @@ function SessionModal({ session, onClose, onSave }) {
   );
 }
 
-// ─── Modal helpers ────────────────────────────────────────────────────────────
-
-function ModalField({ label, children, span2 }) {
-  return (
-    <div
-      style={{
-        gridColumn: span2 ? "span 2" : "span 1",
-        width: "100%",
-        minWidth: 0,
-      }}
-    >
-      <label
-        style={{
-          display: "block",
-          fontSize: 11,
-          fontWeight: 800,
-          color: "#0083b1",
-          textTransform: "uppercase",
-          letterSpacing: "0.08em",
-          marginBottom: 8,
-          lineHeight: 1.5,
-        }}
-      >
-        {label}
-      </label>
-      {children}
-    </div>
-  );
-}
-
-function SectionTitle({ children, color = "#0083b1" }) {
-  return (
-    <p
-      style={{
-        fontSize: 11,
-        fontWeight: 800,
-        color,
-        textTransform: "uppercase",
-        letterSpacing: "0.1em",
-        marginBottom: 16,
-        marginTop: 0,
-      }}
-    >
-      {children}
-    </p>
-  );
-}
-
-// ─── Subscriber Modal ─────────────────────────────────────────────────────────
-
-function DetailRow({ label, value, valueStyle }) {
-  return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        gap: 16,
-        padding: "11px 0",
-        borderBottom: "1px solid #f8fafc",
-      }}
-    >
-      <span
-        style={{
-          fontSize: 11,
-          color: "#94a3b8",
-          fontWeight: 600,
-          flexShrink: 0,
-          textTransform: "uppercase",
-          letterSpacing: "0.04em",
-        }}
-      >
-        {label}
-      </span>
-      <span
-        style={{
-          fontSize: 13,
-          color: "#1a1a2e",
-          fontWeight: 600,
-          textAlign: "right",
-          ...valueStyle,
-        }}
-      >
-        {value ?? "—"}
-      </span>
-    </div>
-  );
-}
+// ── Subscriber Modal ──────────────────────────────────────────────────────────
 
 function SubscriberModal({ sub, onClose }) {
   useEffect(() => {
     document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, []);
+
   useEffect(() => {
-    const h = (e) => { if (e.key === "Escape") onClose(); };
-    document.addEventListener("keydown", h);
-    return () => document.removeEventListener("keydown", h);
+    const fn = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", fn);
+    return () => document.removeEventListener("keydown", fn);
   }, [onClose]);
+
+  const mentee = sub.mentee || {};
+  const name = mentee.name || "Unknown";
+  const initials = name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
+
+  const iconBox = {
+    width: 28,
+    height: 28,
+    borderRadius: 7,
+    background: "#f0f9ff",
+    border: "1px solid #e0f2fe",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexShrink: 0,
+  };
+
+  const Row = ({ icon: Icon, label, value, valueStyle }) => (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 10,
+        padding: "10px 18px",
+        borderBottom: "1px solid #f1f5f9",
+      }}
+    >
+      <div style={iconBox}>
+        <Icon size={14} stroke="#0098cc" strokeWidth={2} />
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <p
+          style={{
+            margin: 0,
+            fontSize: 10,
+            color: "#94a3b8",
+            fontWeight: 700,
+            textTransform: "uppercase",
+            letterSpacing: "0.06em",
+          }}
+        >
+          {label}
+        </p>
+        <p
+          style={{
+            margin: "1px 0 0",
+            fontSize: 13,
+            color: "#1a1a2e",
+            fontWeight: 600,
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            ...valueStyle,
+          }}
+        >
+          {value || "—"}
+        </p>
+      </div>
+    </div>
+  );
 
   return (
     <div
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      role="dialog"
+      aria-modal="true"
       style={{
         position: "fixed",
         inset: 0,
@@ -1053,78 +1886,299 @@ function SubscriberModal({ sub, onClose }) {
         alignItems: "center",
         justifyContent: "center",
         padding: 16,
-        background: "rgba(15,23,42,0.45)",
+        background: "rgba(15,23,42,0.4)",
         backdropFilter: "blur(4px)",
       }}
-      onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
-      role="dialog"
-      aria-modal="true"
     >
       <div
         style={{
           background: "#fff",
-          borderRadius: 20,
+          borderRadius: 16,
           width: "100%",
-          maxWidth: 480,
-          maxHeight: "90vh",
+          maxWidth: 400,
+          border: "1.5px solid #e2e8f0",
           overflow: "hidden",
           display: "flex",
           flexDirection: "column",
-          boxShadow: "0 24px 60px rgba(0,0,0,0.18)",
         }}
       >
+        {/* Header */}
         <div
           style={{
+            padding: "14px 18px 12px",
             display: "flex",
             alignItems: "center",
-            justifyContent: "space-between",
-            padding: "18px 22px",
+            gap: 11,
             borderBottom: "1px solid #f1f5f9",
           }}
         >
-          <h2 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a2e", margin: 0 }}>
-            Subscriber Details
-          </h2>
-          <button
-            onClick={onClose}
+          <div
             style={{
-              width: 32,
-              height: 32,
-              borderRadius: 8,
-              border: "1.5px solid #e2e8f0",
-              background: "#fff",
-              cursor: "pointer",
-              fontSize: 18,
-              color: "#64748b",
+              width: 38,
+              height: 38,
+              borderRadius: 11,
+              background: "#e0f2fe",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              fontSize: 13,
+              fontWeight: 700,
+              color: "#0098cc",
+              flexShrink: 0,
             }}
           >
-            ×
+            {initials}
+          </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p
+              style={{
+                margin: 0,
+                fontSize: 14,
+                fontWeight: 700,
+                color: "#1a1a2e",
+              }}
+            >
+              {name}
+            </p>
+            <p
+              style={{
+                margin: "2px 0 0",
+                fontSize: 12,
+                color: "#94a3b8",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {mentee.email || "—"}
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 7,
+              border: "1.5px solid #e2e8f0",
+              background: "#fff",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: "#64748b",
+            }}
+          >
+            <X size={14} strokeWidth={2} />
           </button>
         </div>
-        <div style={{ overflowY: "auto", padding: "20px 22px", flex: 1 }}>
-          <DetailRow label="Mentee ID" value={shortId(sub.mentee_id)} />
-          <DetailRow label="Mentor ID" value={shortId(sub.mentor_id)} />
-          <DetailRow
-            label="Plan"
-            value={PLAN_LABELS[sub.plan_type] || sub.plan_type}
-            valueStyle={{ color: "#0083b1" }}
-          />
-          <DetailRow label="Total Sessions" value={sub.total_sessions} />
-          <DetailRow
-            label="Amount"
-            value={formatAmount(sub.amount)}
-            valueStyle={{ color: "#16a34a" }}
-          />
-          <DetailRow label="Start Date" value={formatDate(sub.subscribed_at)} />
-          <DetailRow label="End Date" value={formatDate(sub.subscription_end_date)} />
-          <DetailRow label="Status" value={<StatusBadge status={sub.status} />} />
-        </div>
+
+        {/* Status strip */}
         <div
           style={{
-            padding: "14px 22px",
+            padding: "8px 18px",
+            background: "#f0f9ff",
+            borderBottom: "1px solid #e0f2fe",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <span
+            style={{
+              fontSize: 10,
+              fontWeight: 700,
+              color: "#94a3b8",
+              textTransform: "uppercase",
+              letterSpacing: "0.07em",
+            }}
+          >
+            Subscription status
+          </span>
+          {/* <StatusBadge status={sub.status} /> */}
+        </div>
+
+        {/* Metrics */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr",
+            borderBottom: "1px solid #f1f5f9",
+          }}
+        >
+          {[
+            {
+              label: "Plan",
+              value: PLAN_LABELS[sub.plan_type] || sub.plan_type,
+              color: "#0098cc",
+            },
+            { label: "Sessions", value: sub.total_sessions, color: "#1a1a2e" },
+            {
+              label: "Amount",
+              value: fmt.amount(sub.amount),
+              color: "#1a1a2e",
+            },
+          ].map(({ label, value, color }, i) => (
+            <div
+              key={label}
+              style={{
+                padding: "10px 14px",
+                borderRight: i < 2 ? "1px solid #f1f5f9" : "none",
+              }}
+            >
+              <p
+                style={{
+                  margin: "0 0 2px",
+                  fontSize: 10,
+                  color: "#94a3b8",
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.06em",
+                }}
+              >
+                {label}
+              </p>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color,
+                }}
+              >
+                {value ?? "—"}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <Row icon={User} label="Name" value={name} />
+        <Row
+          icon={Mail}
+          label="Email"
+          value={mentee.email}
+          valueStyle={{ color: "#0098cc" }}
+        />
+        <Row
+          icon={Phone}
+          label="Phone"
+          value={
+            mentee.phone
+              ? `+${mentee.countryCode || ""} ${mentee.phone}`
+              : "—"
+          }
+        />
+
+        {/* Date split */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr",
+            borderBottom: "1px solid #f1f5f9",
+          }}
+        >
+          {[
+            {
+              icon: CalendarDays,
+              label: "Start date",
+              value: fmt.date(sub.subscribed_at),
+              border: true,
+            },
+            {
+              icon: CalendarX2,
+              label: "End date",
+              value: fmt.date(sub.subscription_end_date),
+              border: false,
+            },
+          ].map(({ icon: Icon, label, value, border }) => (
+            <div
+              key={label}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                padding: "10px 18px",
+                borderRight: border ? "1px solid #f1f5f9" : "none",
+              }}
+            >
+              <div style={iconBox}>
+                <Icon size={14} stroke="#0098cc" strokeWidth={2} />
+              </div>
+              <div>
+                <p
+                  style={{
+                    margin: 0,
+                    fontSize: 10,
+                    color: "#94a3b8",
+                    fontWeight: 700,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                  }}
+                >
+                  {label}
+                </p>
+                <p
+                  style={{
+                    margin: "1px 0 0",
+                    fontSize: 13,
+                    fontWeight: 600,
+                    color: "#1a1a2e",
+                  }}
+                >
+                  {value}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Mentee ID */}
+        {/* <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 10,
+            padding: "10px 18px",
+          }}
+        >
+          <div style={iconBox}>
+            <BadgeCheck size={14} stroke="#0098cc" strokeWidth={2} />
+          </div>
+          <div>
+            <p
+              style={{
+                margin: 0,
+                fontSize: 10,
+                color: "#94a3b8",
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.06em",
+              }}
+            >
+              Mentee ID
+            </p>
+            <p
+              style={{
+                margin: "1px 0 0",
+                fontSize: 12,
+                fontWeight: 700,
+                color: "#0098cc",
+                fontFamily: "monospace",
+                background: "#f0f9ff",
+                border: "1px solid #e0f2fe",
+                padding: "1px 8px",
+                borderRadius: 5,
+                display: "inline-block",
+              }}
+            >
+              {fmt.shortId(sub.mentee_id)}
+            </p>
+          </div>
+        </div> */}
+
+        {/* Footer */}
+        <div
+          style={{
+            padding: "11px 18px",
             borderTop: "1px solid #f1f5f9",
             display: "flex",
             justifyContent: "flex-end",
@@ -1133,13 +2187,13 @@ function SubscriberModal({ sub, onClose }) {
           <button
             onClick={onClose}
             style={{
-              padding: "9px 24px",
-              borderRadius: 9,
+              padding: "7px 22px",
+              borderRadius: 8,
               border: "none",
               background: "#1a1a2e",
               color: "#fff",
               fontWeight: 700,
-              fontSize: 13,
+              fontSize: 12,
               cursor: "pointer",
             }}
           >
@@ -1151,7 +2205,7 @@ function SubscriberModal({ sub, onClose }) {
   );
 }
 
-// ─── Subscribers Table ────────────────────────────────────────────────────────
+// ── Subscribers Table ─────────────────────────────────────────────────────────
 
 function SubscribersTable({ subscribers, isLoading }) {
   const [page, setPage] = useState(1);
@@ -1159,50 +2213,121 @@ function SubscribersTable({ subscribers, isLoading }) {
   const [selected, setSelected] = useState(null);
 
   const paged = useMemo(
-    () => paginate(subscribers, page, pageSize),
+    () => subscribers.slice((page - 1) * pageSize, page * pageSize),
     [subscribers, page, pageSize]
   );
-
-  const openModal = useCallback((sub) => setSelected(sub), []);
-  const closeModal = useCallback(() => setSelected(null), []);
 
   return (
     <>
       <TableCard>
         <div style={{ overflowX: "auto" }}>
           <table
-            style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              tableLayout: "fixed",
+            }}
           >
             <colgroup>
-              <col style={{ width: 40 }} />
-              <col style={{ width: 120 }} />
-              <col style={{ width: 110 }} />
-              <col style={{ width: 90 }} />
-              <col style={{ width: 120 }} />
-              <col style={{ width: 110 }} />
-              <col style={{ width: 110 }} />
-              <col style={{ width: 100 }} />
+              <col style={{ width: "8%" }} />
+              <col style={{ width: "22%" }} />
+              <col style={{ width: "15%" }} />
+              <col style={{ width: "12%" }} />
+              <col style={{ width: "15%" }} />
+              <col style={{ width: "14%" }} />
+              <col style={{ width: "14%" }} />
             </colgroup>
             <thead>
               <tr>
-                {["#", "Mentee", "Plan", "Sessions", "Amount", "Start Date", "Status"].map(
-                  (h) => <Th key={h}>{h}</Th>
-                )}
+                {[
+                  "S NO",
+                  "Mentee",
+                  "Plan",
+                  "Sessions",
+                  "Amount",
+                  "Start Date",
+                  "Status",
+                ].map((h) => (
+                  <Th key={h}>{h}</Th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
                 <SkeletonRows cols={7} />
               ) : paged.length === 0 ? (
-                <EmptyState message="No subscribers found" />
+                <EmptyState message="No subscribers found" cols={7} />
               ) : (
                 paged.map((sub, idx) => (
-                  <SubscriberRow
+                  <tr
                     key={sub._id}
-                    sub={sub}
-                    idx={(page - 1) * pageSize + idx + 1}
-                    onView={openModal}
-                  />
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setSelected(sub)}
+                  >
+                    <Td>
+                      <span
+                        style={{
+                          fontSize: 12,
+                          color: "#94a3b8",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {(page - 1) * pageSize + idx + 1}
+                      </span>
+                    </Td>
+                    <Td>
+                      <span
+                        style={{
+                          fontSize: 13,
+                          color: "#0098cc",
+                          fontWeight: 700,
+                        }}
+                      >
+                        {sub.mentee.name}
+                      </span>
+                    </Td>
+                    <Td>
+                      <span
+                        style={{
+                          fontSize: 12,
+                          fontWeight: 700,
+                          color: "#0098cc",
+                        }}
+                      >
+                        {PLAN_LABELS[sub.plan_type] || sub.plan_type || "—"}
+                      </span>
+                    </Td>
+                    <Td>
+                      <span
+                        style={{
+                          fontSize: 13,
+                          fontWeight: 600,
+                          color: "#1a1a2e",
+                        }}
+                      >
+                        {sub.total_sessions ?? "—"}
+                      </span>
+                    </Td>
+                    <Td>
+                      <span
+                        style={{
+                          fontSize: 13,
+                          fontWeight: 700,
+                          color: "#16a34a",
+                        }}
+                      >
+                        {fmt.amount(sub.amount)}
+                      </span>
+                    </Td>
+                    <Td>
+                      <span style={{ fontSize: 12, color: "#64748b" }}>
+                        {fmt.date(sub.subscribed_at)}
+                      </span>
+                    </Td>
+                    <Td>
+                      <StatusBadge status={sub.status} />
+                    </Td>
+                  </tr>
                 ))
               )}
             </tbody>
@@ -1213,114 +2338,66 @@ function SubscribersTable({ subscribers, isLoading }) {
           total={subscribers.length}
           pageSize={pageSize}
           onPage={setPage}
-          onPageSize={setPageSize}
+          onPageSize={(s) => {
+            setPageSize(s);
+            setPage(1);
+          }}
           isFetching={false}
         />
       </TableCard>
-      {selected && <SubscriberModal sub={selected} onClose={closeModal} />}
+      {selected && (
+        <SubscriberModal sub={selected} onClose={() => setSelected(null)} />
+      )}
     </>
   );
 }
 
-const SubscriberRow = React.memo(function SubscriberRow({ sub, idx, onView }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <tr
-      style={{ background: hovered ? "#f8fbff" : "#fff", transition: "background 0.12s" }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <Td>
-        <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>{idx}</span>
-      </Td>
-      <Td>
-        <span style={{ fontSize: 13, color: "#0083b1", fontWeight: 700 }}>
-          {sub.user || "—"}
-        </span>
-      </Td>
-      <Td>
-        <span style={{ fontSize: 12, fontWeight: 700, color: "#0083b1" }}>
-          {PLAN_LABELS[sub.plan_type] || sub.plan_type || "—"}
-        </span>
-      </Td>
-      <Td>
-        <span style={{ fontSize: 13, fontWeight: 600, color: "#1a1a2e" }}>
-          {sub.total_sessions ?? "—"}
-        </span>
-      </Td>
-      <Td>
-        <span style={{ fontSize: 13, fontWeight: 700, color: "#16a34a" }}>
-          {formatAmount(sub.amount)}
-        </span>
-      </Td>
-      <Td>
-        <span style={{ fontSize: 12, color: "#64748b" }}>
-          {formatDate(sub.subscribed_at)}
-        </span>
-      </Td>
-      <Td>
-        <StatusBadge status={sub.status} />
-      </Td>
-    </tr>
-  );
-});
+// ── Mentee Card ───────────────────────────────────────────────────────────────
 
-// ─── Mentee Card ─────────────────────────────────────────────────────────────
-
-function MenteeCard({ sub, index, onClick }) {
-  const [hovered, setHovered] = useState(false);
-
-  const totalSessions = sub.total_sessions ?? 0;
-  const userName = sub.user || "Unknown User";
-  const initials = userName
+function MenteeCard({ sub, onClick }) {
+  const name = sub.mentee.name || "Unknown User";
+  const initials = name
     .split(" ")
     .map((n) => n[0])
     .join("")
     .toUpperCase()
     .slice(0, 2);
-
-  const planColor = {
-    one_month: { bg: "#eff9fd", color: "#0083b1" },
-    three_months: { bg: "#f0fdf6", color: "#16a34a" },
-    six_months: { bg: "#fdf4ff", color: "#9333ea" },
-  }[sub.plan_type] ?? { bg: "#f1f5f9", color: "#64748b" };
+  const planColor = (
+    {
+      one_month: { bg: "#eff9fd", color: "#0098cc" },
+      three_months: { bg: "#f0fdf6", color: "#16a34a" },
+      six_months: { bg: "#fdf4ff", color: "#9333ea" },
+    }[sub.plan_type] ?? { bg: "#f1f5f9", color: "#64748b" }
+  );
 
   return (
     <div
       onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       style={{
         background: "#fff",
-        border: hovered ? "1.5px solid #0083b1" : "1.5px solid #e9edf2",
-        borderRadius: 16,
-        padding: "20px",
+        border: "1.5px solid #e9edf2",
+        borderRadius: 14,
+        padding: "18px",
         cursor: "pointer",
-        transition: "all 0.18s",
-        boxShadow: hovered
-          ? "0 4px 20px rgba(0,131,177,0.12)"
-          : "0 1px 6px rgba(0,0,0,0.04)",
-        transform: hovered ? "translateY(-2px)" : "none",
         display: "flex",
         flexDirection: "column",
-        gap: 14,
+        gap: 12,
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 11 }}>
         <div
           style={{
-            width: 44,
-            height: 44,
-            borderRadius: 12,
-            background: "linear-gradient(135deg, #0083b1 0%, #005f82 100%)",
+            width: 42,
+            height: 42,
+            borderRadius: 11,
+            background: "linear-gradient(135deg,#0098cc 0%,#006e99 100%)",
             color: "#fff",
-            fontSize: 14,
+            fontSize: 13,
             fontWeight: 800,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             flexShrink: 0,
-            letterSpacing: "0.02em",
           }}
         >
           {initials}
@@ -1337,33 +2414,31 @@ function MenteeCard({ sub, index, onClick }) {
               whiteSpace: "nowrap",
             }}
           >
-            {userName}
+            {name}
           </p>
           <p style={{ fontSize: 11, color: "#94a3b8", margin: "2px 0 0" }}>
-            {formatDate(sub.subscribed_at)} — {formatDate(sub.subscription_end_date)}
+            {fmt.date(sub.subscribed_at)} — {fmt.date(sub.subscription_end_date)}
           </p>
         </div>
         <svg
-          width="16"
-          height="16"
+          width="15"
+          height="15"
           viewBox="0 0 24 24"
           fill="none"
-          stroke={hovered ? "#0083b1" : "#cbd5e1"}
+          stroke="#cbd5e1"
           strokeWidth="2.5"
           strokeLinecap="round"
           strokeLinejoin="round"
-          style={{ transition: "stroke 0.15s", flexShrink: 0 }}
         >
           <path d="M9 18l6-6-6-6" />
         </svg>
       </div>
-
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
         <span
           style={{
             fontSize: 11,
             fontWeight: 700,
-            padding: "4px 10px",
+            padding: "3px 9px",
             borderRadius: 20,
             background: planColor.bg,
             color: planColor.color,
@@ -1375,28 +2450,27 @@ function MenteeCard({ sub, index, onClick }) {
           style={{
             fontSize: 11,
             fontWeight: 600,
-            padding: "4px 10px",
+            padding: "3px 9px",
             borderRadius: 20,
             background: "#f8fafc",
             color: "#64748b",
           }}
         >
-          {totalSessions} sessions
+          {sub.total_sessions ?? 0} sessions
         </span>
         <span
           style={{
             fontSize: 11,
             fontWeight: 700,
-            padding: "4px 10px",
+            padding: "3px 9px",
             borderRadius: 20,
             background: "#f0fdf4",
             color: "#16a34a",
           }}
         >
-          {formatAmount(sub.amount)}
+          {fmt.amount(sub.amount)}
         </span>
       </div>
-
       <div
         style={{
           display: "flex",
@@ -1405,14 +2479,7 @@ function MenteeCard({ sub, index, onClick }) {
         }}
       >
         <StatusBadge status={sub.status} />
-        <span
-          style={{
-            fontSize: 11,
-            color: hovered ? "#0083b1" : "#94a3b8",
-            fontWeight: 600,
-            transition: "color 0.15s",
-          }}
-        >
+        <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 600 }}>
           View sessions →
         </span>
       </div>
@@ -1420,13 +2487,12 @@ function MenteeCard({ sub, index, onClick }) {
   );
 }
 
-// ─── Mentee Sessions View ─────────────────────────────────────────────────────
+// ── Mentee Sessions View ──────────────────────────────────────────────────────
 
 function MenteeSessionsView({ sub, mentorId, onBack }) {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
   const [selectedSession, setSelectedSession] = useState(null);
-
   const [updateSession] = useUpdateByMentorSessionMutation();
 
   const { data, isLoading, isFetching, refetch } = useGetSessionsByMentorQuery(
@@ -1435,47 +2501,21 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
   );
 
   const sessions = data?.data ?? [];
-  const pagination = data?.pagination ?? { total: 0, totalPages: 1 };
+  const pagination = data?.pagination ?? { total: 0 };
 
-  const handlePageSize = useCallback((newSize) => {
-    setPageSize(newSize);
-    setPage(1);
-  }, []);
-
-  // ── Fixed handleSave: sends only mentor-editable fields ──
   const handleSave = useCallback(
     async (session_id, form) => {
       try {
-        await updateSession({
-          session_id,
-          session_title: form.session_title,
-          session_date: form.session_date,
-          meeting_link: form.meeting_link,
-          meeting_description: form.meeting_description,
-          tasks_given: form.tasks_given,
-          task_completed: form.task_completed,
-          mentor_feedback: form.mentor_feedback,
-          status: form.status,
-        }).unwrap();
-
-        // Update local modal state so UI reflects changes immediately
-        setSelectedSession((prev) =>
-          prev ? { ...prev, ...form } : prev
-        );
-
-        // Refetch so table updates
+        await updateSession({ session_id, ...form }).unwrap();
+        setSelectedSession((p) => (p ? { ...p, ...form } : p));
         refetch();
         return true;
-      } catch (err) {
-        console.error("Update session error:", err);
+      } catch {
         return false;
       }
     },
     [updateSession, refetch]
   );
-
-  const openModal = useCallback((s) => setSelectedSession(s), []);
-  const closeModal = useCallback(() => setSelectedSession(null), []);
 
   return (
     <>
@@ -1485,7 +2525,7 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
           display: "flex",
           alignItems: "center",
           gap: 8,
-          marginBottom: 20,
+          marginBottom: 18,
           flexWrap: "wrap",
         }}
       >
@@ -1495,28 +2535,20 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
             display: "inline-flex",
             alignItems: "center",
             gap: 6,
-            padding: "7px 14px",
-            borderRadius: 9,
+            padding: "8px 14px",
+            borderRadius: 8,
             border: "1.5px solid #e2e8f0",
             background: "#fff",
-            color: "#0083b1",
+            color: "#0098cc",
             fontSize: 12,
             fontWeight: 700,
             cursor: "pointer",
-            transition: "all 0.15s",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "#eff9fd";
-            e.currentTarget.style.borderColor = "#0083b1";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "#fff";
-            e.currentTarget.style.borderColor = "#e2e8f0";
+            flexShrink: 0,
           }}
         >
           <svg
-            width="14"
-            height="14"
+            width="13"
+            height="13"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -1528,102 +2560,80 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
           </svg>
           All Mentees
         </button>
-        <span style={{ color: "#cbd5e1", fontSize: 16 }}>/</span>
         <div
           style={{
             display: "flex",
             alignItems: "center",
-            gap: 8,
-            background: "#f8fafc",
-            border: "1.5px solid #e9edf2",
-            borderRadius: 9,
-            padding: "7px 14px",
+            gap: 12,
+            flexWrap: "wrap",
+            padding: "8px 14px",
+            borderRadius: 8,
+            border: "1.5px solid #e2e8f0",
+            color: "#5a98cc",
           }}
         >
-          <div
-            style={{
-              width: 20,
-              height: 20,
-              borderRadius: 6,
-              background: "#0083b1",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-            }}
-          >
-            <span style={{ fontSize: 9, fontWeight: 800, color: "#fff" }}>
-              {(sub.user || "??")
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .toUpperCase()
-                .slice(0, 2)}
-            </span>
-          </div>
-          <span style={{ fontSize: 12, fontWeight: 700, color: "#1a1a2e" }}>
-            {sub.user || shortId(sub.mentee_id)}
+          <span style={{ fontSize: 13, fontWeight: 700, color: "#5a98cc" }}>
+            {sub?.user || sub?.mentee?.name}
           </span>
           <span
             style={{
               fontSize: 11,
-              color: "#94a3b8",
+              fontWeight: 600,
               borderLeft: "1px solid #e2e8f0",
-              paddingLeft: 8,
-              marginLeft: 2,
+              paddingLeft: 12,
             }}
           >
-            {PLAN_LABELS[sub.plan_type]} · {sub.total_sessions} sessions
+            {PLAN_LABELS[sub.plan_type]} • {sub.total_sessions} Sessions
           </span>
         </div>
       </div>
 
-      {/* Mentee summary strip */}
+      {/* Summary strip */}
       <div
         style={{
           background: "#eff9fd",
           border: "1.5px solid #bae6fd",
-          borderRadius: 12,
-          padding: "12px 18px",
+          borderRadius: 10,
+          padding: "11px 16px",
           display: "flex",
           alignItems: "center",
-          gap: 20,
-          marginBottom: 18,
+          gap: 18,
+          marginBottom: 16,
           flexWrap: "wrap",
         }}
       >
         {[
-          { label: "Plan", value: PLAN_LABELS[sub.plan_type] || sub.plan_type },
-          { label: "Total Sessions", value: pagination.total || sub.total_sessions },
-          { label: "Amount", value: formatAmount(sub.amount), color: "#16a34a" },
-          { label: "Valid Until", value: formatDate(sub.subscription_end_date) },
-        ].map((item, i) => (
-          <React.Fragment key={item.label}>
+          ["Plan", PLAN_LABELS[sub.plan_type] || sub.plan_type, null],
+          ["Total Sessions", pagination.total || sub.total_sessions, null],
+          ["Amount", fmt.amount(sub.amount), "#16a34a"],
+          ["Valid Until", fmt.date(sub.subscription_end_date), null],
+        ].map(([label, value, color], i) => (
+          <React.Fragment key={label}>
             {i > 0 && (
-              <div style={{ width: 1, height: 30, background: "#bae6fd" }} />
+              <div style={{ width: 1, height: 28, background: "#bae6fd" }} />
             )}
             <div>
               <p
                 style={{
                   fontSize: 10,
-                  color: "#0083b1",
+                  color: "#0098cc",
                   fontWeight: 700,
                   margin: 0,
                   textTransform: "uppercase",
                   letterSpacing: "0.06em",
                 }}
               >
-                {item.label}
+                {label}
               </p>
               <p
                 style={{
                   fontSize: 13,
-                  color: item.color || "#1a1a2e",
+                  color: color || "#1a1a2e",
                   fontWeight: 700,
                   margin: "2px 0 0",
                 }}
               >
-                {item.value}
+                {value}
               </p>
             </div>
           </React.Fragment>
@@ -1637,36 +2647,108 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
       <TableCard>
         <div style={{ overflowX: "auto" }}>
           <table
-            style={{ width: "100%", borderCollapse: "collapse", tableLayout: "fixed" }}
+            style={{
+              width: "100%",
+              borderCollapse: "collapse",
+              tableLayout: "auto",
+            }}
           >
             <colgroup>
-              <col style={{ width: 44 }} />
-              <col />
+              <col style={{ width: 50 }} />
+              <col style={{ width: "40%" }} />
               <col style={{ width: 130 }} />
-              <col style={{ width: 90 }} />
-              <col style={{ width: 110 }} />
+              <col style={{ width: 100 }} />
+              <col style={{ width: 120 }} />
               <col style={{ width: 100 }} />
             </colgroup>
             <thead>
               <tr>
-                {["#", "Session", "Date", "Duration", "Status", "Action"].map((h) => (
-                  <Th key={h}>{h}</Th>
-                ))}
+                {["S NO", "Session", "Date", "Duration", "Status", "Action"].map(
+                  (h) => (
+                    <Th key={h}>{h}</Th>
+                  )
+                )}
               </tr>
             </thead>
             <tbody>
               {isLoading || isFetching ? (
                 <SkeletonRows cols={6} rows={pageSize} />
               ) : sessions.length === 0 ? (
-                <EmptyState message="No sessions found" />
+                <EmptyState message="No sessions found" cols={6} />
               ) : (
                 sessions.map((item, idx) => (
-                  <SessionRow
+                  <tr
                     key={item._id}
-                    item={item}
-                    idx={(page - 1) * pageSize + idx + 1}
-                    onView={openModal}
-                  />
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setSelectedSession(item)}
+                  >
+                    <Td>
+                      <span
+                        style={{
+                          fontSize: 12,
+                          color: "#94a3b8",
+                          fontWeight: 600,
+                        }}
+                      >
+                        {(page - 1) * pageSize + idx + 1}
+                      </span>
+                    </Td>
+                    <Td>
+                      <div
+                        style={{
+                          fontSize: 13,
+                          fontWeight: 600,
+                          color: "#1a1a2e",
+                          whiteSpace: "normal",
+                          wordBreak: "break-word",
+                          overflowWrap: "break-word",
+                          lineHeight: "20px",
+                        }}
+                      >
+                        {item.session_title || `Session ${item.session_number}`}
+                      </div>
+                    </Td>
+                    <Td>
+                      <span
+                        style={{
+                          fontSize: 12,
+                          color: "#64748b",
+                          whiteSpace: "normal",
+                          wordBreak: "break-word",
+                        }}
+                      >
+                        {fmt.date(item.session_date)}
+                      </span>
+                    </Td>
+                    <Td>
+                      <span style={{ fontSize: 12, color: "#64748b" }}>
+                        {item.duration ? `${item.duration} min` : "—"}
+                      </span>
+                    </Td>
+                    <Td>
+                      <StatusBadge status={item.status} />
+                    </Td>
+                    <Td>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedSession(item);
+                        }}
+                        style={{
+                          padding: "5px 13px",
+                          borderRadius: 7,
+                          border: "1.5px solid #0098cc",
+                          background: "#fff",
+                          color: "#0098cc",
+                          fontSize: 11,
+                          fontWeight: 700,
+                          cursor: "pointer",
+                        }}
+                      >
+                        View
+                      </button>
+                    </Td>
+                  </tr>
                 ))
               )}
             </tbody>
@@ -1677,7 +2759,10 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
           total={pagination.total}
           pageSize={pageSize}
           onPage={setPage}
-          onPageSize={handlePageSize}
+          onPageSize={(s) => {
+            setPageSize(s);
+            setPage(1);
+          }}
           isFetching={isFetching}
         />
       </TableCard>
@@ -1685,7 +2770,7 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
       {selectedSession && (
         <SessionModal
           session={selectedSession}
-          onClose={closeModal}
+          onClose={() => setSelectedSession(null)}
           onSave={handleSave}
         />
       )}
@@ -1693,111 +2778,28 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
   );
 }
 
-// ─── Session Row ──────────────────────────────────────────────────────────────
+// ── Sessions Tab ──────────────────────────────────────────────────────────────
 
-const SessionRow = React.memo(function SessionRow({ item, idx, onView }) {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <tr
-      style={{
-        background: hovered ? "#f8fbff" : "#fff",
-        transition: "background 0.12s",
-        cursor: "pointer",
-      }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onClick={() => onView(item)}
-    >
-      <Td>
-        <span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>{idx}</span>
-      </Td>
-      <Td>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div
-            style={{
-              width: 30,
-              height: 30,
-              borderRadius: 8,
-              background: "#0083b1",
-              color: "#fff",
-              fontSize: 12,
-              fontWeight: 800,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-            }}
-          >
-            {item.session_number ?? "?"}
-          </div>
-          <span
-            style={{
-              fontSize: 13,
-              fontWeight: 600,
-              color: "#1a1a2e",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {item.session_title || `Session ${item.session_number}`}
-          </span>
-        </div>
-      </Td>
-      <Td>
-        <span style={{ fontSize: 12, color: "#64748b" }}>
-          {formatDate(item.session_date)}
-        </span>
-      </Td>
-      <Td>
-        <span style={{ fontSize: 12, color: "#64748b" }}>
-          {item.duration ? `${item.duration} min` : "—"}
-        </span>
-      </Td>
-      <Td>
-        <StatusBadge status={item.status} />
-      </Td>
-      <Td>
-        <button
-          onClick={(e) => { e.stopPropagation(); onView(item); }}
-          style={{
-            padding: "6px 14px",
-            borderRadius: 8,
-            border: "1.5px solid #0083b1",
-            background: "#fff",
-            color: "#0083b1",
-            fontSize: 11,
-            fontWeight: 700,
-            cursor: "pointer",
-            transition: "all 0.15s",
-            whiteSpace: "nowrap",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "#0083b1";
-            e.currentTarget.style.color = "#fff";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "#fff";
-            e.currentTarget.style.color = "#0083b1";
-          }}
-        >
-          View
-        </button>
-      </Td>
-    </tr>
-  );
-});
+function SessionsTab({ mentorId, subscribers, subLoading }) {
+  const [selectedMentee, setSelectedMentee] = useState(null);
 
-// ─── Mentee Grid View ─────────────────────────────────────────────────────────
+  if (selectedMentee) {
+    return (
+      <MenteeSessionsView
+        sub={selectedMentee}
+        mentorId={mentorId}
+        onBack={() => setSelectedMentee(null)}
+      />
+    );
+  }
 
-function MenteeGridView({ subscribers, isLoading, onSelectMentee }) {
-  if (isLoading) {
+  if (subLoading) {
     return (
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-          gap: 16,
+          gridTemplateColumns: "repeat(auto-fill,minmax(270px,1fr))",
+          gap: 14,
         }}
       >
         {Array.from({ length: 4 }).map((_, i) => (
@@ -1806,9 +2808,9 @@ function MenteeGridView({ subscribers, isLoading, onSelectMentee }) {
             style={{
               background: "#fff",
               border: "1.5px solid #e9edf2",
-              borderRadius: 16,
-              padding: 20,
-              height: 180,
+              borderRadius: 14,
+              padding: 18,
+              height: 170,
             }}
           >
             {[60, 40, 80, 100, 40].map((w, j) => (
@@ -1822,7 +2824,7 @@ function MenteeGridView({ subscribers, isLoading, onSelectMentee }) {
                   backgroundSize: "200% 100%",
                   animation: "shimmer 1.4s infinite",
                   width: `${w}%`,
-                  marginBottom: 12,
+                  marginBottom: 11,
                 }}
               />
             ))}
@@ -1837,26 +2839,26 @@ function MenteeGridView({ subscribers, isLoading, onSelectMentee }) {
       <div
         style={{
           textAlign: "center",
-          padding: "80px 20px",
+          padding: "70px 20px",
           background: "#fff",
           border: "1.5px solid #e9edf2",
-          borderRadius: 18,
+          borderRadius: 16,
         }}
       >
         <svg
-          width="48"
-          height="48"
+          width="44"
+          height="44"
           viewBox="0 0 24 24"
           fill="none"
           stroke="#cbd5e1"
           strokeWidth="1.5"
-          style={{ margin: "0 auto 12px" }}
+          style={{ margin: "0 auto 12px", display: "block" }}
         >
           <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
           <circle cx="9" cy="7" r="4" />
           <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
         </svg>
-        <p style={{ fontSize: 15, color: "#94a3b8", fontWeight: 500 }}>
+        <p style={{ fontSize: 14, color: "#94a3b8", fontWeight: 500, margin: 0 }}>
           No mentees yet
         </p>
       </div>
@@ -1867,50 +2869,22 @@ function MenteeGridView({ subscribers, isLoading, onSelectMentee }) {
     <div
       style={{
         display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-        gap: 16,
+        gridTemplateColumns: "repeat(auto-fill,minmax(270px,1fr))",
+        gap: 14,
       }}
     >
-      {subscribers.map((sub, i) => (
+      {subscribers.map((sub) => (
         <MenteeCard
           key={sub._id}
           sub={sub}
-          index={i}
-          onClick={() => onSelectMentee(sub)}
+          onClick={() => setSelectedMentee(sub)}
         />
       ))}
     </div>
   );
 }
 
-// ─── Sessions Tab ─────────────────────────────────────────────────────────────
-
-function SessionsTab({ mentorId, subscribers, subLoading, sessionsOverview }) {
-  const [selectedMentee, setSelectedMentee] = useState(null);
-
-  const handleSelectMentee = useCallback((sub) => setSelectedMentee(sub), []);
-  const handleBack = useCallback(() => setSelectedMentee(null), []);
-
-  if (selectedMentee) {
-    return (
-      <MenteeSessionsView
-        sub={selectedMentee}
-        mentorId={mentorId}
-        onBack={handleBack}
-      />
-    );
-  }
-
-  return (
-    <MenteeGridView
-      subscribers={subscribers}
-      isLoading={subLoading}
-      onSelectMentee={handleSelectMentee}
-    />
-  );
-}
-
-// ─── Main Dashboard ───────────────────────────────────────────────────────────
+// ── Main Dashboard ────────────────────────────────────────────────────────────
 
 export default function MentorSessionsDashboard() {
   const [activeTab, setActiveTab] = useState("sessions");
@@ -1925,111 +2899,85 @@ export default function MentorSessionsDashboard() {
   );
 
   const subscribers = useMemo(
-    () => subscribersResult?.data ?? subscribersResult?.subscriptions ?? [],
+    () =>
+      subscribersResult?.data ?? subscribersResult?.subscriptions ?? [],
     [subscribersResult]
   );
 
-  const overviewPagination = sessionsOverview?.pagination ?? {};
-  const totalSessions = overviewPagination.total ?? 0;
-
-  const completedSessions = useMemo(
-    () => (sessionsOverview?.data ?? []).filter((s) => s.status === "completed").length,
-    [sessionsOverview]
-  );
-  const pendingSessions = useMemo(
-    () => (sessionsOverview?.data ?? []).filter((s) => s.status === "pending").length,
-    [sessionsOverview]
-  );
-
-  const handleTab = useCallback((tab) => setActiveTab(tab), []);
+  const totalSessions = sessionsOverview?.pagination?.total ?? 0;
 
   return (
     <>
       <style>{`
         @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
-        @keyframes fadeIn  { from{opacity:0} to{opacity:1} }
-        @keyframes slideUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
         @keyframes spin    { to{transform:rotate(360deg)} }
         * { box-sizing: border-box; }
         body { margin: 0; }
-        ::-webkit-scrollbar { width: 0px; height: 0px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: transparent; }
+        ::-webkit-scrollbar { width: 0; height: 0; }
         * { scrollbar-width: none; }
       `}</style>
 
       <div
         style={{
           minHeight: "100vh",
-          background: "#f8fafc",
-          padding: "28px 20px",
+          padding: "24px 18px",
           fontFamily: "'DM Sans','Segoe UI',sans-serif",
         }}
       >
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
 
           {/* Header */}
-          <div style={{ marginBottom: 28 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
-              <div
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 12,
-                  background: "#0083b1",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#fff"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <rect x="3" y="4" width="18" height="18" rx="2" />
-                  <line x1="16" y1="2" x2="16" y2="6" />
-                  <line x1="8" y1="2" x2="8" y2="6" />
-                  <line x1="3" y1="10" x2="21" y2="10" />
-                </svg>
-              </div>
-              <div>
-                <h1
-                  style={{
-                    fontSize: 22,
-                    fontWeight: 800,
-                    color: "#1a1a2e",
-                    margin: 0,
-                    letterSpacing: "-0.02em",
-                  }}
-                >
-                  Sessions Overview
-                </h1>
-                <p style={{ fontSize: 13, color: "#94a3b8", margin: 0 }}>
-                  Manage your mentee sessions and subscriptions
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Metrics */}
           <div
             style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(130px, 1fr))",
-              gap: 12,
+              display: "flex",
+              alignItems: "center",
+              gap: 11,
               marginBottom: 24,
             }}
           >
-            <MetricCard label="Mentees" value={subscribers.length} color="#0083b1" />
-            <MetricCard label="Total Sessions" value={totalSessions} color="#1a1a2e" />
-            <MetricCard label="Completed" value={completedSessions} color="#16a34a" />
-            <MetricCard label="Pending" value={pendingSessions} color="#d97706" />
+            <div
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: 11,
+                background: "#0098cc",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#fff"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <line x1="16" y1="2" x2="16" y2="6" />
+                <line x1="8" y1="2" x2="8" y2="6" />
+                <line x1="3" y1="10" x2="21" y2="10" />
+              </svg>
+            </div>
+            <div>
+              <h1
+                style={{
+                  fontSize: 20,
+                  fontWeight: 800,
+                  color: "#1a1a2e",
+                  margin: 0,
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                Sessions Overview
+              </h1>
+              <p style={{ fontSize: 12, color: "#94a3b8", margin: 0 }}>
+                Manage your mentee sessions and subscriptions
+              </p>
+            </div>
           </div>
 
           {/* Tabs */}
@@ -2039,27 +2987,25 @@ export default function MentorSessionsDashboard() {
               gap: 4,
               background: "#fff",
               border: "1.5px solid #e9edf2",
-              borderRadius: 12,
+              borderRadius: 11,
               padding: 4,
               width: "fit-content",
-              marginBottom: 22,
+              marginBottom: 20,
             }}
           >
             {["sessions", "subscribers"].map((tab) => (
               <button
                 key={tab}
-                onClick={() => handleTab(tab)}
+                onClick={() => setActiveTab(tab)}
                 style={{
-                  padding: "8px 20px",
-                  borderRadius: 9,
+                  padding: "7px 18px",
+                  borderRadius: 8,
                   border: "none",
-                  background: activeTab === tab ? "#0083b1" : "transparent",
+                  background: activeTab === tab ? "#1a1a2e" : "transparent",
                   color: activeTab === tab ? "#fff" : "#64748b",
                   fontWeight: 700,
                   fontSize: 13,
                   cursor: "pointer",
-                  transition: "all 0.18s",
-                  textTransform: "capitalize",
                   letterSpacing: "0.01em",
                 }}
               >
@@ -2072,14 +3018,16 @@ export default function MentorSessionsDashboard() {
 
           {/* Content */}
           {activeTab === "subscribers" && (
-            <SubscribersTable subscribers={subscribers} isLoading={subLoading} />
+            <SubscribersTable
+              subscribers={subscribers}
+              isLoading={subLoading}
+            />
           )}
           {activeTab === "sessions" && (
             <SessionsTab
               mentorId={mentorId}
               subscribers={subscribers}
               subLoading={subLoading}
-              sessionsOverview={sessionsOverview}
             />
           )}
         </div>
@@ -2087,3 +3035,5 @@ export default function MentorSessionsDashboard() {
     </>
   );
 }
+
+

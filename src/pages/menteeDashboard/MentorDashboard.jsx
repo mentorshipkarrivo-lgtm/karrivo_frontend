@@ -387,12 +387,12 @@ const Header = ({
                 {/* Right actions */}
                 <div className="flex items-center gap-1.5 sm:gap-3 relative">
                     {/* Hide utility icons on very small screens to avoid overflow */}
-                    <button className="hidden sm:flex p-1.5 rounded-full hover:bg-gray-100 transition-colors text-gray-500">
+                    {/* <button className="hidden sm:flex p-1.5 rounded-full hover:bg-gray-100 transition-colors text-gray-500">
                         <HelpCircle size={18} />
                     </button>
                     <button className="hidden sm:flex p-1.5 rounded-full hover:bg-gray-100 transition-colors text-gray-500">
                         <Mail size={18} />
-                    </button>
+                    </button> */}
                     <button
                         onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                         className="flex items-center gap-1 rounded-full focus:outline-none"
@@ -507,7 +507,7 @@ const RightPanel = ({ navigate }) => (
 
         {/* Remaining trials card */}
         <div className="m-4 p-4 rounded-xl border border-green-200 bg-green-50" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
-            <p className="text-sm font-bold text-gray-800 mb-1">Your remaining trials: 10/10</p>
+            {/* <p className="text-sm font-bold text-gray-800 mb-1">Your remaining trials: 10/10</p> */}
             <p className="text-xs text-gray-500 leading-relaxed mb-3">
                 Explore from a list of 600+ mentors, book trials and try to find the perfect mentor for you.
             </p>
@@ -534,12 +534,12 @@ const RightPanel = ({ navigate }) => (
                         </div>
                     </div>
                     <div>
-                        <p className="text-xs font-semibold text-gray-800">Bhavya Kalra</p>
-                        <p className="text-[10px] text-gray-500">+919311484346</p>
+                        <p className="text-xs font-semibold text-gray-800">Karrivo</p>
+                        <p className="text-[10px] text-gray-500">+91 7702 193 487</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-1.5">
-                    <a href="https://wa.me/919311484346" target="_blank" rel="noreferrer"
+                    <a href="https://wa.me/917702193487" target="_blank" rel="noreferrer"
                         className="w-7 h-7 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center transition-colors">
                         <MessageCircle size={13} color="white" />
                     </a>
