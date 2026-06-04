@@ -113,7 +113,7 @@ export default function MentorLTMPlans() {
   const [createSubscription, { isLoading: isSubscribing }] = useCreateSubscriptionMutation();
   const [submitPayment, { isLoading: isSubmitting, isSuccess, isError: payError, error: payErrorData, data: payResponse }] = useSubmitPaymentMutation();
 
-  console.log(mentor,"mentorss");
+  console.log(mentor, "mentorss");
   // ── Plan UI state ────────────────────────────────────────────
   const [selected, setSelected] = useState(null);
   const [paymentPlan, setPaymentPlan] = useState(null);
@@ -226,6 +226,16 @@ export default function MentorLTMPlans() {
   // ── Select plan → create subscription → show payment ────────
   const handleGetStarted = async (e, plan, sessionId = null) => {
     e.stopPropagation();
+
+
+
+    const isMentor = storedUser?.role === "mentor" || storedUser?.userType === "mentor";
+    if (isMentor) {
+      toast.error("Access Denied", "Mentors cannot purchase subscriptions.");
+      return;
+    }
+
+
     setSelected(plan.key);
     setAppliedCoupon(null);
     setCouponInput('');
@@ -775,10 +785,10 @@ export default function MentorLTMPlans() {
                           ₹{plan.totalPrice.toLocaleString('en-IN')}
                         </span>
                         <span style={{ fontSize: 'clamp(9px, 1.5vw, 10px)', color: MUTED2, paddingBottom: 2 }}>
-                         / {plan.months}month                        </span>
+                          / {plan.months}month                        </span>
                       </div>
 
-{/*                      
+                      {/*                      
                       <p style={{ fontSize: 'clamp(8px, 1.5vw, 9px)', color: MUTED2, margin: '0 0 12px' }}>
                         {plan.sessionsPerWeek}s/week
                       </p> */}

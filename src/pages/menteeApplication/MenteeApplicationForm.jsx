@@ -186,8 +186,31 @@ const MenteeApplicationForm = () => {
             } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
                 newErrors.email = 'Please enter a valid email address';
             }
-            if (formData.phone && !/^[\d\s\-\+\(\)]+$/.test(formData.phone)) {
-                newErrors.phone = 'Please enter a valid phone number';
+
+
+            if (formData.phone.trim()) {
+                const localNumber = formData.phone.trim();
+                const digitsOnly = localNumber.replace(/\D/g, '');
+
+                const phoneLengthMap = {
+                    '+91': 10,   // India
+                    '+1': 10,   // USA
+                    '+44': 10,   // UK
+                    '+61': 9,    // Australia
+                    '+971': 9,   // UAE
+                    '+65': 8,    // Singapore
+                    '+353': 9,   // Ireland
+                };
+
+                const expectedLength = phoneLengthMap[phoneCode];
+
+                if (!/^\d+$/.test(localNumber)) {
+                    newErrors.phone = 'Phone number must contain digits only';
+                } else if (expectedLength && digitsOnly.length !== expectedLength) {
+                    newErrors.phone = `Phone number must be exactly ${expectedLength} digits for ${phoneCode}`;
+                } else if (!expectedLength && (digitsOnly.length < 7 || digitsOnly.length > 15)) {
+                    newErrors.phone = 'Phone number must be between 7 and 15 digits';
+                }
             }
             if (!formData.motivationStatement.trim()) {
                 newErrors.motivationStatement = 'Motivation statement is required';

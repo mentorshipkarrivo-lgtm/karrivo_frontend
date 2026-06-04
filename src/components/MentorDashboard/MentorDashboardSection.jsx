@@ -3,9 +3,9 @@
 
 import React, { useState, useEffect } from 'react';
 import {
-  ChevronRight, WifiOff,   
+  ChevronRight, WifiOff,
   CalendarDays,
-  CheckCircle,Loader2, CircleAlert, UserRound, TrendingUp, BarChart3, Activity
+  CheckCircle, Loader2, CircleAlert, UserRound, TrendingUp, BarChart3, Activity
 } from 'lucide-react';
 import { useGetUserDetailsQuery, useGetMentorSessionBookingsQuery } from './MentorDashboardapislice';
 import { useNavigate } from 'react-router-dom';
@@ -184,7 +184,7 @@ export default function MentorDashboard() {
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 24px 80px' }}>
         {/* ── HEADER ── */}
         <div style={{ marginBottom: 32 }}>
-          <h1 style={{ margin: 0, fontSize:18, fontWeight: 700, color: C.textDark, letterSpacing: '-0.5px' }}>
+          <h1 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: C.textDark, letterSpacing: '-0.5px' }}>
             Mentor Dashboard
           </h1>
           <p style={{ margin: '4px 0 0', fontSize: 13, color: C.textLight }}>

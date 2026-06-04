@@ -707,13 +707,13 @@ function EditMentorProfile({ onClose, initialTab = "overview" }) {
                                         </div>
                                     </div>
                                     <div style={{ height: 1, background: T.border }} />
-                                    <div>
+                                    {/* <div>
                                         <p style={secHead}><MessageCircle size={11} color={T.primary} /> Contact / Booking</p>
                                         <div className="em-grid-2col">
                                             <div><span style={lbl}>Platform Messaging</span><input style={inp()} value={formData.platformMessaging || ""} onChange={(e) => set("platformMessaging", e.target.value)} placeholder="@username" /></div>
                                             <div><span style={lbl}>Calendar / Booking Link</span><input style={inp()} value={formData.calendarLink || ""} onChange={(e) => set("calendarLink", e.target.value)} placeholder="https://calendly.com/…" /></div>
                                         </div>
-                                    </div>
+                                    </div> */}
                                     <div style={{ height: 1, background: T.border }} />
                                     <div>
                                         <p style={secHead}><Target size={11} color={T.primary} /> Areas of Guidance</p>

@@ -5,8 +5,8 @@ const StatusBadge = ({ status, isExpired }) => {
     if (isExpired) return <Badge bg="#fef2f2" color="#dc2626" border="#fecaca" label="Expired" />;
     const map = {
         inprogress: { bg: "#e0f5fc", color: "#0091c3", border: "#b3e5f7", label: "In Progress" },
-        completed:  { bg: "#f0fdf4", color: "#16a34a", border: "#bbf7d0", label: "Completed" },
-        cancelled:  { bg: "#f9fafb", color: "#6b7280", border: "#e5e7eb", label: "Cancelled" },
+        completed: { bg: "#f0fdf4", color: "#16a34a", border: "#bbf7d0", label: "Completed" },
+        cancelled: { bg: "#f9fafb", color: "#6b7280", border: "#e5e7eb", label: "Cancelled" },
     };
     const s = map[status] || map.inprogress;
     return <Badge {...s} />;
@@ -15,8 +15,8 @@ const StatusBadge = ({ status, isExpired }) => {
 const PaymentBadge = ({ status }) => {
     const map = {
         inprogress: { bg: "#f8fafc", color: "#0091c3", border: "#b3e5f7", label: "Pending" },
-        Approved:       { bg: "#f0fdf4", color: "#16a34a", border: "#bbf7d0", label: "Paid" },
-        failed:     { bg: "#fef2f2", color: "#dc2626", border: "#fecaca", label: "Failed" },
+        Approved: { bg: "#f0fdf4", color: "#16a34a", border: "#bbf7d0", label: "Paid" },
+        failed: { bg: "#fef2f2", color: "#dc2626", border: "#fecaca", label: "Failed" },
     };
     const s = map[status] || map.inprogress;
     return <Badge {...s} />;
@@ -32,19 +32,41 @@ const Badge = ({ bg, color, border, label }) => (
     }}>{label}</span>
 );
 
+const isJoinable = (sessionDate, startTime) => {
+    if (!sessionDate || !startTime) return false;
+
+    // Parse "HH:MM" or "HH:MM AM/PM" from startTime
+    const date = new Date(sessionDate);
+    const [time, meridiem] = startTime.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    if (meridiem === "PM" && hours !== 12) hours += 12;
+    if (meridiem === "AM" && hours === 12) hours = 0;
+
+    date.setHours(hours, minutes, 0, 0);
+
+    const now = Date.now();
+    const sessionMs = date.getTime();
+    const tenMinutes = 10 * 60 * 1000;
+
+    // Enable from 10 min before until session start (or you can keep enabled after start too)
+    return now >= sessionMs - tenMinutes;
+};
+
+
 const formatDate = (d) => d
     ? new Date(d).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
     : "—";
 
 const COLS = [
-    { key: "menteeName",  label: "Mentee" },
-    { key: "topic",       label: "Topic" },
+    { key: "menteeName", label: "Mentee" },
+    { key: "topic", label: "Topic" },
     { key: "sessionDate", label: "Date" },
-    { key: "time",        label: "Time" },
+    { key: "time", label: "Time" },
     { key: "sessionType", label: "Type" },
-    { key: "price",       label: "Amount" },
-    { key: "payment",     label: "Payment" },
-    { key: "meeting",     label: "Join" },
+    { key: "price", label: "Amount" },
+    { key: "payment", label: "Payment" },
+    { key: "meeting", label: "Join" },
 ];
 
 const PBtn = ({ onClick, disabled, children, active }) => (
@@ -68,7 +90,7 @@ const PBtn = ({ onClick, disabled, children, active }) => (
 
 export default function SessionsTable() {
     const [mentorId, setMentorId] = useState(null);
-    const [page, setPage]         = useState(1);
+    const [page, setPage] = useState(1);
     const limit = 10;
 
     useEffect(() => {
@@ -85,11 +107,11 @@ export default function SessionsTable() {
         { skip: !mentorId }
     );
 
-    const sessions    = data?.data       || [];
-    const totalPages  = data?.totalPages || 1;
-    const totalCount  = data?.count      || 0;
-    const hasNext     = data?.hasNextPage;
-    const hasPrev     = data?.hasPrevPage;
+    const sessions = data?.data || [];
+    const totalPages = data?.totalPages || 1;
+    const totalCount = data?.count || 0;
+    const hasNext = data?.hasNextPage;
+    const hasPrev = data?.hasPrevPage;
 
     const cell = {
         padding: "9px 10px", fontSize: "12px",
@@ -218,20 +240,33 @@ export default function SessionsTable() {
                                                 <td style={cell}><PaymentBadge status={s.paymentStatus} /></td>
 
                                                 {/* Join */}
+                                                {/* Join */}
                                                 <td style={cell}>
-                                                    {s.meetingLink && !s.isExpired ? (
-                                                        <a
-                                                            href={s.meetingLink}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            style={{
-                                                                background: "#1a1a2e", color: "#ffffff",
+                                                    {s.meetingLink ? (() => {
+                                                        const canJoin = !s.isExpired && isJoinable(s.sessionDate, s.startTime);
+                                                        return canJoin ? (
+
+                                                            <a href={s.meetingLink}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                style={{
+                                                                    background: "#1a1a2e", color: "#ffffff",
+                                                                    padding: "4px 10px", borderRadius: "5px",
+                                                                    fontSize: "11px", fontWeight: 600,
+                                                                    textDecoration: "none", display: "inline-block",
+                                                                }}
+                                                            >Join</a>
+                                                        ) : (
+                                                            <span style={{
+                                                                background: "#f1f5f9", color: "#94a3b8",
                                                                 padding: "4px 10px", borderRadius: "5px",
                                                                 fontSize: "11px", fontWeight: 600,
-                                                                textDecoration: "none", display: "inline-block",
-                                                            }}
-                                                        >Join</a>
-                                                    ) : (
+                                                                display: "inline-block",
+                                                                cursor: "not-allowed",
+                                                                border: "1px solid #e2e8f0",
+                                                            }}>Join</span>
+                                                        );
+                                                    })() : (
                                                         <span style={{ color: "#b3e5f7", fontSize: "11px" }}>—</span>
                                                     )}
                                                 </td>
@@ -258,7 +293,7 @@ export default function SessionsTable() {
                         </span>
 
                         <div style={{ display: "flex", gap: "4px", alignItems: "center", flexWrap: "wrap" }}>
-                            <PBtn onClick={() => setPage(1)}           disabled={!hasPrev || isFetching}>«</PBtn>
+                            <PBtn onClick={() => setPage(1)} disabled={!hasPrev || isFetching}>«</PBtn>
                             <PBtn onClick={() => setPage(p => p - 1)} disabled={!hasPrev || isFetching}>‹ Prev</PBtn>
 
                             {Array.from({ length: totalPages }, (_, i) => i + 1)
@@ -287,6 +322,6 @@ export default function SessionsTable() {
                 .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
                 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
             `}</style>
-        </div>
+        </div >
     );
 }
