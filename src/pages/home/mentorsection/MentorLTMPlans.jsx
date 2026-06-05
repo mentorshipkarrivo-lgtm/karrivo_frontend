@@ -61,6 +61,8 @@ const UPI_PRIMARY = 'karrivo2024@upi';
 const UPI_SECONDARY = 'example.174327728615@sbi';
 
 function normalizePlans(plans, currentStatus = '') {
+
+  console.log(plans, 'plans123r')
   if (!plans || Object.keys(plans).length === 0) return [];
 
   // Map currentStatus to pricing key
@@ -224,9 +226,16 @@ export default function MentorLTMPlans() {
     setCouponError('');
   };
 
+
+
+
   // ── Select plan → create subscription → show payment ────────
   const handleGetStarted = async (e, plan, sessionId = null) => {
     e.stopPropagation();
+    console.log(storedUser, "storedUser")
+    console.log(storedUser?._id, storedUser.token, "data_recived")
+
+
     if (!storedUser?._id || !storedUser?.token) {
       navigate('/login', { state: { from: location.pathname } });
       return;
@@ -246,7 +255,7 @@ export default function MentorLTMPlans() {
     setCouponError('');
     try {
       const result = await createSubscription({
-        mentor_id: mentor._id,
+        mentor_id: mentor.data._id,
         mentee_id: storedUser._id,
         plan_type: MONTHS_TO_KEY[plan.months],
         mentee_status: currentStatus,
@@ -343,8 +352,10 @@ export default function MentorLTMPlans() {
     );
   }
 
+  console.log(mentor?.data?.pricing, "datarevenue");
 
-  const PLANS = normalizePlans(mentor[0]?.pricing, currentStatus);
+
+  const PLANS = normalizePlans(mentor?.data?.pricing.plans, currentStatus);
 
   console.log(mentor.pricing, "dataee")
   console.log(mentor.pricing, PLANS, "OPLADD")
