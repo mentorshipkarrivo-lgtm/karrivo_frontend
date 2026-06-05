@@ -96,6 +96,7 @@ function normalizePlans(plans, currentStatus = '') {
     .sort((a, b) => a.months - b.months);
 }
 
+
 export default function MentorLTMPlans() {
   const { mentorId } = useParams();
   const navigate = useNavigate();
@@ -226,7 +227,10 @@ export default function MentorLTMPlans() {
   // ── Select plan → create subscription → show payment ────────
   const handleGetStarted = async (e, plan, sessionId = null) => {
     e.stopPropagation();
-
+    if (!storedUser?._id || !storedUser?.token) {
+      navigate('/login', { state: { from: location.pathname } });
+      return;
+    }
 
 
     const isMentor = storedUser?.role === "mentor" || storedUser?.userType === "mentor";
@@ -340,9 +344,10 @@ export default function MentorLTMPlans() {
   }
 
 
-  const PLANS = normalizePlans(mentor?.pricing?.plans, currentStatus);
+  const PLANS = normalizePlans(mentor[0]?.pricing, currentStatus);
 
-  console.log(mentor?.pricing?.plans, PLANS, "OPLADD")
+  console.log(mentor.pricing, "dataee")
+  console.log(mentor.pricing, PLANS, "OPLADD")
   const effectiveSelected = selected ?? (PLANS.length === 1 ? PLANS[0].key : null);
 
   // ── Success screen ───────────────────────────────────────────
