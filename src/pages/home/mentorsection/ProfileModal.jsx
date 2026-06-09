@@ -219,6 +219,8 @@ const InlineBookingSection = ({ mentor, rawAvailability, onClose, onSlotConfirme
   const [selectedSlot, setSelectedSlot] = useState(null);
   const grouped = useMemo(() => {
     if (!rawAvailability?.length) return {};
+
+    console.log(rawAvailability, "rawAvailability1w234")
     const acc = {};
     for (const slot of rawAvailability) {
       const dk = slot.date.slice(0, 10);
@@ -352,9 +354,11 @@ const ProfileModal = () => {
   const { data: apiResponse, isLoading, isError, error } = useFetchMentorByIdQuery({ mentorId, currentStatus });
 
   // AFTER (correct - apiResponse IS response.data already)
-  const mentor = apiResponse?.mentorDetails || apiResponse;
-  const rawAvailability = apiResponse?.mentorDetails?.availability || [];
+  const mentor = apiResponse?.data?.mentorDetails || apiResponse;
 
+  console.log(apiResponse, "apiResponse`123")
+  const rawAvailability = apiResponse?.data?.mentorDetails?.availability || [];
+  console.log(rawAvailability, "rawAvailability`q1w2")
   const userData1 = JSON.parse(localStorage.getItem("userData")) || {};
   const userMenteeId = userData1?._id;
 
@@ -368,8 +372,17 @@ const ProfileModal = () => {
     }
   }, [showBooking]);
 
-  const goToPlans = () => navigate(`/mentor/${mentorId}/ltm-plans`);
+  // const goToPlans = () => navigate(`/mentor/${mentorId}/ltm-plans`);
+  console.log(apiResponse?.data?.availableCoupons,"datebhedeeffe")
 
+
+  const goToPlans = () => navigate(`/mentor/${mentorId}/ltm-plans`, {
+    state: {
+      availableCoupons: apiResponse?.data?.availableCoupons || [],
+      // pass any pre-applied coupon too if you have one
+      // appliedCoupon: someAppliedCoupon || null,
+    }
+  })
   if (isLoading) return <div className="h-screen w-full bg-white flex items-center justify-center"><Loader /></div>;
   if (isError && isAuthError(error)) return null;
   if (isError || !mentor) return (
