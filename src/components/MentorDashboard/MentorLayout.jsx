@@ -7,7 +7,7 @@ import {
     CheckCircle, Calendar, Briefcase, FileText,
     HelpCircle, User, Copy, Wallet, BookOpen,
     Wrench, Bug, Settings, UserCircle, TrendingUp,
-    Target, LogOut, ArrowUpRight, Pencil
+    Target, LogOut, ArrowUpRight, Pencil, MessageSquare, Phone, MapPin
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useGetMentorDetailsMutation, useUpdateMentorDetailsMutation } from "./mentorProfile/mentorprofileapi";
@@ -146,8 +146,16 @@ const SidebarContent = ({ collapsed = false, isActiveRoute, onNavClick }) => {
                 ) : (
                     <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                         <img src={Karrivo} alt="Logo" style={{ width: 36, height: 36, objectFit: "contain", borderRadius: 8 }} />
-                        <span style={{ fontFamily: F, fontSize: 14, fontWeight: 700, color: T.textDark }}>Mentor Hub</span>
-                    </div>
+                        <span
+                            style={{
+                                fontFamily: F,
+                                fontSize: "14px",
+                                fontWeight: 700,
+                                color: T.textDark
+                            }}
+                        >
+                            Mentor Hub
+                        </span>                    </div>
                 )}
             </div>
 
@@ -161,18 +169,34 @@ const SidebarContent = ({ collapsed = false, isActiveRoute, onNavClick }) => {
                             key={item.id}
                             onClick={() => { navigate(item.route); onNavClick?.(); }}
                             style={{
-                                display: "flex", alignItems: "center", gap: collapsed ? 0 : 10,
-                                padding: "9px 12px", borderRadius: 8, border: "none",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: collapsed ? 0 : 10,
+                                padding: "9px 12px",
+                                borderRadius: 8,
+                                border: "none",
                                 background: isActive ? T.navActiveBg : "transparent",
                                 color: isActive ? T.navActive : T.textMid,
-                                cursor: "pointer", fontFamily: F, fontSize: 14,
+                                cursor: "pointer",
+                                fontFamily: F,
+                                fontSize: "14px",
                                 fontWeight: isActive ? 600 : 400,
                                 justifyContent: collapsed ? "center" : "flex-start",
-                                width: "100%", transition: "all .12s ease",
+                                width: "100%",
+                                transition: "all .12s ease",
                             }}
                         >
                             <Icon size={16} style={{ flexShrink: 0 }} />
-                            {!collapsed && <span style={{ flex: 1, textAlign: "left", fontFamily: F }}>{item.label}</span>}
+                            {!collapsed && <span
+                                style={{
+                                    flex: 1,
+                                    textAlign: "left",
+                                    fontFamily: F,
+                                    fontSize: "14px"
+                                }}
+                            >
+                                {item.label}
+                            </span>}
                         </button>
                     );
                 })}
@@ -183,7 +207,7 @@ const SidebarContent = ({ collapsed = false, isActiveRoute, onNavClick }) => {
                 <div style={{ borderTop: `1px solid ${T.border}`, padding: "12px 10px", flexShrink: 0 }}>
                     <button
                         onClick={() => navigate("/mentor-dashboard/support")}
-                        style={{ width: "100%", padding: "8px 12px", border: `1px solid ${T.border}`, borderRadius: 8, background: "#fff", fontFamily: F, fontSize: 13, color: T.textDark, cursor: "pointer", textAlign: "center", fontWeight: 400 }}
+                        style={{ width: "100%", padding: "8px 12px", border: `1px solid ${T.border}`, borderRadius: 8, background: "#fff", fontFamily: F, fontSize: "14px", color: T.textDark, cursor: "pointer", textAlign: "center", fontWeight: 400 }}
                     >
                         Support Centre
                     </button>
@@ -463,39 +487,20 @@ const RightPanel = () => {
 //     );
 // };
 
-const CenterContent = ({ children, isHome, onEditProfileOpen, onSetEditTab, userData }) => {
+
+const CenterContent = ({ children, isHome, onEditProfileOpen, onSetEditTab }) => {
     const navigate = useNavigate();
 
-    const mentorName = userData?.name || "Mentor";
-    const mentorInitials = mentorName
-        .split(" ")
-        .filter(Boolean)
-        .map((n) => n[0])
-        .join("")
-        .slice(0, 2)
-        .toUpperCase();
+    const [userData, setUserData] = useState(null);
 
-    const hour = new Date().getHours();
-    const greeting = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
-
-    const setupSteps = [
-        { label: "Set up your mentor profile", done: false, locked: false, icon: User, tab: "overview", description: "Complete your basic information" },
-        { label: "Set up your mentorship pricing", done: false, locked: false, icon: Wallet, route: "/mentor/dashboard/pricing", description: "Set your hourly rate and experience" },
-        { label: "Set up your availability", done: true, locked: false, icon: Calendar, route: "/mentor/dashboard/Manage_Availability", description: "Set your availability slots" },
-        { label: "Create a mentorship curriculum", done: false, locked: false, icon: BookOpen, tab: "achievements", description: "Add your achievements & certifications" },
-    ];
-
-    const completedCount = setupSteps.filter((s) => s.done).length;
-    const totalCount = setupSteps.length;
-    const progressPct = Math.round((completedCount / totalCount) * 100);
-    const estMinutes = (totalCount - completedCount) * 4;
-
-    const handleStepClick = (step) => {
-        if (step.locked) return;
-        if (step.route) { navigate(step.route); return; }
-        onSetEditTab?.(step.tab);
-        onEditProfileOpen?.();
-    };
+    useEffect(() => {
+        try {
+            const stored = localStorage.getItem("userData") || localStorage.getItem("user");
+            if (stored) setUserData(JSON.parse(stored));
+        } catch (e) {
+            console.error("Failed to parse userData from localStorage", e);
+        }
+    }, []);
 
     if (!isHome) return (
         <div style={{ flex: 1, padding: "12px", overflowY: "auto", background: "#fff", minHeight: 0, scrollbarWidth: "none", msOverflowStyle: "none" }}>
@@ -503,139 +508,227 @@ const CenterContent = ({ children, isHome, onEditProfileOpen, onSetEditTab, user
         </div>
     );
 
+    const mentorName = userData?.name || "Mentor";
+    const ACCENT = "#0f0f10";
+
     const iconBox = (bg) => ({
-        width: 40, height: 40, borderRadius: 10,
+        width: 40, height: 40, borderRadius: "50%",
         background: bg,
         display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
     });
 
-    const checkRing = (size = 30) => ({
-        width: size, height: size, borderRadius: "50%",
-        border: `1.5px solid ${T.success}`,
-        display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+    const cardStyle = {
+        border: `1px solid ${T.border}`,
+        borderRadius: 14,
+        padding: "18px 20px",
+        background: "#fff",
+        display: "flex",
+        flexDirection: "column",
+        gap: 12,
+        minWidth: 0,
+    };
+
+    const cardTitleRow = {
+        display: "flex", alignItems: "center", gap: 12,
+    };
+
+    const statusPill = (color) => ({
+        display: "inline-flex", alignItems: "center", gap: 6,
+        fontFamily: F, fontSize: 13, fontWeight: 600, color,
     });
 
-    const chevronBox = {
-        width: 30, height: 30, borderRadius: "50%",
-        background: T.surface,
-        display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+    const primaryBtn = {
+        width: "100%",
+        background: ACCENT,
+        color: "#fff",
+        border: "none",
+        borderRadius: 8,
+        padding: "8px 0",
+        fontFamily: F,
+        fontSize: 13,
+        fontWeight: 700,
+        cursor: "pointer",
+    };
+
+    const secondaryBtn = {
+        width: "100%",
+        background: "#fff",
+        color: T.textDark,
+        border: `1px solid ${T.border}`,
+        borderRadius: 8,
+        padding: "8px 0",
+        fontFamily: F,
+        fontSize: 13,
+        fontWeight: 700,
+        cursor: "pointer",
     };
 
     return (
-        <div style={{ flex: 1, padding: "28px 32px", overflowY: "auto", background: "#fff", scrollbarWidth: "none", msOverflowStyle: "none" }}>
+        <div style={{ flex: 1, padding: "24px", overflowY: "auto", background: "#fff", scrollbarWidth: "none", msOverflowStyle: "none" }}>
 
-            {/* ── Welcome banner ── */}
-            <div style={{ marginBottom: 28 }}>
-                <p style={{ fontFamily: F, fontSize: 18, fontWeight: 700, color: T.textDark, margin: "0 0 6px", letterSpacing: "0.01em", lineHeight: 1.3 }}>
-                    {greeting}, {mentorName}
+            {/* ── Hero banner ── */}
+            <div style={{ background: "#fff", border: `1px solid ${T.border}`, borderRadius: 16, padding: "24px 28px", marginBottom: 20 }}>
+                <p style={{ fontFamily: F, fontSize: 22, fontWeight: 700, color: T.textDark, margin: "0 0 8px" }}>
+                    Hello {mentorName} 👋, welcome to your Mentor Dashboard.
                 </p>
-                <p style={{ fontFamily: F, fontSize: 13, color: T.textLight, margin: 0, lineHeight: 1.5 }}>
-                    Let's get your profile ready to attract mentees.
-                </p>
-            </div>
-
-            {/* ── Progress card ── */}
-            <div style={{ border: `1px solid ${T.border}`, borderRadius: 16, padding: "22px 24px", marginBottom: 14, background: "#fff" }}>
-                <p style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: T.textDark, margin: "0 0 6px" }}>
-                    Finish setting up your mentor profile
-                </p>
-                <p style={{ fontFamily: F, fontSize: 13, color: T.textLight, margin: 0, lineHeight: 1.6 }}>
-                    Kickstart mentoring with a profile you create and love. 💙
+                <p style={{ fontFamily: F, fontSize: 14, color: T.textLight, margin: 0 }}>
+                    Let's refine your mentorship experience.
                 </p>
             </div>
 
-            {/* ── Step 1: profile created (always done) ── */}
-            <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "16px 20px", border: `1px solid ${T.border}`, borderRadius: 14, marginBottom: 6, background: "#fff" }}>
-                <div style={iconBox("#EAF3DE")}>
-                    <User size={18} color="#166534" />
-                </div>
-                <div style={{ flex: 1 }}>
-                    <p style={{ fontFamily: F, fontSize: 14, fontWeight: 600, color: T.textDark, margin: "0 0 3px" }}>
-                        Create your mentor profile
-                    </p>
-                    <p style={{ fontFamily: F, fontSize: 12, color: T.textLight, margin: 0 }}>
-                        You have successfully created your account
-                    </p>
-                </div>
-                <div style={checkRing(30)}>
-                    <CheckCircle size={15} color={T.success} />
-                </div>
-            </div>
+            {/* ── Main grid: profile + cards ── */}
+            <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 260px) minmax(0, 1fr)", gap: 16, alignItems: "start" }}>
 
-            {/* ── Next Steps label ── */}
-            <p style={{ fontFamily: F, fontSize: 11, fontWeight: 600, color: T.textLight, textTransform: "uppercase", letterSpacing: "0.07em", margin: "22px 0 10px 2px" }}>
-                Next steps
-            </p>
-
-            {/* ── Steps card ── */}
-            <div style={{ border: `1px solid ${T.border}`, borderRadius: 16, overflow: "hidden", background: "#fff" }}>
-
-                {/* Card header */}
-                <div style={{ display: "flex", alignItems: "center", gap: 14, padding: "18px 22px", borderBottom: `1px solid ${T.border}`, background: T.surface }}>
-                    <div style={iconBox("#EEEDFE")}>
-                        <Users size={20} color="#3C3489" />
+                {/* ── Left: profile card ── */}
+                <div style={{ ...cardStyle, padding: "18px" }}>
+                    <div style={{
+                        width: "100%", aspectRatio: "1 / 1", borderRadius: 12,
+                        background: userData?.profilePhoto ? `url(${userData.profilePhoto}) center/cover no-repeat` : T.surface,
+                        display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden"
+                    }}>
+                        {!userData?.profilePhoto && <User size={40} color={T.textLight} />}
                     </div>
-                    <div style={{ flex: 1 }}>
-                        <p style={{ fontFamily: F, fontSize: 14, fontWeight: 700, color: T.textDark, margin: "0 0 3px" }}>
-                            Setting up your long term mentorship
+
+                    <div>
+                        <p style={{ fontFamily: F, fontSize: 17, fontWeight: 700, color: T.textDark, margin: "0 0 4px", textTransform: "capitalize" }}>
+                            {userData?.name || ""}
                         </p>
-                        <p style={{ fontFamily: F, fontSize: 12, color: T.textLight, margin: 0 }}>
-                            Complete each step to go live and start accepting mentees.
+                        <p style={{ fontFamily: F, fontSize: 13, color: T.textLight, margin: 0, wordBreak: "break-word" }}>
+                            {userData?.email || ""}
                         </p>
+                    </div>
+
+                    <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 14, display: "flex", flexDirection: "column", gap: 12 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                            <Phone size={16} color={T.textLight} />
+                            <p style={{ fontFamily: F, fontSize: 13, color: T.textDark, margin: 0 }}>
+                                {userData?.phone || ""}
+                            </p>
+                        </div>
+                        {/* <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                            <MapPin size={16} color={T.textLight} />
+                            <p style={{ fontFamily: F, fontSize: 13, color: T.textDark, margin: 0 }}>
+                                {[userData?.city, userData?.country].filter(c => c && c !== "N/A").join(", ") || "N/A"}
+                            </p>
+                        </div> */}
                     </div>
                 </div>
 
-                {/* Step rows */}
-                {setupSteps.map((step, i) => {
-                    const StepIcon = step.icon;
-                    const isLast = i === setupSteps.length - 1;
-                    return (
-                        <div
-                            key={i}
-                            onClick={() => handleStepClick(step)}
-                            style={{
-                                display: "flex", alignItems: "center", justifyContent: "space-between",
-                                padding: "16px 22px",
-                                borderBottom: isLast ? "none" : `1px solid ${T.border}`,
-                                cursor: step.locked ? "not-allowed" : "pointer",
-                                opacity: step.locked ? 0.5 : 1,
-                                transition: "background .14s",
-                            }}
-                            onMouseEnter={(e) => { if (!step.locked) e.currentTarget.style.background = T.surface; }}
-                            onMouseLeave={(e) => { if (!step.locked) e.currentTarget.style.background = "transparent"; }}
+                {/* ── Right: cards grid ── */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, minWidth: 0 }}>
+
+                    {/* Profile Setup */}
+                    <div style={cardStyle}>
+                        <div style={cardTitleRow}>
+                            <div style={iconBox(T.surface)}><User size={20} color={T.textDark} /></div>
+                            <p style={{ fontFamily: F, fontSize: 16, fontWeight: 700, color: T.textDark, margin: 0 }}>Profile Setup</p>
+                        </div>
+                        {/* <div style={statusPill(T.success)}>
+                            <CheckCircle size={16} /> Profile Completed
+                        </div> */}
+                        <button onClick={() => { onSetEditTab?.("overview"); onEditProfileOpen?.(); }} style={primaryBtn}>
+                            Edit Profile
+                        </button>
+                    </div>
+
+                    {/* Pricing Setup */}
+                    <div style={cardStyle}>
+                        <div style={cardTitleRow}>
+                            <div style={iconBox(T.surface)}>
+                                <span style={{ fontFamily: F, fontSize: 18, fontWeight: 700, color: T.textDark }}>$</span>
+                            </div>
+                            <p style={{ fontFamily: F, fontSize: 16, fontWeight: 700, color: T.textDark, margin: 0 }}>Pricing Setup</p>
+                        </div>
+
+                        <button onClick={() => navigate("/mentor/dashboard/pricing")} style={primaryBtn}>
+                            Set Pricing
+                        </button>
+                    </div>
+
+                    {/* Availability */}
+                    <div style={cardStyle}>
+                        <div style={cardTitleRow}>
+                            <div style={iconBox(T.surface)}><Calendar size={20} color={T.textDark} /></div>
+                            <p style={{ fontFamily: F, fontSize: 16, fontWeight: 700, color: T.textDark, margin: 0 }}>Availability</p>
+                        </div>
+
+                        <button onClick={() => navigate("/mentor/dashboard/Manage_Availability")} style={primaryBtn}>
+                            Manage Slots
+                        </button>
+                    </div>
+
+                    {/* Curriculum */}
+                    <div style={cardStyle}>
+                        <div style={cardTitleRow}>
+                            <div style={iconBox(T.surface)}><BookOpen size={20} color={T.textDark} /></div>
+                            <p style={{ fontFamily: F, fontSize: 16, fontWeight: 700, color: T.textDark, margin: 0 }}>Curriculum</p>
+                        </div>
+
+                        <button
+                            onClick={() => { onSetEditTab?.("achievements"); onEditProfileOpen?.(); }}
+                            style={{ ...primaryBtn, position: "relative" }}
                         >
-                            <div style={{ display: "flex", alignItems: "center", gap: 14, flex: 1 }}>
-                                <div style={iconBox(step.done ? "#EAF3DE" : "#EEEDFE")}>
-                                    <StepIcon size={18} color={step.locked ? T.textLight : step.done ? "#166534" : "#3C3489"} />
-                                </div>
-                                <div style={{ flex: 1 }}>
-                                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                                        <p style={{ fontFamily: F, fontSize: 14, fontWeight: 500, color: step.locked ? T.textLight : T.textDark, margin: 0 }}>
-                                            {step.label}
-                                        </p>
-                                        {/* {step.done && (
-                                            <span style={{ fontFamily: F, fontSize: 11, fontWeight: 700, background: "#DCFCE7", color: "#166534", padding: "2px 9px", borderRadius: 99, letterSpacing: "0.03em" }}>
-                                                Done
-                                            </span>
-                                        )} */}
-                                    </div>
-                                    <p style={{ fontFamily: F, fontSize: 12, color: T.textLight, margin: "4px 0 0" }}>
-                                        {step.description}
+                            Add Curriculum
+                            {userData?.curriculumNotifications > 0 && (
+                                <span style={{
+                                    position: "absolute", top: -6, right: -6,
+                                    background: "#DC2626", color: "#fff",
+                                    borderRadius: "50%", width: 18, height: 18,
+                                    display: "flex", alignItems: "center", justifyContent: "center",
+                                    fontSize: 10, fontWeight: 700,
+                                }}>
+                                    {userData.curriculumNotifications}
+                                </span>
+                            )}
+                        </button>
+                    </div>
+
+                    {/* Mentorship Tips */}
+                    <div style={cardStyle}>
+                        <div style={cardTitleRow}>
+                            <div style={iconBox(T.surface)}><MessageSquare size={18} color={T.textDark} /></div>
+                            <p style={{ fontFamily: F, fontSize: 16, fontWeight: 700, color: T.textDark, margin: 0 }}>Mentorship Tips</p>
+                        </div>
+                        <p style={{ fontFamily: F, fontSize: 13, color: T.textLight, margin: 0, lineHeight: 1.6 }}>
+                            {userData?.mentorshipTip || "Set clear goals with your mentees for better progress."}
+                        </p>
+                    </div>
+
+                    {/* Your Badges */}
+                    <div style={cardStyle}>
+                        <p style={{ fontFamily: F, fontSize: 16, fontWeight: 700, color: T.textDark, margin: 0 }}>Your Badges</p>
+                        {(userData?.badges || []).length > 0 ? (
+                            userData.badges.map((badge, i) => (
+                                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, paddingTop: i > 0 ? 12 : 0, borderTop: i > 0 ? `1px solid ${T.border}` : "none" }}>
+                                    <CheckCircle size={18} color={badge.color || T.success} />
+                                    <p style={{ fontFamily: F, fontSize: 13, fontWeight: 600, color: badge.color || T.success, margin: 0 }}>
+                                        {badge.label}
                                     </p>
                                 </div>
-                            </div>
-
-                            {step.done
-                                ? <div style={checkRing(28)}><CheckCircle size={14} color={T.success} /></div>
-                                : <div style={chevronBox}><ChevronRight size={15} color={step.locked ? T.textLight : "#3C3489"} /></div>
-                            }
-                        </div>
-                    );
-                })}
+                            ))
+                        ) : (
+                            <p style={{ fontFamily: F, fontSize: 13, color: T.textLight, margin: 0 }}>No badges yet</p>
+                        )}
+                    </div>
+                </div>
             </div>
+
+            {/* ── Footer ── */}
+            {/* <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 24, paddingTop: 18, borderTop: `1px solid ${T.border}`, flexWrap: "wrap", gap: 12 }}>
+                <div style={{ display: "flex", gap: 18, flexWrap: "wrap" }}>
+                    <a style={{ fontFamily: F, fontSize: 13, color: T.textLight, textDecoration: "none" }}>• Mentorship Policies</a>
+                    <a style={{ fontFamily: F, fontSize: 13, color: T.textLight, textDecoration: "none" }}>• Feature Request</a>
+                    <a style={{ fontFamily: F, fontSize: 13, color: T.textLight, textDecoration: "none" }}>• Support</a>
+                </div>
+                <button style={{ ...primaryBtn, width: "auto", padding: "8px 16px", display: "flex", alignItems: "center", gap: 8 }}>
+                    <MessageSquare size={16} /> Share Feedback
+                </button>
+            </div> */}
         </div>
     );
 };
+
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // MentorLayout — main export
 // ═══════════════════════════════════════════════════════════════════════════════

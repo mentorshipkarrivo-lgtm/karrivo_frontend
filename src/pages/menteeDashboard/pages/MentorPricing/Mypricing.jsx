@@ -383,7 +383,7 @@ const CouponModal = ({ onClose, mentorId }) => {
   const handleSubmit = async () => {
     setFormError("");
     const totalCoupons = couponData?.data?.length || 0;
-    if (!editingId && totalCoupons >= 3) return setFormError("Maximum 3 coupons allowed.");
+    // if (!editingId && totalCoupons >= 3) return setFormError("Maximum 3 coupons allowed.");
     if (!code || !discount || !startDate || getSelectedDuration().length === 0)
       return setFormError("Please fill all required fields.");
     if (expiry && !expiryDate) return setFormError("Please set an expiry date.");
@@ -573,7 +573,7 @@ const CouponModal = ({ onClose, mentorId }) => {
             style={{ ...btnOutline, justifyContent: "center", width: "100%" }}
           >
             <IconChevron style={{ transform: showList ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
-            {showList ? "Hide coupons" : `View coupons${coupons.length ? ` (${coupons.length}/3)` : ""}`}
+            {showList ? "Hide coupons" : `View coupons`}
           </button>
         </div>
 

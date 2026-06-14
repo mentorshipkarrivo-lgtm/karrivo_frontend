@@ -236,7 +236,7 @@ export default function HeroSection() {
               onClick={() => navigate('/top')}
               className="px-6 py-3 rounded-full bg-[#0098cc] text-white text-sm sm:text-base font-medium hover:opacity-90 transition-opacity"
             >
-              Explore Mentorships
+              Explore Top Mentor
             </button>
             <button
               onClick={() => navigate('/login')}

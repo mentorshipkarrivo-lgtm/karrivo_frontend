@@ -36,7 +36,6 @@
 // const SUCCESS_L = 'rgba(16,185,129,0.10)';
 // const SUCCESS_B = 'rgba(16,185,129,0.30)';
 // const WARN = '#f59e0b';
-// const WARN_L = 'rgba(245,158,11,0.10)';
 
 // // ── Plan metadata ──────────────────────────────────────────
 // const PLAN_META = {
@@ -85,7 +84,7 @@
 //     .sort((a, b) => a.months - b.months);
 // }
 
-// // ── Coupon Card (used in list) ─────────────────────────────
+// // ── Coupon Card ────────────────────────────────────────────
 // function CouponCard({ coupon, isValid, planMonths, onApply }) {
 //   const daysLeft = coupon.expiryDate
 //     ? Math.ceil((new Date(coupon.expiryDate) - new Date()) / (1000 * 60 * 60 * 24))
@@ -110,9 +109,7 @@
 //       }}
 //     >
 //       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-//         {/* Left: code + meta */}
 //         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 }}>
-//           {/* Ticket icon pill */}
 //           <div style={{
 //             width: 32, height: 32, borderRadius: 8, flexShrink: 0,
 //             background: isValid ? SUCCESS_L : ACCENT_L,
@@ -122,14 +119,9 @@
 //             <Tag size={14} color={isValid ? SUCCESS : ACCENT} />
 //           </div>
 //           <div style={{ flex: 1, minWidth: 0 }}>
-//             {/* Coupon code */}
-//             <p style={{
-//               fontSize: 'clamp(11px, 1.5vw, 13px)', fontWeight: 800, color: CREAM,
-//               margin: '0 0 2px', letterSpacing: '1px', fontFamily: 'monospace',
-//             }}>
+//             <p style={{ fontSize: 'clamp(11px, 1.5vw, 13px)', fontWeight: 800, color: CREAM, margin: '0 0 2px', letterSpacing: '1px', fontFamily: 'monospace' }}>
 //               {coupon.couponCode}
 //             </p>
-//             {/* Discount + applicability */}
 //             <p style={{ fontSize: 'clamp(9px, 1.5vw, 10px)', color: isValid ? SUCCESS : MUTED2, margin: 0, fontWeight: 600 }}>
 //               {coupon.discountValue}% off
 //               {coupon.appliesForDuration?.length > 0 && (
@@ -138,17 +130,11 @@
 //                 </span>
 //               )}
 //             </p>
-//             {/* Expiry */}
 //             {daysLeft !== null && (
-//               <p style={{
-//                 fontSize: 'clamp(8px, 1.5vw, 9px)',
-//                 color: daysLeft <= 3 ? WARN : MUTED2,
-//                 margin: '3px 0 0', fontWeight: 600,
-//               }}>
+//               <p style={{ fontSize: 'clamp(8px, 1.5vw, 9px)', color: daysLeft <= 3 ? WARN : MUTED2, margin: '3px 0 0', fontWeight: 600 }}>
 //                 {daysLeft <= 0 ? 'Expired' : daysLeft === 1 ? 'Expires today' : `Expires in ${daysLeft} days`}
 //               </p>
 //             )}
-//             {/* Invalid reason */}
 //             {!isValid && (
 //               <p style={{ fontSize: 'clamp(8px, 1.5vw, 9px)', color: '#dc3545', margin: '3px 0 0', fontWeight: 600 }}>
 //                 Not valid for {planMonths}m plan
@@ -156,24 +142,12 @@
 //             )}
 //           </div>
 //         </div>
-
-//         {/* Right: Apply badge or X */}
 //         {isValid ? (
-//           <span style={{
-//             fontSize: 'clamp(9px, 1.5vw, 10px)', fontWeight: 700,
-//             padding: '4px 10px', borderRadius: 20,
-//             background: SUCCESS, color: '#fff',
-//             flexShrink: 0, letterSpacing: '0.3px',
-//           }}>
+//           <span style={{ fontSize: 'clamp(9px, 1.5vw, 10px)', fontWeight: 700, padding: '4px 10px', borderRadius: 20, background: SUCCESS, color: '#fff', flexShrink: 0, letterSpacing: '0.3px' }}>
 //             Apply
 //           </span>
 //         ) : (
-//           <span style={{
-//             fontSize: 'clamp(9px, 1.5vw, 10px)', fontWeight: 700,
-//             padding: '4px 10px', borderRadius: 20,
-//             background: 'rgba(0,0,0,0.05)', color: MUTED2,
-//             flexShrink: 0,
-//           }}>
+//           <span style={{ fontSize: 'clamp(9px, 1.5vw, 10px)', fontWeight: 700, padding: '4px 10px', borderRadius: 20, background: 'rgba(0,0,0,0.05)', color: MUTED2, flexShrink: 0 }}>
 //             N/A
 //           </span>
 //         )}
@@ -227,20 +201,20 @@
 
 //   const payPanelRef = useRef(null);
 
-//   // ── Load coupons from location state ────────────────────
+//   // ── Load coupons ─────────────────────────────────────────
 //   useEffect(() => {
 //     const coupons = location.state?.availableCoupons;
-//     if (Array.isArray(coupons) && coupons.length > 0) {
-//       setAvailableCoupons(coupons);
-//     }
+//     if (Array.isArray(coupons) && coupons.length > 0) setAvailableCoupons(coupons);
 //   }, [location.state]);
 
-//   // ── Also pull coupons directly from API response if not in location state ──
 //   useEffect(() => {
 //     if (mentor?.data?.availableCoupons?.length > 0 && availableCoupons.length === 0) {
 //       setAvailableCoupons(mentor.data.availableCoupons);
 //     }
 //   }, [mentor]);
+
+//   // ── getTotal: multiplied price ───────────────────────────
+//   const getTotal = (plan) => plan ? plan.totalPrice * plan.months : 0;
 
 //   // ── Helpers ──────────────────────────────────────────────
 //   const copyText = (text, setter) => {
@@ -279,7 +253,6 @@
 //     return Math.ceil(amount * appliedCoupon.discountValue / 100);
 //   };
 
-//   // KEY FIX: cast to Number() so "1" === 1 comparison works
 //   const isCouponValidForPlan = (coupon, plan = paymentPlan) => {
 //     if (!plan) return false;
 //     const months = Number(plan.months);
@@ -291,11 +264,7 @@
 //     const found = availableCoupons.find(
 //       c => c.couponCode?.trim().toUpperCase() === code && c.isActive
 //     );
-
-//     if (!found) {
-//       setCouponError('Coupon not found or inactive.');
-//       return;
-//     }
+//     if (!found) { setCouponError('Coupon not found or inactive.'); return; }
 //     if (!isCouponValidForPlan(found)) {
 //       setCouponError(`This coupon is not valid for the ${paymentPlan?.months}-month plan.`);
 //       return;
@@ -329,7 +298,6 @@
 //     setCouponInput('');
 //     setCouponError('');
 //     setShowCouponList(true);
-
 
 //     try {
 //       const result = await createSubscription({
@@ -386,7 +354,7 @@
 //     } catch { /* shown via payError */ }
 //   };
 
-//   // Reset payment form when going back
+//   // ── Back to plans ────────────────────────────────────────
 //   const handleBackToPlans = () => {
 //     setShowPayment(false);
 //     setUploadError('');
@@ -419,14 +387,10 @@
 //     </div>
 //   );
 
-//   const getTotal = (plan) => plan ? plan.totalPrice * plan.months : 0;
+//   const PLANS = normalizePlans(mentor?.data?.pricing?.plans, currentStatus);
 //   const effectiveSelected = selected ?? (PLANS.length === 1 ? PLANS[0].key : null);
-
-//   // Mentor display name — handle nested data shape
 //   const mentorName = mentor?.data?.mentorDetails?.fullName || mentor?.fullName || '';
 //   const mentorRole = mentor?.data?.mentorDetails?.currentRole || mentor?.currentRole || '';
-
-//   // Partition coupons into valid/invalid for current plan
 //   const validCoupons = availableCoupons.filter(c => c.isActive && isCouponValidForPlan(c, paymentPlan));
 //   const invalidCoupons = availableCoupons.filter(c => c.isActive && !isCouponValidForPlan(c, paymentPlan));
 
@@ -486,7 +450,6 @@
 //         .coupon-list  { animation:slideDown .2s ease-out; }
 //         .coupon-card-btn { transition:all .18s ease !important; }
 //         .coupon-card-btn:hover:not(:disabled) { transform:translateY(-1px) !important; box-shadow:0 4px 14px rgba(16,185,129,0.18) !important; }
-
 //         .ltm-container { min-height:100vh; display:flex; flex-direction:column; background:${BG}; font-family:${FONT}; }
 //         .ltm-hero { text-align:center; padding:clamp(24px,4vw,32px) clamp(16px,4vw,20px); animation:fadeUp .5s ease both; flex-shrink:0; }
 //         .ltm-tabs-row { display:flex; max-width:620px; margin:0 auto clamp(16px,3vw,24px); background:#faf6f0; border-radius:14px; border:1px solid ${BORDER}; padding:4px; gap:3px; flex-wrap:wrap; }
@@ -498,7 +461,6 @@
 //         .payment-header { background:${CREAM}; padding:clamp(14px,3vw,20px) clamp(14px,3vw,24px); flex-shrink:0; }
 //         .payment-body   { padding:clamp(14px,3vw,20px) clamp(14px,3vw,24px); overflow-y:auto; flex:1; min-height:0; }
 //         .payment-footer { padding:clamp(12px,3vw,16px) clamp(14px,3vw,24px); background:${CARD_BG}; border-top:1.5px solid ${BORDER_HI}; flex-shrink:0; }
-
 //         @media(max-width:1024px){
 //           .ltm-outer        { flex-direction:column !important; align-items:stretch !important; gap:clamp(12px,3vw,20px) !important; }
 //           .ltm-plans-col    { width:100% !important; }
@@ -606,11 +568,23 @@
 //                       )}
 //                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
 //                         <p style={{ fontSize: 'clamp(10px,2vw,12px)', fontWeight: 600, color: MUTED, margin: 0 }}>{plan.label}</p>
-//                         <span style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, padding: '2px 8px', borderRadius: 20, background: ACCENT_L, border: `1px solid ${BORDER_HI}`, color: ACCENT }}>{plan.months}mo</span>
 //                       </div>
+
+//                       {/* ── Price display: totalPrice × months ── */}
 //                       <div style={{ display: 'flex', alignItems: 'baseline', gap: 3, marginBottom: 2 }}>
-//                         <span style={{ fontSize: 'clamp(24px,4vw,40px)', fontWeight: 800, lineHeight: 1, color: CREAM }}>₹{(plan.totalPrice * plan.months).toLocaleString('en-IN')}</span>                <span style={{ fontSize: 'clamp(9px,1.5vw,10px)', color: MUTED2, paddingBottom: 2 }}>/ {plan.months}month</span>
-//                       </div>
+//                         <span style={{ fontSize: 'clamp(24px,4vw,40px)', fontWeight: 800, lineHeight: 1, color: CREAM }}>
+//                           ₹{(plan.totalPrice * plan.months).toLocaleString('en-IN')}
+//                         </span>
+//                         <span
+//                           style={{
+//                             fontSize: 'clamp(11px, 1.8vw, 14px)',
+//                             color: MUTED2,
+//                             paddingBottom: 2
+//                           }}
+//                         >
+//                           / {plan.months} month
+//                         </span>                      </div>
+
 //                       <div style={{ height: 1, background: BORDER, margin: '0 0 12px' }} />
 //                       <p style={{ fontSize: 'clamp(10px,1.5vw,11px)', color: MUTED, lineHeight: 1.5, margin: '0 0 12px' }}>{plan.description}</p>
 //                       <button
@@ -694,8 +668,6 @@
 
 //                   {/* ════ COUPON SECTION ════ */}
 //                   <div style={{ marginBottom: 18, paddingBottom: 16, borderBottom: `1.5px solid ${BORDER_HI}` }}>
-
-//                     {/* ── Section header ── */}
 //                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
 //                       <p style={{ fontSize: 'clamp(9px,1.5vw,11px)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', color: MUTED2, margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
 //                         <Tag size={12} color={ACCENT} /> Apply Coupon
@@ -712,7 +684,6 @@
 //                       )}
 //                     </div>
 
-//                     {/* ── Manual input row — always visible unless coupon applied ── */}
 //                     {!appliedCoupon && (
 //                       <div style={{ display: 'flex', gap: 6, marginBottom: couponError ? 0 : 10 }}>
 //                         <input
@@ -735,7 +706,6 @@
 //                       </div>
 //                     )}
 
-//                     {/* ── Coupon error ── */}
 //                     {couponError && (
 //                       <div style={{ display: 'flex', gap: 6, alignItems: 'center', background: 'rgba(220,53,69,0.06)', border: '1.5px solid rgba(220,53,69,0.18)', borderRadius: 8, padding: '8px 10px', margin: '8px 0 10px' }}>
 //                         <X size={11} color="#dc3545" style={{ flexShrink: 0 }} />
@@ -743,7 +713,6 @@
 //                       </div>
 //                     )}
 
-//                     {/* ── Applied coupon banner ── */}
 //                     {appliedCoupon && (
 //                       <div style={{ background: SUCCESS_L, border: `1.5px solid ${SUCCESS_B}`, borderRadius: 12, padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, marginBottom: 10 }}>
 //                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -755,8 +724,7 @@
 //                               {appliedCoupon.couponCode}
 //                             </p>
 //                             <p style={{ fontSize: 'clamp(9px,1.5vw,10px)', color: SUCCESS, margin: '2px 0 0', fontWeight: 600 }}>
-//                               {appliedCoupon.discountValue}% off ·You save ₹{getDiscountAmount(getTotal(paymentPlan)).toLocaleString('en-IN')}
-
+//                               {appliedCoupon.discountValue}% off · You save ₹{getDiscountAmount(getTotal(paymentPlan)).toLocaleString('en-IN')}
 //                             </p>
 //                           </div>
 //                         </div>
@@ -771,143 +739,114 @@
 //                       </div>
 //                     )}
 
-//                     {/* ── Available coupons list — ALWAYS SHOWN when coupons exist ── */}
-//                     {showCouponList && availableCoupons.filter(c => c.isActive !== false)
-//                       .length > 0 && (
-//                         <div style={{ marginTop: appliedCoupon ? 4 : 8 }}>
-
-//                           {/* Valid for this plan */}
-//                           {validCoupons.length > 0 && (
-//                             <div style={{ marginBottom: invalidCoupons.length > 0 ? 14 : 0 }}>
-//                               <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
-//                                 <div style={{ width: 14, height: 14, borderRadius: '50%', background: SUCCESS_L, border: `1px solid ${SUCCESS_B}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-//                                   <Check size={8} color={SUCCESS} strokeWidth={3} />
-//                                 </div>
-//                                 <p style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', color: SUCCESS, margin: 0 }}>
-//                                   Valid for this plan ({validCoupons.length})
-//                                 </p>
+//                     {showCouponList && availableCoupons.filter(c => c.isActive !== false).length > 0 && (
+//                       <div style={{ marginTop: appliedCoupon ? 4 : 8 }}>
+//                         {validCoupons.length > 0 && (
+//                           <div style={{ marginBottom: invalidCoupons.length > 0 ? 14 : 0 }}>
+//                             <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
+//                               <div style={{ width: 14, height: 14, borderRadius: '50%', background: SUCCESS_L, border: `1px solid ${SUCCESS_B}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+//                                 <Check size={8} color={SUCCESS} strokeWidth={3} />
 //                               </div>
-//                               <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-//                                 {validCoupons.map(coupon => {
-//                                   const isAlreadyApplied = appliedCoupon?.couponCode === coupon.couponCode;
-//                                   const daysLeft = coupon.expiryDate
-//                                     ? Math.ceil((new Date(coupon.expiryDate) - new Date()) / (1000 * 60 * 60 * 24))
-//                                     : null;
-//                                   return (
-//                                     <button
-//                                       key={String(coupon.couponId || coupon._id)}
-//                                       type="button"
-//                                       onClick={() => !isAlreadyApplied && handleApplyCoupon(coupon.couponCode)}
-//                                       style={{
-//                                         width: '100%', textAlign: 'left', cursor: isAlreadyApplied ? 'default' : 'pointer',
-//                                         background: isAlreadyApplied ? SUCCESS_L : '#f8fffe',
-//                                         border: `1.5px solid ${isAlreadyApplied ? SUCCESS : SUCCESS_B}`,
-//                                         borderRadius: 10, padding: '10px 12px', fontFamily: FONT,
-//                                         transition: 'all 0.18s',
-//                                       }}
-//                                     >
-//                                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-//                                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 }}>
-//                                           {/* Discount badge */}
-//                                           <div style={{ flexShrink: 0, background: SUCCESS, borderRadius: 8, padding: '4px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 44 }}>
-//                                             <span style={{ fontSize: 'clamp(13px,2vw,15px)', fontWeight: 800, color: '#fff', lineHeight: 1 }}>
-//                                               {coupon.discountValue}%
-//                                             </span>
-//                                             <span style={{ fontSize: 'clamp(7px,1vw,8px)', fontWeight: 700, color: 'rgba(255,255,255,0.8)', letterSpacing: '0.5px', textTransform: 'uppercase' }}>
-//                                               OFF
-//                                             </span>
-//                                           </div>
-//                                           <div style={{ flex: 1, minWidth: 0 }}>
-//                                             <p style={{ fontSize: 'clamp(11px,1.5vw,13px)', fontWeight: 800, color: CREAM, margin: 0, letterSpacing: '1.2px', fontFamily: 'monospace' }}>
-//                                               {coupon.couponCode}
-//                                             </p>
-//                                             <p style={{ fontSize: 'clamp(8px,1.5vw,9px)', color: MUTED2, margin: '3px 0 0', fontWeight: 600 }}>
-//                                               For {coupon.appliesForDuration?.join(', ')}m plans
-//                                               {daysLeft !== null && (
-//                                                 <span style={{ color: daysLeft <= 3 ? WARN : MUTED2 }}>
-//                                                   {' '}· {daysLeft <= 0 ? 'Expired' : daysLeft === 1 ? 'Expires today' : `${daysLeft}d left`}
-//                                                 </span>
-//                                               )}
-//                                             </p>
-//                                           </div>
-//                                         </div>
-//                                         {isAlreadyApplied ? (
-//                                           <span style={{ fontSize: 'clamp(9px,1.5vw,10px)', fontWeight: 700, padding: '4px 10px', borderRadius: 20, background: SUCCESS, color: '#fff', flexShrink: 0 }}>
-//                                             Applied ✓
-//                                           </span>
-//                                         ) : (
-//                                           <span style={{ fontSize: 'clamp(9px,1.5vw,10px)', fontWeight: 700, padding: '4px 10px', borderRadius: 20, background: ACCENT_L, border: `1px solid ${BORDER_HI}`, color: ACCENT, flexShrink: 0 }}>
-//                                             Apply
-//                                           </span>
-//                                         )}
-//                                       </div>
-//                                     </button>
-//                                   );
-//                                 })}
-//                               </div>
+//                               <p style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', color: SUCCESS, margin: 0 }}>
+//                                 Valid for this plan ({validCoupons.length})
+//                               </p>
 //                             </div>
-//                           )}
-
-//                           {/* Not valid for this plan */}
-//                           {invalidCoupons.length > 0 && (
-//                             <div>
-//                               <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
-//                                 <div style={{ width: 14, height: 14, borderRadius: '50%', background: 'rgba(45,45,45,0.06)', border: `1px solid ${BORDER_HI}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-//                                   <X size={8} color={MUTED2} strokeWidth={3} />
-//                                 </div>
-//                                 <p style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', color: MUTED2, margin: 0 }}>
-//                                   Other coupons ({invalidCoupons.length})
-//                                 </p>
-//                               </div>
-//                               <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
-//                                 {invalidCoupons.map(coupon => {
-//                                   const daysLeft = coupon.expiryDate
-//                                     ? Math.ceil((new Date(coupon.expiryDate) - new Date()) / (1000 * 60 * 60 * 24))
-//                                     : null;
-//                                   return (
-//                                     <div
-//                                       key={String(coupon.couponId || coupon._id)}
-//                                       style={{ width: '100%', textAlign: 'left', background: 'rgba(45,45,45,0.02)', border: `1.5px solid ${BORDER}`, borderRadius: 10, padding: '10px 12px', opacity: 0.55 }}
-//                                     >
-//                                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-//                                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 }}>
-//                                           <div style={{ flexShrink: 0, background: 'rgba(45,45,45,0.1)', borderRadius: 8, padding: '4px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 44 }}>
-//                                             <span style={{ fontSize: 'clamp(13px,2vw,15px)', fontWeight: 800, color: MUTED, lineHeight: 1 }}>
-//                                               {coupon.discountValue}%
-//                                             </span>
-//                                             <span style={{ fontSize: 'clamp(7px,1vw,8px)', fontWeight: 700, color: MUTED2, letterSpacing: '0.5px', textTransform: 'uppercase' }}>
-//                                               OFF
-//                                             </span>
-//                                           </div>
-//                                           <div style={{ flex: 1, minWidth: 0 }}>
-//                                             <p style={{ fontSize: 'clamp(11px,1.5vw,13px)', fontWeight: 800, color: MUTED, margin: 0, letterSpacing: '1.2px', fontFamily: 'monospace' }}>
-//                                               {coupon.couponCode}
-//                                             </p>
-//                                             <p style={{ fontSize: 'clamp(8px,1.5vw,9px)', color: MUTED2, margin: '3px 0 0', fontWeight: 600 }}>
-//                                               For {coupon.appliesForDuration?.join(', ')}m plans only
-//                                               {daysLeft !== null && daysLeft <= 0 && <span style={{ color: '#dc3545' }}> · Expired</span>}
-//                                             </p>
-//                                           </div>
+//                             <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+//                               {validCoupons.map(coupon => {
+//                                 const isAlreadyApplied = appliedCoupon?.couponCode === coupon.couponCode;
+//                                 const daysLeft = coupon.expiryDate
+//                                   ? Math.ceil((new Date(coupon.expiryDate) - new Date()) / (1000 * 60 * 60 * 24))
+//                                   : null;
+//                                 return (
+//                                   <button
+//                                     key={String(coupon.couponId || coupon._id)}
+//                                     type="button"
+//                                     onClick={() => !isAlreadyApplied && handleApplyCoupon(coupon.couponCode)}
+//                                     style={{ width: '100%', textAlign: 'left', cursor: isAlreadyApplied ? 'default' : 'pointer', background: isAlreadyApplied ? SUCCESS_L : '#f8fffe', border: `1.5px solid ${isAlreadyApplied ? SUCCESS : SUCCESS_B}`, borderRadius: 10, padding: '10px 12px', fontFamily: FONT, transition: 'all 0.18s' }}
+//                                   >
+//                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+//                                       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 }}>
+//                                         <div style={{ flexShrink: 0, background: SUCCESS, borderRadius: 8, padding: '4px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 44 }}>
+//                                           <span style={{ fontSize: 'clamp(13px,2vw,15px)', fontWeight: 800, color: '#fff', lineHeight: 1 }}>{coupon.discountValue}%</span>
+//                                           <span style={{ fontSize: 'clamp(7px,1vw,8px)', fontWeight: 700, color: 'rgba(255,255,255,0.8)', letterSpacing: '0.5px', textTransform: 'uppercase' }}>OFF</span>
 //                                         </div>
-//                                         <span style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, padding: '4px 8px', borderRadius: 20, background: 'rgba(45,45,45,0.06)', color: MUTED2, flexShrink: 0, whiteSpace: 'nowrap' }}>
-//                                           Not valid
-//                                         </span>
+//                                         <div style={{ flex: 1, minWidth: 0 }}>
+//                                           <p style={{ fontSize: 'clamp(11px,1.5vw,13px)', fontWeight: 800, color: CREAM, margin: 0, letterSpacing: '1.2px', fontFamily: 'monospace' }}>{coupon.couponCode}</p>
+//                                           <p style={{ fontSize: 'clamp(8px,1.5vw,9px)', color: MUTED2, margin: '3px 0 0', fontWeight: 600 }}>
+//                                             For {coupon.appliesForDuration?.join(', ')}m plans
+//                                             {daysLeft !== null && (
+//                                               <span style={{ color: daysLeft <= 3 ? WARN : MUTED2 }}>
+//                                                 {' '}· {daysLeft <= 0 ? 'Expired' : daysLeft === 1 ? 'Expires today' : `${daysLeft}d left`}
+//                                               </span>
+//                                             )}
+//                                           </p>
+//                                         </div>
 //                                       </div>
+//                                       {isAlreadyApplied ? (
+//                                         <span style={{ fontSize: 'clamp(9px,1.5vw,10px)', fontWeight: 700, padding: '4px 10px', borderRadius: 20, background: SUCCESS, color: '#fff', flexShrink: 0 }}>Applied ✓</span>
+//                                       ) : (
+//                                         <span style={{ fontSize: 'clamp(9px,1.5vw,10px)', fontWeight: 700, padding: '4px 10px', borderRadius: 20, background: ACCENT_L, border: `1px solid ${BORDER_HI}`, color: ACCENT, flexShrink: 0 }}>Apply</span>
+//                                       )}
 //                                     </div>
-//                                   );
-//                                 })}
-//                               </div>
+//                                   </button>
+//                                 );
+//                               })}
 //                             </div>
-//                           )}
+//                           </div>
+//                         )}
 
-//                           {/* Zero active coupons */}
-//                           {validCoupons.length === 0 && invalidCoupons.length === 0 && (
-//                             <div style={{ textAlign: 'center', padding: '14px 0' }}>
-//                               <p style={{ fontSize: 'clamp(10px,1.5vw,11px)', color: MUTED2, margin: 0, fontWeight: 600 }}>No active coupons available</p>
+//                         {invalidCoupons.length > 0 && (
+//                           <div>
+//                             <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
+//                               <div style={{ width: 14, height: 14, borderRadius: '50%', background: 'rgba(45,45,45,0.06)', border: `1px solid ${BORDER_HI}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+//                                 <X size={8} color={MUTED2} strokeWidth={3} />
+//                               </div>
+//                               <p style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', color: MUTED2, margin: 0 }}>
+//                                 Other coupons ({invalidCoupons.length})
+//                               </p>
 //                             </div>
-//                           )}
-//                         </div>
-//                       )}
+//                             <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+//                               {invalidCoupons.map(coupon => {
+//                                 const daysLeft = coupon.expiryDate
+//                                   ? Math.ceil((new Date(coupon.expiryDate) - new Date()) / (1000 * 60 * 60 * 24))
+//                                   : null;
+//                                 return (
+//                                   <div
+//                                     key={String(coupon.couponId || coupon._id)}
+//                                     style={{ width: '100%', textAlign: 'left', background: 'rgba(45,45,45,0.02)', border: `1.5px solid ${BORDER}`, borderRadius: 10, padding: '10px 12px', opacity: 0.55 }}
+//                                   >
+//                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+//                                       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 }}>
+//                                         <div style={{ flexShrink: 0, background: 'rgba(45,45,45,0.1)', borderRadius: 8, padding: '4px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 44 }}>
+//                                           <span style={{ fontSize: 'clamp(13px,2vw,15px)', fontWeight: 800, color: MUTED, lineHeight: 1 }}>{coupon.discountValue}%</span>
+//                                           <span style={{ fontSize: 'clamp(7px,1vw,8px)', fontWeight: 700, color: MUTED2, letterSpacing: '0.5px', textTransform: 'uppercase' }}>OFF</span>
+//                                         </div>
+//                                         <div style={{ flex: 1, minWidth: 0 }}>
+//                                           <p style={{ fontSize: 'clamp(11px,1.5vw,13px)', fontWeight: 800, color: MUTED, margin: 0, letterSpacing: '1.2px', fontFamily: 'monospace' }}>{coupon.couponCode}</p>
+//                                           <p style={{ fontSize: 'clamp(8px,1.5vw,9px)', color: MUTED2, margin: '3px 0 0', fontWeight: 600 }}>
+//                                             For {coupon.appliesForDuration?.join(', ')}m plans only
+//                                             {daysLeft !== null && daysLeft <= 0 && <span style={{ color: '#dc3545' }}> · Expired</span>}
+//                                           </p>
+//                                         </div>
+//                                       </div>
+//                                       <span style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, padding: '4px 8px', borderRadius: 20, background: 'rgba(45,45,45,0.06)', color: MUTED2, flexShrink: 0, whiteSpace: 'nowrap' }}>
+//                                         Not valid
+//                                       </span>
+//                                     </div>
+//                                   </div>
+//                                 );
+//                               })}
+//                             </div>
+//                           </div>
+//                         )}
+
+//                         {validCoupons.length === 0 && invalidCoupons.length === 0 && (
+//                           <div style={{ textAlign: 'center', padding: '14px 0' }}>
+//                             <p style={{ fontSize: 'clamp(10px,1.5vw,11px)', color: MUTED2, margin: 0, fontWeight: 600 }}>No active coupons available</p>
+//                           </div>
+//                         )}
+//                       </div>
+//                     )}
 //                   </div>
 
 //                   {/* ════ PRICE BREAKDOWN ════ */}
@@ -939,7 +878,6 @@
 //                     Choose payment method
 //                   </p>
 
-//                   {/* Method tabs */}
 //                   <div style={{ display: 'flex', background: '#f0ede8', borderRadius: 12, padding: 3, gap: 3, marginBottom: 16 }}>
 //                     {[{ id: 'qr', Icon: QrCode, label: 'Scan QR' }, { id: 'upi', Icon: Link2, label: 'UPI ID' }].map(({ id, Icon, label }) => (
 //                       <button
@@ -954,7 +892,6 @@
 //                     ))}
 //                   </div>
 
-//                   {/* QR panel */}
 //                   {payTab === 'qr' && (
 //                     <div style={{ marginBottom: 14 }}>
 //                       <div style={{ background: '#fff', border: `1.5px solid ${BORDER_HI}`, borderRadius: 14, padding: 10, marginBottom: 10, boxShadow: '0 4px 16px rgba(45,45,45,0.06)', display: 'inline-block' }}>
@@ -974,7 +911,6 @@
 //                     </div>
 //                   )}
 
-//                   {/* UPI panel */}
 //                   {payTab === 'upi' && (
 //                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 14 }}>
 //                       {[
@@ -998,14 +934,12 @@
 //                     </div>
 //                   )}
 
-//                   {/* Divider */}
 //                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '12px 0', opacity: 0.5 }}>
 //                     <div style={{ flex: 1, height: 1, background: BORDER_HI }} />
 //                     <span style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', color: MUTED2, whiteSpace: 'nowrap' }}>Upload Proof</span>
 //                     <div style={{ flex: 1, height: 1, background: BORDER_HI }} />
 //                   </div>
 
-//                   {/* Screenshot upload */}
 //                   <div style={{ marginBottom: 12 }}>
 //                     <p style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', color: MUTED2, margin: '0 0 6px' }}>
 //                       Payment Screenshot <span style={{ color: ACCENT, fontWeight: 800 }}>*</span>
@@ -1022,7 +956,6 @@
 //                     </label>
 //                   </div>
 
-//                   {/* UTR input */}
 //                   <div style={{ marginBottom: 10 }}>
 //                     <p style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', color: MUTED2, margin: '0 0 6px' }}>
 //                       UTR ID <span style={{ color: ACCENT, fontWeight: 800 }}>*</span>
@@ -1037,7 +970,6 @@
 //                     <p style={{ fontSize: 'clamp(8px,1.5vw,9px)', color: MUTED2, margin: '3px 0 0', paddingLeft: 2 }}>From your UPI app payment history</p>
 //                   </div>
 
-//                   {/* Errors */}
 //                   {uploadError && (
 //                     <div style={{ display: 'flex', gap: 8, alignItems: 'center', background: 'rgba(220,53,69,0.06)', border: '1.5px solid rgba(220,53,69,0.2)', borderRadius: 10, padding: '10px 12px', marginBottom: 10 }}>
 //                       <X size={12} color="#dc3545" style={{ flexShrink: 0 }} />
@@ -1097,10 +1029,6 @@
 //   );
 // }
 
-
-
-
-
 import React, { useState, useRef, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -1116,24 +1044,26 @@ import useToast from '../../../global/Tostify';
 import Loader from '../../../global/Loader';
 
 // ── Design tokens ──────────────────────────────────────────
-const BG = '#F6F2ED';
-const CREAM = '#2d2d2d';
+const BG = '#ffffff';
+const CREAM = '#1a1a1a';
 const CARD_BG = '#ffffff';
-const CARD_FEAT = '#fafaf8';
-const BORDER = 'rgba(162,196,193,0.15)';
-const BORDER_HI = 'rgba(162,196,193,0.35)';
-const MUTED = 'rgba(45,45,45,0.65)';
-const MUTED2 = 'rgba(45,45,45,0.45)';
+const CARD_FEAT = '#fafafa';
+const BORDER = 'rgba(0,0,0,0.08)';
+const BORDER_HI = 'rgba(0,0,0,0.14)';
+const MUTED = 'rgba(0,0,0,0.65)';
+const MUTED2 = 'rgba(0,0,0,0.45)';
 const FONT = `'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif`;
-const ACCENT = '#7fa9a6';
-const ACCENT_D = '#5d8f8b';
-const ACCENT_L = 'rgba(127,169,166,0.10)';
-const ACCENT_M = 'rgba(127,169,166,0.22)';
-const ACCENT_B = 'rgba(127,169,166,0.32)';
+const ACCENT = '#0f0f10';
+const ACCENT_D = '#000000';
+const ACCENT_L = 'rgba(15,15,16,0.06)';
+const ACCENT_M = 'rgba(15,15,16,0.12)';
+const ACCENT_B = 'rgba(15,15,16,0.22)';
 const SUCCESS = '#10b981';
 const SUCCESS_L = 'rgba(16,185,129,0.10)';
 const SUCCESS_B = 'rgba(16,185,129,0.30)';
 const WARN = '#f59e0b';
+const BTN_BG = '#0f0f10';
+const BTN_TEXT = '#ffffff';
 
 // ── Plan metadata ──────────────────────────────────────────
 const PLAN_META = {
@@ -1478,7 +1408,7 @@ export default function MentorLTMPlans() {
       <div style={{ textAlign: 'center', padding: '20px' }}>
         <X size={32} color="#d9534f" style={{ display: 'block', margin: '0 auto 12px' }} />
         <p style={{ color: MUTED, margin: '0 0 16px' }}>Failed to load plans.</p>
-        <button onClick={() => navigate(-1)} style={{ fontFamily: FONT, background: ACCENT_L, border: `1px solid ${BORDER_HI}`, borderRadius: 8, padding: '9px 20px', color: ACCENT, cursor: 'pointer' }}>
+        <button onClick={() => navigate(-1)} style={{ fontFamily: FONT, background: ACCENT_L, border: `1px solid ${BORDER_HI}`, borderRadius: 8, padding: '9px 20px', color: CREAM, cursor: 'pointer' }}>
           Go Back
         </button>
       </div>
@@ -1495,16 +1425,16 @@ export default function MentorLTMPlans() {
   // ── Success screen ───────────────────────────────────────
   if (isSuccess) return (
     <div style={{ minHeight: '100vh', background: BG, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px', fontFamily: FONT }}>
-      <div style={{ background: CREAM, borderRadius: '20px', padding: 'clamp(24px, 5vw, 40px)', maxWidth: '360px', width: '100%', textAlign: 'center', boxShadow: '0 24px 60px rgba(45,45,45,0.18)' }}>
-        <div style={{ width: 60, height: 60, borderRadius: '50%', background: ACCENT_L, border: `1px solid ${ACCENT_B}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
-          <CheckCircle size={28} color={ACCENT} />
+      <div style={{ background: '#fff', border: `1.5px solid ${BORDER_HI}`, borderRadius: '20px', padding: 'clamp(24px, 5vw, 40px)', maxWidth: '360px', width: '100%', textAlign: 'center', boxShadow: '0 24px 60px rgba(0,0,0,0.08)' }}>
+        <div style={{ width: 60, height: 60, borderRadius: '50%', background: SUCCESS_L, border: `1px solid ${SUCCESS_B}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px' }}>
+          <CheckCircle size={28} color={SUCCESS} />
         </div>
-        <h2 style={{ color: '#fff', fontSize: 'clamp(18px, 4vw, 20px)', fontWeight: 800, margin: '0 0 8px' }}>Payment Submitted!</h2>
-        <p style={{ color: 'rgba(255,255,255,0.65)', fontSize: 'clamp(12px, 3vw, 13px)', margin: '0 0 20px', lineHeight: 1.7 }}>
-          Your <strong style={{ color: '#fff' }}>{paymentPlan?.months}-month mentorship</strong> with <strong style={{ color: '#fff' }}>{mentorName}</strong> is being activated.
+        <h2 style={{ color: CREAM, fontSize: 'clamp(18px, 4vw, 20px)', fontWeight: 800, margin: '0 0 8px' }}>Payment Submitted!</h2>
+        <p style={{ color: MUTED, fontSize: 'clamp(12px, 3vw, 13px)', margin: '0 0 20px', lineHeight: 1.7 }}>
+          Your <strong style={{ color: CREAM }}>{paymentPlan?.months}-month mentorship</strong> with <strong style={{ color: CREAM }}>{mentorName}</strong> is being activated.
         </p>
         {payResponse?.data && (
-          <div style={{ background: 'rgba(255,255,255,0.06)', border: `1px solid rgba(255,255,255,0.1)`, borderRadius: 12, padding: '14px', marginBottom: '20px', textAlign: 'left' }}>
+          <div style={{ background: '#fafafa', border: `1px solid ${BORDER_HI}`, borderRadius: 12, padding: '14px', marginBottom: '20px', textAlign: 'left' }}>
             {[
               { label: 'Status', value: payResponse.data.paymentStatus },
               { label: 'Transaction ID', value: payResponse.data.transactionId },
@@ -1512,14 +1442,14 @@ export default function MentorLTMPlans() {
               payResponse.data.discountAmount > 0 && { label: 'Discount', value: `- ₹${payResponse.data.discountAmount?.toLocaleString('en-IN')} (${appliedCoupon?.discountValue}%)` },
             ].filter(Boolean).map(r => (
               <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8, fontSize: 'clamp(10px, 2vw, 11px)' }}>
-                <span style={{ color: 'rgba(255,255,255,0.45)' }}>{r.label}</span>
-                <span style={{ fontWeight: 700, color: r.label === 'Discount' ? SUCCESS : '#fff' }}>{r.value}</span>
+                <span style={{ color: MUTED2 }}>{r.label}</span>
+                <span style={{ fontWeight: 700, color: r.label === 'Discount' ? SUCCESS : CREAM }}>{r.value}</span>
               </div>
             ))}
           </div>
         )}
-        <p style={{ fontSize: 'clamp(10px, 2vw, 11px)', color: 'rgba(255,255,255,0.45)', margin: '0 0 20px' }}>Verification & activation within 2 hours.</p>
-        <button onClick={() => navigate('/mentee/bookings')} style={{ width: '100%', background: ACCENT, color: '#fff', border: 'none', borderRadius: 12, padding: '13px', fontWeight: 700, fontSize: 'clamp(12px, 3vw, 14px)', cursor: 'pointer', fontFamily: FONT }}>
+        <p style={{ fontSize: 'clamp(10px, 2vw, 11px)', color: MUTED2, margin: '0 0 20px' }}>Verification & activation within 2 hours.</p>
+        <button onClick={() => navigate('/mentee/bookings')} style={{ width: '100%', background: BTN_BG, color: BTN_TEXT, border: 'none', borderRadius: 12, padding: '13px', fontWeight: 700, fontSize: 'clamp(12px, 3vw, 14px)', cursor: 'pointer', fontFamily: FONT }}>
           See Your Bookings →
         </button>
       </div>
@@ -1550,13 +1480,13 @@ export default function MentorLTMPlans() {
         .coupon-card-btn:hover:not(:disabled) { transform:translateY(-1px) !important; box-shadow:0 4px 14px rgba(16,185,129,0.18) !important; }
         .ltm-container { min-height:100vh; display:flex; flex-direction:column; background:${BG}; font-family:${FONT}; }
         .ltm-hero { text-align:center; padding:clamp(24px,4vw,32px) clamp(16px,4vw,20px); animation:fadeUp .5s ease both; flex-shrink:0; }
-        .ltm-tabs-row { display:flex; max-width:620px; margin:0 auto clamp(16px,3vw,24px); background:#faf6f0; border-radius:14px; border:1px solid ${BORDER}; padding:4px; gap:3px; flex-wrap:wrap; }
+        .ltm-tabs-row { display:flex; max-width:620px; margin:0 auto clamp(16px,3vw,24px); background:#f5f5f5; border-radius:14px; border:1px solid ${BORDER}; padding:4px; gap:3px; flex-wrap:wrap; }
         .ltm-outer { display:flex; gap:clamp(16px,3vw,24px); align-items:flex-start; justify-content:center; max-width:1200px; margin:0 auto; padding:0 clamp(12px,4vw,24px) clamp(20px,4vw,40px); flex:1; width:100%; min-height:0; }
         .ltm-plans-col { flex:0 0 auto; display:flex; align-items:flex-start; justify-content:center; width:100%; }
         .ltm-cards { display:flex; flex-direction:row; gap:clamp(12px,3vw,20px); align-items:stretch; justify-content:center; flex-wrap:wrap; width:100%; }
         .ltm-payment-col { flex:1 1 auto; min-width:0; max-width:520px; width:100%; animation:slideInRight .38s cubic-bezier(.23,1,.32,1) both; height:fit-content; }
-        .payment-form-card { background:${CARD_BG}; border:1.5px solid ${BORDER_HI}; border-radius:22px; box-shadow:0 20px 60px rgba(45,45,45,.12),0 4px 16px rgba(45,45,45,.06); overflow:hidden; display:flex; flex-direction:column; max-height:100%; }
-        .payment-header { background:${CREAM}; padding:clamp(14px,3vw,20px) clamp(14px,3vw,24px); flex-shrink:0; }
+        .payment-form-card { background:${CARD_BG}; border:1.5px solid ${BORDER_HI}; border-radius:22px; box-shadow:0 20px 60px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.04); overflow:hidden; display:flex; flex-direction:column; max-height:100%; }
+        .payment-header { background:#fafafa; border-bottom:1.5px solid ${BORDER_HI}; padding:clamp(14px,3vw,20px) clamp(14px,3vw,24px); flex-shrink:0; }
         .payment-body   { padding:clamp(14px,3vw,20px) clamp(14px,3vw,24px); overflow-y:auto; flex:1; min-height:0; }
         .payment-footer { padding:clamp(12px,3vw,16px) clamp(14px,3vw,24px); background:${CARD_BG}; border-top:1.5px solid ${BORDER_HI}; flex-shrink:0; }
         @media(max-width:1024px){
@@ -1605,7 +1535,7 @@ export default function MentorLTMPlans() {
           </p>
           {currentStatus && (
             <div style={{ marginTop: 'clamp(6px,1.5vw,10px)' }}>
-              <span style={{ fontSize: 'clamp(9px,2vw,11px)', fontWeight: 700, padding: '3px 12px', borderRadius: 20, background: ACCENT_L, border: `1px solid ${BORDER_HI}`, color: ACCENT, letterSpacing: '0.4px', textTransform: 'capitalize' }}>
+              <span style={{ fontSize: 'clamp(9px,2vw,11px)', fontWeight: 700, padding: '3px 12px', borderRadius: 20, background: ACCENT_L, border: `1px solid ${BORDER_HI}`, color: CREAM, letterSpacing: '0.4px', textTransform: 'capitalize' }}>
                 {currentStatus} pricing
               </span>
             </div>
@@ -1623,10 +1553,10 @@ export default function MentorLTMPlans() {
                   type="button"
                   className="ltm-tab pay-tab-btn"
                   onClick={() => { setSelected(plan.key); setShowPayment(false); setUploadError(''); setTransactionId(''); setScreenshotUrl(''); setScreenshotName(''); setSelectedSessionId(null); }}
-                  style={{ flex: 1, position: 'relative', padding: 'clamp(9px,1.5vw,12px) clamp(8px,1.5vw,10px)', borderRadius: 10, cursor: 'pointer', background: isActive ? ACCENT : 'transparent', fontFamily: FONT, textAlign: 'center', minWidth: '70px' }}
+                  style={{ flex: 1, position: 'relative', padding: 'clamp(9px,1.5vw,12px) clamp(8px,1.5vw,10px)', borderRadius: 10, cursor: 'pointer', background: isActive ? BTN_BG : 'transparent', fontFamily: FONT, textAlign: 'center', minWidth: '70px' }}
                 >
                   {plan.badge && (
-                    <span style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: ACCENT, color: '#fff', fontSize: 'clamp(7px,2vw,10px)', fontWeight: 800, padding: '2px 10px', borderRadius: 20, whiteSpace: 'nowrap', letterSpacing: '0.4px' }}>
+                    <span style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: BTN_BG, color: '#fff', fontSize: 'clamp(7px,2vw,10px)', fontWeight: 800, padding: '2px 10px', borderRadius: 20, whiteSpace: 'nowrap', letterSpacing: '0.4px' }}>
                       {plan.badge}
                     </span>
                   )}
@@ -1647,9 +1577,9 @@ export default function MentorLTMPlans() {
               <div className="ltm-cards">
                 {PLANS.map(plan => {
                   const isSelected = effectiveSelected === plan.key;
-                  const borderColor = isSelected ? ACCENT : plan.featured ? BORDER_HI : BORDER;
-                  const shadow = isSelected ? `0 20px 56px rgba(127,169,166,0.18), 0 0 0 1.5px ${ACCENT}` : plan.featured ? `0 10px 40px rgba(0,0,0,0.08), 0 0 0 1px ${BORDER_HI}` : '0 2px 8px rgba(0,0,0,0.04)';
-                  const cardBg = plan.featured ? (isSelected ? '#f0f7f6' : CARD_FEAT) : isSelected ? '#f3f9f8' : CARD_BG;
+                  const borderColor = isSelected ? CREAM : plan.featured ? BORDER_HI : BORDER;
+                  const shadow = isSelected ? `0 20px 56px rgba(0,0,0,0.10), 0 0 0 1.5px ${CREAM}` : plan.featured ? `0 10px 40px rgba(0,0,0,0.06), 0 0 0 1px ${BORDER_HI}` : '0 2px 8px rgba(0,0,0,0.04)';
+                  const cardBg = plan.featured ? (isSelected ? '#f7f7f7' : CARD_FEAT) : isSelected ? '#fafafa' : CARD_BG;
                   const lift = PLANS.length === 1 ? 'none' : plan.featured ? (isSelected ? 'translateY(-16px) scale(1.01)' : 'translateY(-10px)') : isSelected ? 'translateY(-6px) scale(1.01)' : 'translateY(0)';
 
                   return (
@@ -1660,7 +1590,7 @@ export default function MentorLTMPlans() {
                       style={{ position: 'relative', flex: PLANS.length === 1 ? '0 0 360px' : '1 1 220px', maxWidth: plan.featured ? '300px' : PLANS.length === 1 ? '360px' : '270px', minWidth: 'clamp(180px,35vw,260px)', cursor: 'pointer', borderRadius: 16, border: `1.5px solid ${borderColor}`, background: cardBg, boxShadow: shadow, transform: lift, padding: `clamp(14px,2.5vw,${plan.featured ? 28 : 22}px) clamp(12px,2.5vw,${plan.featured ? 20 : 18}px)`, display: 'flex', flexDirection: 'column' }}
                     >
                       {plan.badge && (
-                        <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: ACCENT, color: '#fff', fontSize: 'clamp(8px,1.5vw,10px)', fontWeight: 800, padding: '3px 14px', borderRadius: 20, whiteSpace: 'nowrap', zIndex: 5, letterSpacing: '0.5px' }}>
+                        <div style={{ position: 'absolute', top: -12, left: '50%', transform: 'translateX(-50%)', background: BTN_BG, color: '#fff', fontSize: 'clamp(8px,1.5vw,10px)', fontWeight: 800, padding: '3px 14px', borderRadius: 20, whiteSpace: 'nowrap', zIndex: 5, letterSpacing: '0.5px' }}>
                           {plan.badge}
                         </div>
                       )}
@@ -1690,7 +1620,7 @@ export default function MentorLTMPlans() {
                         className="ltm-cta"
                         onClick={e => handleGetStarted(e, plan, plan.sessionId || null)}
                         disabled={isSubscribing}
-                        style={{ width: '100%', padding: 'clamp(8px,1.5vw,10px)', borderRadius: 50, border: `1.5px solid ${ACCENT}`, background: isSelected ? ACCENT : 'transparent', color: isSelected ? '#fff' : ACCENT, fontSize: 'clamp(11px,1.5vw,12px)', fontWeight: 700, cursor: isSubscribing ? 'not-allowed' : 'pointer', marginBottom: 12, fontFamily: FONT, opacity: isSubscribing ? 0.6 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}
+                        style={{ width: '100%', padding: 'clamp(8px,1.5vw,10px)', borderRadius: 50, border: `1.5px solid ${BTN_BG}`, background: isSelected ? BTN_BG : 'transparent', color: isSelected ? '#fff' : CREAM, fontSize: 'clamp(11px,1.5vw,12px)', fontWeight: 700, cursor: isSubscribing ? 'not-allowed' : 'pointer', marginBottom: 12, fontFamily: FONT, opacity: isSubscribing ? 0.6 : 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}
                       >
                         {isSubscribing && effectiveSelected === plan.key ? <><Loader2 size={12} className="animate-spin" /> Processing…</> : <>Get started <ChevronRight size={12} /></>}
                       </button>
@@ -1699,14 +1629,14 @@ export default function MentorLTMPlans() {
                         {plan.features.slice(0, 4).map((feat, i) => (
                           <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
                             <div style={{ width: 14, height: 14, borderRadius: '50%', flexShrink: 0, background: ACCENT_L, border: `1px solid ${BORDER_HI}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 1 }}>
-                              <Check size={7} color={ACCENT} strokeWidth={3} />
+                              <Check size={7} color={CREAM} strokeWidth={3} />
                             </div>
                             <span style={{ fontSize: 'clamp(9px,1.5vw,10px)', color: MUTED, lineHeight: 1.3 }}>{feat}</span>
                           </li>
                         ))}
                       </ul>
                       {isSelected && (
-                        <div style={{ marginTop: 10, textAlign: 'center', fontSize: 'clamp(9px,1.5vw,10px)', fontWeight: 700, color: ACCENT, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
+                        <div style={{ marginTop: 10, textAlign: 'center', fontSize: 'clamp(9px,1.5vw,10px)', fontWeight: 700, color: CREAM, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4 }}>
                           <Check size={10} strokeWidth={3} /> Selected
                         </div>
                       )}
@@ -1733,30 +1663,30 @@ export default function MentorLTMPlans() {
                 {/* ── Header ── */}
                 <div className="payment-header">
                   <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14, flexWrap: 'wrap' }}>
-                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: ACCENT, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 16, color: '#fff', flexShrink: 0 }}>
+                    <div style={{ width: 40, height: 40, borderRadius: '50%', background: BTN_BG, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 16, color: '#fff', flexShrink: 0 }}>
                       {mentorName?.[0]}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <p style={{ color: '#fff', fontWeight: 700, fontSize: 'clamp(12px,2vw,14px)', margin: '0 0 2px', lineHeight: 1.2 }}>{mentorName}</p>
-                      <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 'clamp(10px,1.5vw,11px)', margin: 0 }}>{mentorRole}</p>
+                      <p style={{ color: CREAM, fontWeight: 700, fontSize: 'clamp(12px,2vw,14px)', margin: '0 0 2px', lineHeight: 1.2 }}>{mentorName}</p>
+                      <p style={{ color: MUTED2, fontSize: 'clamp(10px,1.5vw,11px)', margin: 0 }}>{mentorRole}</p>
                     </div>
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                      <p style={{ color: '#fff', fontWeight: 800, fontSize: 'clamp(18px,3vw,24px)', margin: 0, lineHeight: 1, letterSpacing: '-0.5px' }}>
+                      <p style={{ color: CREAM, fontWeight: 800, fontSize: 'clamp(18px,3vw,24px)', margin: 0, lineHeight: 1, letterSpacing: '-0.5px' }}>
                         ₹{getDiscountedPrice(getTotal(paymentPlan)).toLocaleString('en-IN')}
                       </p>
                       {appliedCoupon && (
-                        <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 'clamp(9px,1.5vw,10px)', margin: '2px 0 0', textDecoration: 'line-through' }}>
+                        <p style={{ color: MUTED2, fontSize: 'clamp(9px,1.5vw,10px)', margin: '2px 0 0', textDecoration: 'line-through' }}>
                           ₹{getTotal(paymentPlan).toLocaleString('en-IN')}
                         </p>
                       )}
-                      <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: 'clamp(9px,1.5vw,10px)', margin: '2px 0 0' }}>
+                      <p style={{ color: MUTED2, fontSize: 'clamp(9px,1.5vw,10px)', margin: '2px 0 0' }}>
                         {paymentPlan.months}m · {paymentPlan.totalSessions}s
                       </p>
                     </div>
                   </div>
                   <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
                     {[`${paymentPlan.label}`, `${paymentPlan.sessionsPerWeek} sessions/week`, `₹${paymentPlan.perSession.toLocaleString('en-IN')}/session`].map(t => (
-                      <span key={t} style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 600, padding: '3px 10px', borderRadius: 20, background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.75)', border: '1px solid rgba(255,255,255,0.12)', letterSpacing: '0.2px' }}>{t}</span>
+                      <span key={t} style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 600, padding: '3px 10px', borderRadius: 20, background: '#fff', color: MUTED, border: `1px solid ${BORDER_HI}`, letterSpacing: '0.2px' }}>{t}</span>
                     ))}
                   </div>
                 </div>
@@ -1768,13 +1698,13 @@ export default function MentorLTMPlans() {
                   <div style={{ marginBottom: 18, paddingBottom: 16, borderBottom: `1.5px solid ${BORDER_HI}` }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
                       <p style={{ fontSize: 'clamp(9px,1.5vw,11px)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', color: MUTED2, margin: 0, display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <Tag size={12} color={ACCENT} /> Apply Coupon
+                        <Tag size={12} color={CREAM} /> Apply Coupon
                       </p>
                       {availableCoupons.filter(c => c.isActive).length > 0 && (
                         <button
                           type="button"
                           onClick={() => setShowCouponList(v => !v)}
-                          style={{ background: ACCENT_L, border: `1px solid ${BORDER_HI}`, borderRadius: 20, color: ACCENT, fontSize: 'clamp(9px,1.5vw,10px)', fontWeight: 700, cursor: 'pointer', padding: '3px 10px', fontFamily: FONT, display: 'flex', alignItems: 'center', gap: 4 }}
+                          style={{ background: ACCENT_L, border: `1px solid ${BORDER_HI}`, borderRadius: 20, color: CREAM, fontSize: 'clamp(9px,1.5vw,10px)', fontWeight: 700, cursor: 'pointer', padding: '3px 10px', fontFamily: FONT, display: 'flex', alignItems: 'center', gap: 4 }}
                         >
                           <Tag size={11} />
                           {showCouponList ? 'Hide coupons' : `${availableCoupons.filter(c => c.isActive).length} coupon${availableCoupons.filter(c => c.isActive).length > 1 ? 's' : ''} available`}
@@ -1791,13 +1721,13 @@ export default function MentorLTMPlans() {
                           value={couponInput}
                           onChange={e => { setCouponInput(e.target.value.toUpperCase()); setCouponError(''); }}
                           onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); handleApplyCoupon(couponInput); } }}
-                          style={{ flex: 1, background: '#faf9f7', border: `1.5px solid ${BORDER_HI}`, borderRadius: 10, padding: 'clamp(8px,1.5vw,10px) clamp(10px,1.5vw,12px)', fontSize: 'clamp(11px,1.5vw,12px)', fontWeight: 600, color: CREAM, caretColor: ACCENT, fontFamily: FONT, letterSpacing: '1.5px' }}
+                          style={{ flex: 1, background: '#fafafa', border: `1.5px solid ${BORDER_HI}`, borderRadius: 10, padding: 'clamp(8px,1.5vw,10px) clamp(10px,1.5vw,12px)', fontSize: 'clamp(11px,1.5vw,12px)', fontWeight: 600, color: CREAM, caretColor: CREAM, fontFamily: FONT, letterSpacing: '1.5px' }}
                         />
                         <button
                           type="button"
                           onClick={() => handleApplyCoupon(couponInput)}
                           disabled={!couponInput.trim()}
-                          style={{ padding: 'clamp(8px,1.5vw,10px) clamp(12px,1.5vw,16px)', borderRadius: 10, border: 'none', background: couponInput.trim() ? ACCENT : 'rgba(45,45,45,0.15)', color: '#fff', fontSize: 'clamp(11px,1.5vw,12px)', fontWeight: 700, cursor: couponInput.trim() ? 'pointer' : 'not-allowed', fontFamily: FONT, transition: 'all 0.2s', whiteSpace: 'nowrap', flexShrink: 0 }}
+                          style={{ padding: 'clamp(8px,1.5vw,10px) clamp(12px,1.5vw,16px)', borderRadius: 10, border: 'none', background: couponInput.trim() ? BTN_BG : 'rgba(0,0,0,0.12)', color: '#fff', fontSize: 'clamp(11px,1.5vw,12px)', fontWeight: 700, cursor: couponInput.trim() ? 'pointer' : 'not-allowed', fontFamily: FONT, transition: 'all 0.2s', whiteSpace: 'nowrap', flexShrink: 0 }}
                         >
                           Apply
                         </button>
@@ -1883,7 +1813,7 @@ export default function MentorLTMPlans() {
                                       {isAlreadyApplied ? (
                                         <span style={{ fontSize: 'clamp(9px,1.5vw,10px)', fontWeight: 700, padding: '4px 10px', borderRadius: 20, background: SUCCESS, color: '#fff', flexShrink: 0 }}>Applied ✓</span>
                                       ) : (
-                                        <span style={{ fontSize: 'clamp(9px,1.5vw,10px)', fontWeight: 700, padding: '4px 10px', borderRadius: 20, background: ACCENT_L, border: `1px solid ${BORDER_HI}`, color: ACCENT, flexShrink: 0 }}>Apply</span>
+                                        <span style={{ fontSize: 'clamp(9px,1.5vw,10px)', fontWeight: 700, padding: '4px 10px', borderRadius: 20, background: ACCENT_L, border: `1px solid ${BORDER_HI}`, color: CREAM, flexShrink: 0 }}>Apply</span>
                                       )}
                                     </div>
                                   </button>
@@ -1896,7 +1826,7 @@ export default function MentorLTMPlans() {
                         {invalidCoupons.length > 0 && (
                           <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginBottom: 8 }}>
-                              <div style={{ width: 14, height: 14, borderRadius: '50%', background: 'rgba(45,45,45,0.06)', border: `1px solid ${BORDER_HI}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                              <div style={{ width: 14, height: 14, borderRadius: '50%', background: 'rgba(0,0,0,0.04)', border: `1px solid ${BORDER_HI}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                                 <X size={8} color={MUTED2} strokeWidth={3} />
                               </div>
                               <p style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', color: MUTED2, margin: 0 }}>
@@ -1911,11 +1841,11 @@ export default function MentorLTMPlans() {
                                 return (
                                   <div
                                     key={String(coupon.couponId || coupon._id)}
-                                    style={{ width: '100%', textAlign: 'left', background: 'rgba(45,45,45,0.02)', border: `1.5px solid ${BORDER}`, borderRadius: 10, padding: '10px 12px', opacity: 0.55 }}
+                                    style={{ width: '100%', textAlign: 'left', background: 'rgba(0,0,0,0.015)', border: `1.5px solid ${BORDER}`, borderRadius: 10, padding: '10px 12px', opacity: 0.55 }}
                                   >
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
                                       <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1, minWidth: 0 }}>
-                                        <div style={{ flexShrink: 0, background: 'rgba(45,45,45,0.1)', borderRadius: 8, padding: '4px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 44 }}>
+                                        <div style={{ flexShrink: 0, background: 'rgba(0,0,0,0.06)', borderRadius: 8, padding: '4px 8px', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 44 }}>
                                           <span style={{ fontSize: 'clamp(13px,2vw,15px)', fontWeight: 800, color: MUTED, lineHeight: 1 }}>{coupon.discountValue}%</span>
                                           <span style={{ fontSize: 'clamp(7px,1vw,8px)', fontWeight: 700, color: MUTED2, letterSpacing: '0.5px', textTransform: 'uppercase' }}>OFF</span>
                                         </div>
@@ -1927,7 +1857,7 @@ export default function MentorLTMPlans() {
                                           </p>
                                         </div>
                                       </div>
-                                      <span style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, padding: '4px 8px', borderRadius: 20, background: 'rgba(45,45,45,0.06)', color: MUTED2, flexShrink: 0, whiteSpace: 'nowrap' }}>
+                                      <span style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, padding: '4px 8px', borderRadius: 20, background: 'rgba(0,0,0,0.06)', color: MUTED2, flexShrink: 0, whiteSpace: 'nowrap' }}>
                                         Not valid
                                       </span>
                                     </div>
@@ -1976,14 +1906,14 @@ export default function MentorLTMPlans() {
                     Choose payment method
                   </p>
 
-                  <div style={{ display: 'flex', background: '#f0ede8', borderRadius: 12, padding: 3, gap: 3, marginBottom: 16 }}>
+                  <div style={{ display: 'flex', background: '#f0f0f0', borderRadius: 12, padding: 3, gap: 3, marginBottom: 16 }}>
                     {[{ id: 'qr', Icon: QrCode, label: 'Scan QR' }, { id: 'upi', Icon: Link2, label: 'UPI ID' }].map(({ id, Icon, label }) => (
                       <button
                         key={id}
                         type="button"
                         className="pay-tab-btn"
                         onClick={() => setPayTab(id)}
-                        style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, padding: 'clamp(8px,1.5vw,10px) clamp(8px,1.5vw,12px)', borderRadius: 8, fontFamily: FONT, background: payTab === id ? CREAM : 'transparent', color: payTab === id ? '#fff' : MUTED, fontSize: 'clamp(11px,1.5vw,12px)', fontWeight: 700, letterSpacing: '0.1px' }}
+                        style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, padding: 'clamp(8px,1.5vw,10px) clamp(8px,1.5vw,12px)', borderRadius: 8, fontFamily: FONT, background: payTab === id ? BTN_BG : 'transparent', color: payTab === id ? '#fff' : MUTED, fontSize: 'clamp(11px,1.5vw,12px)', fontWeight: 700, letterSpacing: '0.1px' }}
                       >
                         <Icon size={13} />{label}
                       </button>
@@ -1992,16 +1922,16 @@ export default function MentorLTMPlans() {
 
                   {payTab === 'qr' && (
                     <div style={{ marginBottom: 14 }}>
-                      <div style={{ background: '#fff', border: `1.5px solid ${BORDER_HI}`, borderRadius: 14, padding: 10, marginBottom: 10, boxShadow: '0 4px 16px rgba(45,45,45,0.06)', display: 'inline-block' }}>
+                      <div style={{ background: '#fff', border: `1.5px solid ${BORDER_HI}`, borderRadius: 14, padding: 10, marginBottom: 10, boxShadow: '0 4px 16px rgba(0,0,0,0.04)', display: 'inline-block' }}>
                         <img src="https://img.freepik.com/free-vector/scan-me-qr-code_78370-2915.jpg?semt=ais_hybrid&w=740&q=80" alt="UPI QR Code" style={{ width: 120, height: 'auto', borderRadius: 8, display: 'block' }} />
                       </div>
                       <p style={{ fontSize: 'clamp(11px,1.5vw,12px)', fontWeight: 700, color: CREAM, margin: '0 0 6px' }}>Scan with any UPI app</p>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, marginBottom: 10 }}>
                         {['PhonePe', 'GPay', 'Paytm', 'BHIM'].map(a => (
-                          <span key={a} style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 600, padding: '3px 10px', borderRadius: 20, background: ACCENT_L, border: `1px solid ${BORDER_HI}`, color: ACCENT_D }}>{a}</span>
+                          <span key={a} style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 600, padding: '3px 10px', borderRadius: 20, background: ACCENT_L, border: `1px solid ${BORDER_HI}`, color: CREAM }}>{a}</span>
                         ))}
                       </div>
-                      <div style={{ background: ACCENT_L, border: `1px solid ${BORDER_HI}`, borderRadius: 10, padding: '10px 12px' }}>
+                      <div style={{ background: '#fafafa', border: `1px solid ${BORDER_HI}`, borderRadius: 10, padding: '10px 12px' }}>
                         <p style={{ fontSize: 'clamp(10px,1.5vw,11px)', color: MUTED, margin: 0, lineHeight: 1.5 }}>
                           Send exactly <strong style={{ color: CREAM }}>₹{getDiscountedPrice(getTotal(paymentPlan)).toLocaleString('en-IN')}</strong>. Wrong amounts delay activation.
                         </p>
@@ -2015,14 +1945,14 @@ export default function MentorLTMPlans() {
                         { label: 'Primary UPI', val: UPI_PRIMARY, copied: copiedP, setter: setCopiedP },
                         { label: 'Secondary UPI', val: UPI_SECONDARY, copied: copiedS, setter: setCopiedS },
                       ].map(row => (
-                        <div key={row.label} style={{ background: '#faf9f7', border: `1.5px solid ${BORDER_HI}`, borderRadius: 12, padding: '10px 12px' }}>
+                        <div key={row.label} style={{ background: '#fafafa', border: `1.5px solid ${BORDER_HI}`, borderRadius: 12, padding: '10px 12px' }}>
                           <p style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', color: MUTED2, margin: '0 0 6px' }}>{row.label}</p>
                           <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                             <span style={{ flex: 1, minWidth: 0, fontSize: 'clamp(11px,1.5vw,13px)', fontWeight: 700, color: CREAM, wordBreak: 'break-all', letterSpacing: '0.2px' }}>{row.val}</span>
                             <button
                               type="button"
                               onClick={() => copyText(row.val, row.setter)}
-                              style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 'clamp(9px,1.5vw,10px)', fontWeight: 700, padding: '6px 12px', borderRadius: 8, border: 'none', cursor: 'pointer', fontFamily: FONT, background: row.copied ? ACCENT : CREAM, color: '#fff', flexShrink: 0, transition: 'background 0.2s' }}
+                              style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 'clamp(9px,1.5vw,10px)', fontWeight: 700, padding: '6px 12px', borderRadius: 8, border: 'none', cursor: 'pointer', fontFamily: FONT, background: row.copied ? SUCCESS : BTN_BG, color: '#fff', flexShrink: 0, transition: 'background 0.2s' }}
                             >
                               {row.copied ? <><Check size={10} /> Copied!</> : <><Copy size={10} /> Copy</>}
                             </button>
@@ -2040,27 +1970,27 @@ export default function MentorLTMPlans() {
 
                   <div style={{ marginBottom: 12 }}>
                     <p style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', color: MUTED2, margin: '0 0 6px' }}>
-                      Payment Screenshot <span style={{ color: ACCENT, fontWeight: 800 }}>*</span>
+                      Payment Screenshot <span style={{ color: CREAM, fontWeight: 800 }}>*</span>
                     </p>
-                    <label className="upload-label" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, border: `2px ${screenshotUrl ? 'solid' : 'dashed'} ${screenshotUrl ? ACCENT : BORDER_HI}`, borderRadius: 14, padding: 'clamp(12px,3vw,20px)', cursor: 'pointer', background: screenshotUrl ? ACCENT_L : '#faf9f7', transition: 'all 0.2s' }}>
+                    <label className="upload-label" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6, border: `2px ${screenshotUrl ? 'solid' : 'dashed'} ${screenshotUrl ? CREAM : BORDER_HI}`, borderRadius: 14, padding: 'clamp(12px,3vw,20px)', cursor: 'pointer', background: screenshotUrl ? ACCENT_L : '#fafafa', transition: 'all 0.2s' }}>
                       <input type="file" accept=".jpg,.jpeg,.png,.jfif" style={{ display: 'none' }} disabled={uploading} onChange={e => handleFileUpload(e.target.files[0])} />
                       {uploading ? (
-                        <><Loader2 size={16} color={ACCENT} className="animate-spin" /><p style={{ fontSize: 'clamp(10px,1.5vw,11px)', fontWeight: 700, color: CREAM, margin: 0 }}>Uploading…</p></>
+                        <><Loader2 size={16} color={CREAM} className="animate-spin" /><p style={{ fontSize: 'clamp(10px,1.5vw,11px)', fontWeight: 700, color: CREAM, margin: 0 }}>Uploading…</p></>
                       ) : screenshotUrl ? (
-                        <><Check size={16} color={ACCENT_D} strokeWidth={2.5} /><p style={{ fontSize: 'clamp(10px,1.5vw,11px)', fontWeight: 700, color: CREAM, margin: 0 }}>Screenshot uploaded ✓</p></>
+                        <><Check size={16} color={CREAM} strokeWidth={2.5} /><p style={{ fontSize: 'clamp(10px,1.5vw,11px)', fontWeight: 700, color: CREAM, margin: 0 }}>Screenshot uploaded ✓</p></>
                       ) : (
-                        <><Upload size={16} color={ACCENT} /><p style={{ fontSize: 'clamp(10px,1.5vw,11px)', fontWeight: 700, color: CREAM, margin: 0 }}>Upload screenshot</p></>
+                        <><Upload size={16} color={CREAM} /><p style={{ fontSize: 'clamp(10px,1.5vw,11px)', fontWeight: 700, color: CREAM, margin: 0 }}>Upload screenshot</p></>
                       )}
                     </label>
                   </div>
 
                   <div style={{ marginBottom: 10 }}>
                     <p style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, letterSpacing: '0.8px', textTransform: 'uppercase', color: MUTED2, margin: '0 0 6px' }}>
-                      UTR ID <span style={{ color: ACCENT, fontWeight: 800 }}>*</span>
+                      UTR ID <span style={{ color: CREAM, fontWeight: 800 }}>*</span>
                     </p>
                     <input
                       className="ltm-input"
-                      style={{ width: '100%', background: '#faf9f7', border: `1.5px solid ${BORDER_HI}`, borderRadius: 10, padding: 'clamp(9px,1.5vw,11px) clamp(10px,1.5vw,12px)', fontSize: 'clamp(12px,1.5vw,13px)', fontWeight: 700, color: CREAM, caretColor: ACCENT, fontFamily: FONT, letterSpacing: '0.5px' }}
+                      style={{ width: '100%', background: '#fafafa', border: `1.5px solid ${BORDER_HI}`, borderRadius: 10, padding: 'clamp(9px,1.5vw,11px) clamp(10px,1.5vw,12px)', fontSize: 'clamp(12px,1.5vw,13px)', fontWeight: 700, color: CREAM, caretColor: CREAM, fontFamily: FONT, letterSpacing: '0.5px' }}
                       placeholder="T2312XXXXXXX"
                       value={transactionId}
                       onChange={e => { setTransactionId(e.target.value.toUpperCase()); setUploadError(''); }}
@@ -2105,7 +2035,7 @@ export default function MentorLTMPlans() {
                     className="ltm-cta"
                     onClick={handleConfirmPayment}
                     disabled={uploading || isSubmitting}
-                    style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, padding: 'clamp(10px,1.5vw,13px)', borderRadius: 50, border: 'none', fontFamily: FONT, background: uploading || isSubmitting ? ACCENT_M : ACCENT, color: uploading || isSubmitting ? ACCENT_D : '#fff', fontSize: 'clamp(11px,1.5vw,13px)', fontWeight: 700, letterSpacing: '0.2px', cursor: uploading || isSubmitting ? 'not-allowed' : 'pointer', boxShadow: uploading || isSubmitting ? 'none' : '0 10px 28px rgba(127,169,166,0.35)' }}
+                    style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 7, padding: 'clamp(10px,1.5vw,13px)', borderRadius: 50, border: 'none', fontFamily: FONT, background: uploading || isSubmitting ? 'rgba(0,0,0,0.12)' : BTN_BG, color: uploading || isSubmitting ? MUTED : '#fff', fontSize: 'clamp(11px,1.5vw,13px)', fontWeight: 700, letterSpacing: '0.2px', cursor: uploading || isSubmitting ? 'not-allowed' : 'pointer', boxShadow: uploading || isSubmitting ? 'none' : '0 10px 28px rgba(0,0,0,0.18)' }}
                   >
                     {isSubmitting ? <><Loader2 size={14} className="animate-spin" /> Submitting…</>
                       : uploading ? <><Loader2 size={14} className="animate-spin" /> Uploading…</>
@@ -2126,4 +2056,3 @@ export default function MentorLTMPlans() {
     </>
   );
 }
-
