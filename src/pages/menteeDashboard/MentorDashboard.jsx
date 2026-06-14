@@ -356,7 +356,7 @@ const Header = ({
     return (
         <>
             {/* Announcement bar */}
-            <div style={{
+            {/* <div style={{
                 background: "#1a1a2e", color: "#e5e7eb", fontSize: 12,
                 textAlign: "center", padding: "7px 12px", flexShrink: 0,
                 whiteSpace: 'nowrap', overflowX: 'auto', fontFamily: 'Cambria, Georgia, serif',
@@ -366,7 +366,7 @@ const Header = ({
                     onClick={() => { }}
                     style={{ color: "#ffffff", fontWeight: 600, background: "none", border: "none", cursor: "pointer", fontSize: 12, padding: 0, fontFamily: 'Cambria, Georgia, serif' }}
                 >Go to Trial Settings</button>
-            </div>
+            </div> */}
 
             <header className="bg-white border-b px-3 sm:px-4 flex items-center justify-between sticky top-0 z-40 h-[52px] sm:h-[56px] flex-shrink-0" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                 {/* Left: hamburger + logo */}

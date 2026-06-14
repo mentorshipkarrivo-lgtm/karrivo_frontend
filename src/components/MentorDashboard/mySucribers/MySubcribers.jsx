@@ -2972,7 +2972,7 @@ export default function MentorSessionsDashboard() {
                   letterSpacing: "-0.02em",
                 }}
               >
-                Sessions Overview
+                Subscriptions 
               </h1>
               <p style={{ fontSize: 12, color: "#94a3b8", margin: 0 }}>
                 Manage your mentee sessions and subscriptions

@@ -1,39 +1,38 @@
-
-
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { ChevronDown } from "lucide-react";
 
 export default function FAQAccordion() {
   const [openIndex, setOpenIndex] = useState(null);
-
   const faqs = [
     {
-      question: "How does Karrivo match me with the right mentor?",
-      answer: "Karrivo uses advanced matching techniques based on your career goals, industry, and skill gaps. We analyze your profile and connect you with mentors who have relevant experience and a proven track record in your desired field."
+      question: "How do I find the right mentor?",
+      answer:
+        "You can browse mentor profiles based on expertise, industry, experience, and availability. Our platform helps match you with mentors aligned to your career goals."
     },
     {
-      question: "Can I export my session notes and data?",
-      answer: "Yes! You can export your session notes and progress data in various formats including PDF and CSV. This gives you complete control over your mentorship journey records."
+      question: "Can I book a session with a mentor directly?",
+      answer:
+        "Yes. Once you find a suitable mentor, you can view their availability and book a one-on-one mentoring session directly through the platform."
     },
     {
-      question: "How is the monthly session limit calculated?",
-      answer: "The monthly limit is based on the number of sessions booked during your billing cycle. Each completed session counts toward the limit, and it resets at the start of each new billing period."
+      question: "Are all mentors verified?",
+      answer:
+        "Yes. Every mentor undergoes a verification process to ensure they have the necessary professional experience and expertise."
     },
     {
-      question: "What happens when I reach my monthly session limit?",
-      answer: "When you reach your monthly limit, we'll notify you via email. You can continue to message your mentor, but you'll need to upgrade your plan to book additional sessions for that billing period."
+      question: "What types of mentorship are available?",
+      answer:
+        "We offer career guidance, technical mentoring, interview preparation, leadership coaching, startup mentoring, and skill development sessions."
     },
     {
-      question: "Which payment options are available?",
-      answer: "We accept all major credit cards including Visa, Mastercard, American Express, and Discover. We also support UPI and PayPal. All payments are processed securely through our payment provider."
+      question: "Can I reschedule or cancel a session?",
+      answer:
+        "Yes. You can reschedule or cancel a session according to the mentor's cancellation policy shown during booking."
     },
     {
-      question: "Can I upgrade or downgrade my plan?",
-      answer: "Absolutely! You can upgrade or downgrade your plan at any time from your account settings. Changes take effect immediately, and we'll prorate any differences in your billing."
-    },
-    {
-      question: "Do you have a referral program?",
-      answer: "Yes, we offer a competitive referral program! You can earn credits by referring new users to Karrivo. Sign up through your dashboard to get your unique referral link and start earning."
+      question: "Can I become a mentor on the platform?",
+      answer:
+        "Absolutely. Professionals with relevant expertise can apply to become mentors by completing the mentor onboarding and verification process."
     }
   ];
 
@@ -43,109 +42,125 @@ export default function FAQAccordion() {
 
   return (
     <div
-      className="min-h-screen w-full py-20 px-4 sm:px-6 lg:px-12"
-      style={{ backgroundColor: '#1a1a1a' }}
+      className="w-full min-h-screen py-16 px-5 md:px-10"
+      style={{ background: "#0f0f10" }}
     >
       <div className="max-w-4xl mx-auto">
-
-        {/* Header */}
+        {/* Heading */}
         <div className="text-center mb-14">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-            Frequently Asked Questions
+          <h2
+            style={{
+              fontSize: "clamp(28px,4vw,42px)",
+              fontWeight: 700,
+              color: "#fff"
+            }}
+          >
+            Frequently{" "}
+            <span style={{ color: "#0090c1" }}>Asked Questions</span>
           </h2>
-          <p className="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-            Find answers to commonly asked questions about Long Term Mentorship
-          </p>
         </div>
 
-        {/* FAQ Items */}
-        <div className="space-y-3">
+        {/* FAQ List */}
+        <div>
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
+
             return (
               <div
                 key={index}
                 style={{
-                  backgroundColor: '#2a2a2a',
-                  border: '1px solid #3a3a3a',
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  transition: 'all 0.2s ease',
+                  borderBottom: "1px solid rgba(255,255,255,0.08)"
                 }}
               >
                 <button
                   onClick={() => toggleFAQ(index)}
-                  className="w-full text-left flex items-center justify-between"
                   style={{
-                    padding: '20px 28px',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
+                    width: "100%",
+                    background: "transparent",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: "22px 0",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between"
                   }}
                 >
                   <span
                     style={{
-                      color: '#ffffff',
-                      fontSize: '15px',
-                      fontWeight: '400',
-                      lineHeight: '1.5',
-                      paddingRight: '2rem',
+                      color: "#fff",
+                      fontSize: "15px",
+                      fontWeight: 600,
+                      textAlign: "left",
+                      lineHeight: "1.5"
                     }}
                   >
                     {faq.question}
                   </span>
-                  {/* + / x icon */}
-                  <span
+
+                  <ChevronDown
+                    size={18}
+                    color="#fff"
                     style={{
-                      color: '#9ca3af',
-                      fontSize: '22px',
-                      fontWeight: '300',
-                      flexShrink: 0,
-                      lineHeight: 1,
-                      transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
-                      transition: 'transform 0.2s ease',
-                      display: 'inline-block',
+                      transition: "0.3s",
+                      transform: isOpen
+                        ? "rotate(180deg)"
+                        : "rotate(0deg)"
                     }}
-                  >
-                    +
-                  </span>
+                  />
                 </button>
 
-                {/* Answer */}
                 <div
                   style={{
-                    maxHeight: isOpen ? '400px' : '0',
-                    opacity: isOpen ? 1 : 0,
-                    overflow: 'hidden',
-                    transition: 'max-height 0.3s ease, opacity 0.2s ease',
+                    maxHeight: isOpen ? "200px" : "0px",
+                    overflow: "hidden",
+                    transition: "all 0.3s ease"
                   }}
                 >
-                  <div
+                  <p
                     style={{
-                      padding: '0 28px 20px 28px',
-                      color: '#9ca3af',
-                      fontSize: '14px',
-                      lineHeight: '1.75',
-                      borderTop: '1px solid #3a3a3a',
-                      paddingTop: '16px',
+                      color: "#B5B5B5",
+                      fontSize: "14px",
+                      lineHeight: "1.8",
+                      paddingBottom: "20px",
+                      maxWidth: "90%"
                     }}
                   >
                     {faq.answer}
-                  </div>
+                  </p>
                 </div>
               </div>
             );
           })}
         </div>
+
+        {/* Bottom Section */}
+        <div className="text-center mt-14">
+          <p
+            style={{
+              color: "#9CA3AF",
+              fontSize: "14px",
+              marginBottom: "22px"
+            }}
+          >
+            Still have questions? We're here to help!
+          </p>
+
+          <button
+            style={{
+              background: "#0098cc",
+              color: "#000",
+              border: "none",
+              borderRadius: "999px",
+              padding: "12px 34px",
+              fontSize: "14px",
+              fontWeight: 600,
+              cursor: "pointer"
+            }}
+          >
+            Contact Us
+          </button>
+        </div>
       </div>
     </div>
   );
 }
-
-
-
-
-
-
-
-

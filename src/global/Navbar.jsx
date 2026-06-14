@@ -1,6 +1,3 @@
-
-
-
 import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
@@ -10,15 +7,11 @@ import {
   User,
   Menu,
   X,
-  CreditCard,
-  Heart,
-  MessageSquare,
-  Coins,
+  ChevronDown,
 } from "lucide-react";
 
 import KarrivoLogo from "../assets/KarrivoLogo.png";
 
-/* ─── Helpers ─── */
 const clearAllData = () => {
   localStorage.clear();
   document.cookie.split(";").forEach((c) => {
@@ -34,23 +27,15 @@ const Navbar = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
-
   const dropdownRef = useRef(null);
 
   useEffect(() => {
-    const onResize = () => setIsMobile(window.innerWidth < 1024);
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
-
-  useEffect(() => {
-    const onClickOutside = (e) => {
+    const handler = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target))
         setIsDropdownOpen(false);
     };
-    document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
   }, []);
 
   useEffect(() => {
@@ -58,6 +43,11 @@ const Navbar = () => {
     setIsDropdownOpen(false);
     window.scrollTo(0, 0);
   }, [location]);
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [isOpen]);
 
   const getUserData = () => {
     try { return JSON.parse(localStorage.getItem("userData") || "null"); }
@@ -72,267 +62,269 @@ const Navbar = () => {
   const profileData = getProfileData();
   const isLoggedIn = !!userData?.token;
   const profilePhotoUrl = profileData?.profilePhotoUrl;
-  const coins = profileData?.coins ?? 0;
 
   const getInitials = () =>
-    userData?.name ? userData.name.replace(/\s+/g, "").slice(0, 2).toUpperCase() : "US";
+    userData?.name
+      ? userData.name.trim().split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase()
+      : "US";
 
-  const handleDashboard = () => {
-    navigate(userData?.role === 2 ? "/mentor/dashboard" : "/mentee/bookings");
-    setIsOpen(false); setIsDropdownOpen(false);
-  };
-  const handleProfile = () => { navigate("/mentee/profile"); setIsOpen(false); setIsDropdownOpen(false); };
+  const go = (path) => { navigate(path); setIsOpen(false); setIsDropdownOpen(false); };
+  const handleDashboard = () => go(userData?.role === 2 ? "/mentor/dashboard" : "/mentee/bookings");
+  const handleProfile = () => go("/mentee/profile");
   const handleLogout = () => {
-    clearAllData(); setIsOpen(false); setIsDropdownOpen(false);
+    clearAllData();
+    setIsOpen(false);
+    setIsDropdownOpen(false);
     setTimeout(() => { window.location.href = "/login"; }, 100);
   };
 
-  /* ─── Avatar ─── */
-  const Avatar = ({ cls = "w-9 h-9" }) => (
-    <div className={`${cls} rounded-full overflow-hidden flex-shrink-0 border-2 border-gray-300`}>
-      {profilePhotoUrl
-        ? <img src={profilePhotoUrl} alt="avatar" className="w-full h-full object-cover" />
-        : <div className="w-full h-full flex items-center justify-center bg-[#0098cc] text-white font-bold text-xs">{getInitials()}</div>
-      }
-    </div>
-  );
-
-  const handleBookDemo = () => {
-    navigate("/login");
-    setIsOpen(false);
+  const Avatar = ({ size = "md" }) => {
+    const dim = size === "lg" ? "w-10 h-10" : size === "sm" ? "w-7 h-7" : "w-8 h-8";
+    const txt = size === "lg" ? "text-sm" : "text-xs";
+    return (
+      <div className={`${dim} rounded-full overflow-hidden flex-shrink-0 ring-2 ring-gray-200`}>
+        {profilePhotoUrl
+          ? <img src={profilePhotoUrl} alt="avatar" className="w-full h-full object-cover" />
+          : <div className={`w-full h-full flex items-center justify-center bg-[#0098cc] text-white font-semibold ${txt}`}>{getInitials()}</div>
+        }
+      </div>
+    );
   };
 
-  /* ─── Nav links ─── */
-  const NavLinks = () => (
-    <>
-      <button
-        onClick={() => navigate("/explore-mentors")}
-        className="text-[15px] font-medium text-gray-700 hover:text-gray-900 transition-colors whitespace-nowrap bg-transparent border-none cursor-pointer"
-      >
-        Explore Mentors
-      </button>
-      <button
-        className="text-[15px] font-medium text-gray-700 hover:text-gray-900 transition-colors whitespace-nowrap bg-transparent border-none cursor-pointer"
-        onClick={handleBookDemo}
-      >
-        Book a FREE Trial
-      </button>
-    </>
-  );
+  const PRIMARY_TEXT = "#1a1a2e";
+
+  const navFont = {
+    fontFamily: "Cambria, 'Times New Roman', serif",
+  };
+
+  const textColor = {
+    color: PRIMARY_TEXT,
+  };
+
+  const navStyle = {
+    ...navFont,
+    ...textColor,
+  };
+
+  const menuItems = [
+    { icon: <LayoutDashboard size={15} />, label: "My Dashboard", action: handleDashboard },
+    { icon: <User size={15} />, label: "My Profile", action: handleProfile },
+  ];
+
+  const centerLinks = [
+    { label: "Explore Mentors", path: "/explore-mentors" },
+    { label: "Book a FREE Trial", path: "/login", highlight: true },
+    { label: "Find your mentor", path: "/get-Mentors" },
+  ];
 
   return (
-    <nav className="fixed top-0 left-0 z-[9999] w-full bg-white border-b border-gray-200">
+    <>
+      <nav
+        className="fixed top-0 left-0 z-[9999] w-full bg-white border-b border-gray-200 shadow-[0_1px_4px_rgba(0,0,0,0.06)]"
+        style={navStyle}
+      >
 
-      {/* ── Desktop bar (lg and above only) ── */}
-      <div className="hidden lg:flex items-center justify-between h-[60px] px-8">
+        {/* ═══ DESKTOP (≥ 1024px) ═══ */}
+        <div className="hidden lg:flex items-center h-16 px-8 max-w-[1440px] mx-auto">
 
-        {/* Left: Logo */}
-        <div className="cursor-pointer flex-shrink-0" onClick={() => navigate("/")}>
-          <img src={KarrivoLogo} alt="Karrivo" className="h-8 w-auto" />
-        </div>
-
-        {/* Center: nav links */}
-        <div className="flex items-center gap-8">
-          <NavLinks />
-        </div>
-
-        {/* Right: avatar (logged-in) OR login btn + Find mentor */}
-        <div className="flex items-center gap-3">
-          {isLoggedIn ? (
-            <div className="flex items-center gap-2" ref={dropdownRef}>
-              {/* Avatar circle — clicking opens dropdown */}
-              <button
-                className="p-0 bg-transparent border-none cursor-pointer"
-                onClick={() => setIsDropdownOpen((p) => !p)}
-              >
-                <Avatar cls="w-9 h-9" />
-              </button>
-
-              {/* ≡ when closed → ✕ when open */}
-              <button
-                className="p-0 bg-transparent border-none cursor-pointer text-gray-600 hover:text-gray-900"
-                onClick={() => setIsDropdownOpen((p) => !p)}
-              >
-                {isDropdownOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
-
-              {/* Find your mentor button — DESKTOP ONLY */}
-              <button
-                className="px-5 py-2 bg-gray-900 text-white text-[14px] font-semibold rounded-md hover:bg-gray-800 transition-colors border-none cursor-pointer"
-                onClick={() => navigate("/get-Mentors")}
-              >
-                Find your mentor
-              </button>
-
-              {/* ── Dropdown ── */}
-              {isDropdownOpen && (
-                <div className="absolute right-8 top-[60px] w-[260px] bg-white border border-gray-200 rounded-xl z-[99999] overflow-hidden">
-                  {/* User header */}
-                  <div className="flex items-center gap-3 px-4 py-4 border-b border-gray-100">
-                    <Avatar cls="w-11 h-11" />
-                    <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-[14px] text-gray-900 truncate">
-                        {userData?.name || "User"}
-                      </div>
-                      <div className="text-xs text-gray-400 truncate">
-                        {userData?.email}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Menu items */}
-                  {[
-                    { icon: <LayoutDashboard size={15} className="text-gray-500" />, label: "My Dashboard", action: handleDashboard },
-                    { icon: <User size={15} className="text-gray-500" />, label: "My Profile", action: handleProfile },
-                  ].map(({ icon, label, action, badge }) => (
-                    <button
-                      key={label}
-                      onClick={action}
-                      className="flex items-center justify-between w-full px-4 py-3 text-left text-[13px] font-medium text-gray-800 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0 bg-transparent border-l-0 border-r-0 border-t-0 cursor-pointer"
-                    >
-                      <span className="flex items-center gap-3">
-                        {icon}
-                        {label}
-                      </span>
-                      {badge !== undefined && (
-                        <span className="min-w-[22px] h-[22px] flex items-center justify-center rounded-full bg-blue-600 text-white text-[11px] font-bold px-1.5">
-                          {badge}
-                        </span>
-                      )}
-                    </button>
-                  ))}
-
-                  {/* Logout */}
-                  <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-3 w-full px-4 py-3 text-left text-[13px] font-medium text-gray-800 hover:bg-gray-50 transition-colors bg-transparent border-none cursor-pointer"
-                  >
-                    <LogOut size={15} className="text-gray-500" />
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <>
-              <button
-                className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-md text-[14px] font-medium text-gray-700 hover:bg-gray-50 transition-colors bg-white cursor-pointer"
-                onClick={() => navigate("/login")}
-              >
-                <LogIn size={15} />
-                Log In
-              </button>
-              {/* Find your mentor button — DESKTOP ONLY */}
-              <button
-                className="px-5 py-2 bg-gray-900 text-white text-[14px] font-semibold rounded-md hover:bg-gray-800 transition-colors border-none cursor-pointer"
-                onClick={() => navigate("/get-Mentors")}
-              >
-                Find your mentor
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* ── Mobile / Tablet bar (below lg) ── */}
-      <div className="lg:hidden flex items-center justify-between h-[56px] px-4">
-        <div className="cursor-pointer" onClick={() => navigate("/")}>
-          <img src={KarrivoLogo} alt="Karrivo" className="h-7 w-auto" />
-        </div>
-
-        {/* Right side of mobile bar — NO "Find your mentor" button here */}
-        <div className="flex items-center gap-2">
-          {isLoggedIn ? (
-            <>
-              {/* Avatar */}
-              <Avatar cls="w-8 h-8" />
-
-              {/* Hamburger / X toggle */}
-              <button
-                className="p-1.5 bg-transparent border-none cursor-pointer text-gray-700"
-                onClick={() => setIsOpen((p) => !p)}
-              >
-                {isOpen ? <X size={22} /> : <Menu size={22} />}
-              </button>
-            </>
-          ) : (
-            <button
-              className="p-2 rounded-md border border-gray-300 bg-white text-gray-700"
-              onClick={() => setIsOpen((p) => !p)}
-            >
-              {isOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* ── Mobile menu drawer ── */}
-      {isOpen && (
-        <div className="lg:hidden bg-white border-b border-gray-200 px-4 pt-3 pb-5 flex flex-col gap-2">
-          {/* Nav links */}
-          <div className="flex flex-col gap-1 pb-3 border-b border-gray-100">
-            <button
-              onClick={() => { navigate("/explore-mentors"); setIsOpen(false); }}
-              className="text-left text-[15px] font-medium text-gray-700 py-2 bg-transparent border-none cursor-pointer"
-            >
-              Explore Mentors
-            </button>
-            <button
-              className="text-left text-[15px] font-medium text-gray-700 hover:text-gray-900 transition-colors bg-transparent border-none cursor-pointer py-2"
-              onClick={handleBookDemo}
-            >
-              Book a FREE Trial
+          {/* LEFT — Logo */}
+          <div className="w-[180px] flex-shrink-0">
+            <button className="bg-transparent border-none cursor-pointer p-0" onClick={() => go("/")}>
+              <img src={KarrivoLogo} alt="Karrivo" className="h-8 w-auto" />
             </button>
           </div>
 
-          {isLoggedIn ? (
-            <>
-              {/* User card */}
-              <div className="flex items-center gap-3 py-3 border-b border-gray-100">
-                <Avatar cls="w-10 h-10" />
-                <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-[14px] text-gray-900 truncate">{userData?.name || "User"}</div>
-                  <div className="text-xs text-gray-400 truncate">{userData?.email}</div>
-                </div>
-              </div>
-
-              {[
-                { icon: <LayoutDashboard size={16} className="text-gray-500" />, label: "My Dashboard", action: handleDashboard },
-                { icon: <User size={16} className="text-gray-500" />, label: "My Profile", action: handleProfile },
-              ].map(({ icon, label, action }) => (
+          {/* CENTER — nav links */}
+          <div className="flex-1 flex items-center justify-center gap-1">
+            {centerLinks.map(({ label, path, highlight }) =>
+              highlight ? (
                 <button
                   key={label}
-                  onClick={action}
-                  className="flex items-center gap-3 w-full py-3 text-left text-[14px] font-medium text-gray-800 border-b border-gray-100 bg-transparent border-l-0 border-r-0 border-t-0 cursor-pointer hover:bg-gray-50 transition-colors px-1"
+                  onClick={() => go(path)}
+                  style={navFont}
+                  className="px-5 py-2 mx-1 bg-[#1a1a2e] text-white text-[14px] font-semibold rounded-full border-none cursor-pointer hover:bg-[#2d2d4e] active:scale-[0.97] transition-all duration-150 whitespace-nowrap"
                 >
-                  {icon}{label}
+                  {label}
                 </button>
-              ))}
+              ) : (
+                <button
+                  key={label}
+                  onClick={() => go(path)}
+                  style={{ ...navFont, color: PRIMARY_TEXT }}
+                  className="px-4 py-2 mx-1 text-[14px] font-medium bg-transparent border-none cursor-pointer transition-all duration-150 whitespace-nowrap rounded-md hover:bg-gray-50"
+                >
+                  {label}
+                </button>
+              )
+            )}
+          </div>
 
+          {/* RIGHT — auth */}
+          <div className="w-[180px] flex-shrink-0 flex items-center justify-end">
+            {isLoggedIn ? (
+              <div className="relative flex items-center gap-2" ref={dropdownRef}>
+                <button
+                  className="flex items-center gap-1.5 bg-transparent border-none cursor-pointer group"
+                  onClick={() => setIsDropdownOpen((p) => !p)}
+                  aria-expanded={isDropdownOpen}
+                  aria-label="Account menu"
+                >
+                  <Avatar size="md" />
+                  <span style={{ ...navFont, color: PRIMARY_TEXT }} className="text-[13px] font-medium max-w-[80px] truncate">
+                    {userData?.name?.split(" ")[0] || "Account"}
+                  </span>
+                  <ChevronDown
+                    size={14}
+                    style={{ color: PRIMARY_TEXT }}
+                    className={`transition-transform duration-200 ${isDropdownOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+
+                {isDropdownOpen && (
+                  <div
+                    className="absolute right-0 top-[calc(100%+10px)] w-56 bg-white border border-gray-200 rounded-xl shadow-lg z-[99999] overflow-hidden"
+                    style={{ animation: "fadeDown 0.12s ease", ...navFont }}
+                  >
+                    <div className="flex items-center gap-3 px-4 py-3.5 border-b border-gray-100 bg-gray-50">
+                      <Avatar size="lg" />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-semibold text-[13px] truncate leading-tight" style={{ color: PRIMARY_TEXT }}>{userData?.name || "User"}</p>
+                        <p
+                          className="text-[12px] truncate"
+                          style={{ color: PRIMARY_TEXT }}
+                        >{userData?.email}</p>
+                      </div>
+                    </div>
+                    <div className="py-1">
+                      {menuItems.map(({ icon, label, action }) => (
+                        <button key={label} onClick={action}
+                          className="flex items-center gap-3 w-full px-4 py-2.5 text-left text-[13px] font-medium hover:bg-gray-50 transition-colors bg-transparent border-none cursor-pointer"
+                          style={{ ...navFont, color: PRIMARY_TEXT }}>
+                          <span style={{ color: PRIMARY_TEXT }}>{icon}</span>{label}
+                        </button>
+                      ))}
+                    </div>
+                    <div className="border-t border-gray-100 py-1">
+                      <button onClick={handleLogout}
+                        className="flex items-center gap-3 w-full px-4 py-2.5 text-left text-[13px] font-medium text-red-600 hover:bg-red-50 transition-colors bg-transparent border-none cursor-pointer"
+                        style={navFont}>
+                        <LogOut size={15} />Log out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
               <button
-                onClick={handleLogout}
-                className="flex items-center gap-3 w-full py-3 text-left text-[14px] font-medium text-gray-800 bg-transparent border-none cursor-pointer hover:bg-gray-50 px-1"
-              >
-                <LogOut size={16} className="text-gray-500" />Logout
-              </button>
-            </>
-          ) : (
-            <div className="flex flex-col gap-2 pt-2">
-              <button
-                onClick={() => { navigate("/login"); setIsOpen(false); }}
-                className="flex items-center justify-center gap-2 w-full py-3 border border-gray-300 rounded-md text-[14px] font-medium text-gray-700 bg-white cursor-pointer"
+                onClick={() => go("/login")}
+                style={{
+                  ...navFont,
+                  color: PRIMARY_TEXT,
+                  borderColor: PRIMARY_TEXT,
+                }} className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-white text-sm font-medium rounded-lg border hover:bg-gray-50 active:scale-[0.97] transition-all duration-150 cursor-pointer whitespace-nowrap"
               >
                 <LogIn size={15} />Log In
               </button>
+            )}
+          </div>
+        </div>
+
+        {/* ═══ MOBILE / TABLET (< 1024px) ═══ */}
+        <div className="lg:hidden flex items-center justify-between h-14 px-4">
+          <button className="bg-transparent border-none cursor-pointer p-0" onClick={() => go("/")}>
+            <img src={KarrivoLogo} alt="Karrivo" className="h-7 w-auto" />
+          </button>
+          <div className="flex items-center gap-2">
+            {isLoggedIn && <Avatar size="sm" />}
+            <button
+              className="p-2 rounded-lg border bg-white hover:bg-gray-50 transition-colors cursor-pointer"
+              style={{
+                borderColor: PRIMARY_TEXT,
+                color: PRIMARY_TEXT,
+              }} onClick={() => setIsOpen((p) => !p)}
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+            >
+              {isOpen ? <X size={18} /> : <Menu size={18} />}
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      {/* Backdrop */}
+      {isOpen && (
+        <div
+          className="lg:hidden fixed inset-0 z-[9998] bg-black/30 backdrop-blur-[2px]"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
+
+      {/* Mobile Drawer */}
+      <div
+        className={`lg:hidden fixed top-14 left-0 right-0 z-[9999] bg-white border-b border-gray-200 shadow-xl overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-[90vh] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
+          }`}
+        style={navStyle}
+      >
+        <div className="px-5 pt-4 pb-6 flex flex-col overflow-y-auto max-h-[80vh]">
+
+          {isLoggedIn && (
+            <div className="flex items-center gap-3 pb-4 mb-1 border-b border-gray-100">
+              <Avatar size="lg" />
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-[14px] truncate" style={{ color: PRIMARY_TEXT }}>{userData?.name || "User"}</p>
+                <p className="text-[12px] truncate" style={{ color: PRIMARY_TEXT, opacity: 0.5 }}>{userData?.email}</p>
+              </div>
             </div>
           )}
+
+          <div className="flex flex-col">
+            {centerLinks.map(({ label, path }) => (
+              <button key={label} onClick={() => go(path)}
+                className="flex items-center text-[15px] font-medium py-3.5 border-b border-gray-100 bg-transparent border-l-0 border-r-0 border-t-0 cursor-pointer text-left transition-all hover:opacity-70"
+                style={{ ...navFont, color: PRIMARY_TEXT }}>
+                {label}
+              </button>
+            ))}
+            {isLoggedIn && menuItems.map(({ icon, label, action }) => (
+              <button key={label} onClick={action}
+                className="flex items-center gap-3 text-[15px] font-medium py-3.5 border-b border-gray-100 bg-transparent border-l-0 border-r-0 border-t-0 cursor-pointer text-left transition-all hover:opacity-70"
+                style={{ ...navFont, color: PRIMARY_TEXT }}>
+                <span style={{ color: PRIMARY_TEXT }}>{icon}</span>{label}
+              </button>
+            ))}
+          </div>
+
+          <div className="flex flex-col gap-2.5 mt-4">
+            {isLoggedIn ? (
+              <button onClick={handleLogout}
+                className="inline-flex items-center justify-center gap-2 w-full py-3 text-[15px] font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg border-none cursor-pointer transition-colors"
+                style={navFont}>
+                <LogOut size={16} />Log out
+              </button>
+            ) : (
+              <button
+                onClick={() => go("/login")}
+                style={{
+                  ...navFont,
+                  color: PRIMARY_TEXT,
+                  borderColor: PRIMARY_TEXT,
+                }}
+                className="inline-flex items-center justify-center gap-2 w-full py-3 text-[15px] font-medium bg-white rounded-lg border cursor-pointer hover:bg-gray-50 transition-colors"
+              >
+                <LogIn size={16} />Log In
+              </button>
+            )}
+          </div>
         </div>
-      )}
-    </nav>
+      </div>
+
+      <style>{`
+        @keyframes fadeDown {
+          from { opacity: 0; transform: translateY(-6px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+    </>
   );
 };
 
 export default Navbar;
-
-
-

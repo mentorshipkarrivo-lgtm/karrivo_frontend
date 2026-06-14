@@ -1,38 +1,25 @@
 
-
-
 import { useState, useEffect, useCallback } from "react";
 import {
   useGetMyPricingQuery,
   useSaveOrUpdatePricingMutation,
   useGetCommissionTiersQuery,
-
   useGetAllCouponsQuery,
   useDeleteCouponMutation,
   useUpdateCouponMutation,
-  useCreateCouponMutation
+  useCreateCouponMutation,
 } from "./Mentorpricingapislice";
 
-// ─── Static config ────────────────────────────────────────────────────────────
-const PRICE_OPTIONS = {
-  one_month: {
-    experienced: [10000, 12500, 15000, 17500, 20000, 22500, 25000, 27500, 30000, 32500, 35000, 37500, 40000],
-    freshers: [7500, 10000, 12500, 15000, 17500, 20000, 22500, 25000, 27500, 30000, 32500, 35000],
-  },
-  three_months: {
-    experienced: [7500, 10000, 12500, 15000, 17500, 20000, 22500, 25000, 27500, 30000, 32500, 35000],
-    freshers: [5000, 7500, 10000, 12500],
-  },
-  six_months: {
-    experienced: [5000, 7500, 10000, 12500],
-    freshers: [2500, 5000, 7500, 10000],
-  },
+/* ─── Static config ─────────────────────────────────────────────────────────── */
+const SHARED_PRICE_OPTIONS = {
+  experienced: [5000, 7500, 10000, 12500, 15000, 17500, 20000, 22500, 25000, 27500, 30000, 32500, 35000, 37500, 40000],
+  freshers: [2500, 5000, 7500, 10000, 12500, 15000, 17500, 20000, 22500, 25000, 27500, 30000, 32500, 35000],
 };
 
 const PLANS = [
-  { key: "one_month", label: "1 Month", sublabel: "LTM Plan", months: 1 },
-  { key: "three_months", label: "3 Months", sublabel: "LTM Plan", months: 3 },
-  { key: "six_months", label: "6 Months", sublabel: "LTM Plan", months: 6 },
+  { key: "one_month", label: "1 Month", months: 1 },
+  { key: "three_months", label: "3 Months", months: 3 },
+  { key: "six_months", label: "6 Months", months: 6 },
 ];
 
 const EMPTY_PLANS = {
@@ -47,21 +34,19 @@ const EMPTY_BREAKDOWNS = {
   six_months: { experienced: null, freshers: null },
 };
 
-// Map tier_name → human-readable label and subscriber range
 const TIER_META = {
-  "1_to_5": { label: "Starter", range: "1 – 5 subscribers", color: "blue" },
-  "6_to_20": { label: "Growing", range: "6 – 20 subscribers", color: "violet" },
-  "21_plus": { label: "Established", range: "21+ subscribers", color: "green" },
+  "1_to_5": { label: "Starter", range: "1 – 5 subscribers", color: "#0091c3" },
+  "6_to_20": { label: "Growing", range: "6 – 20 subscribers", color: "#7c3aed" },
+  "21_plus": { label: "Established", range: "21+ subscribers", color: "#16a34a" },
 };
 
-// Resolve tier name from subscriber count (mirrors backend logic)
 const resolveTierName = (count) => {
   if (count <= 5) return "1_to_5";
   if (count <= 20) return "6_to_20";
   return "21_plus";
 };
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
+/* ─── Helpers ───────────────────────────────────────────────────────────────── */
 const fmtINR = (v) =>
   v != null && v !== ""
     ? new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(v)
@@ -75,78 +60,288 @@ const fmtDate = (d) => {
   }).format(new Date(d));
 };
 
-// ─── Tier Banner ──────────────────────────────────────────────────────────────
-/**
- * Shows the mentor's current commission tier, subscriber count, and
- * the commission % that applies per plan duration — all from API data.
- *
- * tierDoc  : the matching object from tiersData.data  (e.g. { tier_name, commission: { one_month, three_months, six_months } })
- * subCount : subscriberCountAtSave from the pricing document
- * isEditing: hides the banner while the form is in edit mode (avoids confusion)
- */
+/* ─── Icons ──────────────────────────────────────────────────────────────────── */
+const IconX = ({ size = 16 }) => (
+  <svg width={size} height={size} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+  </svg>
+);
+const IconChevron = ({ size = 14, style = {} }) => (
+  <svg width={size} height={size} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} style={style}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+  </svg>
+);
+const IconCheck = ({ size = 14 }) => (
+  <svg width={size} height={size} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+  </svg>
+);
+const IconCal = ({ size = 12 }) => (
+  <svg width={size} height={size} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+  </svg>
+);
+const IconClock = ({ size = 12 }) => (
+  <svg width={size} height={size} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+);
+const IconTag = ({ size = 14 }) => (
+  <svg width={size} height={size} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+  </svg>
+);
+
+/* ─── Styles (shared) ────────────────────────────────────────────────────────── */
+const F = "'DM Sans', 'Segoe UI', sans-serif";
+
+const btnPrimary = {
+  fontFamily: F,
+  background: "#1a1a2e",
+  color: "#fff",
+  border: "none",
+  borderRadius: "8px",
+  padding: "8px 18px",
+  fontSize: "13px",
+  fontWeight: 600,
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  gap: "6px",
+  transition: "opacity 0.15s",
+};
+
+const btnOutline = {
+  fontFamily: F,
+  background: "#fff",
+  color: "#1a1a2e",
+  border: "1px solid #e2e8f0",
+  borderRadius: "8px",
+  padding: "8px 18px",
+  fontSize: "13px",
+  fontWeight: 600,
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  gap: "6px",
+  transition: "background 0.15s",
+};
+
+/* ─── Toggle ─────────────────────────────────────────────────────────────────── */
+const Toggle = ({ on, onChange }) => (
+  <button
+    type="button"
+    onClick={() => onChange(!on)}
+    style={{
+      width: 40, height: 22, borderRadius: 99,
+      background: on ? "#1a1a2e" : "#e2e8f0",
+      border: "none", cursor: "pointer", position: "relative",
+      transition: "background 0.2s", flexShrink: 0,
+    }}
+  >
+    <span style={{
+      position: "absolute", top: 3, left: on ? 19 : 3,
+      width: 16, height: 16, borderRadius: "50%",
+      background: "#fff", transition: "left 0.2s",
+      boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+    }} />
+  </button>
+);
+
+/* ─── Tier Banner ────────────────────────────────────────────────────────────── */
 const TierBanner = ({ tierDoc, subCount, isEditing }) => {
   if (!tierDoc || isEditing) return null;
-
-  const meta = TIER_META[tierDoc.tier_name] || { label: tierDoc.tier_name, range: "", color: "gray" };
-
-  const colorMap = {
-    blue: { bg: "bg-blue-50", border: "border-blue-200", text: "text-blue-700", badge: "bg-blue-100 text-blue-700", dot: "bg-blue-500" },
-    violet: { bg: "bg-violet-50", border: "border-violet-200", text: "text-violet-700", badge: "bg-violet-100 text-violet-700", dot: "bg-violet-500" },
-    green: { bg: "bg-emerald-50", border: "border-emerald-200", text: "text-emerald-700", badge: "bg-emerald-100 text-emerald-700", dot: "bg-emerald-500" },
-    gray: { bg: "bg-gray-50", border: "border-gray-200", text: "text-gray-700", badge: "bg-gray-100 text-gray-700", dot: "bg-gray-400" },
-  };
-  const c = colorMap[meta.color];
-
+  const meta = TIER_META[tierDoc.tier_name] || { label: tierDoc.tier_name, range: "", color: "#94a3b8" };
   const rates = [
-    { label: "1 Month", pct: tierDoc.commission?.one_month },
-    { label: "3 Months", pct: tierDoc.commission?.three_months },
-    { label: "6 Months", pct: tierDoc.commission?.six_months },
+    { label: "1 mo", pct: tierDoc.commission?.one_month },
+    { label: "3 mo", pct: tierDoc.commission?.three_months },
+    { label: "6 mo", pct: tierDoc.commission?.six_months },
   ];
 
   return (
-    <div className={`rounded-xl border ${c.border} ${c.bg} px-4 py-3 mb-5`}>
-      {/* Top row */}
-      <div className="flex items-center justify-between flex-wrap gap-2">
-        <div className="flex items-center gap-2">
-          <p className={`text-sm font-bold text-[#1a1a2e]`}>
-            Commission Tier: {meta.label}
+    <div style={{
+      border: "1px solid #e2e8f0", borderRadius: 12,
+      padding: "14px 18px", marginBottom: 18, background: "#fff",
+    }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ width: 8, height: 8, borderRadius: "50%", background: meta.color, display: "inline-block" }} />
+          <p style={{ fontFamily: F, fontSize: 13, fontWeight: 600, color: "#1a1a2e", margin: 0 }}>
+            Commission tier: <span style={{ color: meta.color }}>{meta.label}</span>
           </p>
-          <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full text-[#1a1a2e]`}>
-            {meta.range}
-          </span>
+          <span style={{
+            fontFamily: F, fontSize: 10, fontWeight: 600,
+            color: meta.color, border: `1px solid ${meta.color}30`,
+            background: `${meta.color}10`, padding: "2px 8px", borderRadius: 99,
+          }}>{meta.range}</span>
         </div>
-        <p className="text-[11px] text-gray-400">
-          {subCount === 0
-            ? "No active subscribers yet"
-            : `${subCount} active subscriber${subCount !== 1 ? "s" : ""}`}
+        <p style={{ fontFamily: F, fontSize: 11, color: "#94a3b8", margin: 0 }}>
+          {subCount === 0 ? "No active subscribers yet" : `${subCount} active subscriber${subCount !== 1 ? "s" : ""}`}
         </p>
       </div>
-
-      {/* Commission rates per plan */}
-      <div className="flex items-center gap-3 mt-2.5 flex-wrap">
-        <p className="text-[11px] text-gray-500 font-medium shrink-0">Platform commission:</p>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+        <p style={{ fontFamily: F, fontSize: 11, color: "#94a3b8", margin: 0, fontWeight: 500 }}>Platform fee:</p>
         {rates.map(({ label, pct }) => (
-          <span key={label} className="flex items-center gap-1 text-[11px] text-gray-600 bg-white border border-gray-200 rounded-full px-2.5 py-0.5">
-            <span className="font-semibold text-gray-800">{pct}%</span>
-            <span className="text-gray-400">{label}</span>
+          <span key={label} style={{
+            fontFamily: F, fontSize: 11,
+            border: "1px solid #e2e8f0", borderRadius: 99,
+            padding: "2px 10px", color: "#475569", background: "#fff",
+          }}>
+            <b style={{ color: "#1a1a2e" }}>{pct}%</b> {label}
           </span>
         ))}
-        <p className="text-[10px] text-gray-400 ml-auto">
-          + 9% CGST + 9% SGST on total amount
-        </p>
+        <p style={{ fontFamily: F, fontSize: 10, color: "#94a3b8", margin: "0 0 0 auto" }}>+ 9% CGST + 9% SGST</p>
       </div>
     </div>
   );
 };
 
+/* ─── Details Modal ──────────────────────────────────────────────────────────── */
+const DetailsModal = ({ plan, breakdowns, onClose }) => {
+  if (!plan) return null;
+  const [activeKey, setActiveKey] = useState(plan);
+  const activePlan = PLANS.find((x) => x.key === activeKey);
+  const bd = breakdowns[activeKey];
+  const exp = bd?.experienced;
+  const fre = bd?.freshers;
+  const noData = !exp || !fre;
 
+  const rows = [
+    { label: `Mentee pays (${activePlan.months}mo):`, expVal: exp?.totalPrice, freVal: fre?.totalPrice, negative: false },
+    { label: `Platform fee (${exp?.platformPct}%):`, expVal: exp?.platformFee, freVal: fre?.platformFee, negative: true },
+    { label: "CGST (9%):", expVal: exp?.cgst, freVal: fre?.cgst, negative: true },
+    { label: "SGST (9%):", expVal: exp?.sgst, freVal: fre?.sgst, negative: true },
+  ];
 
+  const thStyle = {
+    fontFamily: F, fontSize: 11, fontWeight: 700,
+    color: "#94a3b8", letterSpacing: "0.5px",
+    textTransform: "uppercase", padding: "8px 12px",
+    borderBottom: "1px solid #e2e8f0", background: "#fff", textAlign: "center",
+  };
+  const tdStyle = {
+    fontFamily: F, fontSize: 13, padding: "11px 12px",
+    borderBottom: "1px solid #f1f5f9", verticalAlign: "middle",
+  };
 
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, zIndex: 50,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        background: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)",
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          width: "100%", maxWidth: 480,
+          background: "#fff", borderRadius: 16,
+          boxShadow: "0 20px 60px rgba(0,0,0,0.15)",
+          overflow: "hidden", margin: "0 16px",
+        }}
+      >
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", padding: "20px 20px 14px" }}>
+          <div>
+            <p style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: "#1a1a2e", margin: "0 0 3px" }}>Payout breakdown</p>
+            <p style={{ fontFamily: F, fontSize: 11, color: "#94a3b8", margin: 0 }}>Server-calculated figures based on your tier</p>
+          </div>
+          <button onClick={onClose} style={{ ...btnOutline, padding: "6px", borderRadius: 8 }}>
+            <IconX size={15} />
+          </button>
+        </div>
+
+        {/* Plan tabs */}
+        <div style={{ display: "flex", margin: "0 20px 16px", border: "1px solid #e2e8f0", borderRadius: 10, overflow: "hidden" }}>
+          {PLANS.map((pl) => (
+            <button
+              key={pl.key}
+              onClick={() => setActiveKey(pl.key)}
+              style={{
+                flex: 1, fontFamily: F, fontSize: 12, fontWeight: 600,
+                padding: "8px 0", border: "none", cursor: "pointer",
+                background: activeKey === pl.key ? "#1a1a2e" : "#fff",
+                color: activeKey === pl.key ? "#fff" : "#94a3b8",
+                transition: "all 0.15s",
+              }}
+            >{pl.label}</button>
+          ))}
+        </div>
+
+        <div style={{ padding: "0 20px 20px" }}>
+          {noData ? (
+            <p style={{ fontFamily: F, fontSize: 13, color: "#94a3b8", textAlign: "center", padding: "32px 0" }}>
+              No breakdown data for this plan.
+            </p>
+          ) : (
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr>
+                  <th style={{ ...thStyle, textAlign: "left", width: "46%" }} />
+                  <th style={thStyle}>
+                    <span style={{ fontFamily: F, fontSize: 11, color: "#db2777", fontWeight: 700 }}>Experienced</span>
+                  </th>
+                  <th style={thStyle}>
+                    <span style={{ fontFamily: F, fontSize: 11, color: "#7c3aed", fontWeight: 700 }}>Freshers</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map(({ label, expVal, freVal, negative }) => (
+                  <tr key={label}>
+                    <td style={{ ...tdStyle, color: "#475569" }}>{label}</td>
+                    <td style={{ ...tdStyle, textAlign: "center", color: negative ? "#dc2626" : "#1a1a2e", fontWeight: negative ? 400 : 600 }}>
+                      {negative ? "− " : ""}₹{fmtINR(expVal)}
+                    </td>
+                    <td style={{ ...tdStyle, textAlign: "center", color: negative ? "#dc2626" : "#1a1a2e", fontWeight: negative ? 400 : 600 }}>
+                      {negative ? "− " : ""}₹{fmtINR(freVal)}
+                    </td>
+                  </tr>
+                ))}
+
+                <tr style={{ borderTop: "1px dashed #e2e8f0" }}>
+                  <td style={{ ...tdStyle, color: "#94a3b8", fontSize: 11, fontStyle: "italic" }}>Total deducted:</td>
+                  <td style={{ ...tdStyle, textAlign: "center", color: "#94a3b8", fontSize: 11 }}>− ₹{fmtINR(exp.totalDeducted)}</td>
+                  <td style={{ ...tdStyle, textAlign: "center", color: "#94a3b8", fontSize: 11 }}>− ₹{fmtINR(fre.totalDeducted)}</td>
+                </tr>
+
+                <tr style={{ borderTop: "2px solid #e2e8f0" }}>
+                  <td style={{ ...tdStyle, color: "#1a1a2e", fontWeight: 700, fontSize: 14 }}>You receive:</td>
+                  <td style={{ ...tdStyle, textAlign: "center" }}>
+                    <p style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: "#16a34a", margin: 0 }}>₹{fmtINR(exp.mentorReceive)}</p>
+                    {activePlan.months > 1 && (
+                      <p style={{ fontFamily: F, fontSize: 10, color: "#94a3b8", margin: "3px 0 0" }}>₹{fmtINR(exp.perMonthReceive)}/mo</p>
+                    )}
+                  </td>
+                  <td style={{ ...tdStyle, textAlign: "center" }}>
+                    <p style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: "#16a34a", margin: 0 }}>₹{fmtINR(fre.mentorReceive)}</p>
+                    {activePlan.months > 1 && (
+                      <p style={{ fontFamily: F, fontSize: 10, color: "#94a3b8", margin: "3px 0 0" }}>₹{fmtINR(fre.perMonthReceive)}/mo</p>
+                    )}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        <div style={{ padding: "0 20px 20px" }}>
+          <button onClick={onClose} style={{ ...btnPrimary, width: "100%", justifyContent: "center", padding: "12px" }}>
+            Got it
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ─── Coupon Modal ───────────────────────────────────────────────────────────── */
 const CouponModal = ({ onClose, mentorId }) => {
-  const [createCoupon, { isLoading }] = useCreateCouponMutation();
+  const [createCoupon, { isLoading: creating }] = useCreateCouponMutation();
   const [updateCoupon] = useUpdateCouponMutation();
   const [deleteCoupon] = useDeleteCouponMutation();
-
   const { data: couponData, refetch } = useGetAllCouponsQuery();
 
   const [code, setCode] = useState("");
@@ -155,68 +350,48 @@ const CouponModal = ({ onClose, mentorId }) => {
   const [startDate, setStartDate] = useState("");
   const [expiry, setExpiry] = useState(false);
   const [expiryDate, setExpiryDate] = useState("");
-  const [showCoupons, setShowCoupons] = useState(false);
+  const [showList, setShowList] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [formError, setFormError] = useState("");
 
   const getSelectedDuration = () => {
-    const selected = [];
-    if (durations.one) selected.push(1);
-    if (durations.three) selected.push(3);
-    if (durations.six) selected.push(6);
-    return selected;
+    const s = [];
+    if (durations.one) s.push(1);
+    if (durations.three) s.push(3);
+    if (durations.six) s.push(6);
+    return s;
   };
 
   const resetForm = () => {
-    setCode("");
-    setDiscount(10);
-    setStartDate("");
-    setExpiry(false);
-    setExpiryDate("");
-    setEditingId(null);
+    setCode(""); setDiscount(10); setStartDate("");
+    setExpiry(false); setExpiryDate(""); setEditingId(null);
     setDurations({ one: false, three: false, six: false });
+    setFormError("");
   };
 
   const handleSubmit = async () => {
+    setFormError("");
+    const totalCoupons = couponData?.data?.length || 0;
+    if (!editingId && totalCoupons >= 3) return setFormError("Maximum 3 coupons allowed.");
+    if (!code || !discount || !startDate || getSelectedDuration().length === 0)
+      return setFormError("Please fill all required fields.");
+    if (expiry && !expiryDate) return setFormError("Please set an expiry date.");
+    const payload = {
+      mentorId, couponCode: code,
+      discountValue: Number(discount),
+      appliesForDuration: getSelectedDuration(),
+      startDate,
+      expiryDate: expiry ? expiryDate : undefined,
+    };
     try {
-      const totalCoupons = couponData?.data?.length || 0;
-
-      if (!editingId && totalCoupons >= 3) {
-        alert("You can only create a maximum of 3 coupons");
-        return;
-      }
-
-      if (
-        !code ||
-        !discount ||
-        !startDate ||
-        getSelectedDuration().length === 0 ||
-        (expiry && !expiryDate)
-      ) {
-        alert("Please fill all required fields");
-        return;
-      }
-
-      const payload = {
-        mentorId,
-        couponCode: code,
-        discountValue: Number(discount),
-        appliesForDuration: getSelectedDuration(),
-        startDate,
-        expiryDate: expiry ? expiryDate : undefined,
-      };
-
       if (editingId) {
         await updateCoupon({ couponId: editingId, ...payload }).unwrap();
-        alert("Coupon updated successfully");
       } else {
         await createCoupon(payload).unwrap();
-        alert("Coupon created successfully");
       }
-
-      resetForm();
-      refetch();
+      resetForm(); refetch();
     } catch (error) {
-      alert(error?.data?.message || "Something went wrong");
+      setFormError(error?.data?.message || "Something went wrong.");
     }
   };
 
@@ -225,312 +400,227 @@ const CouponModal = ({ onClose, mentorId }) => {
     setCode(coupon.couponCode);
     setDiscount(coupon.discountValue);
     setStartDate(coupon.startDate?.split("T")[0] || "");
-
-    if (coupon.expiryDate) {
-      setExpiry(true);
-      setExpiryDate(coupon.expiryDate.split("T")[0]);
-    } else {
-      setExpiry(false);
-      setExpiryDate("");
-    }
-
+    setExpiry(!!coupon.expiryDate);
+    setExpiryDate(coupon.expiryDate?.split("T")[0] || "");
     setDurations({
       one: coupon.appliesForDuration?.includes(1) || false,
       three: coupon.appliesForDuration?.includes(3) || false,
       six: coupon.appliesForDuration?.includes(6) || false,
     });
-
-    // On mobile, scroll the form panel into view
+    setFormError("");
     document.getElementById("coupon-form-top")?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleDelete = async (couponId) => {
-    if (!window.confirm("Are you sure you want to delete this coupon?")) return;
+    if (!window.confirm("Delete this coupon?")) return;
     try {
       await deleteCoupon(couponId).unwrap();
-      alert("Coupon deleted successfully");
       if (editingId === couponId) resetForm();
       refetch();
     } catch (error) {
-      alert(error?.data?.message || "Delete failed");
+      setFormError(error?.data?.message || "Delete failed.");
     }
   };
 
   const coupons = couponData?.data || [];
 
+  const inputStyle = {
+    fontFamily: F, fontSize: 13, color: "#1a1a2e",
+    border: "1px solid #e2e8f0", borderRadius: 8,
+    padding: "9px 12px", width: "100%",
+    outline: "none", background: "#fff",
+    boxSizing: "border-box",
+  };
+  const labelStyle = {
+    fontFamily: F, fontSize: 10, fontWeight: 700,
+    color: "#94a3b8", letterSpacing: "0.6px",
+    textTransform: "uppercase", display: "block", marginBottom: 5,
+  };
+
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-3 sm:p-4"
       onClick={onClose}
+      style={{
+        position: "fixed", inset: 0, zIndex: 50,
+        display: "flex", alignItems: "center", justifyContent: "center",
+        background: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)", padding: 16,
+      }}
     >
-      {/*
-        Modal wrapper:
-        - On mobile (< sm): single column, scrollable
-        - On sm+: side-by-side row when coupons panel is open
-        - max-h-[90vh] prevents overflow past viewport
-      */}
       <div
-        className={[
-          "relative bg-white rounded-2xl shadow-2xl overflow-hidden",
-          "w-full flex",
-          "transition-all duration-300 ease-in-out",
-          showCoupons
-            ? "max-w-2xl flex-col sm:flex-row"
-            : "max-w-sm flex-col",
-          "max-h-[90vh]",
-        ].join(" ")}
+        id="coupon-form-top"
         onClick={(e) => e.stopPropagation()}
+        style={{
+          background: "#fff", borderRadius: 16,
+          boxShadow: "0 20px 60px rgba(0,0,0,0.15)",
+          width: "100%", maxWidth: showList ? 640 : 380,
+          maxHeight: "90vh", overflow: "hidden",
+          display: "flex", transition: "max-width 0.3s",
+        }}
       >
-        {/* ── FORM PANEL ── */}
-        <div
-          id="coupon-form-top"
-          className={[
-            "flex flex-col gap-3 overflow-y-auto",
-            "p-5",
-            // When side panel is open on sm+, fix form width; otherwise full width
-            showCoupons ? "sm:w-72 sm:flex-shrink-0 sm:border-r sm:border-gray-100" : "w-full",
-          ].join(" ")}
-        >
+        {/* Form panel */}
+        <div style={{
+          width: showList ? 300 : "100%", flexShrink: 0,
+          display: "flex", flexDirection: "column", gap: 14,
+          overflowY: "auto", padding: 20,
+          borderRight: showList ? "1px solid #f1f5f9" : "none",
+        }}>
           {/* Header */}
-          <div className="flex items-center justify-between">
-            <h2 className="text-gray-900 text-[15px] font-semibold">
-              {editingId ? "Update coupon code" : "Create a new coupon code"}
-            </h2>
-            <button
-              onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors p-1 rounded-md hover:bg-gray-100"
-              aria-label="Close"
-            >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <IconTag size={15} />
+              <p style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: "#1a1a2e", margin: 0 }}>
+                {editingId ? "Update coupon" : "Create coupon"}
+              </p>
+            </div>
+            <button onClick={onClose} style={{ ...btnOutline, padding: "6px", borderRadius: 8 }}>
+              <IconX size={15} />
             </button>
           </div>
 
-          {/* Coupon Code */}
-          <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-              Coupon code
-            </label>
+          {/* Error */}
+          {formError && (
+            <div style={{
+              fontFamily: F, fontSize: 12, color: "#dc2626",
+              background: "#fef2f2", border: "1px solid #fecaca",
+              borderRadius: 8, padding: "8px 12px",
+            }}>{formError}</div>
+          )}
+
+          {/* Code */}
+          <div>
+            <label style={labelStyle}>Coupon code</label>
             <input
-              type="text"
-              placeholder="eg: ROHAN30"
-              value={code}
+              type="text" placeholder="e.g. ROHAN30" value={code}
               onChange={(e) => setCode(e.target.value.toUpperCase())}
-              className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1a1a2e]/20 focus:border-[#1a1a2e] transition-all"
+              style={{ ...inputStyle, fontFamily: "monospace", letterSpacing: "0.1em" }}
             />
           </div>
 
           {/* Discount */}
-          <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-              Discount (%)
-            </label>
-            <div className="relative">
+          <div>
+            <label style={labelStyle}>Discount</label>
+            <div style={{ position: "relative" }}>
               <input
-                type="number"
-                min={1}
-                max={100}
-                value={discount}
+                type="number" min={1} max={100} value={discount}
                 onChange={(e) => setDiscount(e.target.value)}
-                className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-[#1a1a2e]/20 focus:border-[#1a1a2e] transition-all pr-8"
+                style={{ ...inputStyle, paddingRight: 30 }}
               />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm pointer-events-none">%</span>
+              <span style={{
+                position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
+                fontFamily: F, fontSize: 13, color: "#94a3b8", pointerEvents: "none",
+              }}>%</span>
             </div>
           </div>
 
-          {/* Duration checkboxes */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-              Applies for duration
-            </label>
-            <div className="flex items-center gap-4 flex-wrap">
-              {[
-                { key: "one", label: "1 month" },
-                { key: "three", label: "3 months" },
-                { key: "six", label: "6 months" },
-              ].map(({ key, label }) => (
-                <label key={key} className="flex items-center gap-1.5 cursor-pointer group">
+          {/* Duration */}
+          <div>
+            <label style={labelStyle}>Applies for</label>
+            <div style={{ display: "flex", gap: 16 }}>
+              {[{ key: "one", label: "1 mo" }, { key: "three", label: "3 mo" }, { key: "six", label: "6 mo" }].map(({ key, label }) => (
+                <label key={key} style={{ display: "flex", alignItems: "center", gap: 6, cursor: "pointer", fontFamily: F, fontSize: 13, color: "#475569" }}>
                   <input
-                    type="checkbox"
-                    checked={durations[key]}
-                    onChange={() => setDurations((prev) => ({ ...prev, [key]: !prev[key] }))}
-                    className="w-4 h-4 rounded accent-[#1a1a2e] cursor-pointer"
+                    type="checkbox" checked={durations[key]}
+                    onChange={() => setDurations((p) => ({ ...p, [key]: !p[key] }))}
+                    style={{ width: 15, height: 15, cursor: "pointer", accentColor: "#1a1a2e" }}
                   />
-                  <span className="text-sm text-gray-700 group-hover:text-gray-900 transition-colors">
-                    {label}
-                  </span>
+                  {label}
                 </label>
               ))}
             </div>
           </div>
 
-          {/* Start Date */}
-          <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
-              Start date
-            </label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1a1a2e]/20 focus:border-[#1a1a2e] transition-all"
-            />
+          {/* Start date */}
+          <div>
+            <label style={labelStyle}>Start date</label>
+            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} style={inputStyle} />
           </div>
 
-          {/* Expiry Toggle */}
-          <div className="flex items-center justify-between py-0.5">
-            <label className="text-sm text-gray-700">Set expiry date</label>
-            <button
-              type="button"
-              role="switch"
-              aria-checked={expiry}
-              onClick={() => setExpiry(!expiry)}
-              className={[
-                "relative w-10 h-[22px] rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1a1a2e]/30",
-                expiry ? "bg-[#1a1a2e]" : "bg-gray-200",
-              ].join(" ")}
-            >
-              <span
-                className={[
-                  "absolute top-[3px] left-[3px] w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-200",
-                  expiry ? "translate-x-[18px]" : "translate-x-0",
-                ].join(" ")}
-              />
+          {/* Expiry toggle */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span style={{ fontFamily: F, fontSize: 13, color: "#475569" }}>Set expiry date</span>
+            <Toggle on={expiry} onChange={setExpiry} />
+          </div>
+
+          {/* Expiry date */}
+          {expiry && (
+            <div>
+              <input type="date" value={expiryDate} onChange={(e) => setExpiryDate(e.target.value)} style={inputStyle} />
+            </div>
+          )}
+
+          {/* Actions */}
+          <div style={{ display: "flex", gap: 8 }}>
+            <button onClick={resetForm} style={{ ...btnOutline, flex: 1, justifyContent: "center" }}>Reset</button>
+            <button onClick={handleSubmit} disabled={creating} style={{ ...btnPrimary, flex: 1, justifyContent: "center", opacity: creating ? 0.6 : 1 }}>
+              {editingId ? "Update" : creating ? "Saving…" : "Create"}
             </button>
           </div>
 
-          {/* Expiry Date — animated reveal */}
-          <div
-            className={[
-              "overflow-hidden transition-all duration-200",
-              expiry ? "max-h-20 opacity-100" : "max-h-0 opacity-0",
-            ].join(" ")}
-          >
-            <input
-              type="date"
-              value={expiryDate}
-              onChange={(e) => setExpiryDate(e.target.value)}
-              className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-full focus:outline-none focus:ring-2 focus:ring-[#1a1a2e]/20 focus:border-[#1a1a2e] transition-all"
-            />
-          </div>
-
-          {/* Action buttons */}
-          <div className="flex gap-2 pt-1">
-            <button
-              type="button"
-              onClick={resetForm}
-              className="flex-1 border border-gray-200 text-red-500 font-medium text-sm py-2.5 rounded-xl hover:bg-red-50 transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={isLoading}
-              className="flex-1 bg-[#1a1a2e] text-white font-medium text-sm py-2.5 rounded-xl hover:bg-[#2d2d4e] active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-            >
-              {editingId ? "Update code" : isLoading ? "Saving…" : "Create code"}
-            </button>
-          </div>
-
-          {/* View/hide toggle button */}
+          {/* Toggle list */}
           <button
-            type="button"
-            onClick={() => setShowCoupons(!showCoupons)}
-            className="w-full border border-[#1a1a2e] text-[#1a1a2e] font-medium text-sm py-2.5 rounded-xl hover:bg-[#1a1a2e]/5 active:scale-[0.98] transition-all flex items-center justify-center gap-1.5"
+            onClick={() => setShowList(!showList)}
+            style={{ ...btnOutline, justifyContent: "center", width: "100%" }}
           >
-            <svg
-              className={`w-4 h-4 transition-transform duration-200 ${showCoupons ? "rotate-180" : ""}`}
-              fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-            </svg>
-            {showCoupons ? "Hide coupons" : `View coupons created${coupons.length ? ` (${coupons.length})` : ""}`}
+            <IconChevron style={{ transform: showList ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+            {showList ? "Hide coupons" : `View coupons${coupons.length ? ` (${coupons.length}/3)` : ""}`}
           </button>
         </div>
 
-        {/* ── COUPON SIDE / BOTTOM PANEL ── */}
-        {showCoupons && (
-          <div className="flex flex-col overflow-hidden flex-1 sm:min-w-0">
-            {/* Sticky header inside the panel */}
-            <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-gray-50/80 flex-shrink-0">
-              <span className="text-sm font-semibold text-gray-800">Your coupons</span>
-              <span className="text-xs text-gray-400 bg-white border border-gray-200 rounded-full px-2.5 py-0.5">
-                {coupons.length} / 3
-              </span>
+        {/* List panel */}
+        {showList && (
+          <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+            <div style={{
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              padding: "14px 18px", borderBottom: "1px solid #f1f5f9", background: "#fff",
+            }}>
+              <span style={{ fontFamily: F, fontSize: 14, fontWeight: 700, color: "#1a1a2e" }}>Your coupons</span>
+              <span style={{
+                fontFamily: F, fontSize: 11, color: "#94a3b8",
+                border: "1px solid #e2e8f0", borderRadius: 99, padding: "2px 10px",
+              }}>{coupons.length} / 3</span>
             </div>
-
-            {/* Scrollable list */}
-            <div className="overflow-y-auto flex-1 px-4 py-3 flex flex-col gap-3">
-              {coupons.length > 0 ? (
-                coupons.map((coupon) => (
-                  <div
-                    key={coupon._id}
-                    className={[
-                      "rounded-xl border p-3.5 transition-all",
-                      editingId === coupon._id
-                        ? "border-[#1a1a2e] bg-[#1a1a2e]/[0.03] ring-2 ring-[#1a1a2e]/10"
-                        : "border-gray-200 bg-white hover:border-gray-300",
-                    ].join(" ")}
-                  >
-                    {/* Code + discount badge */}
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <span className="font-mono font-semibold text-sm text-gray-900 tracking-widest">
-                        {coupon.couponCode}
-                      </span>
-                      <span className="bg-emerald-50 text-emerald-700 text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0">
-                        {coupon.discountValue}% off
-                      </span>
-                    </div>
-
-                    {/* Meta */}
-                    <div className="space-y-1 mb-3">
-                      <p className="text-xs text-gray-500 flex items-center gap-1">
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        {coupon.appliesForDuration?.join(", ")} month{coupon.appliesForDuration?.length > 1 ? "s" : ""}
-                      </p>
-                      {coupon.expiryDate ? (
-                        <p className="text-xs text-gray-500 flex items-center gap-1">
-                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          Expires {coupon.expiryDate.split("T")[0]}
-                        </p>
-                      ) : (
-                        <p className="text-xs text-gray-400">No expiry</p>
-                      )}
-                    </div>
-
-                    {/* Edit / Delete */}
-                    <div className="flex gap-2">
-                      <button
-                        type="button"
-                        onClick={() => handleEdit(coupon)}
-                        className="flex-1 text-xs font-medium py-1.5 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-colors"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(coupon._id)}
-                        className="flex-1 text-xs font-medium py-1.5 rounded-lg border border-red-100 text-red-500 hover:bg-red-50 transition-colors"
-                      >
-                        Delete
-                      </button>
-                    </div>
+            <div style={{ overflowY: "auto", flex: 1, padding: "14px 16px", display: "flex", flexDirection: "column", gap: 10 }}>
+              {coupons.length > 0 ? coupons.map((coupon) => (
+                <div
+                  key={coupon._id}
+                  style={{
+                    border: `1px solid ${editingId === coupon._id ? "#1a1a2e" : "#e2e8f0"}`,
+                    borderRadius: 12, padding: 14, background: "#fff",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 8 }}>
+                    <span style={{ fontFamily: "monospace", fontSize: 13, fontWeight: 700, color: "#1a1a2e", letterSpacing: "0.1em" }}>
+                      {coupon.couponCode}
+                    </span>
+                    <span style={{
+                      fontFamily: F, fontSize: 11, fontWeight: 600,
+                      color: "#16a34a", background: "#f0fdf4",
+                      border: "1px solid #bbf7d0", padding: "2px 8px", borderRadius: 99,
+                    }}>{coupon.discountValue}% off</span>
                   </div>
-                ))
-              ) : (
-                <div className="flex flex-col items-center justify-center py-10 gap-2 text-center">
-                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 14l-4-4m0 0l4-4m-4 4h16m-4 4l4-4m0 0l-4-4" />
-                    </svg>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4, marginBottom: 10 }}>
+                    <p style={{ fontFamily: F, fontSize: 11, color: "#94a3b8", margin: 0, display: "flex", alignItems: "center", gap: 5 }}>
+                      <IconCal /> {coupon.appliesForDuration?.join(", ")} month{coupon.appliesForDuration?.length > 1 ? "s" : ""}
+                    </p>
+                    <p style={{ fontFamily: F, fontSize: 11, color: "#94a3b8", margin: 0, display: "flex", alignItems: "center", gap: 5 }}>
+                      <IconClock /> {coupon.expiryDate ? `Expires ${coupon.expiryDate.split("T")[0]}` : "No expiry"}
+                    </p>
                   </div>
-                  <p className="text-sm text-gray-400">No coupons created yet</p>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button onClick={() => handleEdit(coupon)} style={{ ...btnOutline, flex: 1, justifyContent: "center", fontSize: 12, padding: "6px 0" }}>Edit</button>
+                    <button onClick={() => handleDelete(coupon._id)} style={{
+                      flex: 1, fontFamily: F, fontSize: 12, fontWeight: 600,
+                      color: "#dc2626", background: "#fff",
+                      border: "1px solid #fecaca", borderRadius: 8,
+                      padding: "6px 0", cursor: "pointer", justifyContent: "center",
+                    }}>Delete</button>
+                  </div>
+                </div>
+              )) : (
+                <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 0", gap: 8 }}>
+                  <IconTag size={24} />
+                  <p style={{ fontFamily: F, fontSize: 13, color: "#94a3b8", margin: 0 }}>No coupons yet</p>
+                  <p style={{ fontFamily: F, fontSize: 11, color: "#cbd5e1", margin: 0 }}>Create your first coupon above</p>
                 </div>
               )}
             </div>
@@ -541,297 +631,223 @@ const CouponModal = ({ onClose, mentorId }) => {
   );
 };
 
+/* ─── Pricing Empty State ────────────────────────────────────────────────────── */
+const PricingEmptyState = ({ onStart }) => (
+  <div style={{ fontFamily: F, background: "#fff", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+    <div style={{ maxWidth: 400, width: "100%", textAlign: "center" }}>
+      <div style={{
+        width: 56, height: 56, borderRadius: 16,
+        background: "#f8fafc", border: "1px solid #e2e8f0",
+        display: "flex", alignItems: "center", justifyContent: "center",
+        margin: "0 auto 20px",
+      }}>
+        <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#1a1a2e" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h2 style={{ fontFamily: F, fontSize: 18, fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}>Set your pricing</h2>
+      <p style={{ fontFamily: F, fontSize: 13, color: "#94a3b8", lineHeight: 1.6, margin: "0 0 24px" }}>
+        You haven't set your pricing yet. Configure rates for 1, 3, and 6-month plans — for both experienced mentees and freshers.
+      </p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, marginBottom: 16 }}>
+        {PLANS.map((pl) => (
+          <div key={pl.key} style={{ border: "1px solid #e2e8f0", borderRadius: 10, padding: "12px 8px", textAlign: "center" }}>
+            <p style={{ fontFamily: F, fontSize: 13, fontWeight: 700, color: "#1a1a2e", margin: "0 0 3px" }}>{pl.label}</p>
+            <p style={{ fontFamily: F, fontSize: 10, color: "#94a3b8", margin: 0 }}>LTM Plan</p>
+          </div>
+        ))}
+      </div>
+      <p style={{ fontFamily: F, fontSize: 11, color: "#94a3b8", margin: "0 0 20px" }}>
+        Freshers pricing must always be lower than experienced pricing
+      </p>
+      <button onClick={onStart} style={{ ...btnPrimary, width: "100%", justifyContent: "center", padding: "12px" }}>
+        Set up pricing
+      </button>
+    </div>
+  </div>
+);
 
-
-const DetailsModal = ({ plan, breakdowns, onClose }) => {
-  if (!plan) return null;
-
-  const p = PLANS.find((x) => x.key === plan);
-  const tabs = ["1 Month", "3 Months", "6 Months"];
-  const [activeTab, setActiveTab] = useState(p.label);
-
-  const activeKey =
-    activeTab === "1 Month" ? "one_month"
-      : activeTab === "3 Months" ? "three_months"
-        : "six_months";
-
-  const activePlan = PLANS.find((x) => x.key === activeKey);
-
-  // Read straight from stored breakdown — no math here
-  const bd = breakdowns[activeKey];
-  const exp = bd?.experienced;   // { totalPrice, platformFee, platformPct, cgst, sgst, totalDeducted, mentorReceive, perMonthReceive }
-  const fre = bd?.freshers;
-  const noData = !exp || !fre;
+/* ─── Price Selector ─────────────────────────────────────────────────────────── */
+const PriceSelector = ({ tier, value, onChange, disabled }) => {
+  const options = SHARED_PRICE_OPTIONS[tier];
+  const label = tier === "experienced" ? "Experienced" : "Freshers";
+  const color = tier === "experienced" ? "#db2777" : "#7c3aed";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40 backdrop-blur-sm" onClick={onClose}>
-      <div className="w-full max-w-lg bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
-
-        {/* Header */}
-        <div className="px-5 pt-5 pb-3">
-          <p className="text-gray-900 text-sm font-bold">
-            Final Payout Breakdown — {activePlan.label} LTM
-          </p>
-          <p className="text-[#1a1a2e] text-xs mt-0.5">
-            All figures are calculated by the server based on your commission tier at the time of saving.
-          </p>
-        </div>
-
-        {/* Tabs */}
-        <div className="mx-5 flex rounded-xl border border-gray-200 overflow-hidden mb-4 bg-gray-50">
-          {tabs.map((t) => (
-            <button key={t} onClick={() => setActiveTab(t)}
-              className={`flex-1 text-xs font-semibold py-2 transition-colors cursor-pointer
-                ${activeTab === t
-                  ? "bg-white text-gray-900 shadow-sm rounded-xl"
-                  : "text-gray-400 hover:text-gray-600"}`}>
-              {t}
-            </button>
+    <div style={{ flex: 1, padding: "14px 16px" }}>
+      <div style={{ marginBottom: 8 }}>
+        <span style={{
+          fontFamily: F, fontSize: 10, fontWeight: 700,
+          color, border: `1px solid ${color}30`,
+          background: `${color}10`, padding: "2px 8px", borderRadius: 99,
+        }}>{label}</span>
+      </div>
+      <div style={{
+        display: "flex", alignItems: "center",
+        border: `1px solid ${disabled ? "#f1f5f9" : "#e2e8f0"}`,
+        borderRadius: 8, padding: "0 12px", height: 40,
+        background: disabled ? "#fafafa" : "#fff",
+      }}>
+        <span style={{ fontFamily: F, fontSize: 13, color: "#94a3b8", marginRight: 4 }}>₹</span>
+        <select
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          disabled={disabled}
+          style={{
+            fontFamily: F, flex: 1, border: "none", outline: "none",
+            fontSize: 13, fontWeight: 600, background: "transparent",
+            color: disabled ? "#94a3b8" : "#1a1a2e",
+            cursor: disabled ? "not-allowed" : "pointer",
+            appearance: "none",
+          }}
+        >
+          <option value="" disabled>Select price</option>
+          {options.map((p) => (
+            <option key={p} value={p}>{new Intl.NumberFormat("en-IN").format(p)}/month</option>
           ))}
-        </div>
-
-        {/* Breakdown table */}
-        <div className="px-5 pb-5">
-          {noData ? (
-            <p className="text-center text-gray-400 text-xs py-8">
-              No breakdown data available for this plan.
-            </p>
-          ) : (
-            <table className="w-full">
-              <thead>
-                <tr>
-                  <td className="pb-3 w-[46%]" />
-                  <td className="pb-3 text-center">
-                    <span className="bg-pink-50 text-pink-500 text-xs font-semibold px-3 py-1 rounded-full">
-                      Experienced
-                    </span>
-                  </td>
-                  <td className="pb-3 text-center">
-                    <span className="bg-purple-50 text-purple-500 text-xs font-semibold px-3 py-1 rounded-full">
-                      Freshers
-                    </span>
-                  </td>
-                </tr>
-              </thead>
-              <tbody>
-
-                {/* ── Mentee pays ── */}
-                <tr className="border-t border-gray-100">
-                  <td className="py-2.5 text-gray-600 text-xs">
-                    Mentee pays ({activePlan.months}mo total):
-                  </td>
-                  <td className="py-2.5 text-center text-gray-800 text-xs font-semibold">
-                    ₹{fmtINR(exp.totalPrice)}
-                  </td>
-                  <td className="py-2.5 text-center text-gray-800 text-xs font-semibold">
-                    ₹{fmtINR(fre.totalPrice)}
-                  </td>
-                </tr>
-
-                {/* ── Platform fee ── */}
-                <tr className="border-t border-gray-100">
-                  <td className="py-2.5 text-gray-600 text-xs">
-                    Platform fee ({exp.platformPct}%):
-                  </td>
-                  <td className="py-2.5 text-center text-red-400 text-xs">
-                    − ₹{fmtINR(exp.platformFee)}
-                  </td>
-                  <td className="py-2.5 text-center text-red-400 text-xs">
-                    − ₹{fmtINR(fre.platformFee)}
-                  </td>
-                </tr>
-
-                {/* ── CGST ── */}
-                <tr className="border-t border-gray-100">
-                  <td className="py-2.5 text-gray-600 text-xs">CGST (9%):</td>
-                  <td className="py-2.5 text-center text-red-400 text-xs">
-                    − ₹{fmtINR(exp.cgst)}
-                  </td>
-                  <td className="py-2.5 text-center text-red-400 text-xs">
-                    − ₹{fmtINR(fre.cgst)}
-                  </td>
-                </tr>
-
-                {/* ── SGST ── */}
-                <tr className="border-t border-gray-100">
-                  <td className="py-2.5 text-gray-600 text-xs">SGST (9%):</td>
-                  <td className="py-2.5 text-center text-red-400 text-xs">
-                    − ₹{fmtINR(exp.sgst)}
-                  </td>
-                  <td className="py-2.5 text-center text-red-400 text-xs">
-                    − ₹{fmtINR(fre.sgst)}
-                  </td>
-                </tr>
-
-                {/* ── Total deducted sub-total ── */}
-                <tr className="border-t border-dashed border-gray-200 bg-gray-50/70">
-                  <td className="py-2 text-gray-400 text-[11px] italic pl-1">Total deducted:</td>
-                  <td className="py-2 text-center text-gray-500 text-[11px]">
-                    − ₹{fmtINR(exp.totalDeducted)}
-                  </td>
-                  <td className="py-2 text-center text-gray-500 text-[11px]">
-                    − ₹{fmtINR(fre.totalDeducted)}
-                  </td>
-                </tr>
-
-                {/* ── Final payout ── */}
-                <tr className="border-t-2 border-gray-200">
-                  <td className="py-3 text-gray-700 text-sm font-bold">You receive:</td>
-                  <td className="py-3 text-center">
-                    <p className="text-green-600 text-base font-bold">
-                      ₹{fmtINR(exp.mentorReceive)}
-                    </p>
-                    {activePlan.months > 1 && (
-                      <p className="text-green-400 text-[10px] mt-0.5">
-                        (₹{fmtINR(exp.perMonthReceive)}/mo)
-                      </p>
-                    )}
-                  </td>
-                  <td className="py-3 text-center">
-                    <p className="text-green-600 text-base font-bold">
-                      ₹{fmtINR(fre.mentorReceive)}
-                    </p>
-                    {activePlan.months > 1 && (
-                      <p className="text-green-400 text-[10px] mt-0.5">
-                        (₹{fmtINR(fre.perMonthReceive)}/mo)
-                      </p>
-                    )}
-                  </td>
-                </tr>
-
-              </tbody>
-            </table>
-          )}
-        </div>
-
-        <div className="px-5 pb-5">
-          <button onClick={onClose}
-            className="w-full bg-[#1a1a2e] text-white font-semibold text-sm py-3 rounded-xl hover:bg-[#16213e] transition-colors cursor-pointer">
-            I Understood
-          </button>
-        </div>
+        </select>
+        {!disabled && <IconChevron size={13} style={{ color: "#94a3b8", flexShrink: 0 }} />}
       </div>
     </div>
   );
 };
 
-// ─── Pricing Not Set Empty State ──────────────────────────────────────────────
-const PricingNotSetState = ({ onStartSetup }) => (
-  <div className="w-full min-h-screen bg-white p-6 font-sans">
-    <div className="w-full max-w-3xl mx-auto">
-      <h1 className="text-gray-900 text-lg font-bold mb-8">My Pricing</h1>
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Set Your Pricing</h2>
-          <p className="text-gray-600 text-sm leading-relaxed">
-            You haven't set your pricing yet. Set up your rates for different mentoring plans to start earning.
-          </p>
+/* ─── Plan Card ──────────────────────────────────────────────────────────────── */
+const PlanCard = ({ plan, values, breakdowns, isLocked, onChange, onViewDetails }) => {
+  const exp = Number(values.experienced) || 0;
+  const fre = Number(values.freshers) || 0;
+  const hasValues = exp > 0 && fre > 0;
+  const fresWarn = hasValues && fre >= exp;
+  const bdExp = breakdowns[plan.key]?.experienced;
+  const bdFre = breakdowns[plan.key]?.freshers;
+  const expReceive = bdExp?.perMonthReceive ?? null;
+  const freReceive = bdFre?.perMonthReceive ?? null;
+
+  return (
+    <div style={{
+      background: "#fff",
+      border: `1px solid ${fresWarn ? "#fcd34d" : "#e2e8f0"}`,
+      borderRadius: 12, overflow: "hidden",
+    }}>
+      {/* Card header */}
+      <div style={{
+        padding: "12px 18px", borderBottom: "1px solid #f1f5f9",
+        display: "flex", alignItems: "center", gap: 10,
+      }}>
+        <span style={{ fontFamily: F, fontSize: 14, fontWeight: 700, color: "#1a1a2e" }}>{plan.label}</span>
+        <span style={{ fontFamily: F, fontSize: 11, color: "#94a3b8" }}>LTM Plan</span>
+        {hasValues && isLocked && !fresWarn && (
+          <span style={{
+            fontFamily: F, fontSize: 10, fontWeight: 700,
+            color: "#16a34a", background: "#f0fdf4",
+            border: "1px solid #bbf7d0", padding: "2px 8px", borderRadius: 99,
+            display: "flex", alignItems: "center", gap: 4, marginLeft: "auto",
+          }}>
+            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#16a34a", display: "inline-block" }} />
+            Active
+          </span>
+        )}
+      </div>
+
+      {/* Selectors */}
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ flex: 1, borderRight: "1px solid #f1f5f9" }}>
+          <PriceSelector tier="experienced" value={values.experienced} onChange={(val) => onChange(plan.key, "experienced", val)} disabled={isLocked} />
         </div>
-        <div>
-          <p className="text-gray-800 text-sm font-semibold mb-4">You'll be able to set pricing for:</p>
-          <ul className="space-y-4 text-sm text-gray-700">
-            <li><strong>1 Month Plan</strong> — Different rates for experienced mentors and freshers</li>
-            <li><strong>3 Months Plan</strong> — Offer discounted rates for longer commitments</li>
-            <li><strong>6 Months Plan</strong> — Best rates for long-term mentoring relationships</li>
-          </ul>
-        </div>
-        <p className="text-sm text-gray-700">
-          <strong>Tip:</strong> Freshers pricing should always be lower than experienced pricing.
-        </p>
-        <div className="pt-4">
-          <button onClick={onStartSetup}
-            className="bg-[#1a1a2e] text-white font-medium px-5 py-2 rounded-md hover:bg-[#16213e] transition text-sm">
-            Start Setting Pricing
-          </button>
+        <div style={{ flex: 1 }}>
+          <PriceSelector tier="freshers" value={values.freshers} onChange={(val) => onChange(plan.key, "freshers", val)} disabled={isLocked} />
         </div>
       </div>
-    </div>
-  </div>
-);
 
-// ─── Main Component ───────────────────────────────────────────────────────────
+      {/* Fresher warning */}
+      {fresWarn && (
+        <div style={{
+          margin: "0 14px 12px", padding: "8px 12px",
+          background: "#fffbeb", border: "1px solid #fcd34d",
+          borderRadius: 8, fontFamily: F, fontSize: 12, color: "#92400e",
+          display: "flex", alignItems: "center", gap: 6,
+        }}>
+          ⚠ Freshers price must be lower than Experienced
+        </div>
+      )}
+
+      {/* Earnings row */}
+      {hasValues && isLocked && !fresWarn && (
+        <div style={{
+          margin: "0 14px 14px",
+          display: "flex", alignItems: "center", justifyContent: "space-between",
+          border: "1px solid #f1f5f9", borderRadius: 10, padding: "10px 14px",
+        }}>
+          <p style={{ fontFamily: F, fontSize: 12, color: "#475569", margin: 0 }}>
+            You receive / mo:{" "}
+            <b style={{ color: "#1a1a2e" }}>{expReceive != null ? `₹${fmtINR(expReceive)}` : "—"}</b>
+            <span style={{ color: "#e2e8f0", margin: "0 8px" }}>·</span>
+            <b style={{ color: "#1a1a2e" }}>{freReceive != null ? `₹${fmtINR(freReceive)}` : "—"}</b>
+          </p>
+          <button
+            onClick={() => onViewDetails(plan.key)}
+            style={{
+              fontFamily: F, fontSize: 12, fontWeight: 600,
+              color: "#0091c3", background: "none", border: "none",
+              cursor: "pointer", display: "flex", alignItems: "center", gap: 4,
+            }}
+          >
+            Details
+            <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+/* ─── Main Component ─────────────────────────────────────────────────────────── */
 const MyPricing = () => {
   const [plans, setPlans] = useState(EMPTY_PLANS);
   const [breakdowns, setBreakdowns] = useState(EMPTY_BREAKDOWNS);
   const [subCount, setSubCount] = useState(0);
   const [saved, setSaved] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState(null);
   const [modalPlan, setModalPlan] = useState(null);
   const [showCoupon, setShowCoupon] = useState(false);
   const [isEditingNew, setIsEditingNew] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
 
-  const userData = JSON.parse(localStorage.getItem("userData") || "{}");
-  const mentorId = userData?._id;
+  const mentorId = JSON.parse(localStorage.getItem("userData") || "{}")?._id;
 
-  // ─── Queries ───────────────────────────────────────────────────────────────
-  const {
-    data: pricingData,
-    isLoading: pricingLoading,
-    error: pricingError,
-    refetch: refetchPricing,
-  } = useGetMyPricingQuery(mentorId, { skip: !mentorId });
-
-  const {
-    data: tiersData,
-    isLoading: tiersLoading,
-    error: tiersError,
-  } = useGetCommissionTiersQuery();
-
+  const { data: pricingData, isLoading: pricingLoading, error: pricingError, refetch: refetchPricing } =
+    useGetMyPricingQuery(mentorId, { skip: !mentorId });
+  const { data: tiersData, isLoading: tiersLoading, error: tiersError } =
+    useGetCommissionTiersQuery();
   const [saveOrUpdatePricing, { isLoading: savingPricing }] = useSaveOrUpdatePricingMutation();
 
-  // ─── Derive current tier doc from tiersData + subCount ────────────────────
-  // tiersData.data = [{ tier_name, commission: { one_month, three_months, six_months }, ... }]
-  const currentTierName = resolveTierName(subCount);
-  const currentTierDoc = tiersData?.data?.find((t) => t.tier_name === currentTierName) ?? null;
+  const currentTierDoc = tiersData?.data?.find(
+    (t) => t.tier_name === resolveTierName(subCount)
+  ) ?? null;
 
-  // ─── Load saved pricing ────────────────────────────────────────────────────
   useEffect(() => {
     if (!pricingData) return;
-
-    /**
-     * Response shape:
-     *   { success, plans: <MentorPricingDocument> }
-     *
-     * Document shape:
-     *   {
-     *     plans: {
-     *       one_month:    { experienced, freshers, breakdown: { experienced: {...}, freshers: {...} } },
-     *       three_months: { ... },
-     *       six_months:   { ... },
-     *     },
-     *     subscriberCountAtSave: 0,
-     *     updatedAtDate: "...",
-     *     updatedAt: "...",
-     *   }
-     */
-    const doc = pricingData?.plans;          // MentorPricingDocument
-    const planDoc = doc?.plans;                  // nested plans object
-
+    const doc = pricingData?.plans;
+    const planDoc = doc?.plans;
     const hasPricing =
       planDoc?.one_month?.experienced && planDoc?.one_month?.freshers &&
       planDoc?.three_months?.experienced && planDoc?.three_months?.freshers &&
       planDoc?.six_months?.experienced && planDoc?.six_months?.freshers;
 
     if (hasPricing) {
-      // ── Prices (for dropdowns) ──
       setPlans({
         one_month: { experienced: planDoc.one_month.experienced, freshers: planDoc.one_month.freshers },
         three_months: { experienced: planDoc.three_months.experienced, freshers: planDoc.three_months.freshers },
         six_months: { experienced: planDoc.six_months.experienced, freshers: planDoc.six_months.freshers },
       });
-
-      // ── Breakdowns — straight from API, no recalculation ──
       setBreakdowns({
         one_month: planDoc.one_month.breakdown ?? { experienced: null, freshers: null },
         three_months: planDoc.three_months.breakdown ?? { experienced: null, freshers: null },
         six_months: planDoc.six_months.breakdown ?? { experienced: null, freshers: null },
       });
-
-      // ── Subscriber count saved at the time of last save ──
       setSubCount(doc?.subscriberCountAtSave ?? 0);
-
       setSaved(true);
       setIsEditingNew(false);
       setLastUpdated(doc?.updatedAtDate ?? doc?.updatedAt ?? null);
@@ -845,7 +861,6 @@ const MyPricing = () => {
     }
   }, [pricingData]);
 
-  // ─── Handlers ─────────────────────────────────────────────────────────────
   const showToast = useCallback((type, msg) => {
     setToast({ type, msg });
     setTimeout(() => setToast(null), 3500);
@@ -853,19 +868,16 @@ const MyPricing = () => {
 
   const handleDropdown = (planKey, tier, val) => {
     if (saved && !isEditingNew) return;
-    setPlans((prev) => ({ ...prev, [planKey]: { ...prev[planKey], [tier]: Number(val) } }));
+    setPlans((p) => ({ ...p, [planKey]: { ...p[planKey], [tier]: Number(val) } }));
   };
 
   const handleSave = async () => {
-    // Client-side validation only — no price calculations
     for (const plan of PLANS) {
       const exp = Number(plans[plan.key].experienced) || 0;
       const fre = Number(plans[plan.key].freshers) || 0;
-      if (!exp || !fre) return showToast("error", `Fill both prices for ${plan.label}`);
-      if (fre >= exp) return showToast("error", `${plan.label}: Freshers price must be less than Experienced`);
+      if (!exp || !fre) return showToast("error", `Set both prices for ${plan.label}`);
+      if (fre >= exp) return showToast("error", `${plan.label}: Freshers must be less than Experienced`);
     }
-
-    setSaving(true);
     try {
       const result = await saveOrUpdatePricing({
         mentorId,
@@ -876,14 +888,8 @@ const MyPricing = () => {
         },
       }).unwrap();
 
-      /**
-       * Save response: { success, message, plans: <MentorPricingDocument> }
-       * Pull fresh breakdown + meta immediately from the save response
-       * so UI updates without needing to wait for refetch.
-       */
       const savedDoc = result?.plans;
       const savedPlan = savedDoc?.plans;
-
       if (savedPlan) {
         setBreakdowns({
           one_month: savedPlan.one_month?.breakdown ?? { experienced: null, freshers: null },
@@ -892,18 +898,15 @@ const MyPricing = () => {
         });
         setSubCount(savedDoc?.subscriberCountAtSave ?? 0);
       }
-      if (savedDoc?.updatedAtDate ?? savedDoc?.updatedAt) {
+      if (savedDoc?.updatedAtDate || savedDoc?.updatedAt)
         setLastUpdated(savedDoc.updatedAtDate ?? savedDoc.updatedAt);
-      }
 
-      setSaving(false);
       setSaved(true);
       setIsEditingNew(false);
-      showToast("success", "Pricing saved successfully! 🎉");
+      showToast("success", "Pricing saved successfully!");
       refetchPricing();
     } catch (error) {
-      setSaving(false);
-      showToast("error", error?.data?.message || "Failed to save pricing. Please try again.");
+      showToast("error", error?.data?.message || "Failed to save. Please try again.");
     }
   };
 
@@ -923,30 +926,31 @@ const MyPricing = () => {
     }
   };
 
-  // ─── Loading ───────────────────────────────────────────────────────────────
   if (pricingLoading || tiersLoading) {
     return (
-      <div className="w-full min-h-screen bg-white p-4 sm:p-6 font-sans flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#1a1a2e]" />
-          <p className="text-gray-600 mt-2">Loading pricing data...</p>
+      <div style={{ fontFamily: F, background: "#fff", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{
+            width: 32, height: 32, borderRadius: "50%",
+            border: "2px solid #e2e8f0", borderTopColor: "#1a1a2e",
+            animation: "spin 0.8s linear infinite", margin: "0 auto 12px",
+          }} />
+          <p style={{ fontFamily: F, fontSize: 13, color: "#94a3b8", margin: 0 }}>Loading pricing…</p>
         </div>
       </div>
     );
   }
 
-  // ─── Error (ignore 400 = "Pricing not set yet") ───────────────────────────
   const realPricingError = pricingError?.status !== 400 ? pricingError : null;
   if (realPricingError || tiersError) {
     return (
-      <div className="w-full min-h-screen bg-white p-4 sm:p-6 font-sans flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-red-600 font-semibold">Error loading pricing data</p>
-          <p className="text-gray-600 text-sm mt-1">
-            {realPricingError?.data?.message || tiersError?.data?.message || "Please try again later"}
+      <div style={{ fontFamily: F, background: "#fff", minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
+        <div style={{ textAlign: "center", maxWidth: 340 }}>
+          <p style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: "#1a1a2e", margin: "0 0 6px" }}>Failed to load pricing</p>
+          <p style={{ fontFamily: F, fontSize: 13, color: "#94a3b8", margin: "0 0 16px" }}>
+            {realPricingError?.data?.message || tiersError?.data?.message || "Please try again"}
           </p>
-          <button onClick={() => refetchPricing()}
-            className="mt-4 bg-[#1a1a2e] text-white font-semibold px-6 py-2 rounded-lg hover:bg-[#16213e]">
+          <button onClick={() => refetchPricing()} style={{ ...btnPrimary, justifyContent: "center", padding: "10px 24px" }}>
             Retry
           </button>
         </div>
@@ -954,199 +958,117 @@ const MyPricing = () => {
     );
   }
 
-  // ─── Empty state ───────────────────────────────────────────────────────────
-  if (
-    !isEditingNew && !saved &&
-    (!plans.one_month.experienced || !plans.three_months.experienced || !plans.six_months.experienced)
-  ) {
-    return <PricingNotSetState onStartSetup={() => setIsEditingNew(true)} />;
+  if (!isEditingNew && !saved && (!plans.one_month.experienced || !plans.three_months.experienced || !plans.six_months.experienced)) {
+    return <PricingEmptyState onStart={() => setIsEditingNew(true)} />;
   }
 
   const isLocked = saved && !isEditingNew;
 
-  // ─── Main UI ───────────────────────────────────────────────────────────────
   return (
-    <div className="w-full min-h-screen bg-white p-4 sm:p-6 font-sans">
-      <div className="w-full max-w-2xl mx-auto">
+    <div style={{ fontFamily: F, background: "#fff", minHeight: "100vh" }}>
+      <style>{`
+        @keyframes spin { to { transform: rotate(360deg); } }
+        input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.5; }
+        select option { background: #fff; color: #1a1a2e; }
+      `}</style>
 
-        {/* ── Page header ── */}
-        <div className="flex items-center justify-between mb-1">
-          <h1 className="text-gray-900 text-lg font-bold">My Pricing</h1>
-          <div className="flex items-center gap-2">
-            <button onClick={() => setShowCoupon(true)}
-              className="text-xs font-semibold border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
-              + Create Coupon
+      {/* Page header */}
+      <div style={{ background: "#fff", borderBottom: "1px solid #e2e8f0", padding: "16px 24px" }}>
+        <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div>
+            <h1 style={{ fontFamily: F, fontSize: 18, fontWeight: 700, color: "#1a1a2e", margin: "0 0 3px" }}>Pricing</h1>
+            {lastUpdated && isLocked && (
+              <p style={{ fontFamily: F, fontSize: 11, color: "#94a3b8", margin: 0 }}>
+                Last updated: {fmtDate(lastUpdated)}
+              </p>
+            )}
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <button onClick={() => setShowCoupon(true)} style={{ ...btnOutline, fontSize: 12 }}>
+              <IconTag size={13} /> Coupons
             </button>
-            <button
-              onClick={isLocked ? () => setIsEditingNew(true) : handleSave}
-              disabled={saving || savingPricing}
-              className={`text-xs font-semibold px-4 py-2 rounded-lg transition-colors cursor-pointer
-                ${saving || savingPricing
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : isLocked
-                    ? "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
-                    : "bg-[#1a1a2e] text-white hover:bg-[#16213e]"}`}>
-              {saving || savingPricing ? "Saving…" : isLocked ? "Edit" : "Save"}
-            </button>
+            {isLocked ? (
+              <button onClick={() => setIsEditingNew(true)} style={{ ...btnOutline, fontSize: 12 }}>
+                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                Edit
+              </button>
+            ) : (
+              <button onClick={handleSave} disabled={savingPricing} style={{ ...btnPrimary, fontSize: 12, opacity: savingPricing ? 0.6 : 1 }}>
+                <IconCheck size={13} />
+                {savingPricing ? "Saving…" : "Save"}
+              </button>
+            )}
           </div>
         </div>
+      </div>
 
-        {/* Last updated */}
-        {lastUpdated && isLocked ? (
-          <p className="text-[11px] text-gray-400 mb-4">Last updated: {fmtDate(lastUpdated)}</p>
-        ) : (
-          <div className="mb-4" />
+      {/* Content */}
+      <div style={{ maxWidth: 780, margin: "0 auto", padding: "20px 24px" }}>
+
+        <TierBanner tierDoc={currentTierDoc} subCount={subCount} isEditing={!isLocked} />
+
+        {/* Edit notice */}
+        {!isLocked && (
+          <div style={{
+            display: "flex", alignItems: "center", gap: 8,
+            background: "#fffbeb", border: "1px solid #fcd34d",
+            borderRadius: 10, padding: "10px 14px", marginBottom: 16,
+            fontFamily: F, fontSize: 12, color: "#92400e",
+          }}>
+            <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} style={{ color: "#d97706", flexShrink: 0 }}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+            Editing — changes won't apply until you save.
+          </div>
         )}
 
-        {/* ── Tier Banner — shown only in view mode (not while editing) ── */}
-        <TierBanner
-          tierDoc={currentTierDoc}
-          subCount={subCount}
-          isEditing={!isLocked}
-        />
-
-        {/* ── Plan cards ── */}
-        <div className="flex flex-col gap-3">
-          {PLANS.map((plan) => {
-            const s = plans[plan.key];
-            const exp = Number(s.experienced) || 0;
-            const fre = Number(s.freshers) || 0;
-            const hasValues = exp > 0 && fre > 0;
-            const fresWarn = hasValues && fre >= exp;
-            const opts = PRICE_OPTIONS[plan.key];
-
-            // Read perMonthReceive directly from API breakdown — no frontend math
-            const bdExp = breakdowns[plan.key]?.experienced;
-            const bdFre = breakdowns[plan.key]?.freshers;
-            const expReceive = bdExp?.perMonthReceive ?? null;
-            const freReceive = bdFre?.perMonthReceive ?? null;
-
-            return (
-              <div key={plan.key} className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-
-                {/* Card header */}
-                <div className="px-5 py-3.5 border-b border-gray-100 flex items-center gap-2">
-                  <span className="text-gray-800 text-sm font-bold">{plan.label}</span>
-                  <span className="text-gray-400 text-xs">{plan.sublabel}</span>
-                  {hasValues && saved && !fresWarn && isLocked && (
-                    <span className="ml-auto flex items-center gap-1 text-[9px] text-green-600 bg-green-50 border border-green-100 px-2 py-0.5 rounded-full font-semibold">
-                      <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                      Active
-                    </span>
-                  )}
-                </div>
-
-                {/* Price selectors */}
-                <div className="flex flex-col sm:flex-row">
-                  {["experienced", "freshers"].map((tier, idx) => {
-                    const label = tier === "experienced" ? "For Experienced" : "For Freshers";
-                    const value = s[tier];
-                    const tierOpts = opts[tier];
-
-                    return (
-                      <div key={tier}
-                        className={`flex-1 px-5 py-4 ${idx === 0 ? "sm:border-r border-b sm:border-b-0 border-gray-100" : ""}`}>
-                        <p className="text-gray-500 text-xs mb-2">{label}</p>
-                        <div className={`relative flex items-center border rounded-lg px-3 h-11
-                          ${isLocked ? "bg-gray-50 border-gray-100" : "bg-white border-gray-300 hover:border-gray-400"}`}>
-                          <span className="text-gray-500 text-sm shrink-0">₹</span>
-                          <select
-                            value={value}
-                            onChange={(e) => handleDropdown(plan.key, tier, e.target.value)}
-                            disabled={isLocked}
-                            className={`flex-1 bg-transparent border-none outline-none text-sm font-semibold appearance-none pl-1
-                              ${isLocked ? "text-gray-500 cursor-not-allowed" : "text-gray-900 cursor-pointer"}`}>
-                            <option value="" disabled className="text-gray-400">Select price</option>
-                            {tierOpts.map((p) => (
-                              <option key={p} value={p} className="text-gray-900">
-                                ₹{new Intl.NumberFormat("en-IN").format(p)}/month
-                              </option>
-                            ))}
-                          </select>
-                          {!isLocked && (
-                            <svg className="w-3.5 h-3.5 text-gray-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
-                            </svg>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Fresher price warning */}
-                {fresWarn && (
-                  <div className="mx-5 mb-3 px-3 py-2 bg-amber-50 border border-amber-200 rounded-lg text-amber-600 text-xs font-medium">
-                    ⚠ Freshers price must be less than Experienced
-                  </div>
-                )}
-
-                {/* Earnings row — perMonthReceive from API breakdown */}
-                {hasValues && saved && !fresWarn && isLocked && (
-                  <div className="mx-5 mb-4 flex items-center justify-between bg-gray-50 border border-gray-100 rounded-xl px-4 py-3">
-                    <p className="text-gray-500 text-xs">
-                      You receive per month:&nbsp;
-                      <strong className="text-gray-700">
-                        {expReceive != null ? `₹${fmtINR(expReceive)}` : "—"}
-                      </strong>
-                      <span className="text-gray-400"> (Experienced)</span>
-                      &nbsp;|&nbsp;
-                      <strong className="text-gray-700">
-                        {freReceive != null ? `₹${fmtINR(freReceive)}` : "—"}
-                      </strong>
-                      <span className="text-gray-400"> (Freshers)</span>
-                    </p>
-                    <button onClick={() => setModalPlan(plan.key)}
-                      className="text-blue-500 text-xs font-semibold hover:underline shrink-0 ml-3 cursor-pointer">
-                      View Details
-                    </button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+        {/* Plan cards */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {PLANS.map((plan) => (
+            <PlanCard
+              key={plan.key}
+              plan={plan}
+              values={plans[plan.key]}
+              breakdowns={breakdowns}
+              isLocked={isLocked}
+              onChange={handleDropdown}
+              onViewDetails={setModalPlan}
+            />
+          ))}
         </div>
 
-        {/* ── Footer (edit mode only) ── */}
+        {/* Footer actions */}
         {!isLocked && (
-          <div className="flex items-center justify-end gap-3 mt-5 pt-4 border-t border-gray-100">
-            <button onClick={handleCancel}
-              className="border border-gray-300 text-gray-600 text-sm font-semibold px-6 py-2.5 rounded-xl hover:bg-gray-50 transition-colors cursor-pointer">
-              Cancel
-            </button>
-            <button onClick={handleSave} disabled={saving || savingPricing}
-              className={`text-sm font-semibold px-6 py-2.5 rounded-xl transition-colors cursor-pointer
-                ${saving || savingPricing
-                  ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  : "bg-[#1a1a2e] text-white hover:bg-[#16213e]"}`}>
-              {saving || savingPricing ? "Saving…" : "Save Pricing"}
+          <div style={{
+            display: "flex", alignItems: "center", justifyContent: "flex-end",
+            gap: 10, marginTop: 20, paddingTop: 16, borderTop: "1px solid #e2e8f0",
+          }}>
+            <button onClick={handleCancel} style={{ ...btnOutline, padding: "10px 22px" }}>Cancel</button>
+            <button onClick={handleSave} disabled={savingPricing} style={{ ...btnPrimary, padding: "10px 22px", opacity: savingPricing ? 0.6 : 1 }}>
+              {savingPricing ? "Saving…" : "Save Pricing"}
             </button>
           </div>
         )}
       </div>
 
-      {/* Details Modal */}
-      {modalPlan && (
-        <DetailsModal
-          plan={modalPlan}
-          breakdowns={breakdowns}
-          onClose={() => setModalPlan(null)}
-        />
-      )}
-
-      {/* Coupon Modal */}
-      {showCoupon && (
-        <CouponModal
-          onClose={() => setShowCoupon(false)}
-          mentorId={mentorId}
-        />
-      )}
+      {/* Modals */}
+      {modalPlan && <DetailsModal plan={modalPlan} breakdowns={breakdowns} onClose={() => setModalPlan(null)} />}
+      {showCoupon && <CouponModal onClose={() => setShowCoupon(false)} mentorId={mentorId} />}
 
       {/* Toast */}
       {toast && (
-        <div className={`fixed bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2 text-white text-xs font-semibold px-5 py-3 rounded-2xl shadow-xl z-50 whitespace-nowrap
-          ${toast.type === "success" ? "bg-[#1a1a2e]" : "bg-red-500"}`}>
-          {toast.type === "success" ? "✓" : "✕"} {toast.msg}
+        <div style={{
+          position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
+          display: "flex", alignItems: "center", gap: 8,
+          background: toast.type === "success" ? "#1a1a2e" : "#dc2626",
+          color: "#fff", fontFamily: F, fontSize: 13, fontWeight: 600,
+          padding: "10px 20px", borderRadius: 99,
+          boxShadow: "0 8px 24px rgba(0,0,0,0.18)", zIndex: 100, whiteSpace: "nowrap",
+        }}>
+          {toast.type === "success" ? <IconCheck /> : <IconX size={14} />}
+          {toast.msg}
         </div>
       )}
     </div>
@@ -1154,5 +1076,3 @@ const MyPricing = () => {
 };
 
 export default MyPricing;
-
-
