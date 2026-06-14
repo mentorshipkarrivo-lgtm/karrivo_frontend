@@ -1666,7 +1666,6 @@ export default function MentorLTMPlans() {
                       )}
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
                         <p style={{ fontSize: 'clamp(10px,2vw,12px)', fontWeight: 600, color: MUTED, margin: 0 }}>{plan.label}</p>
-                        <span style={{ fontSize: 'clamp(8px,1.5vw,9px)', fontWeight: 700, padding: '2px 8px', borderRadius: 20, background: ACCENT_L, border: `1px solid ${BORDER_HI}`, color: ACCENT }}>{plan.months}mo</span>
                       </div>
 
                       {/* ── Price display: totalPrice × months ── */}
@@ -1674,8 +1673,15 @@ export default function MentorLTMPlans() {
                         <span style={{ fontSize: 'clamp(24px,4vw,40px)', fontWeight: 800, lineHeight: 1, color: CREAM }}>
                           ₹{(plan.totalPrice * plan.months).toLocaleString('en-IN')}
                         </span>
-                        <span style={{ fontSize: 'clamp(9px,1.5vw,10px)', color: MUTED2, paddingBottom: 2 }}>/ {plan.months}month</span>
-                      </div>
+                        <span
+                          style={{
+                            fontSize: 'clamp(11px, 1.8vw, 14px)',
+                            color: MUTED2,
+                            paddingBottom: 2
+                          }}
+                        >
+                          / {plan.months} month
+                        </span>                      </div>
 
                       <div style={{ height: 1, background: BORDER, margin: '0 0 12px' }} />
                       <p style={{ fontSize: 'clamp(10px,1.5vw,11px)', color: MUTED, lineHeight: 1.5, margin: '0 0 12px' }}>{plan.description}</p>

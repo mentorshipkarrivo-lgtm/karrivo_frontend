@@ -217,7 +217,7 @@ const DetailsModal = ({ plan, breakdowns, onClose }) => {
     fontFamily: F, fontSize: 11, fontWeight: 700,
     color: "#94a3b8", letterSpacing: "0.5px",
     textTransform: "uppercase", padding: "8px 12px",
-    borderBottom: "1px solid #e2e8f0", background: "#fff", textAlign: "center",
+    borderBottom: "1.5px solid #e9edf2", background: "#f8fafc", textAlign: "center",
   };
   const tdStyle = {
     fontFamily: F, fontSize: 13, padding: "11px 12px",
@@ -230,39 +230,43 @@ const DetailsModal = ({ plan, breakdowns, onClose }) => {
       style={{
         position: "fixed", inset: 0, zIndex: 50,
         display: "flex", alignItems: "center", justifyContent: "center",
-        background: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)",
+        background: "rgba(15,23,42,0.4)", backdropFilter: "blur(4px)",
       }}
     >
       <div
         onClick={(e) => e.stopPropagation()}
         style={{
-          width: "100%", maxWidth: 480,
-          background: "#fff", borderRadius: 16,
-          boxShadow: "0 20px 60px rgba(0,0,0,0.15)",
+          width: "100%", maxWidth: 500,
+          background: "#fff", borderRadius: 18,
+          border: "1.5px solid #e2e8f0",
+          boxShadow: "0 24px 70px rgba(0,0,0,0.11)",
           overflow: "hidden", margin: "0 16px",
         }}
       >
         {/* Header */}
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", padding: "20px 20px 14px" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", padding: "20px 22px 16px", borderBottom: "1px solid #f1f5f9" }}>
           <div>
-            <p style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: "#1a1a2e", margin: "0 0 3px" }}>Payout breakdown</p>
+            <p style={{ fontFamily: F, fontSize: 15, fontWeight: 800, color: "#1a1a2e", margin: "0 0 3px" }}>Payout breakdown</p>
             <p style={{ fontFamily: F, fontSize: 11, color: "#94a3b8", margin: 0 }}>Server-calculated figures based on your tier</p>
           </div>
-          <button onClick={onClose} style={{ ...btnOutline, padding: "6px", borderRadius: 8 }}>
-            <IconX size={15} />
+          <button
+            onClick={onClose}
+            style={{ width: 30, height: 30, background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#64748b", flexShrink: 0 }}
+          >
+            <IconX size={24} />
           </button>
         </div>
 
         {/* Plan tabs */}
-        <div style={{ display: "flex", margin: "0 20px 16px", border: "1px solid #e2e8f0", borderRadius: 10, overflow: "hidden" }}>
+        <div style={{ display: "flex", margin: "16px 22px", background: "#f8fafc", border: "1.5px solid #e9edf2", borderRadius: 10, overflow: "hidden" }}>
           {PLANS.map((pl) => (
             <button
               key={pl.key}
               onClick={() => setActiveKey(pl.key)}
               style={{
-                flex: 1, fontFamily: F, fontSize: 12, fontWeight: 600,
-                padding: "8px 0", border: "none", cursor: "pointer",
-                background: activeKey === pl.key ? "#1a1a2e" : "#fff",
+                flex: 1, fontFamily: F, fontSize: 12, fontWeight: 700,
+                padding: "9px 0", border: "none", cursor: "pointer",
+                background: activeKey === pl.key ? "#1a1a2e" : "transparent",
                 color: activeKey === pl.key ? "#fff" : "#94a3b8",
                 transition: "all 0.15s",
               }}
@@ -270,65 +274,72 @@ const DetailsModal = ({ plan, breakdowns, onClose }) => {
           ))}
         </div>
 
-        <div style={{ padding: "0 20px 20px" }}>
+        {/* Table */}
+        <div style={{ padding: "0 22px 20px" }}>
           {noData ? (
             <p style={{ fontFamily: F, fontSize: 13, color: "#94a3b8", textAlign: "center", padding: "32px 0" }}>
               No breakdown data for this plan.
             </p>
           ) : (
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
-              <thead>
-                <tr>
-                  <th style={{ ...thStyle, textAlign: "left", width: "46%" }} />
-                  <th style={thStyle}>
-                    <span style={{ fontFamily: F, fontSize: 11, color: "#db2777", fontWeight: 700 }}>Experienced</span>
-                  </th>
-                  <th style={thStyle}>
-                    <span style={{ fontFamily: F, fontSize: 11, color: "#7c3aed", fontWeight: 700 }}>Freshers</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map(({ label, expVal, freVal, negative }) => (
-                  <tr key={label}>
-                    <td style={{ ...tdStyle, color: "#475569" }}>{label}</td>
-                    <td style={{ ...tdStyle, textAlign: "center", color: negative ? "#dc2626" : "#1a1a2e", fontWeight: negative ? 400 : 600 }}>
-                      {negative ? "− " : ""}₹{fmtINR(expVal)}
+            <div style={{ border: "1.5px solid #e9edf2", borderRadius: 12, overflow: "hidden" }}>
+              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <thead>
+                  <tr>
+                    <th style={{ ...thStyle, textAlign: "left", width: "46%" }} />
+                    <th style={thStyle}>
+                      <span style={{ fontFamily: F, fontSize: 11, color: "#1a1a2e", fontWeight: 800 }}>Experienced</span>
+                    </th>
+                    <th style={thStyle}>
+                      <span style={{ fontFamily: F, fontSize: 11, color: "#64748b", fontWeight: 800 }}>Freshers</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map(({ label, expVal, freVal, negative }) => (
+                    <tr key={label}>
+                      <td style={{ ...tdStyle, color: "#475569" }}>{label}</td>
+                      <td style={{ ...tdStyle, textAlign: "center", color: negative ? "#dc2626" : "#1a1a2e", fontWeight: negative ? 400 : 600 }}>
+                        {negative ? "− " : ""}₹{fmtINR(expVal)}
+                      </td>
+                      <td style={{ ...tdStyle, textAlign: "center", color: negative ? "#dc2626" : "#1a1a2e", fontWeight: negative ? 400 : 600 }}>
+                        {negative ? "− " : ""}₹{fmtINR(freVal)}
+                      </td>
+                    </tr>
+                  ))}
+
+                  <tr style={{ borderTop: "1px dashed #e2e8f0" }}>
+                    <td style={{ ...tdStyle, color: "#94a3b8", fontSize: 11, fontStyle: "italic" }}>Total deducted:</td>
+                    <td style={{ ...tdStyle, textAlign: "center", color: "#94a3b8", fontSize: 11 }}>− ₹{fmtINR(exp.totalDeducted)}</td>
+                    <td style={{ ...tdStyle, textAlign: "center", color: "#94a3b8", fontSize: 11 }}>− ₹{fmtINR(fre.totalDeducted)}</td>
+                  </tr>
+
+                  <tr style={{ borderTop: "2px solid #e9edf2", background: "#f8fafc" }}>
+                    <td style={{ ...tdStyle, color: "#1a1a2e", fontWeight: 800, fontSize: 14 }}>You receive:</td>
+                    <td style={{ ...tdStyle, textAlign: "center" }}>
+                      <p style={{ fontFamily: F, fontSize: 15, fontWeight: 800, color: "#16a34a", margin: 0 }}>₹{fmtINR(exp.mentorReceive)}</p>
+                      {activePlan.months > 1 && (
+                        <p style={{ fontFamily: F, fontSize: 10, color: "#94a3b8", margin: "3px 0 0" }}>₹{fmtINR(exp.perMonthReceive)}/mo</p>
+                      )}
                     </td>
-                    <td style={{ ...tdStyle, textAlign: "center", color: negative ? "#dc2626" : "#1a1a2e", fontWeight: negative ? 400 : 600 }}>
-                      {negative ? "− " : ""}₹{fmtINR(freVal)}
+                    <td style={{ ...tdStyle, textAlign: "center" }}>
+                      <p style={{ fontFamily: F, fontSize: 15, fontWeight: 800, color: "#16a34a", margin: 0 }}>₹{fmtINR(fre.mentorReceive)}</p>
+                      {activePlan.months > 1 && (
+                        <p style={{ fontFamily: F, fontSize: 10, color: "#94a3b8", margin: "3px 0 0" }}>₹{fmtINR(fre.perMonthReceive)}/mo</p>
+                      )}
                     </td>
                   </tr>
-                ))}
-
-                <tr style={{ borderTop: "1px dashed #e2e8f0" }}>
-                  <td style={{ ...tdStyle, color: "#94a3b8", fontSize: 11, fontStyle: "italic" }}>Total deducted:</td>
-                  <td style={{ ...tdStyle, textAlign: "center", color: "#94a3b8", fontSize: 11 }}>− ₹{fmtINR(exp.totalDeducted)}</td>
-                  <td style={{ ...tdStyle, textAlign: "center", color: "#94a3b8", fontSize: 11 }}>− ₹{fmtINR(fre.totalDeducted)}</td>
-                </tr>
-
-                <tr style={{ borderTop: "2px solid #e2e8f0" }}>
-                  <td style={{ ...tdStyle, color: "#1a1a2e", fontWeight: 700, fontSize: 14 }}>You receive:</td>
-                  <td style={{ ...tdStyle, textAlign: "center" }}>
-                    <p style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: "#16a34a", margin: 0 }}>₹{fmtINR(exp.mentorReceive)}</p>
-                    {activePlan.months > 1 && (
-                      <p style={{ fontFamily: F, fontSize: 10, color: "#94a3b8", margin: "3px 0 0" }}>₹{fmtINR(exp.perMonthReceive)}/mo</p>
-                    )}
-                  </td>
-                  <td style={{ ...tdStyle, textAlign: "center" }}>
-                    <p style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: "#16a34a", margin: 0 }}>₹{fmtINR(fre.mentorReceive)}</p>
-                    {activePlan.months > 1 && (
-                      <p style={{ fontFamily: F, fontSize: 10, color: "#94a3b8", margin: "3px 0 0" }}>₹{fmtINR(fre.perMonthReceive)}/mo</p>
-                    )}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
 
-        <div style={{ padding: "0 20px 20px" }}>
-          <button onClick={onClose} style={{ ...btnPrimary, width: "100%", justifyContent: "center", padding: "12px" }}>
+        {/* Footer */}
+        <div style={{ padding: "0 22px 20px" }}>
+          <button
+            onClick={onClose}
+            style={{ width: "100%", padding: "11px", borderRadius: 10, border: "none", background: "#1a1a2e", color: "#fff", fontFamily: F, fontSize: 13, fontWeight: 700, cursor: "pointer" }}
+          >
             Got it
           </button>
         </div>
@@ -767,7 +778,7 @@ const PlanCard = ({ plan, values, breakdowns, isLocked, onChange, onViewDetails 
           borderRadius: 8, fontFamily: F, fontSize: 12, color: "#92400e",
           display: "flex", alignItems: "center", gap: 6,
         }}>
-          ⚠ Freshers price must be lower than Experienced
+          ⚠ Freshers price must be less than the Experienced Price
         </div>
       )}
 

@@ -1,5 +1,9 @@
 
-// //  import { useState, useEffect, useMemo } from "react";
+
+
+
+
+// // import { useState, useEffect, useMemo } from "react";
 // // import {
 // //     MapPin, X, ChevronDown, ChevronUp, CheckCircle,
 // //     Search, Pencil, Briefcase, Target,
@@ -9,25 +13,15 @@
 // // import { motion, AnimatePresence } from "framer-motion";
 // // import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 // // import KarrivoLogo from "../../assets/KarrivoLogo.png";
-// // // import {
-// // //     useGetLtmAllMentorsQuery,
-// // //     useSearchMentorMutation,
-// // //     useAdvancedFilterMentorsMutation,
-// // // } from "./exploreMentorsapislice";
 
 // // import { useAdvancedFilterMentorsMutation, useSearchMentorMutation, useGetLtmAllMentorsQuery } from "../LongTermMentorship/MentorshipHome/Mentorshiphomeapislice";
-// // // ── Google Font ────────────────────────────────────────────────────────────
-// // const _link = document.createElement("link");
-// // _link.href = "https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap";
-// // _link.rel = "stylesheet";
-// // document.head.appendChild(_link);
 
 // // // ── Design tokens ──────────────────────────────────────────────────────────
 // // const BLUE = "#0098cc";
 // // const BLUE_LIGHT = "#f0faff";
 // // const BLUE_BORDER = "#cce9f5";
 // // const PRIMARY = "#1a1a2e";
-// // const FONT = "'DM Sans', sans-serif";
+// // const FONT = "'Cambria', 'Georgia', serif";
 
 // // // ── Static data ────────────────────────────────────────────────────────────
 // // const DAY_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -50,7 +44,11 @@
 // //     "Data Scientist / AI/ML", "Data Analyst",
 // // ];
 
-// // const NAV_LINKS = [{ label: "Explore Mentors", path: "/explore-mentors" }];
+// // const NAV_LINKS = [
+// //     { label: "Explore Mentors", path: "/explore-mentors" },
+// //     { label: "Blogs", path: "/blogs" },
+// //     { label: "Success Stories", path: "/success-stories" },
+// // ];
 
 // // // ── Helpers ────────────────────────────────────────────────────────────────
 // // const fmtINR = (n) => `₹${Number(n ?? 0).toLocaleString("en-IN")}`;
@@ -82,9 +80,7 @@
 // // }
 
 // // function useWindowWidth() {
-// //     const [w, setW] = useState(
-// //         typeof window !== "undefined" ? window.innerWidth : 1200
-// //     );
+// //     const [w, setW] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
 // //     useEffect(() => {
 // //         const h = () => setW(window.innerWidth);
 // //         window.addEventListener("resize", h);
@@ -132,47 +128,22 @@
 // //             style={panelStyle}
 // //         >
 // //             {isMobile && (
-// //                 <div style={{
-// //                     width: "36px", height: "4px", background: "#e5e7eb",
-// //                     borderRadius: "2px", margin: "12px auto 4px", flexShrink: 0
-// //                 }} />
+// //                 <div style={{ width: "36px", height: "4px", background: "#e5e7eb", borderRadius: "2px", margin: "12px auto 4px", flexShrink: 0 }} />
 // //             )}
-// //             <div style={{
-// //                 background: "white", borderBottom: `3px solid ${BLUE}`,
-// //                 padding: "20px 24px", flexShrink: 0
-// //             }}>
-// //                 <div style={{
-// //                     display: "flex", alignItems: "center",
-// //                     justifyContent: "space-between", marginBottom: "4px"
-// //                 }}>
-// //                     <h2 style={{ color: BLUE, fontWeight: 800, fontSize: "17px", margin: 0 }}>
-// //                         Book A Free Trial
-// //                     </h2>
-// //                     <button onClick={onClose}
-// //                         style={{
-// //                             background: BLUE_LIGHT, border: `1px solid ${BLUE_BORDER}`, color: BLUE,
-// //                             borderRadius: "8px", width: "32px", height: "32px", cursor: "pointer",
-// //                             display: "flex", alignItems: "center", justifyContent: "center"
-// //                         }}>
+// //             <div style={{ background: "white", borderBottom: `3px solid ${BLUE}`, padding: "20px 24px", flexShrink: 0 }}>
+// //                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }}>
+// //                     <h2 style={{ color: BLUE, fontWeight: 800, fontSize: "17px", margin: 0, fontFamily: FONT }}>Book A Free Trial</h2>
+// //                     <button onClick={onClose} style={{ background: BLUE_LIGHT, border: `1px solid ${BLUE_BORDER}`, color: BLUE, borderRadius: "8px", width: "32px", height: "32px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
 // //                         <X size={16} />
 // //                     </button>
 // //                 </div>
-// //                 <p style={{ color: "#6b7280", fontSize: "13px", margin: 0 }}>
-// //                     {toTitleCase(mentor.fullName)} ·{" "}
-// //                     <span style={{ color: BLUE, fontWeight: 700 }}>
-// //                         {fmtINR(mentor.pricing?.hourlyRate ?? mentor.hourlyRate)}/session
-// //                     </span>
+// //                 <p style={{ color: "#6b7280", fontSize: "13px", margin: 0, fontFamily: FONT }}>
+// //                     {toTitleCase(mentor.fullName)} · <span style={{ color: BLUE, fontWeight: 700 }}>{fmtINR(mentor.pricing?.hourlyRate ?? mentor.hourlyRate)}/session</span>
 // //                 </p>
 // //             </div>
 
 // //             <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px" }}>
-// //                 {/* Plan selector */}
-// //                 <p style={{
-// //                     fontSize: "11px", fontWeight: 700, color: BLUE,
-// //                     textTransform: "uppercase", letterSpacing: ".08em", marginBottom: "10px"
-// //                 }}>
-// //                     Select Plan
-// //                 </p>
+// //                 <p style={{ fontSize: "11px", fontWeight: 700, color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: "10px", fontFamily: FONT }}>Select Plan</p>
 // //                 <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "24px" }}>
 // //                     {PLANS.map((p) => {
 // //                         const sel = planKey === p.key;
@@ -181,54 +152,22 @@
 // //                         const sessions = mentor.pricing?.weeklySessions ?? 0;
 // //                         const disabled = !pData;
 // //                         return (
-// //                             <div key={p.key}
-// //                                 onClick={() => !disabled && setPlanKey(p.key)}
-// //                                 style={{
-// //                                     border: `1.5px solid ${sel ? BLUE : disabled ? "#f3f4f6" : "#e5e7eb"}`,
-// //                                     borderRadius: "12px", padding: "14px 16px",
-// //                                     background: disabled ? "#f9fafb" : "white",
-// //                                     cursor: disabled ? "not-allowed" : "pointer",
-// //                                     display: "flex", alignItems: "center", gap: "12px",
-// //                                     boxShadow: sel ? `0 0 0 3px ${BLUE_LIGHT}` : "none",
-// //                                     opacity: disabled ? 0.6 : 1
-// //                                 }}>
-// //                                 <div style={{
-// //                                     width: "18px", height: "18px", borderRadius: "50%",
-// //                                     border: `2px solid ${sel ? BLUE : "#d1d5db"}`, background: "white",
-// //                                     display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
-// //                                 }}>
-// //                                     {sel && <div style={{
-// //                                         width: "8px", height: "8px",
-// //                                         borderRadius: "50%", background: BLUE
-// //                                     }} />}
+// //                             <div key={p.key} onClick={() => !disabled && setPlanKey(p.key)}
+// //                                 style={{ border: `1.5px solid ${sel ? BLUE : disabled ? "#f3f4f6" : "#e5e7eb"}`, borderRadius: "12px", padding: "14px 16px", background: disabled ? "#f9fafb" : "white", cursor: disabled ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: "12px", boxShadow: sel ? `0 0 0 3px ${BLUE_LIGHT}` : "none", opacity: disabled ? 0.6 : 1 }}>
+// //                                 <div style={{ width: "18px", height: "18px", borderRadius: "50%", border: `2px solid ${sel ? BLUE : "#d1d5db"}`, background: "white", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+// //                                     {sel && <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: BLUE }} />}
 // //                                 </div>
 // //                                 <div style={{ flex: 1 }}>
-// //                                     <p style={{
-// //                                         fontWeight: 700, fontSize: "13px",
-// //                                         color: sel ? BLUE : "#111827", margin: "0 0 2px"
-// //                                     }}>{p.label}</p>
-// //                                     <p style={{ fontSize: "11px", color: "#9ca3af", margin: 0 }}>
-// //                                         {disabled ? "No plans available" : `${sessions} sessions/week`}
-// //                                     </p>
+// //                                     <p style={{ fontWeight: 700, fontSize: "13px", color: sel ? BLUE : "#111827", margin: "0 0 2px", fontFamily: FONT }}>{p.label}</p>
+// //                                     <p style={{ fontSize: "11px", color: "#9ca3af", margin: 0, fontFamily: FONT }}>{disabled ? "No plans available" : `${sessions} sessions/week`}</p>
 // //                                 </div>
-// //                                 <p style={{
-// //                                     fontWeight: 700, fontSize: "15px",
-// //                                     color: sel ? BLUE : "#374151", margin: 0
-// //                                 }}>
-// //                                     {disabled ? "N/A" : fmtINR(price)}
-// //                                 </p>
+// //                                 <p style={{ fontWeight: 700, fontSize: "15px", color: sel ? BLUE : "#374151", margin: 0, fontFamily: FONT }}>{disabled ? "N/A" : fmtINR(price)}</p>
 // //                             </div>
 // //                         );
 // //                     })}
 // //                 </div>
 
-// //                 {/* Availability */}
-// //                 <p style={{
-// //                     fontSize: "11px", fontWeight: 700, color: BLUE,
-// //                     textTransform: "uppercase", letterSpacing: ".08em", marginBottom: "10px"
-// //                 }}>
-// //                     Select Availability
-// //                 </p>
+// //                 <p style={{ fontSize: "11px", fontWeight: 700, color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: "10px", fontFamily: FONT }}>Select Availability</p>
 // //                 {availability.length > 0 ? (
 // //                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
 // //                         {DAY_ORDER.map((day, di) => {
@@ -238,82 +177,28 @@
 // //                             const isOpen = openDay === day;
 // //                             const selInDay = slots.filter((_, si) => selected[`${di}_${si}`]).length;
 // //                             return (
-// //                                 <div key={day}
-// //                                     style={{
-// //                                         border: `1.5px solid ${selInDay ? BLUE : "#e5e7eb"}`,
-// //                                         borderRadius: "12px", overflow: "hidden", background: "white"
-// //                                     }}>
-// //                                     <button
-// //                                         onClick={() => setOpenDay(isOpen ? null : day)}
-// //                                         style={{
-// //                                             width: "100%", display: "flex", alignItems: "center",
-// //                                             justifyContent: "space-between", padding: "12px 14px",
-// //                                             background: "transparent", border: "none", cursor: "pointer",
-// //                                             fontFamily: FONT
-// //                                         }}>
+// //                                 <div key={day} style={{ border: `1.5px solid ${selInDay ? BLUE : "#e5e7eb"}`, borderRadius: "12px", overflow: "hidden", background: "white" }}>
+// //                                     <button onClick={() => setOpenDay(isOpen ? null : day)} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 14px", background: "transparent", border: "none", cursor: "pointer", fontFamily: FONT }}>
 // //                                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-// //                                             <span style={{
-// //                                                 fontWeight: 600, fontSize: "13px",
-// //                                                 color: selInDay ? BLUE : "#374151"
-// //                                             }}>{day}</span>
-// //                                             {selInDay > 0 && (
-// //                                                 <span style={{
-// //                                                     background: BLUE, color: "white",
-// //                                                     borderRadius: "20px", padding: "1px 8px",
-// //                                                     fontSize: "10px", fontWeight: 700
-// //                                                 }}>
-// //                                                     {selInDay} selected
-// //                                                 </span>
-// //                                             )}
+// //                                             <span style={{ fontWeight: 600, fontSize: "13px", color: selInDay ? BLUE : "#374151", fontFamily: FONT }}>{day}</span>
+// //                                             {selInDay > 0 && <span style={{ background: BLUE, color: "white", borderRadius: "20px", padding: "1px 8px", fontSize: "10px", fontWeight: 700 }}>{selInDay} selected</span>}
 // //                                         </div>
 // //                                         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-// //                                             <span style={{ fontSize: "11px", color: "#9ca3af" }}>
-// //                                                 {slots.length} slot{slots.length !== 1 ? "s" : ""}
-// //                                             </span>
-// //                                             {isOpen
-// //                                                 ? <ChevronUp size={14} color="#9ca3af" />
-// //                                                 : <ChevronDown size={14} color="#9ca3af" />}
+// //                                             <span style={{ fontSize: "11px", color: "#9ca3af", fontFamily: FONT }}>{slots.length} slot{slots.length !== 1 ? "s" : ""}</span>
+// //                                             {isOpen ? <ChevronUp size={14} color="#9ca3af" /> : <ChevronDown size={14} color="#9ca3af" />}
 // //                                         </div>
 // //                                     </button>
 // //                                     <AnimatePresence>
 // //                                         {isOpen && (
-// //                                             <motion.div
-// //                                                 initial={{ height: 0, opacity: 0 }}
-// //                                                 animate={{ height: "auto", opacity: 1 }}
-// //                                                 exit={{ height: 0, opacity: 0 }}
-// //                                                 transition={{ duration: .18 }}
-// //                                                 style={{ overflow: "hidden" }}>
-// //                                                 <div style={{
-// //                                                     padding: "0 14px 12px",
-// //                                                     display: "flex", flexDirection: "column", gap: "6px"
-// //                                                 }}>
+// //                                             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: .18 }} style={{ overflow: "hidden" }}>
+// //                                                 <div style={{ padding: "0 14px 12px", display: "flex", flexDirection: "column", gap: "6px" }}>
 // //                                                     {slots.map((slot, si) => {
 // //                                                         const k = `${di}_${si}`;
 // //                                                         const isSel = !!selected[k];
 // //                                                         return (
-// //                                                             <button key={slot._id}
-// //                                                                 onClick={() => toggleSlot(di, si)}
-// //                                                                 style={{
-// //                                                                     display: "flex", alignItems: "center",
-// //                                                                     justifyContent: "space-between",
-// //                                                                     padding: "8px 12px", borderRadius: "8px",
-// //                                                                     border: `1.5px solid ${isSel ? BLUE : "#e5e7eb"}`,
-// //                                                                     background: "white", cursor: "pointer",
-// //                                                                     fontFamily: FONT
-// //                                                                 }}>
-// //                                                                 <span style={{
-// //                                                                     fontSize: "12px", fontWeight: 600,
-// //                                                                     color: isSel ? BLUE : "#374151"
-// //                                                                 }}>
-// //                                                                     {slot.startTime} – {slot.endTime}
-// //                                                                 </span>
-// //                                                                 {isSel
-// //                                                                     ? <CheckCircle size={15} color={BLUE} />
-// //                                                                     : <div style={{
-// //                                                                         width: "15px", height: "15px",
-// //                                                                         borderRadius: "50%",
-// //                                                                         border: "1.5px solid #d1d5db"
-// //                                                                     }} />}
+// //                                                             <button key={slot._id} onClick={() => toggleSlot(di, si)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 12px", borderRadius: "8px", border: `1.5px solid ${isSel ? BLUE : "#e5e7eb"}`, background: "white", cursor: "pointer", fontFamily: FONT }}>
+// //                                                                 <span style={{ fontSize: "12px", fontWeight: 600, color: isSel ? BLUE : "#374151", fontFamily: FONT }}>{slot.startTime} – {slot.endTime}</span>
+// //                                                                 {isSel ? <CheckCircle size={15} color={BLUE} /> : <div style={{ width: "15px", height: "15px", borderRadius: "50%", border: "1.5px solid #d1d5db" }} />}
 // //                                                             </button>
 // //                                                         );
 // //                                                     })}
@@ -326,53 +211,22 @@
 // //                         })}
 // //                     </div>
 // //                 ) : (
-// //                     <div style={{
-// //                         textAlign: "center", padding: "20px",
-// //                         background: "#fafafa", borderRadius: "10px",
-// //                         border: "1px dashed #e5e7eb"
-// //                     }}>
-// //                         <p style={{ fontSize: "13px", color: "#9ca3af", margin: 0 }}>
-// //                             No Availability Slots Set Yet
-// //                         </p>
+// //                     <div style={{ textAlign: "center", padding: "20px", background: "#fafafa", borderRadius: "10px", border: "1px dashed #e5e7eb" }}>
+// //                         <p style={{ fontSize: "13px", color: "#9ca3af", margin: 0, fontFamily: FONT }}>No Availability Slots Set Yet</p>
 // //                     </div>
 // //                 )}
 // //             </div>
 
-// //             {/* Footer */}
-// //             <div style={{
-// //                 borderTop: "1px solid #f0f0f0", padding: "16px 24px",
-// //                 background: "white", flexShrink: 0
-// //             }}>
+// //             <div style={{ borderTop: "1px solid #f0f0f0", padding: "16px 24px", background: "white", flexShrink: 0 }}>
 // //                 <div style={{ marginBottom: "12px" }}>
-// //                     <p style={{
-// //                         fontSize: "11px", color: "#9ca3af", margin: "0 0 2px",
-// //                         fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em"
-// //                     }}>
-// //                         Total For {PLANS.find((p) => p.key === planKey)?.label}
-// //                     </p>
-// //                     <p style={{ fontSize: "26px", fontWeight: 800, color: BLUE, margin: 0 }}>
-// //                         {totalPrice > 0 ? fmtINR(totalPrice) : "N/A"}
-// //                     </p>
-// //                     {totalSessions > 0 && (
-// //                         <p style={{ fontSize: "11px", color: "#9ca3af", margin: "2px 0 0" }}>
-// //                             {totalSessions} sessions · {selectedCount} slot{selectedCount !== 1 ? "s" : ""}/week
-// //                         </p>
-// //                     )}
+// //                     <p style={{ fontSize: "11px", color: "#9ca3af", margin: "0 0 2px", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em", fontFamily: FONT }}>Total For {PLANS.find((p) => p.key === planKey)?.label}</p>
+// //                     <p style={{ fontSize: "26px", fontWeight: 800, color: BLUE, margin: 0, fontFamily: FONT }}>{totalPrice > 0 ? fmtINR(totalPrice) : "N/A"}</p>
+// //                     {totalSessions > 0 && <p style={{ fontSize: "11px", color: "#9ca3af", margin: "2px 0 0", fontFamily: FONT }}>{totalSessions} sessions · {selectedCount} slot{selectedCount !== 1 ? "s" : ""}/week</p>}
 // //                 </div>
-// //                 <button
-// //                     disabled={totalPrice === 0}
-// //                     style={{
-// //                         width: "100%", padding: "13px",
-// //                         background: totalPrice === 0 ? "#d1d5db" : PRIMARY,
-// //                         cursor: totalPrice === 0 ? "not-allowed" : "pointer",
-// //                         color: "white", border: "none", borderRadius: "10px",
-// //                         fontWeight: 700, fontSize: "14px", fontFamily: FONT
-// //                     }}>
+// //                 <button disabled={totalPrice === 0} style={{ width: "100%", padding: "13px", background: totalPrice === 0 ? "#d1d5db" : PRIMARY, cursor: totalPrice === 0 ? "not-allowed" : "pointer", color: "white", border: "none", borderRadius: "10px", fontWeight: 700, fontSize: "14px", fontFamily: FONT }}>
 // //                     {totalPrice === 0 ? "Plan Not Available" : `Subscribe — ${fmtINR(totalPrice)}`}
 // //                 </button>
-// //                 <p style={{ textAlign: "center", color: "#9ca3af", fontSize: "11px", marginTop: "8px" }}>
-// //                     Secure Checkout · Cancel Anytime · 7-Day Refund Policy
-// //                 </p>
+// //                 <p style={{ textAlign: "center", color: "#9ca3af", fontSize: "11px", marginTop: "8px", fontFamily: FONT }}>Secure Checkout · Cancel Anytime · 7-Day Refund Policy</p>
 // //             </div>
 // //         </motion.div>
 // //     );
@@ -380,8 +234,6 @@
 
 // // // ── MentorCard ─────────────────────────────────────────────────────────────
 // // function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
-
-// //     console.log(mentor, "mentor1s2d3fer")
 // //     const width = useWindowWidth();
 // //     const isMobile = width < 768;
 // //     const [bioExpanded, setBioExpanded] = useState(false);
@@ -390,201 +242,182 @@
 // //     const currentRole = toTitleCase(mentor.currentRole || "");
 // //     const companyName = toTitleCase(mentor.companyName || "");
 // //     const locationText = toTitleCase(mentor.location || "");
-// //     const languages = Array.isArray(mentor.languages)
-// //         ? mentor.languages.join(", ")
-// //         : mentor.languages || "";
-
+// //     const languages = Array.isArray(mentor.languages) ? mentor.languages.join(", ") : mentor.languages || "";
 // //     const bio = mentor.motivationStatement || mentor.bio || mentor.about || "";
-
-// //     const areas = (mentor.areasOfInterest || mentor.currentSkills || "")
-// //         .split(",").map((s) => s.trim()).filter(Boolean);
-
-// //     const monthlyPrice = mentor.hourlyRate ?? 0;
+// //     const areas = (mentor.areasOfInterest || mentor.currentSkills || "").split(",").map((s) => s.trim()).filter(Boolean);
+// //     const monthlyPrice = mentor.pricing?.monthlyRate ?? mentor.hourlyRate ?? 0;
+// //     const sessionRate = mentor.pricing?.hourlyRate ?? mentor.hourlyRate ?? 0;
 // //     const nextAvailable = mentor.nextAvailable ?? "";
 // //     const placements = mentor.placements ?? 0;
 // //     const menteeCount = mentor.menteeCount ?? 0;
-// //     const yearsExp = mentor.yearsOfExperience
-// //         ? `${mentor.yearsOfExperience}+ Years of Exp.`
-// //         : "0+ Years of Exp.";
+// //     const yearsExp = mentor.yearsOfExperience ? `${mentor.yearsOfExperience}+ Years of Exp.` : "0+ Years of Exp.";
 // //     const starBadge = mentor.starMentorBadge || mentor.badge || "";
 // //     const referralCount = mentor.referralCount ?? 0;
 // //     const hasCurriculum = mentor.hasCurriculum ?? false;
 // //     const weeklySessions = mentor.pricing?.weeklySessions ?? 4;
+// //     const discount = mentor.discount ?? null;
 
 // //     const offeringForList = Array.isArray(mentor.offeringFor)
 // //         ? mentor.offeringFor
-// //         : mentor.offeringFor
-// //             ? String(mentor.offeringFor).split(",").map((s) => s.trim())
-// //             : [];
+// //         : mentor.offeringFor ? String(mentor.offeringFor).split(",").map((s) => s.trim()) : [];
 
 // //     const domainsList = Array.isArray(mentor.domains)
 // //         ? mentor.domains
-// //         : mentor.domains
-// //             ? String(mentor.domains).split(",").map((s) => s.trim())
-// //             : [];
+// //         : mentor.domains ? String(mentor.domains).split(",").map((s) => s.trim()) : [];
 
-// //     const prevCompanies = Array.isArray(mentor.previousCompanies)
-// //         ? mentor.previousCompanies
-// //         : [];
+// //     const prevCompanies = Array.isArray(mentor.previousCompanies) ? mentor.previousCompanies : [];
 
+// //     // Each card occupies full viewport height minus header
 // //     return (
 // //         <motion.div
-// //             initial={{ opacity: 0, y: 12 }}
+// //             initial={{ opacity: 0, y: 16 }}
 // //             animate={{ opacity: 1, y: 0 }}
-// //             transition={{ duration: 0.25, delay: index * 0.03 }}
+// //             transition={{ duration: 0.28, delay: index * 0.04 }}
 // //             style={{
 // //                 width: "100%",
-// //                 border: "1px solid #e5e7eb",
+// //                 minHeight: isMobile ? "auto" : "calc(100vh - 130px)",
+// //                 border: "1px solid #e2e8f0",
 // //                 background: "#fff",
 // //                 display: "flex",
 // //                 flexDirection: isMobile ? "column" : "row",
 // //                 overflow: "hidden",
-// //                 marginBottom: "16px",
+// //                 marginBottom: "20px",
 // //                 fontFamily: FONT,
-// //                 borderRadius: "4px",
+// //                 borderRadius: "6px",
+// //                 boxShadow: "0 1px 6px rgba(0,0,0,0.06)",
 // //             }}
 // //         >
-// //             {/* LEFT: Photo */}
+// //             {/* LEFT: Photo column */}
 // //             <div style={{
 // //                 position: "relative",
-// //                 width: isMobile ? "100%" : "180px",
-// //                 minWidth: isMobile ? "100%" : "180px",
-// //                 height: isMobile ? "220px" : "auto",
-// //                 background: "#f3f4f6",
+// //                 width: isMobile ? "100%" : "200px",
+// //                 minWidth: isMobile ? "100%" : "200px",
+// //                 height: isMobile ? "240px" : "auto",
+// //                 background: "#f1f5f9",
 // //                 overflow: "hidden",
 // //                 flexShrink: 0,
 // //             }}>
-// //                 <span style={{ position: "absolute", top: "8px", left: "8px", fontSize: "12px", color: "#94a3b8", userSelect: "none" }}>✦</span>
-// //                 <span style={{ position: "absolute", top: "8px", right: "8px", fontSize: "9px", color: "#94a3b8", userSelect: "none" }}>✦</span>
-// //                 <span style={{ position: "absolute", bottom: "52px", left: "6px", fontSize: "8px", color: "#94a3b8", userSelect: "none" }}>✦</span>
-// //                 <span style={{ position: "absolute", bottom: "52px", right: "6px", fontSize: "10px", color: "#94a3b8", userSelect: "none" }}>✦</span>
+// //                 {/* Decorative dots */}
+// //                 <span style={{ position: "absolute", top: "10px", left: "10px", fontSize: "13px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
+// //                 <span style={{ position: "absolute", top: "10px", right: "10px", fontSize: "9px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
+// //                 <span style={{ position: "absolute", bottom: "60px", left: "8px", fontSize: "8px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
+// //                 <span style={{ position: "absolute", bottom: "60px", right: "8px", fontSize: "11px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
 // //                 <img
 // //                     src={mentor.profilePhoto}
 // //                     alt={fullName}
-// //                     style={{
-// //                         width: "100%", height: "100%", objectFit: "cover",
-// //                         objectPosition: "top center", display: "block",
-// //                         minHeight: isMobile ? "220px" : "220px"
-// //                     }}
+// //                     style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block", minHeight: isMobile ? "240px" : "300px" }}
 // //                 />
 // //             </div>
 
-// //             {/* CENTRE: Info */}
+// //             {/* CENTRE: Info column */}
 // //             <div style={{
-// //                 flex: 1, display: "flex", flexDirection: "column",
-// //                 borderRight: isMobile ? "none" : "1px solid #e5e7eb", minWidth: 0,
+// //                 flex: 1,
+// //                 display: "flex",
+// //                 flexDirection: "column",
+// //                 borderRight: isMobile ? "none" : "1px solid #e2e8f0",
+// //                 minWidth: 0,
 // //             }}>
-// //                 <div style={{ padding: "16px 18px", display: "flex", flexDirection: "column", gap: "10px", flex: 1 }}>
-// //                     <h2 style={{ margin: 0, fontSize: "22px", fontWeight: 700, color: "#111827", lineHeight: 1.2 }}>
+// //                 {/* Main content area */}
+// //                 <div style={{ padding: "22px 22px 16px", display: "flex", flexDirection: "column", gap: "12px", flex: 1 }}>
+// //                     {/* Name */}
+// //                     <h2 style={{ margin: 0, fontSize: "24px", fontWeight: 700, color: "#0f172a", lineHeight: 1.2, fontFamily: FONT }}>
 // //                         {fullName}
 // //                     </h2>
-// //                     <div style={{ display: "flex", alignItems: "center", gap: "14px", flexWrap: "wrap", fontSize: "13px", color: "#6b7280" }}>
+
+// //                     {/* Location + Language */}
+// //                     <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap", fontSize: "13px", color: "#64748b", fontFamily: FONT }}>
 // //                         <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-// //                             <MapPin size={13} color="#6b7280" />{locationText}
+// //                             <MapPin size={13} color="#64748b" />
+// //                             <strong style={{ color: "#334155" }}>{locationText.split(",")[0]}</strong>
+// //                             {locationText.includes(",") && <span>, {locationText.split(",").slice(1).join(",").trim()}</span>}
 // //                         </span>
 // //                         <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-// //                             <Pencil size={12} color="#6b7280" />{languages}
+// //                             <Pencil size={12} color="#64748b" />
+// //                             <strong style={{ color: "#334155" }}>{languages}</strong>
 // //                         </span>
 // //                     </div>
-// //                     <div style={{ fontSize: "13px", color: "#4b5563", lineHeight: "1.6" }}>
-// //                         {bioExpanded ? bio : bio.slice(0, 160) + (bio.length > 160 ? "..." : "")}
-// //                         {bio.length > 160 && (
-// //                             <span onClick={() => setBioExpanded(!bioExpanded)}
-// //                                 style={{ color: "#2563eb", marginLeft: "6px", cursor: "pointer", fontWeight: 600 }}>
+
+// //                     {/* Bio */}
+// //                     <div style={{ fontSize: "13px", color: "#475569", lineHeight: "1.65", fontFamily: FONT }}>
+// //                         {bioExpanded ? bio : bio.slice(0, 180) + (bio.length > 180 ? "..." : "")}
+// //                         {bio.length > 180 && (
+// //                             <span onClick={() => setBioExpanded(!bioExpanded)} style={{ color: "#2563eb", marginLeft: "6px", cursor: "pointer", fontWeight: 600 }}>
 // //                                 {bioExpanded ? "Show Less" : "Read More"}
 // //                             </span>
 // //                         )}
 // //                     </div>
+
+// //                     {/* Skills */}
 // //                     <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
 // //                         {areas.slice(0, 7).map((skill, i) => (
-// //                             <div key={i} style={{
-// //                                 border: "1px solid #d1d5db", padding: "4px 10px",
-// //                                 fontSize: "12px", color: "#374151", background: "#fff", borderRadius: "4px"
-// //                             }}>
+// //                             <div key={i} style={{ border: "1px solid #d1d5db", padding: "4px 11px", fontSize: "12px", color: "#374151", background: "#fff", borderRadius: "4px", fontFamily: FONT }}>
 // //                                 {toTitleCase(skill)}
 // //                             </div>
 // //                         ))}
 // //                         {areas.length > 7 && (
-// //                             <div style={{
-// //                                 border: "1px solid #d1d5db", padding: "4px 10px",
-// //                                 fontSize: "12px", color: "#2563eb", background: "#fff", borderRadius: "4px", fontWeight: 600
-// //                             }}>
+// //                             <div style={{ border: "1px solid #d1d5db", padding: "4px 11px", fontSize: "12px", color: "#2563eb", background: "#fff", borderRadius: "4px", fontWeight: 600, fontFamily: FONT }}>
 // //                                 +{areas.length - 7} More
 // //                             </div>
 // //                         )}
 // //                     </div>
-// //                     <div style={{ display: "flex", flexDirection: "row", gap: "10px", flexWrap: "wrap" }}>
-// //                         <div style={{
-// //                             border: "1px solid #e5e7eb", padding: "10px 14px",
-// //                             display: "flex", alignItems: "center", gap: "10px",
-// //                             borderRadius: "6px", minWidth: "200px"
-// //                         }}>
-// //                             <div style={{
-// //                                 width: "36px", height: "36px", borderRadius: "50%",
-// //                                 background: "#1d4ed8", color: "#fff", display: "flex",
-// //                                 alignItems: "center", justifyContent: "center",
-// //                                 fontWeight: 800, fontSize: "13px", flexShrink: 0
-// //                             }}>
+
+// //                     {/* Current role + Experience */}
+// //                     <div style={{ display: "flex", flexDirection: "row", gap: "12px", flexWrap: "wrap" }}>
+// //                         {/* Current company card */}
+// //                         <div style={{ border: "1px solid #e2e8f0", padding: "10px 14px", display: "flex", alignItems: "center", gap: "10px", borderRadius: "8px", minWidth: "210px", background: "#fafafa" }}>
+// //                             <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "#1d4ed8", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "14px", flexShrink: 0, fontFamily: FONT }}>
 // //                                 {fullName.charAt(0)}.
 // //                             </div>
 // //                             <div>
-// //                                 <div style={{ fontSize: "13px", fontWeight: 700, color: "#111827" }}>{currentRole}</div>
-// //                                 <div style={{ fontSize: "11px", color: "#6b7280" }}>{companyName}</div>
+// //                                 <div style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>{currentRole}</div>
+// //                                 <div style={{ fontSize: "11px", color: "#64748b", fontFamily: FONT }}>{companyName}</div>
 // //                             </div>
 // //                         </div>
-// //                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+
+// //                         {/* Experience + Previous companies */}
+// //                         <div style={{ display: "flex", alignItems: "center", gap: "10px", border: "1px solid #e2e8f0", padding: "10px 14px", borderRadius: "8px", background: "#fafafa" }}>
 // //                             <div style={{ display: "flex", alignItems: "center" }}>
 // //                                 {prevCompanies.slice(0, 3).map((c, i) => (
-// //                                     <div key={i} style={{
-// //                                         width: "28px", height: "28px", borderRadius: "50%",
-// //                                         border: "2px solid white", background: "#e5e7eb", overflow: "hidden",
-// //                                         marginLeft: i > 0 ? "-8px" : "0", zIndex: 3 - i, position: "relative", flexShrink: 0
-// //                                     }}>
+// //                                     <div key={i} style={{ width: "30px", height: "30px", borderRadius: "50%", border: "2px solid white", background: "#e2e8f0", overflow: "hidden", marginLeft: i > 0 ? "-9px" : "0", zIndex: 3 - i, position: "relative", flexShrink: 0 }}>
 // //                                         {c.logo ? (
 // //                                             <img src={c.logo} alt={c.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
 // //                                         ) : (
-// //                                             <div style={{
-// //                                                 width: "100%", height: "100%", display: "flex", alignItems: "center",
-// //                                                 justifyContent: "center", fontSize: "10px", fontWeight: 700, color: "#374151",
-// //                                                 background: ["#fef3c7", "#dbeafe", "#d1fae5"][i % 3]
-// //                                             }}>
+// //                                             <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: 700, color: "#374151", background: ["#fef3c7", "#dbeafe", "#d1fae5"][i % 3], fontFamily: FONT }}>
 // //                                                 {c.name?.charAt(0) || "C"}
 // //                                             </div>
 // //                                         )}
 // //                                     </div>
 // //                                 ))}
 // //                                 {prevCompanies.length === 0 && mentor.companyLogo && (
-// //                                     <div style={{ width: "28px", height: "28px", borderRadius: "50%", border: "2px solid white", overflow: "hidden" }}>
+// //                                     <div style={{ width: "30px", height: "30px", borderRadius: "50%", border: "2px solid white", overflow: "hidden" }}>
 // //                                         <img src={mentor.companyLogo} alt={companyName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
 // //                                     </div>
 // //                                 )}
 // //                             </div>
 // //                             <div>
-// //                                 <div style={{ fontSize: "13px", fontWeight: 700, color: "#111827" }}>{yearsExp}</div>
-// //                                 <div style={{ fontSize: "11px", color: "#6b7280" }}>
+// //                                 <div style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>{yearsExp}</div>
+// //                                 <div style={{ fontSize: "11px", color: "#64748b", fontFamily: FONT }}>
 // //                                     {prevCompanies.length > 0 ? prevCompanies.map((c) => c.name).join(" | ") : companyName}
 // //                                 </div>
 // //                             </div>
 // //                         </div>
 // //                     </div>
 // //                 </div>
-// //                 <div style={{
-// //                     borderTop: "1px solid #f3f4f6", padding: "10px 18px",
-// //                     display: "flex", alignItems: "center", gap: "20px",
-// //                     flexWrap: "wrap", background: "#fafafa"
-// //                 }}>
+
+// //                 {/* Bottom strip: For + Domains */}
+// //                 <div style={{ borderTop: "1px solid #f1f5f9", padding: "10px 22px", display: "flex", alignItems: "center", gap: "22px", flexWrap: "wrap", background: "#f8fafc" }}>
 // //                     {offeringForList.length > 0 && (
-// //                         <div style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#374151" }}>
-// //                             <Briefcase size={13} color="#6b7280" />
-// //                             <span style={{ color: "#6b7280" }}>For:</span>
-// //                             <span style={{ fontWeight: 600 }}>{offeringForList.join(" | ")}</span>
+// //                         <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#374151", fontFamily: FONT }}>
+// //                             <Briefcase size={13} color="#64748b" />
+// //                             <span style={{ color: "#64748b" }}>For:</span>
+// //                             <span style={{ fontWeight: 600, color: "#0f172a" }}>{offeringForList.join(" | ")}</span>
 // //                         </div>
 // //                     )}
 // //                     {domainsList.length > 0 && (
-// //                         <div style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#374151" }}>
-// //                             <Target size={13} color="#6b7280" />
-// //                             <span style={{ color: "#6b7280" }}>Domains:</span>
-// //                             <span style={{ fontWeight: 600 }}>{domainsList[0]}</span>
+// //                         <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#374151", fontFamily: FONT }}>
+// //                             <div style={{ width: "13px", height: "13px", borderRadius: "50%", border: "2px solid #64748b", flexShrink: 0 }} />
+// //                             <span style={{ color: "#64748b" }}>Domains:</span>
+// //                             <span style={{ fontWeight: 600, color: "#0f172a" }}>{domainsList[0]}</span>
 // //                             {domainsList.length > 1 && (
 // //                                 <span style={{ color: "#2563eb", fontWeight: 600, cursor: "pointer" }}>| More</span>
 // //                             )}
@@ -593,72 +426,104 @@
 // //                 </div>
 // //             </div>
 
-// //             {/* RIGHT: Stats + CTA */}
+// //             {/* RIGHT: Stats + CTA column */}
 // //             <div style={{
-// //                 width: isMobile ? "100%" : "270px",
-// //                 minWidth: isMobile ? "100%" : "270px",
-// //                 padding: "16px 18px", display: "flex", flexDirection: "column",
-// //                 gap: "10px", background: "#ffffff", flexShrink: 0,
+// //                 width: isMobile ? "100%" : "280px",
+// //                 minWidth: isMobile ? "100%" : "280px",
+// //                 padding: "22px 20px",
+// //                 display: "flex",
+// //                 flexDirection: "column",
+// //                 gap: "11px",
+// //                 background: "#ffffff",
+// //                 flexShrink: 0,
 // //             }}>
-// //                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "14px" }}>
+// //                 {/* Star Mentor */}
+// //                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "14px", fontFamily: FONT }}>
 // //                     <Star size={16} color="#f59e0b" fill="#f59e0b" style={{ flexShrink: 0 }} />
-// //                     <span style={{ fontWeight: 700, color: "#111827" }}>Star Mentor</span>
-// //                     {starBadge && <span style={{ fontSize: "12px", color: "#6b7280", fontWeight: 400 }}>- {starBadge}</span>}
+// //                     <span style={{ fontWeight: 700, color: "#0f172a" }}>Star Mentor</span>
+// //                     {starBadge && <span style={{ fontSize: "12px", color: "#64748b" }}>- {starBadge}</span>}
 // //                 </div>
-// //                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151" }}>
+
+// //                 {/* Placements */}
+// //                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
 // //                     <Trophy size={15} color="#d97706" style={{ flexShrink: 0 }} />
 // //                     <span>{placements} Placements</span>
 // //                 </div>
-// //                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151" }}>
+
+// //                 {/* Mentees */}
+// //                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
 // //                     <Users size={15} color="#0ea5e9" style={{ flexShrink: 0 }} />
 // //                     <span>5.0 ({menteeCount}+ mentees)</span>
 // //                 </div>
-// //                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151" }}>
+
+// //                 {/* Sessions per month */}
+// //                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
 // //                     <Video size={15} color="#10b981" style={{ flexShrink: 0 }} />
 // //                     <span>{weeklySessions * 4}x Sessions Per Month</span>
 // //                 </div>
-// //                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151" }}>
+
+// //                 {/* Referrals */}
+// //                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
 // //                     <Briefcase size={15} color="#8b5cf6" style={{ flexShrink: 0 }} />
 // //                     <span>Referrals in Top Companies</span>
 // //                     {referralCount > 0 && (
-// //                         <span style={{ color: "#2563eb", fontWeight: 600, fontSize: "12px", cursor: "pointer", whiteSpace: "nowrap" }}>
+// //                         <span style={{ color: "#2563eb", fontWeight: 600, fontSize: "12px", cursor: "pointer", whiteSpace: "nowrap", marginLeft: "auto", fontFamily: FONT }}>
 // //                             +{referralCount} More
 // //                         </span>
 // //                     )}
 // //                 </div>
+
+// //                 {/* Curriculum */}
 // //                 {hasCurriculum && (
-// //                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "13px", color: "#374151" }}>
+// //                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
 // //                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-// //                             <BookOpen size={15} color="#6b7280" style={{ flexShrink: 0 }} />
+// //                             <BookOpen size={15} color="#64748b" style={{ flexShrink: 0 }} />
 // //                             <span>Detailed Curriculum Available</span>
 // //                         </div>
 // //                         <span style={{ color: "#2563eb", fontWeight: 600, fontSize: "12px", cursor: "pointer", whiteSpace: "nowrap" }}>View ↗</span>
 // //                     </div>
 // //                 )}
-// //                 <div style={{ borderTop: "1px solid #f3f4f6", margin: "2px 0" }} />
+
+// //                 <div style={{ borderTop: "1px solid #f1f5f9", margin: "4px 0" }} />
+
+// //                 {/* Price */}
 // //                 <div>
-// //                     <div style={{ fontSize: "11px", color: "#9ca3af", marginBottom: "2px" }}>Starting from</div>
-// //                     <div style={{ display: "flex", alignItems: "flex-end", gap: "4px" }}>
-// //                         <span style={{ fontSize: "28px", fontWeight: 800, color: "#111827", lineHeight: 1 }}>
+// //                     <div style={{ fontSize: "11px", color: "#94a3b8", marginBottom: "2px", fontFamily: FONT }}>Starting from</div>
+// //                     <div style={{ display: "flex", alignItems: "flex-end", gap: "4px", flexWrap: "wrap" }}>
+// //                         <span style={{ fontSize: "30px", fontWeight: 800, color: "#0f172a", lineHeight: 1, fontFamily: FONT }}>
 // //                             {fmtINR(monthlyPrice)}
 // //                         </span>
-// //                         <span style={{ fontSize: "12px", color: "#6b7280", marginBottom: "3px" }}>/Session</span>
+// //                         <span style={{ fontSize: "12px", color: "#64748b", marginBottom: "4px", fontFamily: FONT }}>/Month + taxes</span>
 // //                     </div>
+// //                     {discount && (
+// //                         <div style={{ display: "inline-flex", alignItems: "center", gap: "4px", background: "#dcfce7", color: "#16a34a", borderRadius: "20px", padding: "2px 10px", fontSize: "11px", fontWeight: 700, marginTop: "4px", fontFamily: FONT }}>
+// //                             ✦ Extra {discount}% OFF
+// //                         </div>
+// //                     )}
 // //                 </div>
+
+// //                 {/* View Profile button */}
 // //                 <button
 // //                     onClick={() => onViewProfile(mentor)}
-// //                     style={{
-// //                         width: "100%", height: "42px", border: "1px solid #d1d5db",
-// //                         borderRadius: "8px", background: "#ffffff", color: "#111827",
-// //                         fontSize: "14px", fontWeight: 600, cursor: "pointer", fontFamily: FONT,
-// //                     }}
-// //                     onMouseEnter={(e) => (e.currentTarget.style.background = "#f9fafb")}
+// //                     style={{ width: "100%", height: "44px", border: "1px solid #d1d5db", borderRadius: "8px", background: "#ffffff", color: "#0f172a", fontSize: "14px", fontWeight: 600, cursor: "pointer", fontFamily: FONT, transition: "background .15s" }}
+// //                     onMouseEnter={(e) => (e.currentTarget.style.background = "#f8fafc")}
 // //                     onMouseLeave={(e) => (e.currentTarget.style.background = "#ffffff")}
 // //                 >
 // //                     View Profile
 // //                 </button>
+
+// //                 {/* Book Trial button */}
+// //                 <button
+// //                     onClick={() => onSubscribe(mentor)}
+// //                     style={{ width: "100%", height: "44px", border: "none", borderRadius: "8px", background: PRIMARY, color: "white", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: FONT }}
+// //                     onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+// //                     onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+// //                 >
+// //                     Book Trial Session for ₹99
+// //                 </button>
+
 // //                 {nextAvailable && (
-// //                     <p style={{ textAlign: "center", fontSize: "11px", color: "#9ca3af", margin: 0 }}>
+// //                     <p style={{ textAlign: "center", fontSize: "11px", color: "#94a3b8", margin: 0, fontFamily: FONT }}>
 // //                         Next Available: <span style={{ color: "#374151", fontWeight: 600 }}>{nextAvailable}</span>
 // //                     </p>
 // //                 )}
@@ -674,137 +539,117 @@
 
 // //     const [selectedDomains, setSelectedDomains] = useState([]);
 // //     const [offeringFor, setOfferingFor] = useState("Working Professionals");
-// //     const [priceVal, setPriceVal] = useState(7000);
+// //     const [priceVal, setPriceVal] = useState(40000);
 
 // //     const toggleDomain = (d) =>
-// //         setSelectedDomains((prev) =>
-// //             prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]
-// //         );
+// //         setSelectedDomains((prev) => prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]);
 
-// //     const handleClear = () => { setSelectedDomains([]); setPriceVal(7000); onClear(); };
+// //     const handleClear = () => { setSelectedDomains([]); setPriceVal(40000); onClear(); };
 
 // //     const sidebarContent = (
 // //         <div style={{
-// //             width: isMobile ? "100%" : "240px", background: "white",
-// //             borderRadius: isMobile ? 0 : "14px", padding: "18px",
-// //             fontFamily: FONT, boxSizing: "border-box",
+// //             width: isMobile ? "100%" : "270px",
+// //             background: "white",
+// //             borderRadius: isMobile ? 0 : "8px",
+// //             padding: "20px",
+// //             fontFamily: FONT,
+// //             boxSizing: "border-box",
 // //             ...(!isMobile && {
-// //                 border: "1px solid #e5e7eb", alignSelf: "flex-start",
-// //                 position: "sticky", top: "80px", flexShrink: 0,
-// //                 boxShadow: "0 1px 8px rgba(0,0,0,.06)",
+// //                 border: "1px solid #e2e8f0",
+// //                 alignSelf: "flex-start",
+// //                 position: "sticky",
+// //                 top: "80px",
+// //                 flexShrink: 0,
+// //                 boxShadow: "0 1px 6px rgba(0,0,0,.06)",
 // //             }),
 // //         }}>
-// //             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
-// //                 <h3 style={{ fontWeight: 700, fontSize: "14px", color: "#0f172a", margin: 0 }}>Filter By</h3>
+// //             {/* Header */}
+// //             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "18px" }}>
+// //                 <h3 style={{ fontWeight: 700, fontSize: "15px", color: "#0f172a", margin: 0, fontFamily: FONT }}>Filter By</h3>
 // //                 <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-// //                     <button onClick={handleClear}
-// //                         style={{
-// //                             background: "none", border: "none", color: "#ef4444",
-// //                             fontSize: "12px", fontWeight: 600, cursor: "pointer",
-// //                             fontFamily: FONT, display: "flex", alignItems: "center", gap: "3px"
-// //                         }}>
-// //                         <X size={11} /> Clear
+// //                     <button onClick={handleClear} style={{ background: "none", border: "none", color: "#ef4444", fontSize: "12px", fontWeight: 600, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: "3px" }}>
+// //                         <X size={11} /> Clear Filters
 // //                     </button>
 // //                     {isMobile && (
-// //                         <button onClick={onClose}
-// //                             style={{ background: "none", border: "none", cursor: "pointer", color: "#6b7280", display: "flex" }}>
+// //                         <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b", display: "flex" }}>
 // //                             <X size={18} />
 // //                         </button>
 // //                     )}
 // //                 </div>
 // //             </div>
 
-// //             <p style={{ fontWeight: 700, fontSize: "11px", color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", margin: "0 0 8px" }}>
-// //                 Domain
-// //             </p>
+// //             {/* Domain section */}
+// //             <p style={{ fontWeight: 700, fontSize: "13px", color: "#0f172a", margin: "0 0 10px", fontFamily: FONT }}>Domain</p>
+
+// //             {/* Selected domain tags box */}
 // //             {selectedDomains.length > 0 && (
-// //                 <div style={{
-// //                     display: "flex", flexWrap: "wrap", gap: "5px",
-// //                     border: `1px solid ${BLUE_BORDER}`, borderRadius: "8px",
-// //                     padding: "7px 9px", marginBottom: "8px"
-// //                 }}>
+// //                 <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", border: `1px solid ${BLUE_BORDER}`, borderRadius: "8px", padding: "8px 10px", marginBottom: "10px", position: "relative" }}>
 // //                     {selectedDomains.map((d) => (
-// //                         <span key={d} style={{
-// //                             display: "flex", alignItems: "center", gap: "3px",
-// //                             fontSize: "11px", fontWeight: 600, padding: "2px 7px",
-// //                             borderRadius: "20px", background: BLUE_LIGHT, color: BLUE,
-// //                             border: `1px solid ${BLUE_BORDER}`
-// //                         }}>
+// //                         <span key={d} style={{ display: "flex", alignItems: "center", gap: "3px", fontSize: "11px", fontWeight: 600, padding: "2px 8px", borderRadius: "20px", background: BLUE_LIGHT, color: BLUE, border: `1px solid ${BLUE_BORDER}`, fontFamily: FONT }}>
 // //                             {d}
-// //                             <button onClick={() => toggleDomain(d)}
-// //                                 style={{ background: "none", border: "none", cursor: "pointer", color: "#ef4444", padding: 0, display: "flex", lineHeight: 1 }}>
+// //                             <button onClick={() => toggleDomain(d)} style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8", padding: 0, display: "flex", lineHeight: 1 }}>
 // //                                 <X size={9} />
 // //                             </button>
 // //                         </span>
 // //                     ))}
+// //                     {/* Expand/collapse icon */}
+// //                     <div style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", gap: "4px" }}>
+// //                         <span style={{ color: "#94a3b8", fontSize: "11px" }}>|</span>
+// //                         <ChevronDown size={13} color="#94a3b8" />
+// //                     </div>
 // //                 </div>
 // //             )}
-// //             <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "18px" }}>
+
+// //             {/* Domain chips */}
+// //             <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "22px" }}>
 // //                 {DOMAIN_CHIPS.map((d) => {
 // //                     const active = selectedDomains.includes(d);
 // //                     return (
 // //                         <button key={d} onClick={() => toggleDomain(d)}
-// //                             style={{
-// //                                 fontSize: "11px", fontWeight: 500, padding: "4px 10px", borderRadius: "7px",
-// //                                 background: active ? BLUE_LIGHT : "white", color: active ? BLUE : "#374151",
-// //                                 border: `1px solid ${active ? BLUE_BORDER : "#e5e7eb"}`, cursor: "pointer", fontFamily: FONT
-// //                             }}>
+// //                             style={{ fontSize: "12px", fontWeight: 500, padding: "5px 12px", borderRadius: "6px", background: active ? "#0f172a" : "white", color: active ? "white" : "#374151", border: `1px solid ${active ? "#0f172a" : "#e2e8f0"}`, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: "5px" }}>
+// //                             {active && <span style={{ fontSize: "10px" }}>✓</span>}
 // //                             {d}
 // //                         </button>
 // //                     );
 // //                 })}
 // //             </div>
 
-// //             <div style={{ borderTop: "1px solid #f0f0f0", marginBottom: "16px" }} />
+// //             <div style={{ borderTop: "1px solid #f1f5f9", marginBottom: "18px" }} />
 
-// //             <p style={{ fontWeight: 700, fontSize: "11px", color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", margin: "0 0 8px" }}>
-// //                 Offering For
-// //             </p>
-// //             <select value={offeringFor} onChange={(e) => setOfferingFor(e.target.value)}
-// //                 style={{
-// //                     width: "100%", border: "1px solid #e5e7eb", borderRadius: "8px",
-// //                     padding: "9px 32px 9px 12px", fontSize: "13px", color: "#374151",
-// //                     background: "white", cursor: "pointer", outline: "none",
-// //                     appearance: "none", fontFamily: FONT,
-// //                     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%230098cc' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`,
-// //                     backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center",
-// //                     boxSizing: "border-box", marginBottom: "18px"
-// //                 }}>
-// //                 <option>Working Professionals</option>
-// //                 <option>Students</option>
-// //                 <option>Freshers</option>
-// //                 <option>Entrepreneurs</option>
-// //             </select>
-
-// //             <div style={{ borderTop: "1px solid #f0f0f0", marginBottom: "16px" }} />
-
-// //             <p style={{ fontWeight: 700, fontSize: "11px", color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", margin: "0 0 8px" }}>
-// //                 Pricing
-// //             </p>
-// //             <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#6b7280", marginBottom: "6px" }}>
-// //                 <span>₹5,000</span><span>₹10,000</span>
+// //             {/* Offering Mentorship For */}
+// //             <p style={{ fontWeight: 700, fontSize: "13px", color: "#0f172a", margin: "0 0 10px", fontFamily: FONT }}>Offering Mentorship For</p>
+// //             <div style={{ position: "relative", marginBottom: "22px" }}>
+// //                 <select value={offeringFor} onChange={(e) => setOfferingFor(e.target.value)}
+// //                     style={{ width: "100%", border: "1px solid #e2e8f0", borderRadius: "8px", padding: "10px 36px 10px 14px", fontSize: "13px", color: "#374151", background: "white", cursor: "pointer", outline: "none", appearance: "none", fontFamily: FONT, boxSizing: "border-box" }}>
+// //                     <option>Working Professionals</option>
+// //                     <option>Students</option>
+// //                     <option>Freshers</option>
+// //                     <option>Entrepreneurs</option>
+// //                 </select>
+// //                 <ChevronDown size={14} color="#64748b" style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
 // //             </div>
-// //             <input type="range" min={5000} max={10000} step={500} value={priceVal}
+
+// //             <div style={{ borderTop: "1px solid #f1f5f9", marginBottom: "18px" }} />
+
+// //             {/* Pricing */}
+// //             <p style={{ fontWeight: 700, fontSize: "13px", color: "#0f172a", margin: "0 0 10px", fontFamily: FONT }}>Pricing</p>
+// //             <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#64748b", marginBottom: "8px", fontFamily: FONT }}>
+// //                 <span>₹5,000</span>
+// //                 <span>₹40,000</span>
+// //             </div>
+// //             <input
+// //                 type="range" min={5000} max={40000} step={500} value={priceVal}
 // //                 onChange={(e) => setPriceVal(Number(e.target.value))}
-// //                 style={{ width: "100%", accentColor: BLUE, cursor: "pointer", boxSizing: "border-box" }} />
-// //             <p style={{ fontSize: "13px", color: BLUE, fontWeight: 700, margin: "5px 0 0" }}>
+// //                 style={{ width: "100%", accentColor: BLUE, cursor: "pointer", boxSizing: "border-box" }}
+// //             />
+// //             <p style={{ fontSize: "13px", color: "#374151", fontWeight: 600, margin: "6px 0 0", fontFamily: FONT }}>
 // //                 Up To {fmtINR(priceVal)}/Month
 // //             </p>
 
 // //             <button
-// //                 onClick={() => {
-// //                     onSearch({ maxPrice: priceVal, offeringFor, domains: selectedDomains });
-// //                     if (isMobile) onClose();
-// //                 }}
+// //                 onClick={() => { onSearch({ maxPrice: priceVal, offeringFor, domains: selectedDomains }); if (isMobile) onClose(); }}
 // //                 disabled={isSearching}
-// //                 style={{
-// //                     marginTop: "16px", width: "100%", padding: "11px",
-// //                     background: isSearching ? BLUE_BORDER : PRIMARY,
-// //                     color: "white", border: "none", borderRadius: "10px",
-// //                     fontWeight: 700, fontSize: "13px",
-// //                     cursor: isSearching ? "not-allowed" : "pointer",
-// //                     fontFamily: FONT, boxSizing: "border-box"
-// //                 }}>
+// //                 style={{ marginTop: "18px", width: "100%", padding: "12px", background: isSearching ? BLUE_BORDER : PRIMARY, color: "white", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "13px", cursor: isSearching ? "not-allowed" : "pointer", fontFamily: FONT, boxSizing: "border-box" }}>
 // //                 {isSearching ? "Applying…" : "Apply Filters"}
 // //             </button>
 // //         </div>
@@ -816,22 +661,11 @@
 // //         <AnimatePresence>
 // //             {isOpen && (
 // //                 <>
-// //                     <motion.div key="overlay"
-// //                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-// //                         onClick={onClose}
-// //                         style={{
-// //                             position: "fixed", inset: 0, zIndex: 200,
-// //                             background: "rgba(0,0,0,.3)", backdropFilter: "blur(2px)"
-// //                         }} />
-// //                     <motion.div key="drawer"
-// //                         initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
-// //                         transition={{ type: "spring", damping: 28, stiffness: 300 }}
-// //                         style={{
-// //                             position: "fixed", bottom: 0, left: 0, right: 0,
-// //                             maxHeight: "85vh", zIndex: 201, background: "white",
-// //                             borderRadius: "20px 20px 0 0", overflowY: "auto"
-// //                         }}>
-// //                         <div style={{ width: "36px", height: "4px", background: "#e5e7eb", borderRadius: "2px", margin: "12px auto 0" }} />
+// //                     <motion.div key="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}
+// //                         style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,.3)", backdropFilter: "blur(2px)" }} />
+// //                     <motion.div key="drawer" initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 28, stiffness: 300 }}
+// //                         style={{ position: "fixed", bottom: 0, left: 0, right: 0, maxHeight: "85vh", zIndex: 201, background: "white", borderRadius: "20px 20px 0 0", overflowY: "auto" }}>
+// //                         <div style={{ width: "36px", height: "4px", background: "#e2e8f0", borderRadius: "2px", margin: "12px auto 0" }} />
 // //                         {sidebarContent}
 // //                     </motion.div>
 // //                 </>
@@ -848,41 +682,21 @@
 // //     const isMobile = width < 640;
 // //     const isTablet = width < 1024;
 
-// //     // ─────────────────────────────────────────────────────────────────────────
-// //     // STEP 1 — Read URL query params set by MentorDiscoveryUI
-// //     //   e.g. /explore-mentors?domain=Frontend+Developer,Backend+Developer
-// //     // ─────────────────────────────────────────────────────────────────────────
 // //     const [searchParams] = useSearchParams();
+// //     const domainFromUrl = searchParams.get("domain") ?? "";
 
-// //     const domainFromUrl = searchParams.get("domain") ?? "";       // "Frontend Developer,Backend Developer"
-
-// //     // ─────────────────────────────────────────────────────────────────────────
-// //     // STEP 2 — Build the POST body that the backend expects.
-// //     //   useMemo so it only re-computes when the URL params actually change.
-// //     //   This object is passed directly to useGetLtmAllMentorsQuery as the
-// //     //   `filters` argument, which the API slice sends as the POST body.
-// //     // ─────────────────────────────────────────────────────────────────────────
 // //     const apiFilters = useMemo(() => {
 // //         const filters = {};
-// //         if (domainFromUrl) filters.domain = domainFromUrl;       // "Frontend Developer,Backend Developer"
-// //         console.log("📤 Sending POST body to backend:", filters);
+// //         if (domainFromUrl) filters.domain = domainFromUrl;
 // //         return filters;
 // //     }, [domainFromUrl]);
 
-// //     // ─────────────────────────────────────────────────────────────────────────
-// //     // STEP 3 — Call the API with the filters.
-// //     //   When URL params are absent, apiFilters = {} → backend returns all mentors.
-// //     //   When params are present, apiFilters = { domain } → filtered.
-// //     //   RTK Query automatically re-fetches when apiFilters reference changes.
-// //     // ─────────────────────────────────────────────────────────────────────────
 // //     const { data, isLoading, isError } = useGetLtmAllMentorsQuery(apiFilters);
-
 // //     const [searchMentors, { isLoading: isSearching }] = useSearchMentorMutation();
 // //     const [advancedFilter] = useAdvancedFilterMentorsMutation();
 
 // //     const allMentors = data?.data ?? [];
 
-// //     // Manual filter/search state (sidebar & sort — overrides URL-based results)
 // //     const [displayMentors, setDisplayMentors] = useState(null);
 // //     const [isFiltered, setIsFiltered] = useState(false);
 // //     const [searchEmpty, setSearchEmpty] = useState(false);
@@ -892,7 +706,6 @@
 // //     const [mobileNavOpen, setMobileNavOpen] = useState(false);
 // //     const [subscribeTarget, setSubscribeTarget] = useState(null);
 
-// //     // Reset manual filters whenever the URL params change
 // //     useEffect(() => {
 // //         setIsFiltered(false);
 // //         setDisplayMentors(null);
@@ -900,17 +713,9 @@
 // //         setSortBy("Recommended");
 // //     }, [domainFromUrl]);
 
-// //     // What to show: manual filter result takes precedence over URL-filtered API result
 // //     const mentors = isFiltered ? (displayMentors ?? []) : allMentors;
 
-// //     // ── Handlers ──────────────────────────────────────────────────────────────
-
-// //     const handleClear = () => {
-// //         setIsFiltered(false);
-// //         setDisplayMentors(null);
-// //         setSearchEmpty(false);
-// //         navigate("/explore-mentors"); // strips URL params → re-fetches all mentors
-// //     };
+// //     const handleClear = () => { setIsFiltered(false); setDisplayMentors(null); setSearchEmpty(false); navigate("/explore-mentors"); };
 
 // //     const handleSearch = async (body) => {
 // //         try {
@@ -962,65 +767,62 @@
 // //             {/* ── Header ─────────────────────────────────────────────── */}
 // //             <header style={{
 // //                 position: "sticky", top: 0, zIndex: 100, background: "white",
-// //                 borderBottom: "1px solid #e5e7eb", fontFamily: FONT,
+// //                 borderBottom: "1px solid #e2e8f0", fontFamily: FONT,
 // //                 boxShadow: "0 1px 4px rgba(0,0,0,.06)"
 // //             }}>
-// //                 <div style={{
-// //                     maxWidth: "1280px", margin: "0 auto", padding: "0 20px",
-// //                     height: "62px", display: "flex", alignItems: "center", justifyContent: "space-between"
-// //                 }}>
+// //                 <div style={{ maxWidth: "1360px", margin: "0 auto", padding: "0 24px", height: "64px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+// //                     {/* Logo */}
 // //                     <div onClick={() => navigate("/")} style={{ cursor: "pointer", flexShrink: 0 }}>
 // //                         <img src={KarrivoLogo} className="h-10 w-20 sm:h-12 sm:w-24 md:h-14 md:w-28 object-contain" alt="Karrivo" />
 // //                     </div>
+
+// //                     {/* Center nav */}
 // //                     {!isMobile && (
-// //                         <nav style={{ display: "flex", alignItems: "center", gap: "24px" }}>
+// //                         <nav style={{ display: "flex", alignItems: "center", gap: "32px" }}>
 // //                             {NAV_LINKS.map((link) => {
 // //                                 const isActive = location.pathname === link.path;
 // //                                 return (
 // //                                     <button key={link.path} onClick={() => navigate(link.path)}
-// //                                         style={{
-// //                                             background: "none", border: "none", cursor: "pointer",
-// //                                             fontFamily: FONT, fontSize: "14px", fontWeight: 600,
-// //                                             color: isActive ? BLUE : "#6b7280", padding: "4px 0",
-// //                                             borderBottom: `2px solid ${isActive ? BLUE : "transparent"}`,
-// //                                         }}>
+// //                                         style={{ background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "14px", fontWeight: 500, color: isActive ? "#0f172a" : "#64748b", padding: "4px 0", borderBottom: `2px solid ${isActive ? "#0f172a" : "transparent"}` }}>
 // //                                         {link.label}
 // //                                     </button>
 // //                                 );
 // //                             })}
 // //                         </nav>
 // //                     )}
-// //                     {isMobile && (
-// //                         <button onClick={() => setMobileNavOpen(!mobileNavOpen)}
-// //                             style={{ background: "none", border: "none", cursor: "pointer", padding: "8px", display: "flex", flexDirection: "column", gap: "5px" }}>
-// //                             {[0, 1, 2].map((i) => (
-// //                                 <span key={i} style={{
-// //                                     display: "block", width: "20px", height: "2px", background: BLUE, borderRadius: "2px",
-// //                                     ...(i === 0 && mobileNavOpen ? { transform: "rotate(45deg) translateY(7px)" }
-// //                                         : i === 1 && mobileNavOpen ? { opacity: 0 }
-// //                                             : i === 2 && mobileNavOpen ? { transform: "rotate(-45deg) translateY(-7px)" }
-// //                                                 : {})
-// //                                 }} />
-// //                             ))}
-// //                         </button>
-// //                     )}
+
+// //                     {/* Right: Login */}
+// //                     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+// //                         {!isMobile && (
+// //                             <button
+// //                                 onClick={() => navigate("/login")}
+// //                                 style={{ background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "14px", fontWeight: 600, color: "#0f172a", padding: "8px 16px" }}>
+// //                                 Login
+// //                             </button>
+// //                         )}
+// //                         {isMobile && (
+// //                             <button onClick={() => setMobileNavOpen(!mobileNavOpen)} style={{ background: "none", border: "none", cursor: "pointer", padding: "8px", display: "flex", flexDirection: "column", gap: "5px" }}>
+// //                                 {[0, 1, 2].map((i) => (
+// //                                     <span key={i} style={{ display: "block", width: "20px", height: "2px", background: "#0f172a", borderRadius: "2px", ...(i === 0 && mobileNavOpen ? { transform: "rotate(45deg) translateY(7px)" } : i === 1 && mobileNavOpen ? { opacity: 0 } : i === 2 && mobileNavOpen ? { transform: "rotate(-45deg) translateY(-7px)" } : {}) }} />
+// //                                 ))}
+// //                             </button>
+// //                         )}
+// //                     </div>
 // //                 </div>
+
+// //                 {/* Mobile nav dropdown */}
 // //                 <AnimatePresence>
 // //                     {isMobile && mobileNavOpen && (
-// //                         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-// //                             style={{ overflow: "hidden", borderTop: "1px solid #f0f0f0", background: "white" }}>
+// //                         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} style={{ overflow: "hidden", borderTop: "1px solid #f1f5f9", background: "white" }}>
 // //                             {NAV_LINKS.map((link) => (
 // //                                 <button key={link.path} onClick={() => { navigate(link.path); setMobileNavOpen(false); }}
-// //                                     style={{
-// //                                         display: "block", width: "100%", textAlign: "left", padding: "14px 20px",
-// //                                         background: "none", border: "none", cursor: "pointer", fontFamily: FONT,
-// //                                         fontSize: "14px", fontWeight: 600,
-// //                                         color: location.pathname === link.path ? BLUE : "#374151",
-// //                                         borderBottom: "1px solid #f9fafb"
-// //                                     }}>
+// //                                     style={{ display: "block", width: "100%", textAlign: "left", padding: "14px 20px", background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "14px", fontWeight: 500, color: location.pathname === link.path ? "#0f172a" : "#64748b", borderBottom: "1px solid #f8fafc" }}>
 // //                                     {link.label}
 // //                                 </button>
 // //                             ))}
+// //                             <button onClick={() => navigate("/login")} style={{ display: "block", width: "100%", textAlign: "left", padding: "14px 20px", background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "14px", fontWeight: 600, color: "#0f172a" }}>
+// //                                 Login
+// //                             </button>
 // //                         </motion.div>
 // //                     )}
 // //                 </AnimatePresence>
@@ -1028,187 +830,152 @@
 
 // //             {/* ── Active filter pills ─────────────────────────────────── */}
 // //             {domainFromUrl && !isFiltered && (
-// //                 <div style={{
-// //                     background: "#f0faff", borderBottom: "1px solid #cce9f5",
-// //                     padding: "10px 24px", display: "flex", alignItems: "center",
-// //                     gap: "8px", flexWrap: "wrap", fontFamily: FONT
-// //                 }}>
-// //                     <span style={{ fontSize: "12px", color: "#6b7280", fontWeight: 600 }}>Filtered by:</span>
-// //                     {domainFromUrl && domainFromUrl.split(",").map((d) => (
-// //                         <span key={d} style={{
-// //                             background: BLUE_LIGHT, color: BLUE, border: `1px solid ${BLUE_BORDER}`,
-// //                             borderRadius: "20px", padding: "3px 10px", fontSize: "11px", fontWeight: 700
-// //                         }}>
+// //                 <div style={{ background: BLUE_LIGHT, borderBottom: `1px solid ${BLUE_BORDER}`, padding: "10px 24px", display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", fontFamily: FONT }}>
+// //                     <span style={{ fontSize: "12px", color: "#64748b", fontWeight: 600 }}>Filtered by:</span>
+// //                     {domainFromUrl.split(",").map((d) => (
+// //                         <span key={d} style={{ background: BLUE_LIGHT, color: BLUE, border: `1px solid ${BLUE_BORDER}`, borderRadius: "20px", padding: "3px 10px", fontSize: "11px", fontWeight: 700 }}>
 // //                             {d.trim()}
 // //                         </span>
 // //                     ))}
-// //                     <button onClick={handleClear}
-// //                         style={{
-// //                             marginLeft: "4px", background: "none", border: "none", color: "#ef4444",
-// //                             fontSize: "11px", fontWeight: 600, cursor: "pointer",
-// //                             fontFamily: FONT, display: "flex", alignItems: "center", gap: "3px"
-// //                         }}>
+// //                     <button onClick={handleClear} style={{ marginLeft: "4px", background: "none", border: "none", color: "#ef4444", fontSize: "11px", fontWeight: 600, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: "3px" }}>
 // //                         <X size={10} /> Clear filters
 // //                     </button>
 // //                 </div>
 // //             )}
 
-// //             {/* ── Main ───────────────────────────────────────────────── */}
-// //             <main style={{
-// //                 minHeight: "100vh", background: "#f6f8fa",
-// //                 padding: isMobile ? "12px" : "20px 24px",
-// //                 fontFamily: FONT, boxSizing: "border-box"
-// //             }}>
-// //                 <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+// //             {/* ── Main layout ─────────────────────────────────────────── */}
+// //             <main style={{ minHeight: "100vh", background: "#f6f8fa", fontFamily: FONT, boxSizing: "border-box" }}>
+// //                 <div style={{ maxWidth: "1360px", margin: "0 auto", padding: isMobile ? "12px" : "20px 24px", display: "flex", gap: "20px", alignItems: "flex-start", boxSizing: "border-box" }}>
 
-// //                     {/* Search + Sort row */}
-// //                     <div style={{
-// //                         display: "flex", gap: "8px", alignItems: "center",
-// //                         marginBottom: "14px", flexWrap: isMobile ? "wrap" : "nowrap"
-// //                     }}>
-// //                         <div style={{ flex: 1, minWidth: isMobile ? "100%" : "auto", position: "relative", boxSizing: "border-box" }}>
-// //                             <Search size={14} color={BLUE}
-// //                                 style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
-// //                             <input
-// //                                 value={searchQuery}
-// //                                 onChange={(e) => setSearchQuery(e.target.value)}
-// //                                 placeholder={isMobile ? "Search skills, domain…" : "Search for any skill, domain or name…"}
-// //                                 onKeyDown={(e) => {
-// //                                     if (e.key === "Enter" && searchQuery)
-// //                                         handleSearch({ query: searchQuery });
-// //                                 }}
-// //                                 style={{
-// //                                     width: "100%", padding: "10px 14px 10px 36px",
-// //                                     border: "1px solid #e5e7eb", borderRadius: "10px",
-// //                                     fontSize: "13px", color: "#374151", fontFamily: FONT,
-// //                                     outline: "none", background: "white", boxSizing: "border-box",
-// //                                     boxShadow: "0 1px 3px rgba(0,0,0,.04)"
-// //                                 }}
-// //                                 onFocus={(e) => (e.target.style.borderColor = BLUE)}
-// //                                 onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
-// //                             />
-// //                         </div>
-// //                         <div style={{ display: "flex", alignItems: "center", gap: "8px", width: isMobile ? "100%" : "auto", boxSizing: "border-box" }}>
-// //                             {!isMobile && <span style={{ fontSize: "13px", color: "#6b7280", fontWeight: 600, whiteSpace: "nowrap" }}>Sort:</span>}
-// //                             <select value={sortBy} onChange={(e) => handleSortChange(e.target.value)}
-// //                                 style={{
-// //                                     flex: isMobile ? 1 : "none", border: "1px solid #e5e7eb",
-// //                                     borderRadius: "8px", padding: "10px 30px 10px 12px",
-// //                                     fontSize: "13px", color: "#374151", background: "white",
-// //                                     cursor: "pointer", outline: "none", appearance: "none", fontFamily: FONT,
-// //                                     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%230098cc' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`,
-// //                                     backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center",
-// //                                     minWidth: isMobile ? 0 : "180px", boxSizing: "border-box"
-// //                                 }}>
-// //                                 <option>Recommended</option>
-// //                                 <option>Price: Low To High</option>
-// //                                 <option>Price: High To Low</option>
-// //                                 <option>Most Experienced</option>
-// //                             </select>
-// //                             {isTablet && (
-// //                                 <button onClick={() => setFilterDrawerOpen(true)}
-// //                                     style={{
-// //                                         display: "flex", alignItems: "center", gap: "5px",
-// //                                         padding: "10px 14px", border: `1.5px solid ${BLUE_BORDER}`,
-// //                                         borderRadius: "8px", background: "white", cursor: "pointer",
-// //                                         fontFamily: FONT, fontSize: "13px", fontWeight: 700, color: BLUE,
-// //                                         whiteSpace: "nowrap", flexShrink: 0
-// //                                     }}>
-// //                                     <SlidersHorizontal size={13} color={BLUE} /> Filters
-// //                                 </button>
-// //                             )}
-// //                         </div>
-// //                     </div>
+// //                     {/* ── LEFT: Mentor list ── */}
+// //                     <div style={{ flex: 1, minWidth: 0 }}>
 
-// //                     {/* Result count */}
-// //                     {!isLoading && !isError && mentors.length > 0 && (
-// //                         <p style={{ fontSize: "12px", color: "#9ca3af", marginBottom: "14px", fontWeight: 500 }}>
-// //                             Showing {mentors.length} of {allMentors.length} mentor{allMentors.length !== 1 ? "s" : ""}
-// //                         </p>
-// //                     )}
+// //                         {/* Search + Sort row */}
+// //                         <div style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "16px", flexWrap: isMobile ? "wrap" : "nowrap" }}>
+// //                             {/* Search input */}
+// //                             <div style={{ flex: 1, minWidth: isMobile ? "100%" : "auto", position: "relative", boxSizing: "border-box" }}>
+// //                                 <Search size={14} color="#94a3b8" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
+// //                                 <input
+// //                                     value={searchQuery}
+// //                                     onChange={(e) => setSearchQuery(e.target.value)}
+// //                                     placeholder="Search for any Skill, domain or name..."
+// //                                     onKeyDown={(e) => { if (e.key === "Enter" && searchQuery) handleSearch({ query: searchQuery }); }}
+// //                                     style={{ width: "100%", padding: "11px 14px 11px 38px", border: "1px solid #e2e8f0", borderRadius: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT, outline: "none", background: "white", boxSizing: "border-box", boxShadow: "0 1px 3px rgba(0,0,0,.04)" }}
+// //                                     onFocus={(e) => (e.target.style.borderColor = BLUE)}
+// //                                     onBlur={(e) => (e.target.style.borderColor = "#e2e8f0")}
+// //                                 />
+// //                             </div>
 
-// //                     {/* Layout */}
-// //                     <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
-// //                         <div style={{ flex: 1, minWidth: 0 }}>
-
-// //                             {isLoading && (
-// //                                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "40vh" }}>
-// //                                     <div style={{
-// //                                         width: "36px", height: "36px", borderRadius: "50%",
-// //                                         border: `3px solid ${BLUE_LIGHT}`, borderTopColor: BLUE,
-// //                                         animation: "spin .8s linear infinite"
-// //                                     }} />
-// //                                     <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+// //                             {/* Sort */}
+// //                             <div style={{ display: "flex", alignItems: "center", gap: "8px", width: isMobile ? "100%" : "auto", boxSizing: "border-box" }}>
+// //                                 <span style={{ fontSize: "13px", color: "#64748b", fontWeight: 600, whiteSpace: "nowrap", fontFamily: FONT }}>Sort by:</span>
+// //                                 <div style={{ position: "relative", flex: isMobile ? 1 : "none" }}>
+// //                                     <select value={sortBy} onChange={(e) => handleSortChange(e.target.value)}
+// //                                         style={{ border: "1px solid #e2e8f0", borderRadius: "8px", padding: "10px 32px 10px 12px", fontSize: "13px", color: "#374151", background: "white", cursor: "pointer", outline: "none", appearance: "none", fontFamily: FONT, minWidth: "170px", boxSizing: "border-box", width: "100%" }}>
+// //                                         <option>Recommended</option>
+// //                                         <option>Price: Low To High</option>
+// //                                         <option>Price: High To Low</option>
+// //                                         <option>Most Experienced</option>
+// //                                     </select>
+// //                                     <ChevronDown size={13} color="#64748b" style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
 // //                                 </div>
-// //                             )}
 
-// //                             {isError && !isLoading && (
-// //                                 <div style={{ textAlign: "center", padding: "60px 0", background: "white", borderRadius: "14px", border: "1px solid #e5e7eb" }}>
-// //                                     <p style={{ fontWeight: 700, color: "#0f172a" }}>No Mentors Available</p>
-// //                                     <p style={{ fontSize: "13px", color: "#9ca3af", marginTop: "4px" }}>Please check back later</p>
-// //                                 </div>
-// //                             )}
-
-// //                             {!isLoading && !isError && searchEmpty && (
-// //                                 <div style={{ textAlign: "center", padding: "60px 0" }}>
-// //                                     <p style={{ fontWeight: 700, color: "#0f172a" }}>No mentors match your filters</p>
-// //                                 </div>
-// //                             )}
-
-// //                             {!isLoading && !isError && !searchEmpty && mentors.length > 0 && (
-// //                                 <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
-// //                                     {mentors.map((mentor, index) => (
-// //                                         <MentorCard
-// //                                             key={mentor._id || index}
-// //                                             mentor={mentor}
-// //                                             index={index}
-// //                                             onSubscribe={handleBookTrial}
-// //                                             onViewProfile={handleViewProfile}
-// //                                         />
-// //                                     ))}
-// //                                 </div>
-// //                             )}
-
-// //                             {!isLoading && !isError && !isFiltered && allMentors.length === 0 && (
-// //                                 <div style={{ textAlign: "center", padding: "60px 0", border: "2px dashed #e5e7eb", borderRadius: "14px", background: "white" }}>
-// //                                     <p style={{ fontSize: "32px", marginBottom: "8px" }}>👨‍🏫</p>
-// //                                     <p style={{ fontWeight: 700, color: "#0f172a" }}>No Mentors Available</p>
-// //                                 </div>
-// //                             )}
+// //                                 {/* Mobile filter button */}
+// //                                 {isTablet && (
+// //                                     <button onClick={() => setFilterDrawerOpen(true)}
+// //                                         style={{ display: "flex", alignItems: "center", gap: "5px", padding: "10px 14px", border: `1.5px solid ${BLUE_BORDER}`, borderRadius: "8px", background: "white", cursor: "pointer", fontFamily: FONT, fontSize: "13px", fontWeight: 700, color: BLUE, whiteSpace: "nowrap", flexShrink: 0 }}>
+// //                                         <SlidersHorizontal size={13} color={BLUE} /> Filters
+// //                                     </button>
+// //                                 )}
+// //                             </div>
 // //                         </div>
 
-// //                         {!isTablet && (
-// //                             <FilterSidebar
-// //                                 onSearch={handleSearch}
-// //                                 isSearching={isSearching}
-// //                                 onClear={handleClear}
-// //                                 isFiltered={isFiltered}
-// //                                 isOpen={false}
-// //                                 onClose={() => { }}
-// //                             />
+// //                         {/* Result count */}
+// //                         {!isLoading && !isError && mentors.length > 0 && (
+// //                             <p style={{ fontSize: "12px", color: "#94a3b8", marginBottom: "14px", fontWeight: 500, fontFamily: FONT }}>
+// //                                 Showing {mentors.length} of {allMentors.length} mentor{allMentors.length !== 1 ? "s" : ""}
+// //                             </p>
+// //                         )}
+
+// //                         {/* Loading */}
+// //                         {isLoading && (
+// //                             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "50vh" }}>
+// //                                 <div style={{ width: "38px", height: "38px", borderRadius: "50%", border: `3px solid ${BLUE_LIGHT}`, borderTopColor: BLUE, animation: "spin .8s linear infinite" }} />
+// //                                 <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+// //                             </div>
+// //                         )}
+
+// //                         {/* Error */}
+// //                         {isError && !isLoading && (
+// //                             <div style={{ textAlign: "center", padding: "80px 0", background: "white", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+// //                                 <p style={{ fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>No Mentors Available</p>
+// //                                 <p style={{ fontSize: "13px", color: "#94a3b8", marginTop: "4px", fontFamily: FONT }}>Please check back later</p>
+// //                             </div>
+// //                         )}
+
+// //                         {/* Empty search */}
+// //                         {!isLoading && !isError && searchEmpty && (
+// //                             <div style={{ textAlign: "center", padding: "80px 0" }}>
+// //                                 <p style={{ fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>No mentors match your filters</p>
+// //                                 <button onClick={handleClear} style={{ marginTop: "12px", background: BLUE, color: "white", border: "none", borderRadius: "8px", padding: "10px 20px", fontWeight: 600, cursor: "pointer", fontFamily: FONT }}>Clear Filters</button>
+// //                             </div>
+// //                         )}
+
+// //                         {/* Mentor cards */}
+// //                         {!isLoading && !isError && !searchEmpty && mentors.length > 0 && (
+// //                             <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
+// //                                 {mentors.map((mentor, index) => (
+// //                                     <MentorCard
+// //                                         key={mentor._id || index}
+// //                                         mentor={mentor}
+// //                                         index={index}
+// //                                         onSubscribe={handleBookTrial}
+// //                                         onViewProfile={handleViewProfile}
+// //                                     />
+// //                                 ))}
+// //                             </div>
+// //                         )}
+
+// //                         {/* Truly empty */}
+// //                         {!isLoading && !isError && !isFiltered && allMentors.length === 0 && (
+// //                             <div style={{ textAlign: "center", padding: "80px 0", border: "2px dashed #e2e8f0", borderRadius: "10px", background: "white" }}>
+// //                                 <p style={{ fontSize: "36px", marginBottom: "8px" }}>👨‍🏫</p>
+// //                                 <p style={{ fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>No Mentors Available</p>
+// //                             </div>
 // //                         )}
 // //                     </div>
-// //                 </div>
 
-// //                 {isTablet && (
-// //                     <FilterSidebar
-// //                         onSearch={handleSearch}
-// //                         isSearching={isSearching}
-// //                         onClear={handleClear}
-// //                         isFiltered={isFiltered}
-// //                         isOpen={filterDrawerOpen}
-// //                         onClose={() => setFilterDrawerOpen(false)}
-// //                     />
-// //                 )}
+// //                     {/* ── RIGHT: Filter sidebar (desktop) ── */}
+// //                     {!isTablet && (
+// //                         <FilterSidebar
+// //                             onSearch={handleSearch}
+// //                             isSearching={isSearching}
+// //                             onClear={handleClear}
+// //                             isFiltered={isFiltered}
+// //                             isOpen={false}
+// //                             onClose={() => { }}
+// //                         />
+// //                     )}
+// //                 </div>
 // //             </main>
+
+// //             {/* Mobile filter drawer */}
+// //             {isTablet && (
+// //                 <FilterSidebar
+// //                     onSearch={handleSearch}
+// //                     isSearching={isSearching}
+// //                     onClear={handleClear}
+// //                     isFiltered={isFiltered}
+// //                     isOpen={filterDrawerOpen}
+// //                     onClose={() => setFilterDrawerOpen(false)}
+// //                 />
+// //             )}
 
 // //             {/* Subscribe panel overlay */}
 // //             <AnimatePresence>
 // //                 {subscribeTarget && (
 // //                     <>
-// //                         <motion.div key="sub-overlay"
-// //                             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-// //                             onClick={() => setSubscribeTarget(null)}
+// //                         <motion.div key="sub-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSubscribeTarget(null)}
 // //                             style={{ position: "fixed", inset: 0, zIndex: 299, background: "rgba(0,0,0,.35)", backdropFilter: "blur(2px)" }} />
 // //                         <SubscribePanel key="sub-panel" mentor={subscribeTarget} onClose={() => setSubscribeTarget(null)} />
 // //                     </>
@@ -1220,54 +987,46 @@
 
 
 
-
-
-
-
 // import { useState, useEffect, useMemo } from "react";
 // import {
 //     MapPin, X, ChevronDown, ChevronUp, CheckCircle,
-//     Search, Pencil, Briefcase, Target,
+//     Search, Pencil, Briefcase,
 //     SlidersHorizontal, Star, Trophy,
 //     Users, BookOpen, Video,
 // } from "lucide-react";
 // import { motion, AnimatePresence } from "framer-motion";
 // import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 // import KarrivoLogo from "../../assets/KarrivoLogo.png";
-
 // import { useAdvancedFilterMentorsMutation, useSearchMentorMutation, useGetLtmAllMentorsQuery } from "../LongTermMentorship/MentorshipHome/Mentorshiphomeapislice";
 
-// // ── Design tokens ──────────────────────────────────────────────────────────
 // const BLUE = "#0098cc";
 // const BLUE_LIGHT = "#f0faff";
 // const BLUE_BORDER = "#cce9f5";
 // const PRIMARY = "#1a1a2e";
 // const FONT = "'Cambria', 'Georgia', serif";
 
-// // ── Static data ────────────────────────────────────────────────────────────
 // const DAY_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
 // const PLANS = [
 //     { key: "1Month", label: "1 Mo" },
 //     { key: "3Month", label: "3 Mo" },
 //     { key: "6Month", label: "6 Mo" },
 // ];
-
 // const PLAN_ALIASES = {
 //     "1Month": ["1Month", "oneMonth", "1month", "one_month", "onemonth"],
 //     "3Month": ["3Month", "threeMonths", "3month", "three_months", "threemonths", "3Months"],
 //     "6Month": ["6Month", "sixMonths", "6month", "six_months", "sixmonths", "6Months"],
 // };
-
 // const DOMAIN_CHIPS = [
 //     "Frontend", "Backend", "Fullstack",
 //     "DevOps / SRE / Cloud", "QA / Automation Testing",
 //     "Data Scientist / AI/ML", "Data Analyst",
 // ];
+// const NAV_LINKS = [
+//     { label: "Explore Mentors", path: "/explore-mentors" },
+//     { label: "Blogs", path: "/blogs" },
+//     { label: "Success Stories", path: "/success-stories" },
+// ];
 
-// const NAV_LINKS = [{ label: "Explore Mentors", path: "/explore-mentors" }];
-
-// // ── Helpers ────────────────────────────────────────────────────────────────
 // const fmtINR = (n) => `₹${Number(n ?? 0).toLocaleString("en-IN")}`;
 
 // function getPlanData(pricing, planKey) {
@@ -1297,9 +1056,7 @@
 // }
 
 // function useWindowWidth() {
-//     const [w, setW] = useState(
-//         typeof window !== "undefined" ? window.innerWidth : 1200
-//     );
+//     const [w, setW] = useState(typeof window !== "undefined" ? window.innerWidth : 1200);
 //     useEffect(() => {
 //         const h = () => setW(window.innerWidth);
 //         window.addEventListener("resize", h);
@@ -1312,82 +1069,42 @@
 // function SubscribePanel({ mentor, onClose }) {
 //     const width = useWindowWidth();
 //     const isMobile = width < 640;
-
 //     const availability = Array.isArray(mentor.availability) ? mentor.availability : [];
 //     const [selected, setSelected] = useState({});
 //     const [openDay, setOpenDay] = useState(null);
 //     const [planKey, setPlanKey] = useState("1Month");
 
-//     const toggleSlot = (di, si) =>
-//         setSelected((p) => ({ ...p, [`${di}_${si}`]: !p[`${di}_${si}`] }));
-
+//     const toggleSlot = (di, si) => setSelected((p) => ({ ...p, [`${di}_${si}`]: !p[`${di}_${si}`] }));
 //     const selectedCount = Object.values(selected).filter(Boolean).length;
 //     const planData = getPlanData(mentor.pricing, planKey);
 //     const totalSessions = planData?.totalSessions ?? 0;
 //     const totalPrice = planData?.totalPrice ?? 0;
 
 //     const panelStyle = isMobile
-//         ? {
-//             position: "fixed", bottom: 0, left: 0, right: 0, height: "85vh", background: "white", zIndex: 300,
-//             boxShadow: "0 -4px 24px rgba(0,0,0,.10)", display: "flex", flexDirection: "column",
-//             fontFamily: FONT, borderRadius: "20px 20px 0 0"
-//         }
-//         : {
-//             position: "fixed", top: 0, right: 0, bottom: 0, width: "420px", background: "white", zIndex: 300,
-//             boxShadow: "-4px 0 24px rgba(0,0,0,.10)", display: "flex", flexDirection: "column", fontFamily: FONT
-//         };
+//         ? { position: "fixed", bottom: 0, left: 0, right: 0, height: "85vh", background: "white", zIndex: 300, boxShadow: "0 -4px 24px rgba(0,0,0,.10)", display: "flex", flexDirection: "column", fontFamily: FONT, borderRadius: "20px 20px 0 0" }
+//         : { position: "fixed", top: 0, right: 0, bottom: 0, width: "420px", background: "white", zIndex: 300, boxShadow: "-4px 0 24px rgba(0,0,0,.10)", display: "flex", flexDirection: "column", fontFamily: FONT };
 
 //     const motionProps = isMobile
 //         ? { initial: { y: "100%" }, animate: { y: 0 }, exit: { y: "100%" } }
 //         : { initial: { x: "100%" }, animate: { x: 0 }, exit: { x: "100%" } };
 
 //     return (
-//         <motion.div {...motionProps}
-//             transition={{ type: "spring", damping: 28, stiffness: 300 }}
-//             style={panelStyle}
-//         >
-//             {isMobile && (
-//                 <div style={{
-//                     width: "36px", height: "4px", background: "#e5e7eb",
-//                     borderRadius: "2px", margin: "12px auto 4px", flexShrink: 0
-//                 }} />
-//             )}
-//             <div style={{
-//                 background: "white", borderBottom: `3px solid ${BLUE}`,
-//                 padding: "20px 24px", flexShrink: 0
-//             }}>
-//                 <div style={{
-//                     display: "flex", alignItems: "center",
-//                     justifyContent: "space-between", marginBottom: "4px"
-//                 }}>
-//                     <h2 style={{ color: BLUE, fontWeight: 800, fontSize: "17px", margin: 0, fontFamily: FONT }}>
-//                         Book A Free Trial
-//                     </h2>
-//                     <button onClick={onClose}
-//                         style={{
-//                             background: BLUE_LIGHT, border: `1px solid ${BLUE_BORDER}`, color: BLUE,
-//                             borderRadius: "8px", width: "32px", height: "32px", cursor: "pointer",
-//                             display: "flex", alignItems: "center", justifyContent: "center", fontFamily: FONT
-//                         }}>
+//         <motion.div {...motionProps} transition={{ type: "spring", damping: 28, stiffness: 300 }} style={panelStyle}>
+//             {isMobile && <div style={{ width: "36px", height: "4px", background: "#e5e7eb", borderRadius: "2px", margin: "12px auto 4px", flexShrink: 0 }} />}
+//             <div style={{ background: "white", borderBottom: `3px solid ${BLUE}`, padding: "20px 24px", flexShrink: 0 }}>
+//                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }}>
+//                     <h2 style={{ color: BLUE, fontWeight: 800, fontSize: "17px", margin: 0, fontFamily: FONT }}>Book A Free Trial</h2>
+//                     <button onClick={onClose} style={{ background: BLUE_LIGHT, border: `1px solid ${BLUE_BORDER}`, color: BLUE, borderRadius: "8px", width: "32px", height: "32px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
 //                         <X size={16} />
 //                     </button>
 //                 </div>
 //                 <p style={{ color: "#6b7280", fontSize: "13px", margin: 0, fontFamily: FONT }}>
-//                     {toTitleCase(mentor.fullName)} ·{" "}
-//                     <span style={{ color: BLUE, fontWeight: 700, fontFamily: FONT }}>
-//                         {fmtINR(mentor.pricing?.hourlyRate ?? mentor.hourlyRate)}/session
-//                     </span>
+//                     {toTitleCase(mentor.fullName)} · <span style={{ color: BLUE, fontWeight: 700 }}>{fmtINR(mentor.pricing?.hourlyRate ?? mentor.hourlyRate)}/session</span>
 //                 </p>
 //             </div>
 
 //             <div style={{ flex: 1, overflowY: "auto", padding: "20px 24px" }}>
-//                 {/* Plan selector */}
-//                 <p style={{
-//                     fontSize: "11px", fontWeight: 700, color: BLUE,
-//                     textTransform: "uppercase", letterSpacing: ".08em", marginBottom: "10px", fontFamily: FONT
-//                 }}>
-//                     Select Plan
-//                 </p>
+//                 <p style={{ fontSize: "11px", fontWeight: 700, color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: "10px", fontFamily: FONT }}>Select Plan</p>
 //                 <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "24px" }}>
 //                     {PLANS.map((p) => {
 //                         const sel = planKey === p.key;
@@ -1396,54 +1113,22 @@
 //                         const sessions = mentor.pricing?.weeklySessions ?? 0;
 //                         const disabled = !pData;
 //                         return (
-//                             <div key={p.key}
-//                                 onClick={() => !disabled && setPlanKey(p.key)}
-//                                 style={{
-//                                     border: `1.5px solid ${sel ? BLUE : disabled ? "#f3f4f6" : "#e5e7eb"}`,
-//                                     borderRadius: "12px", padding: "14px 16px",
-//                                     background: disabled ? "#f9fafb" : "white",
-//                                     cursor: disabled ? "not-allowed" : "pointer",
-//                                     display: "flex", alignItems: "center", gap: "12px",
-//                                     boxShadow: sel ? `0 0 0 3px ${BLUE_LIGHT}` : "none",
-//                                     opacity: disabled ? 0.6 : 1
-//                                 }}>
-//                                 <div style={{
-//                                     width: "18px", height: "18px", borderRadius: "50%",
-//                                     border: `2px solid ${sel ? BLUE : "#d1d5db"}`, background: "white",
-//                                     display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
-//                                 }}>
-//                                     {sel && <div style={{
-//                                         width: "8px", height: "8px",
-//                                         borderRadius: "50%", background: BLUE
-//                                     }} />}
+//                             <div key={p.key} onClick={() => !disabled && setPlanKey(p.key)}
+//                                 style={{ border: `1.5px solid ${sel ? BLUE : disabled ? "#f3f4f6" : "#e5e7eb"}`, borderRadius: "12px", padding: "14px 16px", background: disabled ? "#f9fafb" : "white", cursor: disabled ? "not-allowed" : "pointer", display: "flex", alignItems: "center", gap: "12px", boxShadow: sel ? `0 0 0 3px ${BLUE_LIGHT}` : "none", opacity: disabled ? 0.6 : 1 }}>
+//                                 <div style={{ width: "18px", height: "18px", borderRadius: "50%", border: `2px solid ${sel ? BLUE : "#d1d5db"}`, background: "white", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+//                                     {sel && <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: BLUE }} />}
 //                                 </div>
 //                                 <div style={{ flex: 1 }}>
-//                                     <p style={{
-//                                         fontWeight: 700, fontSize: "13px",
-//                                         color: sel ? BLUE : "#111827", margin: "0 0 2px", fontFamily: FONT
-//                                     }}>{p.label}</p>
-//                                     <p style={{ fontSize: "11px", color: "#9ca3af", margin: 0, fontFamily: FONT }}>
-//                                         {disabled ? "No plans available" : `${sessions} sessions/week`}
-//                                     </p>
+//                                     <p style={{ fontWeight: 700, fontSize: "13px", color: sel ? BLUE : "#111827", margin: "0 0 2px", fontFamily: FONT }}>{p.label}</p>
+//                                     <p style={{ fontSize: "11px", color: "#9ca3af", margin: 0, fontFamily: FONT }}>{disabled ? "No plans available" : `${sessions} sessions/week`}</p>
 //                                 </div>
-//                                 <p style={{
-//                                     fontWeight: 700, fontSize: "15px",
-//                                     color: sel ? BLUE : "#374151", margin: 0, fontFamily: FONT
-//                                 }}>
-//                                     {disabled ? "N/A" : fmtINR(price)}
-//                                 </p>
+//                                 <p style={{ fontWeight: 700, fontSize: "15px", color: sel ? BLUE : "#374151", margin: 0, fontFamily: FONT }}>{disabled ? "N/A" : fmtINR(price)}</p>
 //                             </div>
 //                         );
 //                     })}
 //                 </div>
 
-//                 {/* Availability */}
-//                 <p style={{
-//                     fontSize: "11px", fontWeight: 700, color: BLUE,
-//                     textTransform: "uppercase", letterSpacing: ".08em", marginBottom: "10px", fontFamily: FONT
-//                 }}>
-//                     Select Availability
-//                 </p>
+//                 <p style={{ fontSize: "11px", fontWeight: 700, color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: "10px", fontFamily: FONT }}>Select Availability</p>
 //                 {availability.length > 0 ? (
 //                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
 //                         {DAY_ORDER.map((day, di) => {
@@ -1453,82 +1138,28 @@
 //                             const isOpen = openDay === day;
 //                             const selInDay = slots.filter((_, si) => selected[`${di}_${si}`]).length;
 //                             return (
-//                                 <div key={day}
-//                                     style={{
-//                                         border: `1.5px solid ${selInDay ? BLUE : "#e5e7eb"}`,
-//                                         borderRadius: "12px", overflow: "hidden", background: "white"
-//                                     }}>
-//                                     <button
-//                                         onClick={() => setOpenDay(isOpen ? null : day)}
-//                                         style={{
-//                                             width: "100%", display: "flex", alignItems: "center",
-//                                             justifyContent: "space-between", padding: "12px 14px",
-//                                             background: "transparent", border: "none", cursor: "pointer",
-//                                             fontFamily: FONT
-//                                         }}>
+//                                 <div key={day} style={{ border: `1.5px solid ${selInDay ? BLUE : "#e5e7eb"}`, borderRadius: "12px", overflow: "hidden", background: "white" }}>
+//                                     <button onClick={() => setOpenDay(isOpen ? null : day)} style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "12px 14px", background: "transparent", border: "none", cursor: "pointer", fontFamily: FONT }}>
 //                                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-//                                             <span style={{
-//                                                 fontWeight: 600, fontSize: "13px",
-//                                                 color: selInDay ? BLUE : "#374151", fontFamily: FONT
-//                                             }}>{day}</span>
-//                                             {selInDay > 0 && (
-//                                                 <span style={{
-//                                                     background: BLUE, color: "white",
-//                                                     borderRadius: "20px", padding: "1px 8px",
-//                                                     fontSize: "10px", fontWeight: 700, fontFamily: FONT
-//                                                 }}>
-//                                                     {selInDay} selected
-//                                                 </span>
-//                                             )}
+//                                             <span style={{ fontWeight: 600, fontSize: "13px", color: selInDay ? BLUE : "#374151", fontFamily: FONT }}>{day}</span>
+//                                             {selInDay > 0 && <span style={{ background: BLUE, color: "white", borderRadius: "20px", padding: "1px 8px", fontSize: "10px", fontWeight: 700 }}>{selInDay} selected</span>}
 //                                         </div>
 //                                         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-//                                             <span style={{ fontSize: "11px", color: "#9ca3af", fontFamily: FONT }}>
-//                                                 {slots.length} slot{slots.length !== 1 ? "s" : ""}
-//                                             </span>
-//                                             {isOpen
-//                                                 ? <ChevronUp size={14} color="#9ca3af" />
-//                                                 : <ChevronDown size={14} color="#9ca3af" />}
+//                                             <span style={{ fontSize: "11px", color: "#9ca3af", fontFamily: FONT }}>{slots.length} slot{slots.length !== 1 ? "s" : ""}</span>
+//                                             {isOpen ? <ChevronUp size={14} color="#9ca3af" /> : <ChevronDown size={14} color="#9ca3af" />}
 //                                         </div>
 //                                     </button>
 //                                     <AnimatePresence>
 //                                         {isOpen && (
-//                                             <motion.div
-//                                                 initial={{ height: 0, opacity: 0 }}
-//                                                 animate={{ height: "auto", opacity: 1 }}
-//                                                 exit={{ height: 0, opacity: 0 }}
-//                                                 transition={{ duration: .18 }}
-//                                                 style={{ overflow: "hidden" }}>
-//                                                 <div style={{
-//                                                     padding: "0 14px 12px",
-//                                                     display: "flex", flexDirection: "column", gap: "6px"
-//                                                 }}>
+//                                             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: .18 }} style={{ overflow: "hidden" }}>
+//                                                 <div style={{ padding: "0 14px 12px", display: "flex", flexDirection: "column", gap: "6px" }}>
 //                                                     {slots.map((slot, si) => {
 //                                                         const k = `${di}_${si}`;
 //                                                         const isSel = !!selected[k];
 //                                                         return (
-//                                                             <button key={slot._id}
-//                                                                 onClick={() => toggleSlot(di, si)}
-//                                                                 style={{
-//                                                                     display: "flex", alignItems: "center",
-//                                                                     justifyContent: "space-between",
-//                                                                     padding: "8px 12px", borderRadius: "8px",
-//                                                                     border: `1.5px solid ${isSel ? BLUE : "#e5e7eb"}`,
-//                                                                     background: "white", cursor: "pointer",
-//                                                                     fontFamily: FONT
-//                                                                 }}>
-//                                                                 <span style={{
-//                                                                     fontSize: "12px", fontWeight: 600,
-//                                                                     color: isSel ? BLUE : "#374151", fontFamily: FONT
-//                                                                 }}>
-//                                                                     {slot.startTime} – {slot.endTime}
-//                                                                 </span>
-//                                                                 {isSel
-//                                                                     ? <CheckCircle size={15} color={BLUE} />
-//                                                                     : <div style={{
-//                                                                         width: "15px", height: "15px",
-//                                                                         borderRadius: "50%",
-//                                                                         border: "1.5px solid #d1d5db"
-//                                                                     }} />}
+//                                                             <button key={slot._id} onClick={() => toggleSlot(di, si)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 12px", borderRadius: "8px", border: `1.5px solid ${isSel ? BLUE : "#e5e7eb"}`, background: "white", cursor: "pointer", fontFamily: FONT }}>
+//                                                                 <span style={{ fontSize: "12px", fontWeight: 600, color: isSel ? BLUE : "#374151", fontFamily: FONT }}>{slot.startTime} – {slot.endTime}</span>
+//                                                                 {isSel ? <CheckCircle size={15} color={BLUE} /> : <div style={{ width: "15px", height: "15px", borderRadius: "50%", border: "1.5px solid #d1d5db" }} />}
 //                                                             </button>
 //                                                         );
 //                                                     })}
@@ -1541,53 +1172,22 @@
 //                         })}
 //                     </div>
 //                 ) : (
-//                     <div style={{
-//                         textAlign: "center", padding: "20px",
-//                         background: "#fafafa", borderRadius: "10px",
-//                         border: "1px dashed #e5e7eb"
-//                     }}>
-//                         <p style={{ fontSize: "13px", color: "#9ca3af", margin: 0, fontFamily: FONT }}>
-//                             No Availability Slots Set Yet
-//                         </p>
+//                     <div style={{ textAlign: "center", padding: "20px", background: "#fafafa", borderRadius: "10px", border: "1px dashed #e5e7eb" }}>
+//                         <p style={{ fontSize: "13px", color: "#9ca3af", margin: 0, fontFamily: FONT }}>No Availability Slots Set Yet</p>
 //                     </div>
 //                 )}
 //             </div>
 
-//             {/* Footer */}
-//             <div style={{
-//                 borderTop: "1px solid #f0f0f0", padding: "16px 24px",
-//                 background: "white", flexShrink: 0
-//             }}>
+//             <div style={{ borderTop: "1px solid #f0f0f0", padding: "16px 24px", background: "white", flexShrink: 0 }}>
 //                 <div style={{ marginBottom: "12px" }}>
-//                     <p style={{
-//                         fontSize: "11px", color: "#9ca3af", margin: "0 0 2px",
-//                         fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em", fontFamily: FONT
-//                     }}>
-//                         Total For {PLANS.find((p) => p.key === planKey)?.label}
-//                     </p>
-//                     <p style={{ fontSize: "26px", fontWeight: 800, color: BLUE, margin: 0, fontFamily: FONT }}>
-//                         {totalPrice > 0 ? fmtINR(totalPrice) : "N/A"}
-//                     </p>
-//                     {totalSessions > 0 && (
-//                         <p style={{ fontSize: "11px", color: "#9ca3af", margin: "2px 0 0", fontFamily: FONT }}>
-//                             {totalSessions} sessions · {selectedCount} slot{selectedCount !== 1 ? "s" : ""}/week
-//                         </p>
-//                     )}
+//                     <p style={{ fontSize: "11px", color: "#9ca3af", margin: "0 0 2px", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em", fontFamily: FONT }}>Total For {PLANS.find((p) => p.key === planKey)?.label}</p>
+//                     <p style={{ fontSize: "26px", fontWeight: 800, color: BLUE, margin: 0, fontFamily: FONT }}>{totalPrice > 0 ? fmtINR(totalPrice) : "N/A"}</p>
+//                     {totalSessions > 0 && <p style={{ fontSize: "11px", color: "#9ca3af", margin: "2px 0 0", fontFamily: FONT }}>{totalSessions} sessions · {selectedCount} slot{selectedCount !== 1 ? "s" : ""}/week</p>}
 //                 </div>
-//                 <button
-//                     disabled={totalPrice === 0}
-//                     style={{
-//                         width: "100%", padding: "13px",
-//                         background: totalPrice === 0 ? "#d1d5db" : PRIMARY,
-//                         cursor: totalPrice === 0 ? "not-allowed" : "pointer",
-//                         color: "white", border: "none", borderRadius: "10px",
-//                         fontWeight: 700, fontSize: "14px", fontFamily: FONT
-//                     }}>
+//                 <button disabled={totalPrice === 0} style={{ width: "100%", padding: "13px", background: totalPrice === 0 ? "#d1d5db" : PRIMARY, cursor: totalPrice === 0 ? "not-allowed" : "pointer", color: "white", border: "none", borderRadius: "10px", fontWeight: 700, fontSize: "14px", fontFamily: FONT }}>
 //                     {totalPrice === 0 ? "Plan Not Available" : `Subscribe — ${fmtINR(totalPrice)}`}
 //                 </button>
-//                 <p style={{ textAlign: "center", color: "#9ca3af", fontSize: "11px", marginTop: "8px", fontFamily: FONT }}>
-//                     Secure Checkout · Cancel Anytime · 7-Day Refund Policy
-//                 </p>
+//                 <p style={{ textAlign: "center", color: "#9ca3af", fontSize: "11px", marginTop: "8px", fontFamily: FONT }}>Secure Checkout · Cancel Anytime · 7-Day Refund Policy</p>
 //             </div>
 //         </motion.div>
 //     );
@@ -1595,8 +1195,6 @@
 
 // // ── MentorCard ─────────────────────────────────────────────────────────────
 // function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
-
-//     console.log(mentor, "mentor1s2d3fer")
 //     const width = useWindowWidth();
 //     const isMobile = width < 768;
 //     const [bioExpanded, setBioExpanded] = useState(false);
@@ -1605,275 +1203,290 @@
 //     const currentRole = toTitleCase(mentor.currentRole || "");
 //     const companyName = toTitleCase(mentor.companyName || "");
 //     const locationText = toTitleCase(mentor.location || "");
-//     const languages = Array.isArray(mentor.languages)
-//         ? mentor.languages.join(", ")
-//         : mentor.languages || "";
-
+//     const languages = Array.isArray(mentor.languages) ? mentor.languages.join(", ") : mentor.languages || "";
 //     const bio = mentor.motivationStatement || mentor.bio || mentor.about || "";
-
-//     const areas = (mentor.areasOfInterest || mentor.currentSkills || "")
-//         .split(",").map((s) => s.trim()).filter(Boolean);
-
-//     const monthlyPrice = mentor.hourlyRate ?? 0;
+//     const areas = (mentor.areasOfInterest || mentor.currentSkills || "").split(",").map((s) => s.trim()).filter(Boolean);
+//     const monthlyPrice = mentor.pricing?.monthlyRate ?? mentor.hourlyRate ?? 0;
 //     const nextAvailable = mentor.nextAvailable ?? "";
 //     const placements = mentor.placements ?? 0;
 //     const menteeCount = mentor.menteeCount ?? 0;
-//     const yearsExp = mentor.yearsOfExperience
-//         ? `${mentor.yearsOfExperience}+ Years of Exp.`
-//         : "0+ Years of Exp.";
+//     const yearsExp = mentor.yearsOfExperience ? `${mentor.yearsOfExperience}+ Years of Exp.` : "0+ Years of Exp.";
 //     const starBadge = mentor.starMentorBadge || mentor.badge || "";
 //     const referralCount = mentor.referralCount ?? 0;
 //     const hasCurriculum = mentor.hasCurriculum ?? false;
 //     const weeklySessions = mentor.pricing?.weeklySessions ?? 4;
+//     const discount = mentor.discount ?? null;
 
 //     const offeringForList = Array.isArray(mentor.offeringFor)
 //         ? mentor.offeringFor
-//         : mentor.offeringFor
-//             ? String(mentor.offeringFor).split(",").map((s) => s.trim())
-//             : [];
+//         : mentor.offeringFor ? String(mentor.offeringFor).split(",").map((s) => s.trim()) : [];
 
 //     const domainsList = Array.isArray(mentor.domains)
 //         ? mentor.domains
-//         : mentor.domains
-//             ? String(mentor.domains).split(",").map((s) => s.trim())
-//             : [];
+//         : mentor.domains ? String(mentor.domains).split(",").map((s) => s.trim()) : [];
 
-//     const prevCompanies = Array.isArray(mentor.previousCompanies)
-//         ? mentor.previousCompanies
-//         : [];
+//     const prevCompanies = Array.isArray(mentor.previousCompanies) ? mentor.previousCompanies : [];
 
 //     return (
 //         <motion.div
-//             initial={{ opacity: 0, y: 12 }}
+//             initial={{ opacity: 0, y: 16 }}
 //             animate={{ opacity: 1, y: 0 }}
-//             transition={{ duration: 0.25, delay: index * 0.03 }}
+//             transition={{ duration: 0.28, delay: index * 0.04 }}
 //             style={{
 //                 width: "100%",
-//                 border: "1px solid #e5e7eb",
+//                 // ✅ KEY FIX: natural height, no minHeight — card sizes to content like the image
+//                 border: "1px solid #e2e8f0",
 //                 background: "#fff",
 //                 display: "flex",
 //                 flexDirection: isMobile ? "column" : "row",
 //                 overflow: "hidden",
-//                 marginBottom: "16px",
+//                 marginBottom: "20px",
 //                 fontFamily: FONT,
-//                 borderRadius: "4px",
+//                 borderRadius: "6px",
+//                 boxShadow: "0 1px 6px rgba(0,0,0,0.06)",
 //             }}
 //         >
-//             {/* LEFT: Photo */}
+//             {/* ── LEFT: Photo column ── */}
 //             <div style={{
 //                 position: "relative",
 //                 width: isMobile ? "100%" : "180px",
 //                 minWidth: isMobile ? "100%" : "180px",
-//                 height: isMobile ? "220px" : "auto",
-//                 background: "#f3f4f6",
+//                 height: isMobile ? "240px" : "auto",
+//                 background: "#f1f5f9",
 //                 overflow: "hidden",
 //                 flexShrink: 0,
 //             }}>
-//                 <span style={{ position: "absolute", top: "8px", left: "8px", fontSize: "12px", color: "#94a3b8", userSelect: "none" }}>✦</span>
-//                 <span style={{ position: "absolute", top: "8px", right: "8px", fontSize: "9px", color: "#94a3b8", userSelect: "none" }}>✦</span>
-//                 <span style={{ position: "absolute", bottom: "52px", left: "6px", fontSize: "8px", color: "#94a3b8", userSelect: "none" }}>✦</span>
-//                 <span style={{ position: "absolute", bottom: "52px", right: "6px", fontSize: "10px", color: "#94a3b8", userSelect: "none" }}>✦</span>
+//                 <span style={{ position: "absolute", top: "10px", left: "10px", fontSize: "13px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
+//                 <span style={{ position: "absolute", top: "10px", right: "10px", fontSize: "9px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
+//                 <span style={{ position: "absolute", bottom: "60px", left: "8px", fontSize: "8px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
+//                 <span style={{ position: "absolute", bottom: "60px", right: "8px", fontSize: "11px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
 //                 <img
 //                     src={mentor.profilePhoto}
 //                     alt={fullName}
 //                     style={{
-//                         width: "100%", height: "100%", objectFit: "cover",
-//                         objectPosition: "top center", display: "block",
-//                         minHeight: isMobile ? "220px" : "220px"
+//                         width: "100%",
+//                         height: "100%",
+//                         objectFit: "cover",
+//                         objectPosition: "top center",
+//                         display: "block",
+//                         // ✅ absolute fill on desktop so it stretches with card height
+//                         position: isMobile ? "static" : "absolute",
+//                         top: 0, left: 0, right: 0, bottom: 0,
+//                         minHeight: isMobile ? "240px" : "unset",
 //                     }}
 //                 />
 //             </div>
 
-//             {/* CENTRE: Info */}
+//             {/* ── CENTRE: Info column ── */}
 //             <div style={{
-//                 flex: 1, display: "flex", flexDirection: "column",
-//                 borderRight: isMobile ? "none" : "1px solid #e5e7eb", minWidth: 0,
+//                 flex: 1,
+//                 display: "flex",
+//                 flexDirection: "column",
+//                 borderRight: isMobile ? "none" : "1px solid #e2e8f0",
+//                 minWidth: 0,
 //             }}>
-//                 <div style={{ padding: "16px 18px", display: "flex", flexDirection: "column", gap: "10px", flex: 1 }}>
-//                     <h2 style={{ margin: 0, fontSize: "22px", fontWeight: 700, color: "#111827", lineHeight: 1.2, fontFamily: FONT }}>
+//                 <div style={{ padding: "20px 22px 16px", display: "flex", flexDirection: "column", gap: "12px", flex: 1 }}>
+//                     {/* Name */}
+//                     <h2 style={{ margin: 0, fontSize: "22px", fontWeight: 700, color: "#0f172a", lineHeight: 1.2, fontFamily: FONT }}>
 //                         {fullName}
 //                     </h2>
-//                     <div style={{ display: "flex", alignItems: "center", gap: "14px", flexWrap: "wrap", fontSize: "13px", color: "#6b7280", fontFamily: FONT }}>
+
+//                     {/* Location + Language */}
+//                     <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap", fontSize: "13px", color: "#64748b", fontFamily: FONT }}>
 //                         <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-//                             <MapPin size={13} color="#6b7280" />{locationText}
+//                             <MapPin size={13} color="#64748b" />
+//                             <strong style={{ color: "#334155" }}>{locationText.split(",")[0]}</strong>
+//                             {locationText.includes(",") && <span>, {locationText.split(",").slice(1).join(",").trim()}</span>}
 //                         </span>
 //                         <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-//                             <Pencil size={12} color="#6b7280" />{languages}
+//                             <Pencil size={12} color="#64748b" />
+//                             <strong style={{ color: "#334155" }}>{languages}</strong>
 //                         </span>
 //                     </div>
-//                     <div style={{ fontSize: "13px", color: "#4b5563", lineHeight: "1.6", fontFamily: FONT }}>
-//                         {bioExpanded ? bio : bio.slice(0, 160) + (bio.length > 160 ? "..." : "")}
-//                         {bio.length > 160 && (
-//                             <span onClick={() => setBioExpanded(!bioExpanded)}
-//                                 style={{ color: "#2563eb", marginLeft: "6px", cursor: "pointer", fontWeight: 600, fontFamily: FONT }}>
+
+//                     {/* Bio */}
+//                     <div style={{ fontSize: "13px", color: "#475569", lineHeight: "1.65", fontFamily: FONT }}>
+//                         {bioExpanded ? bio : bio.slice(0, 180) + (bio.length > 180 ? "..." : "")}
+//                         {bio.length > 180 && (
+//                             <span onClick={() => setBioExpanded(!bioExpanded)} style={{ color: "#2563eb", marginLeft: "6px", cursor: "pointer", fontWeight: 600 }}>
 //                                 {bioExpanded ? "Show Less" : "Read More"}
 //                             </span>
 //                         )}
 //                     </div>
+
+//                     {/* Skills */}
 //                     <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
 //                         {areas.slice(0, 7).map((skill, i) => (
-//                             <div key={i} style={{
-//                                 border: "1px solid #d1d5db", padding: "4px 10px",
-//                                 fontSize: "12px", color: "#374151", background: "#fff", borderRadius: "4px", fontFamily: FONT
-//                             }}>
+//                             <div key={i} style={{ border: "1px solid #d1d5db", padding: "4px 11px", fontSize: "12px", color: "#374151", background: "#fff", borderRadius: "4px", fontFamily: FONT }}>
 //                                 {toTitleCase(skill)}
 //                             </div>
 //                         ))}
 //                         {areas.length > 7 && (
-//                             <div style={{
-//                                 border: "1px solid #d1d5db", padding: "4px 10px",
-//                                 fontSize: "12px", color: "#2563eb", background: "#fff", borderRadius: "4px", fontWeight: 600, fontFamily: FONT
-//                             }}>
+//                             <div style={{ border: "1px solid #d1d5db", padding: "4px 11px", fontSize: "12px", color: "#2563eb", background: "#fff", borderRadius: "4px", fontWeight: 600, fontFamily: FONT }}>
 //                                 +{areas.length - 7} More
 //                             </div>
 //                         )}
 //                     </div>
-//                     <div style={{ display: "flex", flexDirection: "row", gap: "10px", flexWrap: "wrap" }}>
-//                         <div style={{
-//                             border: "1px solid #e5e7eb", padding: "10px 14px",
-//                             display: "flex", alignItems: "center", gap: "10px",
-//                             borderRadius: "6px", minWidth: "200px"
-//                         }}>
-//                             <div style={{
-//                                 width: "36px", height: "36px", borderRadius: "50%",
-//                                 background: "#1d4ed8", color: "#fff", display: "flex",
-//                                 alignItems: "center", justifyContent: "center",
-//                                 fontWeight: 800, fontSize: "13px", flexShrink: 0, fontFamily: FONT
-//                             }}>
+
+//                     {/* Current role + Experience cards */}
+//                     <div style={{ display: "flex", flexDirection: "row", gap: "12px", flexWrap: "wrap" }}>
+//                         {/* Current company */}
+//                         <div style={{ border: "1px solid #e2e8f0", padding: "10px 14px", display: "flex", alignItems: "center", gap: "10px", borderRadius: "8px", flex: 1, minWidth: "180px", background: "#fafafa" }}>
+//                             <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: "#1d4ed8", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "14px", flexShrink: 0, fontFamily: FONT }}>
 //                                 {fullName.charAt(0)}.
 //                             </div>
-//                             <div>
-//                                 <div style={{ fontSize: "13px", fontWeight: 700, color: "#111827", fontFamily: FONT }}>{currentRole}</div>
-//                                 <div style={{ fontSize: "11px", color: "#6b7280", fontFamily: FONT }}>{companyName}</div>
+//                             <div style={{ minWidth: 0 }}>
+//                                 <div style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", fontFamily: FONT, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{currentRole}</div>
+//                                 <div style={{ fontSize: "11px", color: "#64748b", fontFamily: FONT, marginTop: "2px" }}>{companyName}</div>
 //                             </div>
 //                         </div>
-//                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-//                             <div style={{ display: "flex", alignItems: "center" }}>
+
+//                         {/* Experience + prev companies */}
+//                         <div style={{ display: "flex", alignItems: "center", gap: "10px", border: "1px solid #e2e8f0", padding: "10px 14px", borderRadius: "8px", flex: 1, minWidth: "180px", background: "#fafafa" }}>
+//                             <div style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
 //                                 {prevCompanies.slice(0, 3).map((c, i) => (
-//                                     <div key={i} style={{
-//                                         width: "28px", height: "28px", borderRadius: "50%",
-//                                         border: "2px solid white", background: "#e5e7eb", overflow: "hidden",
-//                                         marginLeft: i > 0 ? "-8px" : "0", zIndex: 3 - i, position: "relative", flexShrink: 0
-//                                     }}>
+//                                     <div key={i} style={{ width: "30px", height: "30px", borderRadius: "50%", border: "2px solid white", background: "#e2e8f0", overflow: "hidden", marginLeft: i > 0 ? "-9px" : "0", zIndex: 3 - i, position: "relative", flexShrink: 0 }}>
 //                                         {c.logo ? (
 //                                             <img src={c.logo} alt={c.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
 //                                         ) : (
-//                                             <div style={{
-//                                                 width: "100%", height: "100%", display: "flex", alignItems: "center",
-//                                                 justifyContent: "center", fontSize: "10px", fontWeight: 700, color: "#374151",
-//                                                 background: ["#fef3c7", "#dbeafe", "#d1fae5"][i % 3], fontFamily: FONT
-//                                             }}>
+//                                             <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: 700, color: "#374151", background: ["#fef3c7", "#dbeafe", "#d1fae5"][i % 3], fontFamily: FONT }}>
 //                                                 {c.name?.charAt(0) || "C"}
 //                                             </div>
 //                                         )}
 //                                     </div>
 //                                 ))}
-//                                 {prevCompanies.length === 0 && mentor.companyLogo && (
-//                                     <div style={{ width: "28px", height: "28px", borderRadius: "50%", border: "2px solid white", overflow: "hidden" }}>
-//                                         <img src={mentor.companyLogo} alt={companyName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+//                                 {prevCompanies.length === 0 && (
+//                                     <div style={{ width: "30px", height: "30px", borderRadius: "50%", background: "#dbeafe", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: 700, color: "#1d4ed8", fontFamily: FONT }}>
+//                                         {companyName?.charAt(0) || "C"}
 //                                     </div>
 //                                 )}
 //                             </div>
-//                             <div>
-//                                 <div style={{ fontSize: "13px", fontWeight: 700, color: "#111827", fontFamily: FONT }}>{yearsExp}</div>
-//                                 <div style={{ fontSize: "11px", color: "#6b7280", fontFamily: FONT }}>
+//                             <div style={{ minWidth: 0 }}>
+//                                 <div style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>{yearsExp}</div>
+//                                 <div style={{ fontSize: "11px", color: "#64748b", fontFamily: FONT, marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
 //                                     {prevCompanies.length > 0 ? prevCompanies.map((c) => c.name).join(" | ") : companyName}
 //                                 </div>
 //                             </div>
 //                         </div>
 //                     </div>
 //                 </div>
-//                 <div style={{
-//                     borderTop: "1px solid #f3f4f6", padding: "10px 18px",
-//                     display: "flex", alignItems: "center", gap: "20px",
-//                     flexWrap: "wrap", background: "#fafafa"
-//                 }}>
+
+//                 {/* Bottom strip */}
+//                 <div style={{ borderTop: "1px solid #f1f5f9", padding: "10px 22px", display: "flex", alignItems: "center", gap: "22px", flexWrap: "wrap", background: "#f8fafc" }}>
 //                     {offeringForList.length > 0 && (
-//                         <div style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#374151", fontFamily: FONT }}>
-//                             <Briefcase size={13} color="#6b7280" />
-//                             <span style={{ color: "#6b7280" }}>For:</span>
-//                             <span style={{ fontWeight: 600 }}>{offeringForList.join(" | ")}</span>
+//                         <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#374151", fontFamily: FONT }}>
+//                             <Briefcase size={13} color="#64748b" />
+//                             <span style={{ color: "#64748b" }}>For:</span>
+//                             <span style={{ fontWeight: 600, color: "#0f172a" }}>{offeringForList.join(" | ")}</span>
 //                         </div>
 //                     )}
 //                     {domainsList.length > 0 && (
-//                         <div style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#374151", fontFamily: FONT }}>
-//                             <Target size={13} color="#6b7280" />
-//                             <span style={{ color: "#6b7280" }}>Domains:</span>
-//                             <span style={{ fontWeight: 600 }}>{domainsList[0]}</span>
+//                         <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#374151", fontFamily: FONT }}>
+//                             <div style={{ width: "13px", height: "13px", borderRadius: "50%", border: "2px solid #64748b", flexShrink: 0 }} />
+//                             <span style={{ color: "#64748b" }}>Domains:</span>
+//                             <span style={{ fontWeight: 600, color: "#0f172a" }}>{domainsList[0]}</span>
 //                             {domainsList.length > 1 && (
-//                                 <span style={{ color: "#2563eb", fontWeight: 600, cursor: "pointer" }}>| More</span>
+//                                 <span style={{ color: "#2563eb", fontWeight: 600, cursor: "pointer" }}>| +{domainsList.length - 1} More</span>
 //                             )}
 //                         </div>
 //                     )}
 //                 </div>
 //             </div>
 
-//             {/* RIGHT: Stats + CTA */}
+//             {/* ── RIGHT: Stats + CTA ── */}
 //             <div style={{
-//                 width: isMobile ? "100%" : "270px",
-//                 minWidth: isMobile ? "100%" : "270px",
-//                 padding: "16px 18px", display: "flex", flexDirection: "column",
-//                 gap: "10px", background: "#ffffff", flexShrink: 0,
+//                 width: isMobile ? "100%" : "280px",
+//                 minWidth: isMobile ? "100%" : "280px",
+//                 padding: "20px",
+//                 display: "flex",
+//                 flexDirection: "column",
+//                 gap: "10px",
+//                 background: "#ffffff",
+//                 flexShrink: 0,
 //             }}>
-//                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "14px", fontFamily: FONT }}>
-//                     <Star size={16} color="#f59e0b" fill="#f59e0b" style={{ flexShrink: 0 }} />
-//                     <span style={{ fontWeight: 700, color: "#111827" }}>Star Mentor</span>
-//                     {starBadge && <span style={{ fontSize: "12px", color: "#6b7280", fontWeight: 400 }}>- {starBadge}</span>}
+//                 {/* Star Mentor */}
+//                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", fontFamily: FONT, paddingBottom: "10px", borderBottom: "1px solid #f1f5f9" }}>
+//                     <Star size={15} color="#f59e0b" fill="#f59e0b" style={{ flexShrink: 0 }} />
+//                     <span style={{ fontWeight: 700, color: "#0f172a" }}>Star Mentor</span>
+//                     {starBadge && <span style={{ fontSize: "12px", color: "#64748b" }}>- {starBadge}</span>}
 //                 </div>
-//                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
-//                     <Trophy size={15} color="#d97706" style={{ flexShrink: 0 }} />
+
+//                 {/* Placements */}
+//                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT, paddingBottom: "10px", borderBottom: "1px solid #f1f5f9" }}>
+//                     <Trophy size={14} color="#d97706" style={{ flexShrink: 0 }} />
 //                     <span>{placements} Placements</span>
 //                 </div>
-//                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
-//                     <Users size={15} color="#0ea5e9" style={{ flexShrink: 0 }} />
+
+//                 {/* Mentees */}
+//                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT, paddingBottom: "10px", borderBottom: "1px solid #f1f5f9" }}>
+//                     <Users size={14} color="#0ea5e9" style={{ flexShrink: 0 }} />
 //                     <span>5.0 ({menteeCount}+ mentees)</span>
 //                 </div>
-//                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
-//                     <Video size={15} color="#10b981" style={{ flexShrink: 0 }} />
+
+//                 {/* Sessions per month */}
+//                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT, paddingBottom: "10px", borderBottom: "1px solid #f1f5f9" }}>
+//                     <Video size={14} color="#10b981" style={{ flexShrink: 0 }} />
 //                     <span>{weeklySessions * 4}x Sessions Per Month</span>
 //                 </div>
-//                 <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
-//                     <Briefcase size={15} color="#8b5cf6" style={{ flexShrink: 0 }} />
-//                     <span>Referrals in Top Companies</span>
+
+//                 {/* Referrals */}
+//                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "13px", color: "#374151", fontFamily: FONT, paddingBottom: "10px", borderBottom: "1px solid #f1f5f9" }}>
+//                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+//                         <Briefcase size={14} color="#8b5cf6" style={{ flexShrink: 0 }} />
+//                         <span>Referrals in Top Companies</span>
+//                     </div>
 //                     {referralCount > 0 && (
-//                         <span style={{ color: "#2563eb", fontWeight: 600, fontSize: "12px", cursor: "pointer", whiteSpace: "nowrap", fontFamily: FONT }}>
+//                         <span style={{ color: "#2563eb", fontWeight: 600, fontSize: "12px", cursor: "pointer", whiteSpace: "nowrap", flexShrink: 0, fontFamily: FONT }}>
 //                             +{referralCount} More
 //                         </span>
 //                     )}
 //                 </div>
-//                 {hasCurriculum && (
-//                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
-//                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-//                             <BookOpen size={15} color="#6b7280" style={{ flexShrink: 0 }} />
-//                             <span>Detailed Curriculum Available</span>
-//                         </div>
-//                         <span style={{ color: "#2563eb", fontWeight: 600, fontSize: "12px", cursor: "pointer", whiteSpace: "nowrap" }}>View ↗</span>
+
+//                 {/* Curriculum */}
+//                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "13px", color: hasCurriculum ? "#374151" : "#cbd5e1", fontFamily: FONT, paddingBottom: "10px", borderBottom: "1px solid #f1f5f9" }}>
+//                     <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+//                         <BookOpen size={14} color={hasCurriculum ? "#64748b" : "#cbd5e1"} style={{ flexShrink: 0 }} />
+//                         <span>{hasCurriculum ? "Detailed Curriculum Available" : "No Curriculum Yet"}</span>
 //                     </div>
-//                 )}
-//                 <div style={{ borderTop: "1px solid #f3f4f6", margin: "2px 0" }} />
-//                 <div>
-//                     <div style={{ fontSize: "11px", color: "#9ca3af", marginBottom: "2px", fontFamily: FONT }}>Starting from</div>
-//                     <div style={{ display: "flex", alignItems: "flex-end", gap: "4px" }}>
-//                         <span style={{ fontSize: "28px", fontWeight: 800, color: "#111827", lineHeight: 1, fontFamily: FONT }}>
-//                             {fmtINR(monthlyPrice)}
-//                         </span>
-//                         <span style={{ fontSize: "12px", color: "#6b7280", marginBottom: "3px", fontFamily: FONT }}>/Session</span>
-//                     </div>
+//                     {hasCurriculum && <span style={{ color: "#2563eb", fontWeight: 600, fontSize: "12px", cursor: "pointer", whiteSpace: "nowrap" }}>View ↗</span>}
 //                 </div>
+
+//                 {/* Price */}
+//                 <div style={{ marginTop: "2px" }}>
+//                     <div style={{ fontSize: "11px", color: "#94a3b8", marginBottom: "2px", fontFamily: FONT }}>Starting from</div>
+//                     <div style={{ display: "flex", alignItems: "flex-end", gap: "4px", flexWrap: "wrap" }}>
+//                         <span style={{ fontSize: "28px", fontWeight: 800, color: "#0f172a", lineHeight: 1, fontFamily: FONT }}>{fmtINR(monthlyPrice)}</span>
+//                         <span style={{ fontSize: "12px", color: "#64748b", marginBottom: "3px", fontFamily: FONT }}>/Month + taxes</span>
+//                     </div>
+//                     {discount && (
+//                         <div style={{ display: "inline-flex", alignItems: "center", gap: "4px", background: "#dcfce7", color: "#16a34a", borderRadius: "20px", padding: "2px 10px", fontSize: "11px", fontWeight: 700, marginTop: "4px", fontFamily: FONT }}>
+//                             ✦ Extra {discount}% OFF
+//                         </div>
+//                     )}
+//                 </div>
+
+//                 {/* View Profile */}
 //                 <button
 //                     onClick={() => onViewProfile(mentor)}
-//                     style={{
-//                         width: "100%", height: "42px", border: "1px solid #d1d5db",
-//                         borderRadius: "8px", background: "#ffffff", color: "#111827",
-//                         fontSize: "14px", fontWeight: 600, cursor: "pointer", fontFamily: FONT,
-//                     }}
-//                     onMouseEnter={(e) => (e.currentTarget.style.background = "#f9fafb")}
+//                     style={{ width: "100%", height: "42px", border: "1px solid #d1d5db", borderRadius: "8px", background: "#ffffff", color: "#0f172a", fontSize: "14px", fontWeight: 600, cursor: "pointer", fontFamily: FONT }}
+//                     onMouseEnter={(e) => (e.currentTarget.style.background = "#f8fafc")}
 //                     onMouseLeave={(e) => (e.currentTarget.style.background = "#ffffff")}
 //                 >
 //                     View Profile
 //                 </button>
+
+//                 {/* Book Trial */}
+//                 <button
+//                     onClick={() => onSubscribe(mentor)}
+//                     style={{ width: "100%", height: "42px", border: "none", borderRadius: "8px", background: PRIMARY, color: "white", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: FONT }}
+//                     onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+//                     onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+//                 >
+//                     Book Trial Session for ₹99
+//                 </button>
+
 //                 {nextAvailable && (
-//                     <p style={{ textAlign: "center", fontSize: "11px", color: "#9ca3af", margin: 0, fontFamily: FONT }}>
+//                     <p style={{ textAlign: "center", fontSize: "11px", color: "#94a3b8", margin: 0, fontFamily: FONT }}>
 //                         Next Available: <span style={{ color: "#374151", fontWeight: 600 }}>{nextAvailable}</span>
 //                     </p>
 //                 )}
@@ -1889,137 +1502,109 @@
 
 //     const [selectedDomains, setSelectedDomains] = useState([]);
 //     const [offeringFor, setOfferingFor] = useState("Working Professionals");
-//     const [priceVal, setPriceVal] = useState(7000);
+//     const [priceVal, setPriceVal] = useState(40000);
 
 //     const toggleDomain = (d) =>
-//         setSelectedDomains((prev) =>
-//             prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]
-//         );
+//         setSelectedDomains((prev) => prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]);
 
-//     const handleClear = () => { setSelectedDomains([]); setPriceVal(7000); onClear(); };
+//     const handleClear = () => { setSelectedDomains([]); setPriceVal(40000); onClear(); };
 
 //     const sidebarContent = (
 //         <div style={{
-//             width: isMobile ? "100%" : "240px", background: "white",
-//             borderRadius: isMobile ? 0 : "14px", padding: "18px",
-//             fontFamily: FONT, boxSizing: "border-box",
+//             width: isMobile ? "100%" : "270px",
+//             background: "white",
+//             borderRadius: isMobile ? 0 : "8px",
+//             padding: "20px",
+//             fontFamily: FONT,
+//             boxSizing: "border-box",
 //             ...(!isMobile && {
-//                 border: "1px solid #e5e7eb", alignSelf: "flex-start",
-//                 position: "sticky", top: "80px", flexShrink: 0,
-//                 boxShadow: "0 1px 8px rgba(0,0,0,.06)",
+//                 border: "1px solid #e2e8f0",
+//                 alignSelf: "flex-start",
+//                 position: "sticky",
+//                 top: "80px",
+//                 flexShrink: 0,
+//                 boxShadow: "0 1px 6px rgba(0,0,0,.06)",
 //             }),
 //         }}>
-//             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
-//                 <h3 style={{ fontWeight: 700, fontSize: "14px", color: "#0f172a", margin: 0, fontFamily: FONT }}>Filter By</h3>
+//             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "18px" }}>
+//                 <h3 style={{ fontWeight: 700, fontSize: "15px", color: "#0f172a", margin: 0, fontFamily: FONT }}>Filter By</h3>
 //                 <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-//                     <button onClick={handleClear}
-//                         style={{
-//                             background: "none", border: "none", color: "#ef4444",
-//                             fontSize: "12px", fontWeight: 600, cursor: "pointer",
-//                             fontFamily: FONT, display: "flex", alignItems: "center", gap: "3px"
-//                         }}>
-//                         <X size={11} /> Clear
+//                     <button onClick={handleClear} style={{ background: "none", border: "none", color: "#ef4444", fontSize: "12px", fontWeight: 600, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: "3px" }}>
+//                         <X size={11} /> Clear Filters
 //                     </button>
 //                     {isMobile && (
-//                         <button onClick={onClose}
-//                             style={{ background: "none", border: "none", cursor: "pointer", color: "#6b7280", display: "flex" }}>
+//                         <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b", display: "flex" }}>
 //                             <X size={18} />
 //                         </button>
 //                     )}
 //                 </div>
 //             </div>
 
-//             <p style={{ fontWeight: 700, fontSize: "11px", color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", margin: "0 0 8px", fontFamily: FONT }}>
-//                 Domain
-//             </p>
+//             <p style={{ fontWeight: 700, fontSize: "13px", color: "#0f172a", margin: "0 0 10px", fontFamily: FONT }}>Domain</p>
+
 //             {selectedDomains.length > 0 && (
-//                 <div style={{
-//                     display: "flex", flexWrap: "wrap", gap: "5px",
-//                     border: `1px solid ${BLUE_BORDER}`, borderRadius: "8px",
-//                     padding: "7px 9px", marginBottom: "8px"
-//                 }}>
+//                 <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", border: `1px solid ${BLUE_BORDER}`, borderRadius: "8px", padding: "8px 10px", marginBottom: "10px", position: "relative" }}>
 //                     {selectedDomains.map((d) => (
-//                         <span key={d} style={{
-//                             display: "flex", alignItems: "center", gap: "3px",
-//                             fontSize: "11px", fontWeight: 600, padding: "2px 7px",
-//                             borderRadius: "20px", background: BLUE_LIGHT, color: BLUE,
-//                             border: `1px solid ${BLUE_BORDER}`, fontFamily: FONT
-//                         }}>
+//                         <span key={d} style={{ display: "flex", alignItems: "center", gap: "3px", fontSize: "11px", fontWeight: 600, padding: "2px 8px", borderRadius: "20px", background: BLUE_LIGHT, color: BLUE, border: `1px solid ${BLUE_BORDER}`, fontFamily: FONT }}>
 //                             {d}
-//                             <button onClick={() => toggleDomain(d)}
-//                                 style={{ background: "none", border: "none", cursor: "pointer", color: "#ef4444", padding: 0, display: "flex", lineHeight: 1 }}>
+//                             <button onClick={() => toggleDomain(d)} style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8", padding: 0, display: "flex", lineHeight: 1 }}>
 //                                 <X size={9} />
 //                             </button>
 //                         </span>
 //                     ))}
+//                     <div style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", gap: "4px" }}>
+//                         <span style={{ color: "#94a3b8", fontSize: "11px" }}>|</span>
+//                         <ChevronDown size={13} color="#94a3b8" />
+//                     </div>
 //                 </div>
 //             )}
-//             <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", marginBottom: "18px" }}>
+
+//             <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "22px" }}>
 //                 {DOMAIN_CHIPS.map((d) => {
 //                     const active = selectedDomains.includes(d);
 //                     return (
 //                         <button key={d} onClick={() => toggleDomain(d)}
-//                             style={{
-//                                 fontSize: "11px", fontWeight: 500, padding: "4px 10px", borderRadius: "7px",
-//                                 background: active ? BLUE_LIGHT : "white", color: active ? BLUE : "#374151",
-//                                 border: `1px solid ${active ? BLUE_BORDER : "#e5e7eb"}`, cursor: "pointer", fontFamily: FONT
-//                             }}>
+//                             style={{ fontSize: "12px", fontWeight: 500, padding: "5px 12px", borderRadius: "6px", background: active ? "#0f172a" : "white", color: active ? "white" : "#374151", border: `1px solid ${active ? "#0f172a" : "#e2e8f0"}`, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: "5px" }}>
+//                             {active && <span style={{ fontSize: "10px" }}>✓</span>}
 //                             {d}
 //                         </button>
 //                     );
 //                 })}
 //             </div>
 
-//             <div style={{ borderTop: "1px solid #f0f0f0", marginBottom: "16px" }} />
+//             <div style={{ borderTop: "1px solid #f1f5f9", marginBottom: "18px" }} />
 
-//             <p style={{ fontWeight: 700, fontSize: "11px", color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", margin: "0 0 8px", fontFamily: FONT }}>
-//                 Offering For
-//             </p>
-//             <select value={offeringFor} onChange={(e) => setOfferingFor(e.target.value)}
-//                 style={{
-//                     width: "100%", border: "1px solid #e5e7eb", borderRadius: "8px",
-//                     padding: "9px 32px 9px 12px", fontSize: "13px", color: "#374151",
-//                     background: "white", cursor: "pointer", outline: "none",
-//                     appearance: "none", fontFamily: FONT,
-//                     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%230098cc' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`,
-//                     backgroundRepeat: "no-repeat", backgroundPosition: "right 12px center",
-//                     boxSizing: "border-box", marginBottom: "18px"
-//                 }}>
-//                 <option>Working Professionals</option>
-//                 <option>Students</option>
-//                 <option>Freshers</option>
-//                 <option>Entrepreneurs</option>
-//             </select>
-
-//             <div style={{ borderTop: "1px solid #f0f0f0", marginBottom: "16px" }} />
-
-//             <p style={{ fontWeight: 700, fontSize: "11px", color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", margin: "0 0 8px", fontFamily: FONT }}>
-//                 Pricing
-//             </p>
-//             <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#6b7280", marginBottom: "6px", fontFamily: FONT }}>
-//                 <span>₹5,000</span><span>₹10,000</span>
+//             <p style={{ fontWeight: 700, fontSize: "13px", color: "#0f172a", margin: "0 0 10px", fontFamily: FONT }}>Offering Mentorship For</p>
+//             <div style={{ position: "relative", marginBottom: "22px" }}>
+//                 <select value={offeringFor} onChange={(e) => setOfferingFor(e.target.value)}
+//                     style={{ width: "100%", border: "1px solid #e2e8f0", borderRadius: "8px", padding: "10px 36px 10px 14px", fontSize: "13px", color: "#374151", background: "white", cursor: "pointer", outline: "none", appearance: "none", fontFamily: FONT, boxSizing: "border-box" }}>
+//                     <option>Working Professionals</option>
+//                     <option>Students</option>
+//                     <option>Freshers</option>
+//                     <option>Entrepreneurs</option>
+//                 </select>
+//                 <ChevronDown size={14} color="#64748b" style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
 //             </div>
-//             <input type="range" min={5000} max={10000} step={500} value={priceVal}
+
+//             <div style={{ borderTop: "1px solid #f1f5f9", marginBottom: "18px" }} />
+
+//             <p style={{ fontWeight: 700, fontSize: "13px", color: "#0f172a", margin: "0 0 10px", fontFamily: FONT }}>Pricing</p>
+//             <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#64748b", marginBottom: "8px", fontFamily: FONT }}>
+//                 <span>₹5,000</span>
+//                 <span>₹40,000</span>
+//             </div>
+//             <input type="range" min={5000} max={40000} step={500} value={priceVal}
 //                 onChange={(e) => setPriceVal(Number(e.target.value))}
-//                 style={{ width: "100%", accentColor: BLUE, cursor: "pointer", boxSizing: "border-box" }} />
-//             <p style={{ fontSize: "13px", color: BLUE, fontWeight: 700, margin: "5px 0 0", fontFamily: FONT }}>
+//                 style={{ width: "100%", accentColor: BLUE, cursor: "pointer", boxSizing: "border-box" }}
+//             />
+//             <p style={{ fontSize: "13px", color: "#374151", fontWeight: 600, margin: "6px 0 0", fontFamily: FONT }}>
 //                 Up To {fmtINR(priceVal)}/Month
 //             </p>
 
 //             <button
-//                 onClick={() => {
-//                     onSearch({ maxPrice: priceVal, offeringFor, domains: selectedDomains });
-//                     if (isMobile) onClose();
-//                 }}
+//                 onClick={() => { onSearch({ maxPrice: priceVal, offeringFor, domains: selectedDomains }); if (isMobile) onClose(); }}
 //                 disabled={isSearching}
-//                 style={{
-//                     marginTop: "16px", width: "100%", padding: "11px",
-//                     background: isSearching ? BLUE_BORDER : PRIMARY,
-//                     color: "white", border: "none", borderRadius: "10px",
-//                     fontWeight: 700, fontSize: "13px",
-//                     cursor: isSearching ? "not-allowed" : "pointer",
-//                     fontFamily: FONT, boxSizing: "border-box"
-//                 }}>
+//                 style={{ marginTop: "18px", width: "100%", padding: "12px", background: isSearching ? BLUE_BORDER : PRIMARY, color: "white", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "13px", cursor: isSearching ? "not-allowed" : "pointer", fontFamily: FONT, boxSizing: "border-box" }}>
 //                 {isSearching ? "Applying…" : "Apply Filters"}
 //             </button>
 //         </div>
@@ -2031,22 +1616,11 @@
 //         <AnimatePresence>
 //             {isOpen && (
 //                 <>
-//                     <motion.div key="overlay"
-//                         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-//                         onClick={onClose}
-//                         style={{
-//                             position: "fixed", inset: 0, zIndex: 200,
-//                             background: "rgba(0,0,0,.3)", backdropFilter: "blur(2px)"
-//                         }} />
-//                     <motion.div key="drawer"
-//                         initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
-//                         transition={{ type: "spring", damping: 28, stiffness: 300 }}
-//                         style={{
-//                             position: "fixed", bottom: 0, left: 0, right: 0,
-//                             maxHeight: "85vh", zIndex: 201, background: "white",
-//                             borderRadius: "20px 20px 0 0", overflowY: "auto"
-//                         }}>
-//                         <div style={{ width: "36px", height: "4px", background: "#e5e7eb", borderRadius: "2px", margin: "12px auto 0" }} />
+//                     <motion.div key="overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}
+//                         style={{ position: "fixed", inset: 0, zIndex: 200, background: "rgba(0,0,0,.3)", backdropFilter: "blur(2px)" }} />
+//                     <motion.div key="drawer" initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }} transition={{ type: "spring", damping: 28, stiffness: 300 }}
+//                         style={{ position: "fixed", bottom: 0, left: 0, right: 0, maxHeight: "85vh", zIndex: 201, background: "white", borderRadius: "20px 20px 0 0", overflowY: "auto" }}>
+//                         <div style={{ width: "36px", height: "4px", background: "#e2e8f0", borderRadius: "2px", margin: "12px auto 0" }} />
 //                         {sidebarContent}
 //                     </motion.div>
 //                 </>
@@ -2069,17 +1643,14 @@
 //     const apiFilters = useMemo(() => {
 //         const filters = {};
 //         if (domainFromUrl) filters.domain = domainFromUrl;
-//         console.log("📤 Sending POST body to backend:", filters);
 //         return filters;
 //     }, [domainFromUrl]);
 
 //     const { data, isLoading, isError } = useGetLtmAllMentorsQuery(apiFilters);
-
 //     const [searchMentors, { isLoading: isSearching }] = useSearchMentorMutation();
 //     const [advancedFilter] = useAdvancedFilterMentorsMutation();
 
 //     const allMentors = data?.data ?? [];
-
 //     const [displayMentors, setDisplayMentors] = useState(null);
 //     const [isFiltered, setIsFiltered] = useState(false);
 //     const [searchEmpty, setSearchEmpty] = useState(false);
@@ -2098,12 +1669,7 @@
 
 //     const mentors = isFiltered ? (displayMentors ?? []) : allMentors;
 
-//     const handleClear = () => {
-//         setIsFiltered(false);
-//         setDisplayMentors(null);
-//         setSearchEmpty(false);
-//         navigate("/explore-mentors");
-//     };
+//     const handleClear = () => { setIsFiltered(false); setDisplayMentors(null); setSearchEmpty(false); navigate("/explore-mentors"); };
 
 //     const handleSearch = async (body) => {
 //         try {
@@ -2152,256 +1718,172 @@
 
 //     return (
 //         <>
-//             {/* ── Header ─────────────────────────────────────────────── */}
-//             <header style={{
-//                 position: "sticky", top: 0, zIndex: 100, background: "white",
-//                 borderBottom: "1px solid #e5e7eb", fontFamily: FONT,
-//                 boxShadow: "0 1px 4px rgba(0,0,0,.06)"
-//             }}>
-//                 <div style={{
-//                     maxWidth: "1280px", margin: "0 auto", padding: "0 20px",
-//                     height: "62px", display: "flex", alignItems: "center", justifyContent: "space-between"
-//                 }}>
+//             {/* ── Header ── */}
+//             <header style={{ position: "sticky", top: 0, zIndex: 100, background: "white", borderBottom: "1px solid #e2e8f0", fontFamily: FONT, boxShadow: "0 1px 4px rgba(0,0,0,.06)" }}>
+//                 <div style={{ maxWidth: "1360px", margin: "0 auto", padding: "0 24px", height: "64px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
 //                     <div onClick={() => navigate("/")} style={{ cursor: "pointer", flexShrink: 0 }}>
 //                         <img src={KarrivoLogo} className="h-10 w-20 sm:h-12 sm:w-24 md:h-14 md:w-28 object-contain" alt="Karrivo" />
 //                     </div>
+
 //                     {!isMobile && (
-//                         <nav style={{ display: "flex", alignItems: "center", gap: "24px" }}>
+//                         <nav style={{ display: "flex", alignItems: "center", gap: "32px" }}>
 //                             {NAV_LINKS.map((link) => {
 //                                 const isActive = location.pathname === link.path;
 //                                 return (
 //                                     <button key={link.path} onClick={() => navigate(link.path)}
-//                                         style={{
-//                                             background: "none", border: "none", cursor: "pointer",
-//                                             fontFamily: FONT, fontSize: "14px", fontWeight: 600,
-//                                             color: isActive ? BLUE : "#6b7280", padding: "4px 0",
-//                                             borderBottom: `2px solid ${isActive ? BLUE : "transparent"}`,
-//                                         }}>
+//                                         style={{ background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "14px", fontWeight: 500, color: isActive ? "#0f172a" : "#64748b", padding: "4px 0", borderBottom: `2px solid ${isActive ? "#0f172a" : "transparent"}` }}>
 //                                         {link.label}
 //                                     </button>
 //                                 );
 //                             })}
 //                         </nav>
 //                     )}
-//                     {isMobile && (
-//                         <button onClick={() => setMobileNavOpen(!mobileNavOpen)}
-//                             style={{ background: "none", border: "none", cursor: "pointer", padding: "8px", display: "flex", flexDirection: "column", gap: "5px" }}>
-//                             {[0, 1, 2].map((i) => (
-//                                 <span key={i} style={{
-//                                     display: "block", width: "20px", height: "2px", background: BLUE, borderRadius: "2px",
-//                                     ...(i === 0 && mobileNavOpen ? { transform: "rotate(45deg) translateY(7px)" }
-//                                         : i === 1 && mobileNavOpen ? { opacity: 0 }
-//                                             : i === 2 && mobileNavOpen ? { transform: "rotate(-45deg) translateY(-7px)" }
-//                                                 : {})
-//                                 }} />
-//                             ))}
-//                         </button>
-//                     )}
+
+//                     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+//                         {!isMobile && (
+//                             <button onClick={() => navigate("/login")}
+//                                 style={{ background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "14px", fontWeight: 600, color: "#0f172a", padding: "8px 16px" }}>
+//                                 Login
+//                             </button>
+//                         )}
+//                         {isMobile && (
+//                             <button onClick={() => setMobileNavOpen(!mobileNavOpen)} style={{ background: "none", border: "none", cursor: "pointer", padding: "8px", display: "flex", flexDirection: "column", gap: "5px" }}>
+//                                 {[0, 1, 2].map((i) => (
+//                                     <span key={i} style={{ display: "block", width: "20px", height: "2px", background: "#0f172a", borderRadius: "2px", ...(i === 0 && mobileNavOpen ? { transform: "rotate(45deg) translateY(7px)" } : i === 1 && mobileNavOpen ? { opacity: 0 } : i === 2 && mobileNavOpen ? { transform: "rotate(-45deg) translateY(-7px)" } : {}) }} />
+//                                 ))}
+//                             </button>
+//                         )}
+//                     </div>
 //                 </div>
+
 //                 <AnimatePresence>
 //                     {isMobile && mobileNavOpen && (
-//                         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-//                             style={{ overflow: "hidden", borderTop: "1px solid #f0f0f0", background: "white" }}>
+//                         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} style={{ overflow: "hidden", borderTop: "1px solid #f1f5f9", background: "white" }}>
 //                             {NAV_LINKS.map((link) => (
 //                                 <button key={link.path} onClick={() => { navigate(link.path); setMobileNavOpen(false); }}
-//                                     style={{
-//                                         display: "block", width: "100%", textAlign: "left", padding: "14px 20px",
-//                                         background: "none", border: "none", cursor: "pointer", fontFamily: FONT,
-//                                         fontSize: "14px", fontWeight: 600,
-//                                         color: location.pathname === link.path ? BLUE : "#374151",
-//                                         borderBottom: "1px solid #f9fafb"
-//                                     }}>
+//                                     style={{ display: "block", width: "100%", textAlign: "left", padding: "14px 20px", background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "14px", fontWeight: 500, color: location.pathname === link.path ? "#0f172a" : "#64748b", borderBottom: "1px solid #f8fafc" }}>
 //                                     {link.label}
 //                                 </button>
 //                             ))}
+//                             <button onClick={() => navigate("/login")} style={{ display: "block", width: "100%", textAlign: "left", padding: "14px 20px", background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "14px", fontWeight: 600, color: "#0f172a" }}>
+//                                 Login
+//                             </button>
 //                         </motion.div>
 //                     )}
 //                 </AnimatePresence>
 //             </header>
 
-//             {/* ── Active filter pills ─────────────────────────────────── */}
+//             {/* ── Active filter pills ── */}
 //             {domainFromUrl && !isFiltered && (
-//                 <div style={{
-//                     background: "#f0faff", borderBottom: "1px solid #cce9f5",
-//                     padding: "10px 24px", display: "flex", alignItems: "center",
-//                     gap: "8px", flexWrap: "wrap", fontFamily: FONT
-//                 }}>
-//                     <span style={{ fontSize: "12px", color: "#6b7280", fontWeight: 600 }}>Filtered by:</span>
-//                     {domainFromUrl && domainFromUrl.split(",").map((d) => (
-//                         <span key={d} style={{
-//                             background: BLUE_LIGHT, color: BLUE, border: `1px solid ${BLUE_BORDER}`,
-//                             borderRadius: "20px", padding: "3px 10px", fontSize: "11px", fontWeight: 700, fontFamily: FONT
-//                         }}>
-//                             {d.trim()}
-//                         </span>
+//                 <div style={{ background: BLUE_LIGHT, borderBottom: `1px solid ${BLUE_BORDER}`, padding: "10px 24px", display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", fontFamily: FONT }}>
+//                     <span style={{ fontSize: "12px", color: "#64748b", fontWeight: 600 }}>Filtered by:</span>
+//                     {domainFromUrl.split(",").map((d) => (
+//                         <span key={d} style={{ background: BLUE_LIGHT, color: BLUE, border: `1px solid ${BLUE_BORDER}`, borderRadius: "20px", padding: "3px 10px", fontSize: "11px", fontWeight: 700 }}>{d.trim()}</span>
 //                     ))}
-//                     <button onClick={handleClear}
-//                         style={{
-//                             marginLeft: "4px", background: "none", border: "none", color: "#ef4444",
-//                             fontSize: "11px", fontWeight: 600, cursor: "pointer",
-//                             fontFamily: FONT, display: "flex", alignItems: "center", gap: "3px"
-//                         }}>
+//                     <button onClick={handleClear} style={{ marginLeft: "4px", background: "none", border: "none", color: "#ef4444", fontSize: "11px", fontWeight: 600, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: "3px" }}>
 //                         <X size={10} /> Clear filters
 //                     </button>
 //                 </div>
 //             )}
 
-//             {/* ── Main ───────────────────────────────────────────────── */}
-//             <main style={{
-//                 minHeight: "100vh", background: "#f6f8fa",
-//                 padding: isMobile ? "12px" : "20px 24px",
-//                 fontFamily: FONT, boxSizing: "border-box"
-//             }}>
-//                 <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+//             {/* ── Main ── */}
+//             <main style={{ minHeight: "100vh", background: "#f6f8fa", fontFamily: FONT, boxSizing: "border-box" }}>
+//                 <div style={{ maxWidth: "1360px", margin: "0 auto", padding: isMobile ? "12px" : "20px 24px", display: "flex", gap: "20px", alignItems: "flex-start", boxSizing: "border-box" }}>
 
-//                     {/* Search + Sort row */}
-//                     <div style={{
-//                         display: "flex", gap: "8px", alignItems: "center",
-//                         marginBottom: "14px", flexWrap: isMobile ? "wrap" : "nowrap"
-//                     }}>
-//                         <div style={{ flex: 1, minWidth: isMobile ? "100%" : "auto", position: "relative", boxSizing: "border-box" }}>
-//                             <Search size={14} color={BLUE}
-//                                 style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
-//                             <input
-//                                 value={searchQuery}
-//                                 onChange={(e) => setSearchQuery(e.target.value)}
-//                                 placeholder={isMobile ? "Search skills, domain…" : "Search for any skill, domain or name…"}
-//                                 onKeyDown={(e) => {
-//                                     if (e.key === "Enter" && searchQuery)
-//                                         handleSearch({ query: searchQuery });
-//                                 }}
-//                                 style={{
-//                                     width: "100%", padding: "10px 14px 10px 36px",
-//                                     border: "1px solid #e5e7eb", borderRadius: "10px",
-//                                     fontSize: "13px", color: "#374151", fontFamily: FONT,
-//                                     outline: "none", background: "white", boxSizing: "border-box",
-//                                     boxShadow: "0 1px 3px rgba(0,0,0,.04)"
-//                                 }}
-//                                 onFocus={(e) => (e.target.style.borderColor = BLUE)}
-//                                 onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
-//                             />
-//                         </div>
-//                         <div style={{ display: "flex", alignItems: "center", gap: "8px", width: isMobile ? "100%" : "auto", boxSizing: "border-box" }}>
-//                             {!isMobile && <span style={{ fontSize: "13px", color: "#6b7280", fontWeight: 600, whiteSpace: "nowrap", fontFamily: FONT }}>Sort:</span>}
-//                             <select value={sortBy} onChange={(e) => handleSortChange(e.target.value)}
-//                                 style={{
-//                                     flex: isMobile ? 1 : "none", border: "1px solid #e5e7eb",
-//                                     borderRadius: "8px", padding: "10px 30px 10px 12px",
-//                                     fontSize: "13px", color: "#374151", background: "white",
-//                                     cursor: "pointer", outline: "none", appearance: "none", fontFamily: FONT,
-//                                     backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%230098cc' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")`,
-//                                     backgroundRepeat: "no-repeat", backgroundPosition: "right 10px center",
-//                                     minWidth: isMobile ? 0 : "180px", boxSizing: "border-box"
-//                                 }}>
-//                                 <option>Recommended</option>
-//                                 <option>Price: Low To High</option>
-//                                 <option>Price: High To Low</option>
-//                                 <option>Most Experienced</option>
-//                             </select>
-//                             {isTablet && (
-//                                 <button onClick={() => setFilterDrawerOpen(true)}
-//                                     style={{
-//                                         display: "flex", alignItems: "center", gap: "5px",
-//                                         padding: "10px 14px", border: `1.5px solid ${BLUE_BORDER}`,
-//                                         borderRadius: "8px", background: "white", cursor: "pointer",
-//                                         fontFamily: FONT, fontSize: "13px", fontWeight: 700, color: BLUE,
-//                                         whiteSpace: "nowrap", flexShrink: 0
-//                                     }}>
-//                                     <SlidersHorizontal size={13} color={BLUE} /> Filters
-//                                 </button>
-//                             )}
-//                         </div>
-//                     </div>
+//                     <div style={{ flex: 1, minWidth: 0 }}>
+//                         {/* Search + Sort */}
+//                         <div style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "16px", flexWrap: isMobile ? "wrap" : "nowrap" }}>
+//                             <div style={{ flex: 1, minWidth: isMobile ? "100%" : "auto", position: "relative", boxSizing: "border-box" }}>
+//                                 <Search size={14} color="#94a3b8" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
+//                                 <input
+//                                     value={searchQuery}
+//                                     onChange={(e) => setSearchQuery(e.target.value)}
+//                                     placeholder="Search for any Skill, domain or name..."
+//                                     onKeyDown={(e) => { if (e.key === "Enter" && searchQuery) handleSearch({ query: searchQuery }); }}
+//                                     style={{ width: "100%", padding: "11px 14px 11px 38px", border: "1px solid #e2e8f0", borderRadius: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT, outline: "none", background: "white", boxSizing: "border-box", boxShadow: "0 1px 3px rgba(0,0,0,.04)" }}
+//                                     onFocus={(e) => (e.target.style.borderColor = BLUE)}
+//                                     onBlur={(e) => (e.target.style.borderColor = "#e2e8f0")}
+//                                 />
+//                             </div>
 
-//                     {/* Result count */}
-//                     {!isLoading && !isError && mentors.length > 0 && (
-//                         <p style={{ fontSize: "12px", color: "#9ca3af", marginBottom: "14px", fontWeight: 500, fontFamily: FONT }}>
-//                             Showing {mentors.length} of {allMentors.length} mentor{allMentors.length !== 1 ? "s" : ""}
-//                         </p>
-//                     )}
-
-//                     {/* Layout */}
-//                     <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
-//                         <div style={{ flex: 1, minWidth: 0 }}>
-
-//                             {isLoading && (
-//                                 <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "40vh" }}>
-//                                     <div style={{
-//                                         width: "36px", height: "36px", borderRadius: "50%",
-//                                         border: `3px solid ${BLUE_LIGHT}`, borderTopColor: BLUE,
-//                                         animation: "spin .8s linear infinite"
-//                                     }} />
-//                                     <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+//                             <div style={{ display: "flex", alignItems: "center", gap: "8px", width: isMobile ? "100%" : "auto", boxSizing: "border-box" }}>
+//                                 <span style={{ fontSize: "13px", color: "#64748b", fontWeight: 600, whiteSpace: "nowrap", fontFamily: FONT }}>Sort by:</span>
+//                                 <div style={{ position: "relative", flex: isMobile ? 1 : "none" }}>
+//                                     <select value={sortBy} onChange={(e) => handleSortChange(e.target.value)}
+//                                         style={{ border: "1px solid #e2e8f0", borderRadius: "8px", padding: "10px 32px 10px 12px", fontSize: "13px", color: "#374151", background: "white", cursor: "pointer", outline: "none", appearance: "none", fontFamily: FONT, minWidth: "170px", boxSizing: "border-box", width: "100%" }}>
+//                                         <option>Recommended</option>
+//                                         <option>Price: Low To High</option>
+//                                         <option>Price: High To Low</option>
+//                                         <option>Most Experienced</option>
+//                                     </select>
+//                                     <ChevronDown size={13} color="#64748b" style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
 //                                 </div>
-//                             )}
-
-//                             {isError && !isLoading && (
-//                                 <div style={{ textAlign: "center", padding: "60px 0", background: "white", borderRadius: "14px", border: "1px solid #e5e7eb" }}>
-//                                     <p style={{ fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>No Mentors Available</p>
-//                                     <p style={{ fontSize: "13px", color: "#9ca3af", marginTop: "4px", fontFamily: FONT }}>Please check back later</p>
-//                                 </div>
-//                             )}
-
-//                             {!isLoading && !isError && searchEmpty && (
-//                                 <div style={{ textAlign: "center", padding: "60px 0" }}>
-//                                     <p style={{ fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>No mentors match your filters</p>
-//                                 </div>
-//                             )}
-
-//                             {!isLoading && !isError && !searchEmpty && mentors.length > 0 && (
-//                                 <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
-//                                     {mentors.map((mentor, index) => (
-//                                         <MentorCard
-//                                             key={mentor._id || index}
-//                                             mentor={mentor}
-//                                             index={index}
-//                                             onSubscribe={handleBookTrial}
-//                                             onViewProfile={handleViewProfile}
-//                                         />
-//                                     ))}
-//                                 </div>
-//                             )}
-
-//                             {!isLoading && !isError && !isFiltered && allMentors.length === 0 && (
-//                                 <div style={{ textAlign: "center", padding: "60px 0", border: "2px dashed #e5e7eb", borderRadius: "14px", background: "white" }}>
-//                                     <p style={{ fontSize: "32px", marginBottom: "8px" }}>👨‍🏫</p>
-//                                     <p style={{ fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>No Mentors Available</p>
-//                                 </div>
-//                             )}
+//                                 {isTablet && (
+//                                     <button onClick={() => setFilterDrawerOpen(true)}
+//                                         style={{ display: "flex", alignItems: "center", gap: "5px", padding: "10px 14px", border: `1.5px solid ${BLUE_BORDER}`, borderRadius: "8px", background: "white", cursor: "pointer", fontFamily: FONT, fontSize: "13px", fontWeight: 700, color: BLUE, whiteSpace: "nowrap", flexShrink: 0 }}>
+//                                         <SlidersHorizontal size={13} color={BLUE} /> Filters
+//                                     </button>
+//                                 )}
+//                             </div>
 //                         </div>
 
-//                         {!isTablet && (
-//                             <FilterSidebar
-//                                 onSearch={handleSearch}
-//                                 isSearching={isSearching}
-//                                 onClear={handleClear}
-//                                 isFiltered={isFiltered}
-//                                 isOpen={false}
-//                                 onClose={() => { }}
-//                             />
+//                         {!isLoading && !isError && mentors.length > 0 && (
+//                             <p style={{ fontSize: "12px", color: "#94a3b8", marginBottom: "14px", fontWeight: 500, fontFamily: FONT }}>
+//                                 Showing {mentors.length} of {allMentors.length} mentor{allMentors.length !== 1 ? "s" : ""}
+//                             </p>
+//                         )}
+
+//                         {isLoading && (
+//                             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "50vh" }}>
+//                                 <div style={{ width: "38px", height: "38px", borderRadius: "50%", border: `3px solid ${BLUE_LIGHT}`, borderTopColor: BLUE, animation: "spin .8s linear infinite" }} />
+//                                 <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+//                             </div>
+//                         )}
+
+//                         {isError && !isLoading && (
+//                             <div style={{ textAlign: "center", padding: "80px 0", background: "white", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+//                                 <p style={{ fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>No Mentors Available</p>
+//                                 <p style={{ fontSize: "13px", color: "#94a3b8", marginTop: "4px", fontFamily: FONT }}>Please check back later</p>
+//                             </div>
+//                         )}
+
+//                         {!isLoading && !isError && searchEmpty && (
+//                             <div style={{ textAlign: "center", padding: "80px 0" }}>
+//                                 <p style={{ fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>No mentors match your filters</p>
+//                                 <button onClick={handleClear} style={{ marginTop: "12px", background: BLUE, color: "white", border: "none", borderRadius: "8px", padding: "10px 20px", fontWeight: 600, cursor: "pointer", fontFamily: FONT }}>Clear Filters</button>
+//                             </div>
+//                         )}
+
+//                         {!isLoading && !isError && !searchEmpty && mentors.length > 0 && (
+//                             <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
+//                                 {mentors.map((mentor, index) => (
+//                                     <MentorCard key={mentor._id || index} mentor={mentor} index={index} onSubscribe={handleBookTrial} onViewProfile={handleViewProfile} />
+//                                 ))}
+//                             </div>
+//                         )}
+
+//                         {!isLoading && !isError && !isFiltered && allMentors.length === 0 && (
+//                             <div style={{ textAlign: "center", padding: "80px 0", border: "2px dashed #e2e8f0", borderRadius: "10px", background: "white" }}>
+//                                 <p style={{ fontSize: "36px", marginBottom: "8px" }}>👨‍🏫</p>
+//                                 <p style={{ fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>No Mentors Available</p>
+//                             </div>
 //                         )}
 //                     </div>
-//                 </div>
 
-//                 {isTablet && (
-//                     <FilterSidebar
-//                         onSearch={handleSearch}
-//                         isSearching={isSearching}
-//                         onClear={handleClear}
-//                         isFiltered={isFiltered}
-//                         isOpen={filterDrawerOpen}
-//                         onClose={() => setFilterDrawerOpen(false)}
-//                     />
-//                 )}
+//                     {!isTablet && (
+//                         <FilterSidebar onSearch={handleSearch} isSearching={isSearching} onClear={handleClear} isFiltered={isFiltered} isOpen={false} onClose={() => { }} />
+//                     )}
+//                 </div>
 //             </main>
 
-//             {/* Subscribe panel overlay */}
+//             {isTablet && (
+//                 <FilterSidebar onSearch={handleSearch} isSearching={isSearching} onClear={handleClear} isFiltered={isFiltered} isOpen={filterDrawerOpen} onClose={() => setFilterDrawerOpen(false)} />
+//             )}
+
 //             <AnimatePresence>
 //                 {subscribeTarget && (
 //                     <>
-//                         <motion.div key="sub-overlay"
-//                             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-//                             onClick={() => setSubscribeTarget(null)}
+//                         <motion.div key="sub-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSubscribeTarget(null)}
 //                             style={{ position: "fixed", inset: 0, zIndex: 299, background: "rgba(0,0,0,.35)", backdropFilter: "blur(2px)" }} />
 //                         <SubscribePanel key="sub-panel" mentor={subscribeTarget} onClose={() => setSubscribeTarget(null)} />
 //                     </>
@@ -2418,51 +1900,43 @@
 import { useState, useEffect, useMemo } from "react";
 import {
     MapPin, X, ChevronDown, ChevronUp, CheckCircle,
-    Search, Pencil, Briefcase, Target,
+    Search, Pencil, Briefcase,
     SlidersHorizontal, Star, Trophy,
     Users, BookOpen, Video,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import KarrivoLogo from "../../assets/KarrivoLogo.png";
-
 import { useAdvancedFilterMentorsMutation, useSearchMentorMutation, useGetLtmAllMentorsQuery } from "../LongTermMentorship/MentorshipHome/Mentorshiphomeapislice";
 
-// ── Design tokens ──────────────────────────────────────────────────────────
 const BLUE = "#0098cc";
 const BLUE_LIGHT = "#f0faff";
 const BLUE_BORDER = "#cce9f5";
 const PRIMARY = "#1a1a2e";
 const FONT = "'Cambria', 'Georgia', serif";
 
-// ── Static data ────────────────────────────────────────────────────────────
 const DAY_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-
 const PLANS = [
     { key: "1Month", label: "1 Mo" },
     { key: "3Month", label: "3 Mo" },
     { key: "6Month", label: "6 Mo" },
 ];
-
 const PLAN_ALIASES = {
     "1Month": ["1Month", "oneMonth", "1month", "one_month", "onemonth"],
     "3Month": ["3Month", "threeMonths", "3month", "three_months", "threemonths", "3Months"],
     "6Month": ["6Month", "sixMonths", "6month", "six_months", "sixmonths", "6Months"],
 };
-
 const DOMAIN_CHIPS = [
     "Frontend", "Backend", "Fullstack",
     "DevOps / SRE / Cloud", "QA / Automation Testing",
     "Data Scientist / AI/ML", "Data Analyst",
 ];
-
 const NAV_LINKS = [
     { label: "Explore Mentors", path: "/explore-mentors" },
     { label: "Blogs", path: "/blogs" },
     { label: "Success Stories", path: "/success-stories" },
 ];
 
-// ── Helpers ────────────────────────────────────────────────────────────────
 const fmtINR = (n) => `₹${Number(n ?? 0).toLocaleString("en-IN")}`;
 
 function getPlanData(pricing, planKey) {
@@ -2505,43 +1979,28 @@ function useWindowWidth() {
 function SubscribePanel({ mentor, onClose }) {
     const width = useWindowWidth();
     const isMobile = width < 640;
-
     const availability = Array.isArray(mentor.availability) ? mentor.availability : [];
     const [selected, setSelected] = useState({});
     const [openDay, setOpenDay] = useState(null);
     const [planKey, setPlanKey] = useState("1Month");
 
-    const toggleSlot = (di, si) =>
-        setSelected((p) => ({ ...p, [`${di}_${si}`]: !p[`${di}_${si}`] }));
-
+    const toggleSlot = (di, si) => setSelected((p) => ({ ...p, [`${di}_${si}`]: !p[`${di}_${si}`] }));
     const selectedCount = Object.values(selected).filter(Boolean).length;
     const planData = getPlanData(mentor.pricing, planKey);
     const totalSessions = planData?.totalSessions ?? 0;
     const totalPrice = planData?.totalPrice ?? 0;
 
     const panelStyle = isMobile
-        ? {
-            position: "fixed", bottom: 0, left: 0, right: 0, height: "85vh", background: "white", zIndex: 300,
-            boxShadow: "0 -4px 24px rgba(0,0,0,.10)", display: "flex", flexDirection: "column",
-            fontFamily: FONT, borderRadius: "20px 20px 0 0"
-        }
-        : {
-            position: "fixed", top: 0, right: 0, bottom: 0, width: "420px", background: "white", zIndex: 300,
-            boxShadow: "-4px 0 24px rgba(0,0,0,.10)", display: "flex", flexDirection: "column", fontFamily: FONT
-        };
+        ? { position: "fixed", bottom: 0, left: 0, right: 0, height: "85vh", background: "white", zIndex: 300, boxShadow: "0 -4px 24px rgba(0,0,0,.10)", display: "flex", flexDirection: "column", fontFamily: FONT, borderRadius: "20px 20px 0 0" }
+        : { position: "fixed", top: 0, right: 0, bottom: 0, width: "420px", background: "white", zIndex: 300, boxShadow: "-4px 0 24px rgba(0,0,0,.10)", display: "flex", flexDirection: "column", fontFamily: FONT };
 
     const motionProps = isMobile
         ? { initial: { y: "100%" }, animate: { y: 0 }, exit: { y: "100%" } }
         : { initial: { x: "100%" }, animate: { x: 0 }, exit: { x: "100%" } };
 
     return (
-        <motion.div {...motionProps}
-            transition={{ type: "spring", damping: 28, stiffness: 300 }}
-            style={panelStyle}
-        >
-            {isMobile && (
-                <div style={{ width: "36px", height: "4px", background: "#e5e7eb", borderRadius: "2px", margin: "12px auto 4px", flexShrink: 0 }} />
-            )}
+        <motion.div {...motionProps} transition={{ type: "spring", damping: 28, stiffness: 300 }} style={panelStyle}>
+            {isMobile && <div style={{ width: "36px", height: "4px", background: "#e5e7eb", borderRadius: "2px", margin: "12px auto 4px", flexShrink: 0 }} />}
             <div style={{ background: "white", borderBottom: `3px solid ${BLUE}`, padding: "20px 24px", flexShrink: 0 }}>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }}>
                     <h2 style={{ color: BLUE, fontWeight: 800, fontSize: "17px", margin: 0, fontFamily: FONT }}>Book A Free Trial</h2>
@@ -2658,7 +2117,6 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
     const bio = mentor.motivationStatement || mentor.bio || mentor.about || "";
     const areas = (mentor.areasOfInterest || mentor.currentSkills || "").split(",").map((s) => s.trim()).filter(Boolean);
     const monthlyPrice = mentor.pricing?.monthlyRate ?? mentor.hourlyRate ?? 0;
-    const sessionRate = mentor.pricing?.hourlyRate ?? mentor.hourlyRate ?? 0;
     const nextAvailable = mentor.nextAvailable ?? "";
     const placements = mentor.placements ?? 0;
     const menteeCount = mentor.menteeCount ?? 0;
@@ -2668,6 +2126,11 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
     const hasCurriculum = mentor.hasCurriculum ?? false;
     const weeklySessions = mentor.pricing?.weeklySessions ?? 4;
     const discount = mentor.discount ?? null;
+
+    // Bio: only truncate if truly long (> 200 chars)
+    const BIO_LIMIT = 200;
+    const bioIsTruncatable = bio.length > BIO_LIMIT;
+    const displayedBio = bioIsTruncatable && !bioExpanded ? bio.slice(0, BIO_LIMIT) + "..." : bio;
 
     const offeringForList = Array.isArray(mentor.offeringFor)
         ? mentor.offeringFor
@@ -2679,7 +2142,6 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
 
     const prevCompanies = Array.isArray(mentor.previousCompanies) ? mentor.previousCompanies : [];
 
-    // Each card occupies full viewport height minus header
     return (
         <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -2687,263 +2149,317 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
             transition={{ duration: 0.28, delay: index * 0.04 }}
             style={{
                 width: "100%",
-                minHeight: isMobile ? "auto" : "calc(100vh - 130px)",
                 border: "1px solid #e2e8f0",
                 background: "#fff",
                 display: "flex",
                 flexDirection: isMobile ? "column" : "row",
                 overflow: "hidden",
-                marginBottom: "20px",
+                marginBottom: "16px",
                 fontFamily: FONT,
-                borderRadius: "6px",
-                boxShadow: "0 1px 6px rgba(0,0,0,0.06)",
+                borderRadius: "8px",
+                boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+                minHeight: isMobile ? "auto" : "320px",
             }}
         >
-            {/* LEFT: Photo column */}
-            <div style={{
-                position: "relative",
-                width: isMobile ? "100%" : "200px",
-                minWidth: isMobile ? "100%" : "200px",
-                height: isMobile ? "240px" : "auto",
-                background: "#f1f5f9",
-                overflow: "hidden",
-                flexShrink: 0,
-            }}>
-                {/* Decorative dots */}
-                <span style={{ position: "absolute", top: "10px", left: "10px", fontSize: "13px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
-                <span style={{ position: "absolute", top: "10px", right: "10px", fontSize: "9px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
-                <span style={{ position: "absolute", bottom: "60px", left: "8px", fontSize: "8px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
-                <span style={{ position: "absolute", bottom: "60px", right: "8px", fontSize: "11px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
-                <img
-                    src={mentor.profilePhoto}
-                    alt={fullName}
-                    style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top center", display: "block", minHeight: isMobile ? "240px" : "300px" }}
-                />
+            {/* ── LEFT COLUMN: Photo (fills space) + Role + Experience pinned bottom ── */}
+            <div
+                style={{
+                    width: isMobile ? "100%" : "185px",
+                    minWidth: isMobile ? "100%" : "185px",
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRight: isMobile ? "none" : "1px solid #e2e8f0",
+                    flexShrink: 0,
+                    background: "#fff",
+                }}
+            >
+                {/* Photo — flex:1 so it fills all space above the two cards */}
+                <div
+                    style={{
+                        position: "relative",
+                        width: "100%",
+                        flex: isMobile ? "none" : 1,
+                        height: isMobile ? "240px" : "auto",
+                        minHeight: isMobile ? "240px" : "180px",
+                        background: "#f1f5f9",
+                        overflow: "hidden",
+                    }}
+                >
+                    <span style={{ position: "absolute", top: "8px", left: "8px", fontSize: "12px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
+                    <span style={{ position: "absolute", top: "8px", right: "8px", fontSize: "8px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
+                    <span style={{ position: "absolute", bottom: "8px", left: "6px", fontSize: "7px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
+                    <span style={{ position: "absolute", bottom: "8px", right: "6px", fontSize: "10px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
+                    <img
+                        src={mentor.profilePhoto}
+                        alt={fullName}
+                        style={{
+                            display: "block",
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                            objectPosition: "top center",
+                            position: "absolute",
+                            top: 0, left: 0, right: 0, bottom: 0,
+                        }}
+                    />
+                </div>
+
+                {/* Current Company — pinned at bottom */}
+                <div
+                    style={{
+                        borderTop: "1px solid #e2e8f0",
+                        padding: "10px 12px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        background: "#fafafa",
+                        flexShrink: 0,
+                    }}
+                >
+                    <div
+                        style={{
+                            width: "32px", height: "32px", borderRadius: "50%",
+                            background: mentor.companyLogoColor || "#1d4ed8",
+                            color: "#fff", display: "flex", alignItems: "center",
+                            justifyContent: "center", fontWeight: 800, fontSize: "12px",
+                            flexShrink: 0, fontFamily: FONT, overflow: "hidden",
+                        }}
+                    >
+                        {mentor.companyLogo
+                            ? <img src={mentor.companyLogo} alt={companyName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                            : fullName.charAt(0)
+                        }
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                        <div style={{ fontSize: "11px", fontWeight: 700, color: "#0f172a", fontFamily: FONT, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                            {currentRole}
+                        </div>
+                        <div style={{ fontSize: "10px", color: "#64748b", fontFamily: FONT, marginTop: "1px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                            {companyName}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Experience — pinned at bottom below company */}
+                <div
+                    style={{
+                        borderTop: "1px solid #e2e8f0",
+                        padding: "10px 12px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        background: "#fafafa",
+                        flexShrink: 0,
+                    }}
+                >
+                    <div style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
+                        {prevCompanies.slice(0, 3).map((c, i) => (
+                            <div key={i} style={{
+                                width: "26px", height: "26px", borderRadius: "50%",
+                                border: "2px solid white", background: "#e2e8f0", overflow: "hidden",
+                                marginLeft: i > 0 ? "-8px" : "0", zIndex: 3 - i,
+                                position: "relative", flexShrink: 0,
+                            }}>
+                                {c.logo
+                                    ? <img src={c.logo} alt={c.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                    : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "8px", fontWeight: 700, color: "#374151", background: ["#fef3c7", "#dbeafe", "#d1fae5"][i % 3], fontFamily: FONT }}>{c.name?.charAt(0) || "C"}</div>
+                                }
+                            </div>
+                        ))}
+                        {prevCompanies.length === 0 && (
+                            <div style={{ width: "26px", height: "26px", borderRadius: "50%", background: "#fef3c7", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "9px", fontWeight: 700, color: "#92400e", fontFamily: FONT }}>
+                                {companyName?.charAt(0) || "C"}
+                            </div>
+                        )}
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                        <div style={{ fontSize: "11px", fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>{yearsExp}</div>
+                        <div style={{ fontSize: "10px", color: "#64748b", fontFamily: FONT, marginTop: "1px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                            {prevCompanies.length > 0 ? prevCompanies.map((c) => c.name).join(" | ") : companyName}
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            {/* CENTRE: Info column */}
-            <div style={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "column",
-                borderRight: isMobile ? "none" : "1px solid #e2e8f0",
-                minWidth: 0,
-            }}>
-                {/* Main content area */}
-                <div style={{ padding: "22px 22px 16px", display: "flex", flexDirection: "column", gap: "12px", flex: 1 }}>
+            {/* ── CENTRE: Name, Location, Bio, Skills, Bottom strip ── */}
+            <div
+                style={{
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRight: isMobile ? "none" : "1px solid #e2e8f0",
+                    minWidth: 0,
+                }}
+            >
+                <div style={{ padding: "18px 20px 14px", display: "flex", flexDirection: "column", gap: "10px", flex: 1 }}>
+
                     {/* Name */}
-                    <h2 style={{ margin: 0, fontSize: "24px", fontWeight: 700, color: "#0f172a", lineHeight: 1.2, fontFamily: FONT }}>
+                    <h2 style={{ margin: 0, fontSize: "20px", fontWeight: 700, color: "#0f172a", lineHeight: 1.2, fontFamily: FONT }}>
                         {fullName}
                     </h2>
 
                     {/* Location + Language */}
-                    <div style={{ display: "flex", alignItems: "center", gap: "16px", flexWrap: "wrap", fontSize: "13px", color: "#64748b", fontFamily: FONT }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: "14px", flexWrap: "wrap", fontSize: "13px", color: "#64748b", fontFamily: FONT }}>
                         <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                            <MapPin size={13} color="#64748b" />
+                            <MapPin size={12} color="#64748b" />
                             <strong style={{ color: "#334155" }}>{locationText.split(",")[0]}</strong>
                             {locationText.includes(",") && <span>, {locationText.split(",").slice(1).join(",").trim()}</span>}
                         </span>
                         <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-                            <Pencil size={12} color="#64748b" />
+                            <Pencil size={11} color="#64748b" />
                             <strong style={{ color: "#334155" }}>{languages}</strong>
                         </span>
                     </div>
 
-                    {/* Bio */}
-                    <div style={{ fontSize: "13px", color: "#475569", lineHeight: "1.65", fontFamily: FONT }}>
-                        {bioExpanded ? bio : bio.slice(0, 180) + (bio.length > 180 ? "..." : "")}
-                        {bio.length > 180 && (
-                            <span onClick={() => setBioExpanded(!bioExpanded)} style={{ color: "#2563eb", marginLeft: "6px", cursor: "pointer", fontWeight: 600 }}>
+                    {/* Bio — full text shown if short; Read More only when truly long */}
+                    <div style={{ fontSize: "13px", color: "#475569", lineHeight: "1.6", fontFamily: FONT }}>
+                        {displayedBio}
+                        {bioIsTruncatable && (
+                            <span
+                                onClick={() => setBioExpanded(!bioExpanded)}
+                                style={{ color: "#2563eb", marginLeft: "5px", cursor: "pointer", fontWeight: 600 }}
+                            >
                                 {bioExpanded ? "Show Less" : "Read More"}
                             </span>
                         )}
                     </div>
 
-                    {/* Skills */}
+                    {/* Skills — all shown, no artificial cap */}
                     <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                        {areas.slice(0, 7).map((skill, i) => (
-                            <div key={i} style={{ border: "1px solid #d1d5db", padding: "4px 11px", fontSize: "12px", color: "#374151", background: "#fff", borderRadius: "4px", fontFamily: FONT }}>
+                        {areas.map((skill, i) => (
+                            <div key={i} style={{ border: "1px solid #d1d5db", padding: "3px 10px", fontSize: "12px", color: "#374151", background: "#fff", borderRadius: "4px", fontFamily: FONT }}>
                                 {toTitleCase(skill)}
                             </div>
                         ))}
-                        {areas.length > 7 && (
-                            <div style={{ border: "1px solid #d1d5db", padding: "4px 11px", fontSize: "12px", color: "#2563eb", background: "#fff", borderRadius: "4px", fontWeight: 600, fontFamily: FONT }}>
-                                +{areas.length - 7} More
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Current role + Experience */}
-                    <div style={{ display: "flex", flexDirection: "row", gap: "12px", flexWrap: "wrap" }}>
-                        {/* Current company card */}
-                        <div style={{ border: "1px solid #e2e8f0", padding: "10px 14px", display: "flex", alignItems: "center", gap: "10px", borderRadius: "8px", minWidth: "210px", background: "#fafafa" }}>
-                            <div style={{ width: "38px", height: "38px", borderRadius: "50%", background: "#1d4ed8", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: "14px", flexShrink: 0, fontFamily: FONT }}>
-                                {fullName.charAt(0)}.
-                            </div>
-                            <div>
-                                <div style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>{currentRole}</div>
-                                <div style={{ fontSize: "11px", color: "#64748b", fontFamily: FONT }}>{companyName}</div>
-                            </div>
-                        </div>
-
-                        {/* Experience + Previous companies */}
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px", border: "1px solid #e2e8f0", padding: "10px 14px", borderRadius: "8px", background: "#fafafa" }}>
-                            <div style={{ display: "flex", alignItems: "center" }}>
-                                {prevCompanies.slice(0, 3).map((c, i) => (
-                                    <div key={i} style={{ width: "30px", height: "30px", borderRadius: "50%", border: "2px solid white", background: "#e2e8f0", overflow: "hidden", marginLeft: i > 0 ? "-9px" : "0", zIndex: 3 - i, position: "relative", flexShrink: 0 }}>
-                                        {c.logo ? (
-                                            <img src={c.logo} alt={c.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                        ) : (
-                                            <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: 700, color: "#374151", background: ["#fef3c7", "#dbeafe", "#d1fae5"][i % 3], fontFamily: FONT }}>
-                                                {c.name?.charAt(0) || "C"}
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                                {prevCompanies.length === 0 && mentor.companyLogo && (
-                                    <div style={{ width: "30px", height: "30px", borderRadius: "50%", border: "2px solid white", overflow: "hidden" }}>
-                                        <img src={mentor.companyLogo} alt={companyName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                    </div>
-                                )}
-                            </div>
-                            <div>
-                                <div style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>{yearsExp}</div>
-                                <div style={{ fontSize: "11px", color: "#64748b", fontFamily: FONT }}>
-                                    {prevCompanies.length > 0 ? prevCompanies.map((c) => c.name).join(" | ") : companyName}
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
-                {/* Bottom strip: For + Domains */}
-                <div style={{ borderTop: "1px solid #f1f5f9", padding: "10px 22px", display: "flex", alignItems: "center", gap: "22px", flexWrap: "wrap", background: "#f8fafc" }}>
+                {/* Bottom strip */}
+                <div style={{ borderTop: "1px solid #f1f5f9", padding: "8px 20px", display: "flex", alignItems: "center", gap: "20px", flexWrap: "wrap", background: "#f8fafc" }}>
                     {offeringForList.length > 0 && (
-                        <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#374151", fontFamily: FONT }}>
-                            <Briefcase size={13} color="#64748b" />
+                        <div style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "12px", fontFamily: FONT }}>
+                            <Briefcase size={12} color="#64748b" />
                             <span style={{ color: "#64748b" }}>For:</span>
                             <span style={{ fontWeight: 600, color: "#0f172a" }}>{offeringForList.join(" | ")}</span>
                         </div>
                     )}
                     {domainsList.length > 0 && (
-                        <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: "#374151", fontFamily: FONT }}>
-                            <div style={{ width: "13px", height: "13px", borderRadius: "50%", border: "2px solid #64748b", flexShrink: 0 }} />
+                        <div style={{ display: "flex", alignItems: "center", gap: "5px", fontSize: "12px", fontFamily: FONT }}>
+                            <div style={{ width: "11px", height: "11px", borderRadius: "50%", border: "2px solid #64748b", flexShrink: 0 }} />
                             <span style={{ color: "#64748b" }}>Domains:</span>
                             <span style={{ fontWeight: 600, color: "#0f172a" }}>{domainsList[0]}</span>
                             {domainsList.length > 1 && (
-                                <span style={{ color: "#2563eb", fontWeight: 600, cursor: "pointer" }}>| More</span>
+                                <span style={{ color: "#2563eb", fontWeight: 600, cursor: "pointer" }}>+{domainsList.length - 1} More</span>
                             )}
                         </div>
                     )}
                 </div>
             </div>
 
-            {/* RIGHT: Stats + CTA column */}
-            <div style={{
-                width: isMobile ? "100%" : "280px",
-                minWidth: isMobile ? "100%" : "280px",
-                padding: "22px 20px",
-                display: "flex",
-                flexDirection: "column",
-                gap: "11px",
-                background: "#ffffff",
-                flexShrink: 0,
-            }}>
-                {/* Star Mentor */}
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "14px", fontFamily: FONT }}>
-                    <Star size={16} color="#f59e0b" fill="#f59e0b" style={{ flexShrink: 0 }} />
-                    <span style={{ fontWeight: 700, color: "#0f172a" }}>Star Mentor</span>
-                    {starBadge && <span style={{ fontSize: "12px", color: "#64748b" }}>- {starBadge}</span>}
-                </div>
+            {/* ── RIGHT: Stats + CTA ── */}
+            <div
+                style={{
+                    width: isMobile ? "100%" : "260px",
+                    minWidth: isMobile ? "100%" : "260px",
+                    display: "flex",
+                    flexDirection: "column",
+                    background: "#ffffff",
+                    flexShrink: 0,
+                }}
+            >
+                {/* Stats */}
+                <div style={{ padding: "16px 18px", display: "flex", flexDirection: "column", gap: "12px", flex: 1 }}>
 
-                {/* Placements */}
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
-                    <Trophy size={15} color="#d97706" style={{ flexShrink: 0 }} />
-                    <span>{placements} Placements</span>
-                </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", fontFamily: FONT }}>
+                        <Star size={14} color="#f59e0b" fill="#f59e0b" style={{ flexShrink: 0 }} />
+                        <span style={{ fontWeight: 700, color: "#0f172a" }}>Star Mentor</span>
+                        {starBadge && <span style={{ fontSize: "12px", color: "#64748b" }}>- {starBadge}</span>}
+                    </div>
 
-                {/* Mentees */}
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
-                    <Users size={15} color="#0ea5e9" style={{ flexShrink: 0 }} />
-                    <span>5.0 ({menteeCount}+ mentees)</span>
-                </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
+                        <Trophy size={14} color="#d97706" style={{ flexShrink: 0 }} />
+                        <span>{placements} Placements</span>
+                    </div>
 
-                {/* Sessions per month */}
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
-                    <Video size={15} color="#10b981" style={{ flexShrink: 0 }} />
-                    <span>{weeklySessions * 4}x Sessions Per Month</span>
-                </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
+                        <Users size={14} color="#0ea5e9" style={{ flexShrink: 0 }} />
+                        <span>5.0 ({menteeCount}+ mentees)</span>
+                    </div>
 
-                {/* Referrals */}
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
-                    <Briefcase size={15} color="#8b5cf6" style={{ flexShrink: 0 }} />
-                    <span>Referrals in Top Companies</span>
-                    {referralCount > 0 && (
-                        <span style={{ color: "#2563eb", fontWeight: 600, fontSize: "12px", cursor: "pointer", whiteSpace: "nowrap", marginLeft: "auto", fontFamily: FONT }}>
-                            +{referralCount} More
-                        </span>
-                    )}
-                </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
+                        <Video size={14} color="#10b981" style={{ flexShrink: 0 }} />
+                        <span>{weeklySessions * 4}x Sessions Per Month</span>
+                    </div>
 
-                {/* Curriculum */}
-                {hasCurriculum && (
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "13px", color: "#374151", fontFamily: FONT }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                            <BookOpen size={15} color="#64748b" style={{ flexShrink: 0 }} />
-                            <span>Detailed Curriculum Available</span>
+                            <Briefcase size={14} color="#8b5cf6" style={{ flexShrink: 0 }} />
+                            <span>Referrals in Top Companies</span>
                         </div>
-                        <span style={{ color: "#2563eb", fontWeight: 600, fontSize: "12px", cursor: "pointer", whiteSpace: "nowrap" }}>View ↗</span>
+                        {referralCount > 0 && (
+                            <span style={{ color: "#2563eb", fontWeight: 600, fontSize: "12px", cursor: "pointer", whiteSpace: "nowrap", marginLeft: "4px" }}>
+                                +{referralCount} More
+                            </span>
+                        )}
                     </div>
-                )}
 
-                <div style={{ borderTop: "1px solid #f1f5f9", margin: "4px 0" }} />
-
-                {/* Price */}
-                <div>
-                    <div style={{ fontSize: "11px", color: "#94a3b8", marginBottom: "2px", fontFamily: FONT }}>Starting from</div>
-                    <div style={{ display: "flex", alignItems: "flex-end", gap: "4px", flexWrap: "wrap" }}>
-                        <span style={{ fontSize: "30px", fontWeight: 800, color: "#0f172a", lineHeight: 1, fontFamily: FONT }}>
-                            {fmtINR(monthlyPrice)}
-                        </span>
-                        <span style={{ fontSize: "12px", color: "#64748b", marginBottom: "4px", fontFamily: FONT }}>/Month + taxes</span>
-                    </div>
-                    {discount && (
-                        <div style={{ display: "inline-flex", alignItems: "center", gap: "4px", background: "#dcfce7", color: "#16a34a", borderRadius: "20px", padding: "2px 10px", fontSize: "11px", fontWeight: 700, marginTop: "4px", fontFamily: FONT }}>
-                            ✦ Extra {discount}% OFF
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "13px", fontFamily: FONT, color: hasCurriculum ? "#374151" : "#cbd5e1" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                            <BookOpen size={14} color={hasCurriculum ? "#64748b" : "#cbd5e1"} style={{ flexShrink: 0 }} />
+                            <span>{hasCurriculum ? "Detailed Curriculum Available" : "No Curriculum Yet"}</span>
                         </div>
-                    )}
+                        {hasCurriculum && (
+                            <span style={{ color: "#2563eb", fontWeight: 600, fontSize: "12px", cursor: "pointer" }}>View ↗</span>
+                        )}
+                    </div>
+
+                    {/* Price */}
+                    <div style={{ marginTop: "4px" }}>
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2px" }}>
+                            <span style={{ fontSize: "11px", color: "#94a3b8", fontFamily: FONT }}>Starting from</span>
+                            {discount && (
+                                <div style={{ display: "inline-flex", alignItems: "center", gap: "3px", background: "#dcfce7", color: "#16a34a", borderRadius: "20px", padding: "2px 8px", fontSize: "11px", fontWeight: 700, fontFamily: FONT }}>
+                                    ✦ Extra {discount}% OFF
+                                </div>
+                            )}
+                        </div>
+                        <div style={{ display: "flex", alignItems: "flex-end", gap: "4px" }}>
+                            <span style={{ fontSize: "26px", fontWeight: 800, color: "#0f172a", lineHeight: 1, fontFamily: FONT }}>{fmtINR(monthlyPrice)}</span>
+                            <span style={{ fontSize: "12px", color: "#64748b", marginBottom: "2px", fontFamily: FONT }}>/Month + taxes</span>
+                        </div>
+                    </div>
                 </div>
 
-                {/* View Profile button */}
-                <button
-                    onClick={() => onViewProfile(mentor)}
-                    style={{ width: "100%", height: "44px", border: "1px solid #d1d5db", borderRadius: "8px", background: "#ffffff", color: "#0f172a", fontSize: "14px", fontWeight: 600, cursor: "pointer", fontFamily: FONT, transition: "background .15s" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = "#f8fafc")}
-                    onMouseLeave={(e) => (e.currentTarget.style.background = "#ffffff")}
-                >
-                    View Profile
-                </button>
+                {/* CTA buttons */}
+                <div style={{ padding: "0 18px 16px", display: "flex", flexDirection: "column", gap: "8px" }}>
+                    <button
+                        onClick={() => onViewProfile(mentor)}
+                        style={{ width: "100%", height: "40px", border: "1px solid #d1d5db", borderRadius: "8px", background: "#ffffff", color: "#0f172a", fontSize: "13px", fontWeight: 600, cursor: "pointer", fontFamily: FONT }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "#f8fafc")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "#ffffff")}
+                    >
+                        View Profile
+                    </button>
+{/* 
+                    <button
+                        onClick={() => onSubscribe(mentor)}
+                        style={{ width: "100%", height: "40px", border: "none", borderRadius: "8px", background: PRIMARY, color: "white", fontSize: "13px", fontWeight: 700, cursor: "pointer", fontFamily: FONT }}
+                        onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
+                        onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
+                    >
+                        Book Trial Session for ₹99
+                    </button> */}
 
-                {/* Book Trial button */}
-                <button
-                    onClick={() => onSubscribe(mentor)}
-                    style={{ width: "100%", height: "44px", border: "none", borderRadius: "8px", background: PRIMARY, color: "white", fontSize: "14px", fontWeight: 700, cursor: "pointer", fontFamily: FONT }}
-                    onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.9")}
-                    onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
-                >
-                    Book Trial Session for ₹99
-                </button>
-
-                {nextAvailable && (
-                    <p style={{ textAlign: "center", fontSize: "11px", color: "#94a3b8", margin: 0, fontFamily: FONT }}>
-                        Next Available: <span style={{ color: "#374151", fontWeight: 600 }}>{nextAvailable}</span>
-                    </p>
-                )}
+                    {nextAvailable && (
+                        <p style={{ textAlign: "center", fontSize: "11px", color: "#94a3b8", margin: 0, fontFamily: FONT }}>
+                            Next Available: <span style={{ color: "#374151", fontWeight: 600 }}>{nextAvailable}</span>
+                        </p>
+                    )}
+                </div>
             </div>
         </motion.div>
     );
 }
-
 // ── FilterSidebar ──────────────────────────────────────────────────────────
 function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
     const width = useWindowWidth();
@@ -2960,7 +2476,7 @@ function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
 
     const sidebarContent = (
         <div style={{
-            width: isMobile ? "100%" : "270px",
+            width: isMobile ? "100%" : "300px",
             background: "white",
             borderRadius: isMobile ? 0 : "8px",
             padding: "20px",
@@ -2976,49 +2492,39 @@ function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
             }),
         }}>
             {/* Header */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "18px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "16px" }}>
                 <h3 style={{ fontWeight: 700, fontSize: "15px", color: "#0f172a", margin: 0, fontFamily: FONT }}>Filter By</h3>
-                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                    <button onClick={handleClear} style={{ background: "none", border: "none", color: "#ef4444", fontSize: "12px", fontWeight: 600, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: "3px" }}>
-                        <X size={11} /> Clear Filters
-                    </button>
-                    {isMobile && (
-                        <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer", color: "#64748b", display: "flex" }}>
-                            <X size={18} />
-                        </button>
-                    )}
-                </div>
+                <button onClick={handleClear} style={{ background: "none", border: "none", color: "#ef4444", fontSize: "12px", fontWeight: 600, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: "3px" }}>
+                    ✕ Clear Filters
+                </button>
             </div>
 
-            {/* Domain section */}
+            {/* Domain */}
             <p style={{ fontWeight: 700, fontSize: "13px", color: "#0f172a", margin: "0 0 10px", fontFamily: FONT }}>Domain</p>
 
-            {/* Selected domain tags box */}
             {selectedDomains.length > 0 && (
-                <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", border: `1px solid ${BLUE_BORDER}`, borderRadius: "8px", padding: "8px 10px", marginBottom: "10px", position: "relative" }}>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: "5px", border: `1px solid ${BLUE_BORDER}`, borderRadius: "8px", padding: "8px 36px 8px 10px", marginBottom: "10px", position: "relative" }}>
                     {selectedDomains.map((d) => (
                         <span key={d} style={{ display: "flex", alignItems: "center", gap: "3px", fontSize: "11px", fontWeight: 600, padding: "2px 8px", borderRadius: "20px", background: BLUE_LIGHT, color: BLUE, border: `1px solid ${BLUE_BORDER}`, fontFamily: FONT }}>
                             {d}
-                            <button onClick={() => toggleDomain(d)} style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8", padding: 0, display: "flex", lineHeight: 1 }}>
+                            <button onClick={() => toggleDomain(d)} style={{ background: "none", border: "none", cursor: "pointer", color: "#ef4444", padding: 0, display: "flex", lineHeight: 1 }}>
                                 <X size={9} />
                             </button>
                         </span>
                     ))}
-                    {/* Expand/collapse icon */}
-                    <div style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", gap: "4px" }}>
-                        <span style={{ color: "#94a3b8", fontSize: "11px" }}>|</span>
-                        <ChevronDown size={13} color="#94a3b8" />
+                    <div style={{ position: "absolute", right: "8px", top: "50%", transform: "translateY(-50%)", display: "flex", alignItems: "center", gap: "3px" }}>
+                        <span style={{ color: "#94a3b8", fontSize: "12px" }}>|</span>
+                        <ChevronDown size={12} color="#94a3b8" />
                     </div>
                 </div>
             )}
 
-            {/* Domain chips */}
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "22px" }}>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginBottom: "20px" }}>
                 {DOMAIN_CHIPS.map((d) => {
                     const active = selectedDomains.includes(d);
                     return (
                         <button key={d} onClick={() => toggleDomain(d)}
-                            style={{ fontSize: "12px", fontWeight: 500, padding: "5px 12px", borderRadius: "6px", background: active ? "#0f172a" : "white", color: active ? "white" : "#374151", border: `1px solid ${active ? "#0f172a" : "#e2e8f0"}`, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: "5px" }}>
+                            style={{ fontSize: "12px", fontWeight: 500, padding: "5px 12px", borderRadius: "6px", background: active ? "#0f172a" : "white", color: active ? "white" : "#374151", border: `1px solid ${active ? "#0f172a" : "#e2e8f0"}`, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: "4px" }}>
                             {active && <span style={{ fontSize: "10px" }}>✓</span>}
                             {d}
                         </button>
@@ -3026,11 +2532,11 @@ function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
                 })}
             </div>
 
-            <div style={{ borderTop: "1px solid #f1f5f9", marginBottom: "18px" }} />
+            <div style={{ borderTop: "1px solid #f1f5f9", marginBottom: "16px" }} />
 
-            {/* Offering Mentorship For */}
+            {/* Offering For */}
             <p style={{ fontWeight: 700, fontSize: "13px", color: "#0f172a", margin: "0 0 10px", fontFamily: FONT }}>Offering Mentorship For</p>
-            <div style={{ position: "relative", marginBottom: "22px" }}>
+            <div style={{ position: "relative", marginBottom: "20px" }}>
                 <select value={offeringFor} onChange={(e) => setOfferingFor(e.target.value)}
                     style={{ width: "100%", border: "1px solid #e2e8f0", borderRadius: "8px", padding: "10px 36px 10px 14px", fontSize: "13px", color: "#374151", background: "white", cursor: "pointer", outline: "none", appearance: "none", fontFamily: FONT, boxSizing: "border-box" }}>
                     <option>Working Professionals</option>
@@ -3041,7 +2547,7 @@ function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
                 <ChevronDown size={14} color="#64748b" style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
             </div>
 
-            <div style={{ borderTop: "1px solid #f1f5f9", marginBottom: "18px" }} />
+            <div style={{ borderTop: "1px solid #f1f5f9", marginBottom: "16px" }} />
 
             {/* Pricing */}
             <p style={{ fontWeight: 700, fontSize: "13px", color: "#0f172a", margin: "0 0 10px", fontFamily: FONT }}>Pricing</p>
@@ -3049,19 +2555,16 @@ function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
                 <span>₹5,000</span>
                 <span>₹40,000</span>
             </div>
-            <input
-                type="range" min={5000} max={40000} step={500} value={priceVal}
+            <input type="range" min={5000} max={40000} step={500} value={priceVal}
                 onChange={(e) => setPriceVal(Number(e.target.value))}
                 style={{ width: "100%", accentColor: BLUE, cursor: "pointer", boxSizing: "border-box" }}
             />
-            <p style={{ fontSize: "13px", color: "#374151", fontWeight: 600, margin: "6px 0 0", fontFamily: FONT }}>
-                Up To {fmtINR(priceVal)}/Month
-            </p>
+            <p style={{ fontSize: "13px", color: "#374151", fontWeight: 600, margin: "6px 0 0", fontFamily: FONT }}>Up To {fmtINR(priceVal)}/Month</p>
 
             <button
                 onClick={() => { onSearch({ maxPrice: priceVal, offeringFor, domains: selectedDomains }); if (isMobile) onClose(); }}
                 disabled={isSearching}
-                style={{ marginTop: "18px", width: "100%", padding: "12px", background: isSearching ? BLUE_BORDER : PRIMARY, color: "white", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "13px", cursor: isSearching ? "not-allowed" : "pointer", fontFamily: FONT, boxSizing: "border-box" }}>
+                style={{ marginTop: "16px", width: "100%", padding: "11px", background: isSearching ? BLUE_BORDER : PRIMARY, color: "white", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "13px", cursor: isSearching ? "not-allowed" : "pointer", fontFamily: FONT, boxSizing: "border-box" }}>
                 {isSearching ? "Applying…" : "Apply Filters"}
             </button>
         </div>
@@ -3108,7 +2611,6 @@ export default function ExploreMentors() {
     const [advancedFilter] = useAdvancedFilterMentorsMutation();
 
     const allMentors = data?.data ?? [];
-
     const [displayMentors, setDisplayMentors] = useState(null);
     const [isFiltered, setIsFiltered] = useState(false);
     const [searchEmpty, setSearchEmpty] = useState(false);
@@ -3126,7 +2628,6 @@ export default function ExploreMentors() {
     }, [domainFromUrl]);
 
     const mentors = isFiltered ? (displayMentors ?? []) : allMentors;
-
     const handleClear = () => { setIsFiltered(false); setDisplayMentors(null); setSearchEmpty(false); navigate("/explore-mentors"); };
 
     const handleSearch = async (body) => {
@@ -3167,7 +2668,6 @@ export default function ExploreMentors() {
     };
 
     const handleViewProfile = (mentor) => navigate(`/mentor-profile/${mentor.userId}`);
-
     const handleBookTrial = (mentor) => {
         const isLoggedIn = !!localStorage.getItem("authToken");
         if (!isLoggedIn) { navigate(`/login?mentorId=${mentor._id}`); return; }
@@ -3176,21 +2676,14 @@ export default function ExploreMentors() {
 
     return (
         <>
-            {/* ── Header ─────────────────────────────────────────────── */}
-            <header style={{
-                position: "sticky", top: 0, zIndex: 100, background: "white",
-                borderBottom: "1px solid #e2e8f0", fontFamily: FONT,
-                boxShadow: "0 1px 4px rgba(0,0,0,.06)"
-            }}>
-                <div style={{ maxWidth: "1360px", margin: "0 auto", padding: "0 24px", height: "64px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    {/* Logo */}
+            {/* ── Header ── */}
+            <header style={{ position: "sticky", top: 0, zIndex: 100, background: "white", borderBottom: "1px solid #e2e8f0", fontFamily: FONT, boxShadow: "0 1px 4px rgba(0,0,0,.06)" }}>
+                <div style={{ maxWidth: "1400px", margin: "0 auto", padding: "0 24px", height: "60px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <div onClick={() => navigate("/")} style={{ cursor: "pointer", flexShrink: 0 }}>
                         <img src={KarrivoLogo} className="h-10 w-20 sm:h-12 sm:w-24 md:h-14 md:w-28 object-contain" alt="Karrivo" />
                     </div>
-
-                    {/* Center nav */}
                     {!isMobile && (
-                        <nav style={{ display: "flex", alignItems: "center", gap: "32px" }}>
+                        <nav style={{ display: "flex", alignItems: "center", gap: "36px" }}>
                             {NAV_LINKS.map((link) => {
                                 const isActive = location.pathname === link.path;
                                 return (
@@ -3202,13 +2695,9 @@ export default function ExploreMentors() {
                             })}
                         </nav>
                     )}
-
-                    {/* Right: Login */}
                     <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                         {!isMobile && (
-                            <button
-                                onClick={() => navigate("/login")}
-                                style={{ background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "14px", fontWeight: 600, color: "#0f172a", padding: "8px 16px" }}>
+                            <button onClick={() => navigate("/login")} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "14px", fontWeight: 600, color: "#0f172a", padding: "8px 16px" }}>
                                 Login
                             </button>
                         )}
@@ -3221,81 +2710,70 @@ export default function ExploreMentors() {
                         )}
                     </div>
                 </div>
-
-                {/* Mobile nav dropdown */}
                 <AnimatePresence>
                     {isMobile && mobileNavOpen && (
                         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} style={{ overflow: "hidden", borderTop: "1px solid #f1f5f9", background: "white" }}>
                             {NAV_LINKS.map((link) => (
                                 <button key={link.path} onClick={() => { navigate(link.path); setMobileNavOpen(false); }}
-                                    style={{ display: "block", width: "100%", textAlign: "left", padding: "14px 20px", background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "14px", fontWeight: 500, color: location.pathname === link.path ? "#0f172a" : "#64748b", borderBottom: "1px solid #f8fafc" }}>
+                                    style={{ display: "block", width: "100%", textAlign: "left", padding: "14px 20px", background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "14px", color: "#64748b", borderBottom: "1px solid #f8fafc" }}>
                                     {link.label}
                                 </button>
                             ))}
-                            <button onClick={() => navigate("/login")} style={{ display: "block", width: "100%", textAlign: "left", padding: "14px 20px", background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "14px", fontWeight: 600, color: "#0f172a" }}>
-                                Login
-                            </button>
+                            <button onClick={() => navigate("/login")} style={{ display: "block", width: "100%", textAlign: "left", padding: "14px 20px", background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "14px", fontWeight: 600, color: "#0f172a" }}>Login</button>
                         </motion.div>
                     )}
                 </AnimatePresence>
             </header>
 
-            {/* ── Active filter pills ─────────────────────────────────── */}
+            {/* ── Domain filter pill bar ── */}
             {domainFromUrl && !isFiltered && (
-                <div style={{ background: BLUE_LIGHT, borderBottom: `1px solid ${BLUE_BORDER}`, padding: "10px 24px", display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", fontFamily: FONT }}>
+                <div style={{ background: BLUE_LIGHT, borderBottom: `1px solid ${BLUE_BORDER}`, padding: "8px 24px", display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap", fontFamily: FONT }}>
                     <span style={{ fontSize: "12px", color: "#64748b", fontWeight: 600 }}>Filtered by:</span>
                     {domainFromUrl.split(",").map((d) => (
-                        <span key={d} style={{ background: BLUE_LIGHT, color: BLUE, border: `1px solid ${BLUE_BORDER}`, borderRadius: "20px", padding: "3px 10px", fontSize: "11px", fontWeight: 700 }}>
-                            {d.trim()}
-                        </span>
+                        <span key={d} style={{ background: BLUE_LIGHT, color: BLUE, border: `1px solid ${BLUE_BORDER}`, borderRadius: "20px", padding: "2px 10px", fontSize: "11px", fontWeight: 700 }}>{d.trim()}</span>
                     ))}
-                    <button onClick={handleClear} style={{ marginLeft: "4px", background: "none", border: "none", color: "#ef4444", fontSize: "11px", fontWeight: 600, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: "3px" }}>
-                        <X size={10} /> Clear filters
+                    <button onClick={handleClear} style={{ background: "none", border: "none", color: "#ef4444", fontSize: "11px", fontWeight: 600, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: "2px" }}>
+                        <X size={10} /> Clear
                     </button>
                 </div>
             )}
 
-            {/* ── Main layout ─────────────────────────────────────────── */}
-            <main style={{ minHeight: "100vh", background: "#f6f8fa", fontFamily: FONT, boxSizing: "border-box" }}>
-                <div style={{ maxWidth: "1360px", margin: "0 auto", padding: isMobile ? "12px" : "20px 24px", display: "flex", gap: "20px", alignItems: "flex-start", boxSizing: "border-box" }}>
+            {/* ── Main layout ── */}
+            <main style={{ minHeight: "100vh", background: "#f6f8fa", fontFamily: FONT }}>
+                <div style={{ maxWidth: "1400px", margin: "0 auto", padding: isMobile ? "12px" : "16px 24px", display: "flex", gap: "20px", alignItems: "flex-start", boxSizing: "border-box" }}>
 
-                    {/* ── LEFT: Mentor list ── */}
+                    {/* ── LEFT: Cards area ── */}
                     <div style={{ flex: 1, minWidth: 0 }}>
 
-                        {/* Search + Sort row */}
-                        <div style={{ display: "flex", gap: "10px", alignItems: "center", marginBottom: "16px", flexWrap: isMobile ? "wrap" : "nowrap" }}>
-                            {/* Search input */}
-                            <div style={{ flex: 1, minWidth: isMobile ? "100%" : "auto", position: "relative", boxSizing: "border-box" }}>
+                        {/* Search + Sort bar — inside a white box like the image */}
+                        <div style={{ background: "white", border: "1px solid #e2e8f0", borderRadius: "8px", padding: "14px 16px", marginBottom: "12px", display: "flex", gap: "12px", alignItems: "center", flexWrap: isMobile ? "wrap" : "nowrap", boxShadow: "0 1px 3px rgba(0,0,0,.04)" }}>
+                            <div style={{ flex: 1, minWidth: isMobile ? "100%" : "auto", position: "relative" }}>
                                 <Search size={14} color="#94a3b8" style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
                                 <input
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder="Search for any Skill, domain or name..."
                                     onKeyDown={(e) => { if (e.key === "Enter" && searchQuery) handleSearch({ query: searchQuery }); }}
-                                    style={{ width: "100%", padding: "11px 14px 11px 38px", border: "1px solid #e2e8f0", borderRadius: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT, outline: "none", background: "white", boxSizing: "border-box", boxShadow: "0 1px 3px rgba(0,0,0,.04)" }}
+                                    style={{ width: "100%", padding: "10px 14px 10px 36px", border: "1px solid #e2e8f0", borderRadius: "8px", fontSize: "13px", color: "#374151", fontFamily: FONT, outline: "none", background: "white", boxSizing: "border-box" }}
                                     onFocus={(e) => (e.target.style.borderColor = BLUE)}
                                     onBlur={(e) => (e.target.style.borderColor = "#e2e8f0")}
                                 />
                             </div>
-
-                            {/* Sort */}
-                            <div style={{ display: "flex", alignItems: "center", gap: "8px", width: isMobile ? "100%" : "auto", boxSizing: "border-box" }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 }}>
                                 <span style={{ fontSize: "13px", color: "#64748b", fontWeight: 600, whiteSpace: "nowrap", fontFamily: FONT }}>Sort by:</span>
-                                <div style={{ position: "relative", flex: isMobile ? 1 : "none" }}>
+                                <div style={{ position: "relative" }}>
                                     <select value={sortBy} onChange={(e) => handleSortChange(e.target.value)}
-                                        style={{ border: "1px solid #e2e8f0", borderRadius: "8px", padding: "10px 32px 10px 12px", fontSize: "13px", color: "#374151", background: "white", cursor: "pointer", outline: "none", appearance: "none", fontFamily: FONT, minWidth: "170px", boxSizing: "border-box", width: "100%" }}>
+                                        style={{ border: "1px solid #e2e8f0", borderRadius: "8px", padding: "9px 32px 9px 12px", fontSize: "13px", color: "#374151", background: "white", cursor: "pointer", outline: "none", appearance: "none", fontFamily: FONT, minWidth: "160px" }}>
                                         <option>Recommended</option>
                                         <option>Price: Low To High</option>
                                         <option>Price: High To Low</option>
                                         <option>Most Experienced</option>
                                     </select>
-                                    <ChevronDown size={13} color="#64748b" style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
+                                    <ChevronDown size={12} color="#64748b" style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
                                 </div>
-
-                                {/* Mobile filter button */}
                                 {isTablet && (
                                     <button onClick={() => setFilterDrawerOpen(true)}
-                                        style={{ display: "flex", alignItems: "center", gap: "5px", padding: "10px 14px", border: `1.5px solid ${BLUE_BORDER}`, borderRadius: "8px", background: "white", cursor: "pointer", fontFamily: FONT, fontSize: "13px", fontWeight: 700, color: BLUE, whiteSpace: "nowrap", flexShrink: 0 }}>
+                                        style={{ display: "flex", alignItems: "center", gap: "5px", padding: "9px 14px", border: `1.5px solid ${BLUE_BORDER}`, borderRadius: "8px", background: "white", cursor: "pointer", fontFamily: FONT, fontSize: "13px", fontWeight: 700, color: BLUE, whiteSpace: "nowrap" }}>
                                         <SlidersHorizontal size={13} color={BLUE} /> Filters
                                     </button>
                                 )}
@@ -3304,86 +2782,61 @@ export default function ExploreMentors() {
 
                         {/* Result count */}
                         {!isLoading && !isError && mentors.length > 0 && (
-                            <p style={{ fontSize: "12px", color: "#94a3b8", marginBottom: "14px", fontWeight: 500, fontFamily: FONT }}>
+                            <p style={{ fontSize: "12px", color: "#94a3b8", marginBottom: "12px", fontWeight: 500, fontFamily: FONT }}>
                                 Showing {mentors.length} of {allMentors.length} mentor{allMentors.length !== 1 ? "s" : ""}
                             </p>
                         )}
 
-                        {/* Loading */}
                         {isLoading && (
                             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "50vh" }}>
-                                <div style={{ width: "38px", height: "38px", borderRadius: "50%", border: `3px solid ${BLUE_LIGHT}`, borderTopColor: BLUE, animation: "spin .8s linear infinite" }} />
+                                <div style={{ width: "36px", height: "36px", borderRadius: "50%", border: `3px solid ${BLUE_LIGHT}`, borderTopColor: BLUE, animation: "spin .8s linear infinite" }} />
                                 <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
                             </div>
                         )}
 
-                        {/* Error */}
                         {isError && !isLoading && (
-                            <div style={{ textAlign: "center", padding: "80px 0", background: "white", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+                            <div style={{ textAlign: "center", padding: "60px 0", background: "white", borderRadius: "8px", border: "1px solid #e2e8f0" }}>
                                 <p style={{ fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>No Mentors Available</p>
                                 <p style={{ fontSize: "13px", color: "#94a3b8", marginTop: "4px", fontFamily: FONT }}>Please check back later</p>
                             </div>
                         )}
 
-                        {/* Empty search */}
                         {!isLoading && !isError && searchEmpty && (
-                            <div style={{ textAlign: "center", padding: "80px 0" }}>
+                            <div style={{ textAlign: "center", padding: "60px 0" }}>
                                 <p style={{ fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>No mentors match your filters</p>
                                 <button onClick={handleClear} style={{ marginTop: "12px", background: BLUE, color: "white", border: "none", borderRadius: "8px", padding: "10px 20px", fontWeight: 600, cursor: "pointer", fontFamily: FONT }}>Clear Filters</button>
                             </div>
                         )}
 
-                        {/* Mentor cards */}
                         {!isLoading && !isError && !searchEmpty && mentors.length > 0 && (
                             <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
                                 {mentors.map((mentor, index) => (
-                                    <MentorCard
-                                        key={mentor._id || index}
-                                        mentor={mentor}
-                                        index={index}
-                                        onSubscribe={handleBookTrial}
-                                        onViewProfile={handleViewProfile}
-                                    />
+                                    <MentorCard key={mentor._id || index} mentor={mentor} index={index} onSubscribe={handleBookTrial} onViewProfile={handleViewProfile} />
                                 ))}
                             </div>
                         )}
 
-                        {/* Truly empty */}
                         {!isLoading && !isError && !isFiltered && allMentors.length === 0 && (
-                            <div style={{ textAlign: "center", padding: "80px 0", border: "2px dashed #e2e8f0", borderRadius: "10px", background: "white" }}>
-                                <p style={{ fontSize: "36px", marginBottom: "8px" }}>👨‍🏫</p>
+                            <div style={{ textAlign: "center", padding: "60px 0", border: "2px dashed #e2e8f0", borderRadius: "8px", background: "white" }}>
+                                <p style={{ fontSize: "32px", marginBottom: "8px" }}>👨‍🏫</p>
                                 <p style={{ fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>No Mentors Available</p>
                             </div>
                         )}
                     </div>
 
-                    {/* ── RIGHT: Filter sidebar (desktop) ── */}
+                    {/* ── RIGHT: Filter sidebar (desktop only) ── */}
                     {!isTablet && (
-                        <FilterSidebar
-                            onSearch={handleSearch}
-                            isSearching={isSearching}
-                            onClear={handleClear}
-                            isFiltered={isFiltered}
-                            isOpen={false}
-                            onClose={() => { }}
-                        />
+                        <FilterSidebar onSearch={handleSearch} isSearching={isSearching} onClear={handleClear} isFiltered={isFiltered} isOpen={false} onClose={() => { }} />
                     )}
                 </div>
             </main>
 
             {/* Mobile filter drawer */}
             {isTablet && (
-                <FilterSidebar
-                    onSearch={handleSearch}
-                    isSearching={isSearching}
-                    onClear={handleClear}
-                    isFiltered={isFiltered}
-                    isOpen={filterDrawerOpen}
-                    onClose={() => setFilterDrawerOpen(false)}
-                />
+                <FilterSidebar onSearch={handleSearch} isSearching={isSearching} onClear={handleClear} isFiltered={isFiltered} isOpen={filterDrawerOpen} onClose={() => setFilterDrawerOpen(false)} />
             )}
 
-            {/* Subscribe panel overlay */}
+            {/* Subscribe panel */}
             <AnimatePresence>
                 {subscribeTarget && (
                     <>
