@@ -1,7 +1,3 @@
-
-
-
-
 import React, { useState } from 'react';
 import { MessageCircle, Plus, X, Clock, CheckCircle, AlertCircle, Search, Filter, ThumbsUp, ThumbsDown, MessageSquare } from 'lucide-react';
 import { useGetSupportTicketsQuery, useCreateSupportTicketMutation, useUpdateSupportTicketMutation } from "./Helpsupportapislice";
@@ -81,31 +77,30 @@ const HelpSupport = () => {
 
     const getStatusBadge = (status) => {
         const statusConfig = {
-            pending: { cls: 'bg-[#f0f9ff] text-[#007daa] border border-[#bae6fd]', icon: Clock, label: 'Pending' },
-            in_progress: { cls: 'bg-[#e0f4fb] text-[#0098cc] border border-[#7dd3ea]', icon: Clock, label: 'In Progress' },
-            resolved: { cls: 'bg-[#f0fdf4] text-[#166534] border border-[#bbf7d0]', icon: CheckCircle, label: 'Resolved' },
-            closed: { cls: 'bg-[#f8fafc] text-[#475569] border border-[#e2e8f0]', icon: CheckCircle, label: 'Closed' },
+            pending: { color: '#0091c3', label: 'Pending', icon: Clock },
+            in_progress: { color: '#0091c3', label: 'In Progress', icon: Clock },
+            resolved: { color: '#16a34a', label: 'Resolved', icon: CheckCircle },
+            closed: { color: '#6b7280', label: 'Closed', icon: CheckCircle },
         };
         const config = statusConfig[status] || statusConfig.pending;
         const Icon = config.icon;
         return (
-            <span className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-semibold ${config.cls}`}>
-                <Icon className="w-3 h-3" />
-                <span className="hidden sm:inline">{config.label}</span>
-                <span className="sm:hidden">{config.label.substring(0, 3)}</span>
+            <span style={{ color: config.color, fontSize: '12px', fontWeight: 600, letterSpacing: '0.2px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                <Icon size={12} />
+                {config.label}
             </span>
         );
     };
 
     const getPriorityBadge = (priority) => {
-        const cfg = {
-            low: 'bg-[#f8fafc] text-[#475569] border border-[#e2e8f0]',
-            medium: 'bg-[#f0f9ff] text-[#0098cc] border border-[#bae6fd]',
-            high: 'bg-[#e0f4fb] text-[#007daa] border border-[#7dd3ea]',
-            urgent: 'bg-[#fff1f0] text-[#b91c1c] border border-[#fecaca]',
+        const colorMap = {
+            low: '#6b7280',
+            medium: '#0091c3',
+            high: '#d97706',
+            urgent: '#dc2626',
         };
         return (
-            <span className={`px-2 py-1 rounded text-xs font-semibold ${cfg[priority] || cfg.low}`}>
+            <span style={{ color: colorMap[priority] || '#6b7280', fontSize: '12px', fontWeight: 600, letterSpacing: '0.2px' }}>
                 {priority.charAt(0).toUpperCase() + priority.slice(1)}
             </span>
         );
@@ -121,25 +116,24 @@ const HelpSupport = () => {
 
     if (isLoading) {
         return (
-            <div className="min-h-screen bg-white flex items-center justify-center p-4">
-                <div className="text-center"><Loader /></div>
+            <div style={{ minHeight: '100vh', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+                <Loader />
             </div>
         );
     }
 
     if (isError) {
         return (
-            <div className="min-h-screen bg-white flex items-center justify-center p-4">
-                <div className="bg-white rounded-xl border border-[#bae6fd] p-6 sm:p-8 max-w-md w-full text-center">
-                    <AlertCircle className="h-12 w-12 sm:h-16 sm:w-16 mx-auto mb-4" style={{ color: '#0098cc' }} />
-                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Error Loading Tickets</h2>
-                    <p className="text-sm sm:text-base text-gray-500 mb-4">
+            <div style={{ minHeight: '100vh', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+                <div style={{ background: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', padding: '2rem', maxWidth: '400px', width: '100%', textAlign: 'center' }}>
+                    <AlertCircle size={48} style={{ color: '#1a1a2e', margin: '0 auto 1rem' }} />
+                    <h2 style={{ fontSize: '20px', fontWeight: 700, color: '#1a1a2e', marginBottom: '8px' }}>Error Loading Tickets</h2>
+                    <p style={{ fontSize: '14px', color: '#94a3b8', marginBottom: '16px' }}>
                         {error?.data?.message || "Failed to load support tickets. Please try again."}
                     </p>
                     <button
                         onClick={() => refetch()}
-                        className="text-white px-6 py-2.5 rounded-lg font-medium transition-colors w-full sm:w-auto"
-                        style={{ background: '#0098cc' }}
+                        style={{ background: '#1a1a2e', color: '#fff', border: 'none', borderRadius: '8px', padding: '10px 24px', fontWeight: 600, fontSize: '14px', cursor: 'pointer', width: '100%' }}
                     >
                         Retry
                     </button>
@@ -148,56 +142,132 @@ const HelpSupport = () => {
         );
     }
 
-    const inputCls = "w-full px-3 py-2.5 border border-[#e2e8f0] rounded-lg focus:ring-2 focus:ring-[#0098cc] focus:border-[#0098cc] outline-none text-sm text-gray-900 placeholder-gray-400 bg-white transition-colors";
-    const selectCls = `${inputCls} bg-white`;
+    const inputStyle = {
+        width: '100%',
+        padding: '10px 12px',
+        border: '1px solid #e2e8f0',
+        borderRadius: '8px',
+        fontSize: '13px',
+        color: '#1a1a2e',
+        background: '#fff',
+        outline: 'none',
+        boxSizing: 'border-box',
+        fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
+        transition: 'border-color 0.15s',
+    };
+
+    const thStyle = {
+        padding: '11px 14px',
+        textAlign: 'left',
+        fontSize: '11px',
+        fontWeight: 700,
+        color: '#ffffff',
+        letterSpacing: '0.6px',
+        textTransform: 'uppercase',
+        whiteSpace: 'nowrap',
+        borderBottom: '1px solid #e2e8f0',
+        background: '#1a1a2e',
+    };
+
+    const tdStyle = {
+        padding: '13px 14px',
+        fontSize: '13px',
+        color: '#1a1a2e',
+        verticalAlign: 'middle',
+        borderBottom: '1px solid #f1f5f9',
+        whiteSpace: 'nowrap',
+        background: '#fff',
+    };
+
+    const primaryBtnStyle = {
+        background: '#1a1a2e',
+        color: '#fff',
+        border: 'none',
+        borderRadius: '8px',
+        padding: '10px 20px',
+        fontWeight: 600,
+        fontSize: '14px',
+        cursor: 'pointer',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '6px',
+        transition: 'opacity 0.15s',
+        fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
+    };
+
+    const ghostBtnStyle = {
+        background: '#fff',
+        color: '#1a1a2e',
+        border: '1px solid #e2e8f0',
+        borderRadius: '8px',
+        padding: '10px 20px',
+        fontWeight: 600,
+        fontSize: '14px',
+        cursor: 'pointer',
+        transition: 'background 0.15s',
+        fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
+    };
+
+    const labelStyle = {
+        display: 'block',
+        fontSize: '11px',
+        fontWeight: 700,
+        color: '#475569',
+        textTransform: 'uppercase',
+        letterSpacing: '0.6px',
+        marginBottom: '6px',
+    };
 
     return (
-        <div className="min-h-screen bg-white p-3 sm:p-4 md:p-6 lg:p-8">
-            <div className="max-w-7xl mx-auto">
+        <div style={{ minHeight: '100vh', background: '#fff', padding: '24px', fontFamily: "'DM Sans', 'Segoe UI', sans-serif" }}>
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
 
                 {/* Header */}
-                <div className="bg-white rounded-xl border border-[#e2e8f0] p-4 sm:p-6 mb-4 sm:mb-6">
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+                <div style={{ background: '#fff', borderRadius: '10px', border: '1px solid #e2e8f0', padding: '20px 24px', marginBottom: '20px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
                         <div>
-                            <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+                            <h1 style={{ fontSize: '18px', fontWeight: 700, color: '#1a1a2e', margin: '0 0 4px' }}>
                                 Help &amp; Support
                             </h1>
-                            <p className="text-gray-400 mt-1 text-xs sm:text-sm">
+                            <p style={{ color: '#94a3b8', fontSize: '13px', margin: 0 }}>
                                 Raise queries and track your support requests
                             </p>
                         </div>
                         <button
                             onClick={() => setIsModalOpen(true)}
-                            className="w-full sm:w-auto text-white px-4 sm:px-5 py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors font-medium text-sm"
-                            style={{ background: '#0098cc' }}
-                            onMouseEnter={e => e.currentTarget.style.background = '#007daa'}
-                            onMouseLeave={e => e.currentTarget.style.background = '#0098cc'}
+                            style={{ ...primaryBtnStyle, whiteSpace: 'nowrap' }}
+                            onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+                            onMouseLeave={e => e.currentTarget.style.opacity = '1'}
                         >
-                            <Plus className="w-4 h-4" />
+                            <Plus size={16} />
                             Raise a Query
                         </button>
                     </div>
                 </div>
 
                 {/* Search & Filter */}
-                <div className="bg-white rounded-xl border border-[#e2e8f0] p-3 sm:p-4 mb-4 sm:mb-6">
-                    <div className="flex flex-col sm:flex-row gap-3">
-                        <div className="flex-1 relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ color: '#0098cc' }} />
+                <div style={{ background: '#fff', borderRadius: '10px', border: '1px solid #e2e8f0', padding: '14px 18px', marginBottom: '20px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                        <div style={{ flex: '1 1 200px', position: 'relative' }}>
+                            <Search size={15} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8', pointerEvents: 'none' }} />
                             <input
                                 type="text"
                                 placeholder="Search by subject or ticket ID…"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className={`${inputCls} pl-9`}
+                                style={{ ...inputStyle, paddingLeft: '32px' }}
+                                onFocus={e => e.target.style.borderColor = '#1a1a2e'}
+                                onBlur={e => e.target.style.borderColor = '#e2e8f0'}
                             />
                         </div>
-                        <div className="flex items-center gap-2">
-                            <Filter className="w-4 h-4 flex-shrink-0" style={{ color: '#0098cc' }} />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: '0 1 auto' }}>
+                            <Filter size={15} style={{ color: '#94a3b8', flexShrink: 0 }} />
                             <select
                                 value={selectedStatus}
                                 onChange={(e) => setSelectedStatus(e.target.value)}
-                                className={`${selectCls} flex-1 sm:flex-none sm:w-40`}
+                                style={{ ...inputStyle, width: '150px', cursor: 'pointer' }}
+                                onFocus={e => e.target.style.borderColor = '#1a1a2e'}
+                                onBlur={e => e.target.style.borderColor = '#e2e8f0'}
                             >
                                 <option value="all">All Status</option>
                                 <option value="pending">Pending</option>
@@ -210,147 +280,150 @@ const HelpSupport = () => {
                 </div>
 
                 {/* Desktop Table */}
-                <div className="hidden lg:block bg-white rounded-xl border border-[#e2e8f0] overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full">
-                            <thead>
-                                <tr style={{ background: '#f0f9ff', borderBottom: '1.5px solid #bae6fd' }}>
-                                    {['Ticket ID', 'Subject', 'Category', 'Priority', 'Status', 'Created', 'Response'].map(h => (
-                                        <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider" style={{ color: '#0098cc' }}>
-                                            {h}
-                                        </th>
-                                    ))}
+                <div className="scroll-hide" style={{ display: 'block', background: '#fff', borderRadius: '10px', border: '1px solid #e2e8f0', overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', minWidth: '820px' }}>
+                        <thead style={{ backgroundColor: '#1a1a2e' }}>
+                            <tr>
+                                {['Ticket ID', 'Subject', 'Category', 'Priority', 'Status', 'Created', 'Response', 'Action'].map(h => (
+                                    <th key={h} style={thStyle}>{h}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredTickets.length === 0 ? (
+                                <tr>
+                                    <td colSpan="8" style={{ ...tdStyle, textAlign: 'center', padding: '48px', color: '#94a3b8' }}>
+                                        <MessageCircle size={40} style={{ color: '#cbd5e1', margin: '0 auto 12px', display: 'block' }} />
+                                        <p style={{ fontWeight: 600, color: '#1a1a2e', margin: '0 0 4px' }}>No support tickets found</p>
+                                        <p style={{ fontSize: '13px', color: '#94a3b8', margin: 0 }}>
+                                            {searchQuery || selectedStatus !== 'all'
+                                                ? 'Try adjusting your filters'
+                                                : 'Create your first support ticket to get started'}
+                                        </p>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody className="divide-y divide-[#f0f4f8]">
-                                {filteredTickets.length === 0 ? (
-                                    <tr>
-                                        <td colSpan="7" className="px-6 py-16 text-center">
-                                            <MessageCircle className="mx-auto mb-4 w-12 h-12" style={{ color: '#bae6fd' }} />
-                                            <p className="text-gray-700 font-semibold">No support tickets found</p>
-                                            <p className="text-gray-400 text-sm mt-1">
-                                                {searchQuery || selectedStatus !== 'all'
-                                                    ? 'Try adjusting your filters'
-                                                    : 'Create your first support ticket to get started'}
-                                            </p>
+                            ) : (
+                                filteredTickets.map((ticket) => (
+                                    <tr key={ticket.ticketId} style={{ transition: 'background 0.15s' }}
+                                        onMouseEnter={e => { Array.from(e.currentTarget.cells).forEach(c => c.style.background = '#f8fafc'); }}
+                                        onMouseLeave={e => { Array.from(e.currentTarget.cells).forEach(c => c.style.background = '#fff'); }}
+                                    >
+                                        <td style={{ ...tdStyle, fontWeight: 700, color: '#0091c3' }}>{ticket.ticketId}</td>
+                                        <td style={{ ...tdStyle, maxWidth: '180px' }}>
+                                            <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 600, color: '#1a1a2e' }} title={ticket.subject}>
+                                                {ticket.subject}
+                                            </span>
+                                        </td>
+                                        <td style={{ ...tdStyle, color: '#475569' }}>{ticket.category}</td>
+                                        <td style={tdStyle}>{getPriorityBadge(ticket.priority)}</td>
+                                        <td style={tdStyle}>{getStatusBadge(ticket.status)}</td>
+                                        <td style={{ ...tdStyle, color: '#475569' }}>{new Date(ticket.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</td>
+                                        <td style={{ ...tdStyle, maxWidth: '180px' }}>
+                                            {ticket.response ? (
+                                                <div>
+                                                    <span style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#1a1a2e' }} title={ticket.response}>
+                                                        {ticket.response}
+                                                    </span>
+                                                    {ticket.respondedAt && (
+                                                        <span style={{ fontSize: '11px', color: '#94a3b8', display: 'block', marginTop: '2px' }}>
+                                                            {new Date(ticket.respondedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            ) : (
+                                                <span style={{ fontSize: '13px', color: '#cbd5e1', fontStyle: 'italic' }}>No response yet</span>
+                                            )}
+                                        </td>
+                                        <td style={{ ...tdStyle, textAlign: 'center' }}>
+                                            {ticket.response && ticket.status !== 'resolved' && ticket.status !== 'closed' ? (
+                                                <button
+                                                    onClick={() => openFeedbackModal(ticket)}
+                                                    style={{ ...primaryBtnStyle, padding: '5px 14px', fontSize: '12px' }}
+                                                    onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+                                                    onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+                                                >
+                                                    <MessageSquare size={12} />
+                                                    Feedback
+                                                </button>
+                                            ) : ticket.userRemarks || ticket.status === 'resolved' || ticket.status === 'closed' ? (
+                                                <span style={{ fontSize: '12px', fontWeight: 600, color: '#16a34a', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                                    <CheckCircle size={12} /> Done
+                                                </span>
+                                            ) : (
+                                                <span style={{ fontSize: '12px', color: '#cbd5e1', fontStyle: 'italic' }}>Awaiting</span>
+                                            )}
                                         </td>
                                     </tr>
-                                ) : (
-                                    filteredTickets.map((ticket) => (
-                                        <tr key={ticket.ticketId} className="hover:bg-[#f0f9ff] transition-colors">
-                                            <td className="px-4 py-3.5 whitespace-nowrap">
-                                                <span className="text-sm font-bold" style={{ color: '#0098cc' }}>{ticket.ticketId}</span>
-                                            </td>
-                                            <td className="px-4 py-3.5">
-                                                <p className="text-sm font-medium text-gray-900 line-clamp-2 max-w-xs">{ticket.subject}</p>
-                                            </td>
-                                            <td className="px-4 py-3.5 whitespace-nowrap">
-                                                <span className="text-sm text-gray-600">{ticket.category}</span>
-                                            </td>
-                                            <td className="px-4 py-3.5 whitespace-nowrap">
-                                                {getPriorityBadge(ticket.priority)}
-                                            </td>
-                                            <td className="px-4 py-3.5 whitespace-nowrap">
-                                                {getStatusBadge(ticket.status)}
-                                            </td>
-                                            <td className="px-4 py-3.5 whitespace-nowrap text-sm text-gray-500">
-                                                {new Date(ticket.createdAt).toLocaleDateString()}
-                                            </td>
-                                            <td className="px-4 py-3.5">
-                                                {ticket.response ? (
-                                                    <div className="max-w-xs">
-                                                        <p className="text-sm text-gray-900 line-clamp-2">{ticket.response}</p>
-                                                        {ticket.respondedAt && (
-                                                            <p className="text-xs text-gray-400 mt-1">
-                                                                {new Date(ticket.respondedAt).toLocaleDateString()}
-                                                            </p>
-                                                        )}
-                                                    </div>
-                                                ) : (
-                                                    <span className="text-sm text-gray-400 italic">No response yet</span>
-                                                )}
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
 
-                {/* Mobile Card View */}
-                <div className="lg:hidden space-y-3 sm:space-y-4">
+                {/* Mobile Card View — hidden on large screens via inline media via className */}
+                <div className="mobile-cards">
                     {filteredTickets.length === 0 ? (
-                        <div className="bg-white rounded-xl border border-[#e2e8f0] p-10 text-center">
-                            <MessageCircle className="mx-auto mb-4 w-12 h-12" style={{ color: '#bae6fd' }} />
-                            <p className="text-gray-700 font-semibold">No support tickets found</p>
-                            <p className="text-gray-400 text-sm mt-1">
-                                {searchQuery || selectedStatus !== 'all'
-                                    ? 'Try adjusting your filters'
-                                    : 'Create your first support ticket'}
+                        <div style={{ background: '#fff', borderRadius: '10px', border: '1px solid #e2e8f0', padding: '40px', textAlign: 'center' }}>
+                            <MessageCircle size={40} style={{ color: '#cbd5e1', margin: '0 auto 12px', display: 'block' }} />
+                            <p style={{ fontWeight: 600, color: '#1a1a2e', margin: '0 0 4px' }}>No support tickets found</p>
+                            <p style={{ fontSize: '13px', color: '#94a3b8', margin: 0 }}>
+                                {searchQuery || selectedStatus !== 'all' ? 'Try adjusting your filters' : 'Create your first support ticket'}
                             </p>
                         </div>
                     ) : (
                         filteredTickets.map((ticket) => (
-                            <div key={ticket.ticketId} className="bg-white rounded-xl border border-[#e2e8f0] p-4 space-y-3">
-                                <div className="flex items-start justify-between gap-2">
-                                    <div className="flex-1 min-w-0">
-                                        <p className="text-xs font-bold mb-1" style={{ color: '#0098cc' }}>{ticket.ticketId}</p>
-                                        <h3 className="text-sm font-semibold text-gray-900 line-clamp-2">{ticket.subject}</h3>
+                            <div key={ticket.ticketId} style={{ background: '#fff', borderRadius: '10px', border: '1px solid #e2e8f0', padding: '16px', marginBottom: '12px' }}>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '12px' }}>
+                                    <div style={{ flex: 1, minWidth: 0 }}>
+                                        <p style={{ fontSize: '11px', fontWeight: 700, color: '#0091c3', margin: '0 0 4px', letterSpacing: '0.3px' }}>{ticket.ticketId}</p>
+                                        <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#1a1a2e', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{ticket.subject}</h3>
                                     </div>
                                     {getStatusBadge(ticket.status)}
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
-                                    <div>
-                                        <p className="text-gray-400 mb-1 font-medium">Category</p>
-                                        <p className="text-gray-900 font-semibold">{ticket.category}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-gray-400 mb-1 font-medium">Priority</p>
-                                        {getPriorityBadge(ticket.priority)}
-                                    </div>
-                                    <div>
-                                        <p className="text-gray-400 mb-1 font-medium">Created</p>
-                                        <p className="text-gray-900 font-semibold">{new Date(ticket.createdAt).toLocaleDateString()}</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-gray-400 mb-1 font-medium">Status</p>
-                                        <p className="text-gray-900 font-semibold capitalize">{ticket.status.replace('_', ' ')}</p>
-                                    </div>
+                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px 16px', marginBottom: '12px' }}>
+                                    {[
+                                        { label: 'Category', value: ticket.category },
+                                        { label: 'Priority', value: null, badge: getPriorityBadge(ticket.priority) },
+                                        { label: 'Created', value: new Date(ticket.createdAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) },
+                                        { label: 'Status', value: ticket.status.replace('_', ' ') },
+                                    ].map(({ label, value, badge }) => (
+                                        <div key={label}>
+                                            <p style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, margin: '0 0 3px', textTransform: 'uppercase', letterSpacing: '0.4px' }}>{label}</p>
+                                            {badge || <p style={{ fontSize: '13px', color: '#1a1a2e', fontWeight: 600, margin: 0, textTransform: 'capitalize' }}>{value}</p>}
+                                        </div>
+                                    ))}
                                 </div>
 
                                 {ticket.response && (
-                                    <div className="pt-3 border-t border-[#f0f4f8]">
-                                        <p className="text-xs text-gray-400 mb-1 font-medium">Response</p>
-                                        <p className="text-sm text-gray-900 line-clamp-3">{ticket.response}</p>
+                                    <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '12px', marginBottom: '12px' }}>
+                                        <p style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Response</p>
+                                        <p style={{ fontSize: '13px', color: '#1a1a2e', margin: 0, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{ticket.response}</p>
                                         {ticket.respondedAt && (
-                                            <p className="text-xs text-gray-400 mt-1">
-                                                Responded: {new Date(ticket.respondedAt).toLocaleDateString()}
+                                            <p style={{ fontSize: '11px', color: '#94a3b8', margin: '4px 0 0' }}>
+                                                Responded: {new Date(ticket.respondedAt).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}
                                             </p>
                                         )}
                                     </div>
                                 )}
 
-                                <div className="pt-3 border-t border-[#f0f4f8]">
+                                <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '12px' }}>
                                     {ticket.response && ticket.status !== 'resolved' && ticket.status !== 'closed' ? (
                                         <button
                                             onClick={() => openFeedbackModal(ticket)}
-                                            className="w-full text-sm text-white px-4 py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2 font-medium"
-                                            style={{ background: '#0098cc' }}
-                                            onMouseEnter={e => e.currentTarget.style.background = '#007daa'}
-                                            onMouseLeave={e => e.currentTarget.style.background = '#0098cc'}
+                                            style={{ ...primaryBtnStyle, width: '100%', justifyContent: 'center' }}
+                                            onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+                                            onMouseLeave={e => e.currentTarget.style.opacity = '1'}
                                         >
-                                            <MessageSquare className="w-4 h-4" />
+                                            <MessageSquare size={14} />
                                             Provide Feedback
                                         </button>
                                     ) : ticket.userRemarks || ticket.status === 'resolved' || ticket.status === 'closed' ? (
-                                        <div className="text-center text-sm font-semibold py-2 flex items-center justify-center gap-1.5" style={{ color: '#0098cc' }}>
-                                            <CheckCircle className="w-4 h-4" />
-                                            Completed
+                                        <div style={{ textAlign: 'center', fontSize: '13px', fontWeight: 700, color: '#16a34a', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px 0' }}>
+                                            <CheckCircle size={14} /> Completed
                                         </div>
                                     ) : (
-                                        <div className="text-center text-sm text-gray-400 italic py-2">Awaiting Response</div>
+                                        <div style={{ textAlign: 'center', fontSize: '13px', color: '#94a3b8', fontStyle: 'italic', padding: '8px 0' }}>Awaiting Response</div>
                                     )}
                                 </div>
                             </div>
@@ -361,44 +434,46 @@ const HelpSupport = () => {
 
             {/* Create Ticket Modal */}
             {isModalOpen && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-                        <div className="flex items-center justify-between px-5 py-4 border-b border-[#f0f4f8] sticky top-0 bg-white rounded-t-xl z-10">
-                            <div className="flex items-center gap-3">
-                                <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: '#f0f9ff' }}>
-                                    <MessageCircle className="w-4 h-4" style={{ color: '#0098cc' }} />
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+                    <div style={{ background: '#fff', borderRadius: '12px', width: '100%', maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }}>
+                        {/* Modal Header */}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #f1f5f9', position: 'sticky', top: 0, background: '#fff', borderRadius: '12px 12px 0 0', zIndex: 10 }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                                <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: '#1a1a2e', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <MessageCircle size={16} color="#fff" />
                                 </div>
-                                <h2 className="text-base font-bold text-gray-900">Raise a Support Query</h2>
+                                <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#1a1a2e', margin: 0 }}>Raise a Support Query</h2>
                             </div>
                             <button
                                 onClick={() => setIsModalOpen(false)}
                                 disabled={isCreating}
-                                className="text-gray-400 hover:text-gray-600 hover:bg-[#f0f9ff] transition-colors disabled:opacity-50 p-1.5 rounded-lg"
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: '6px', borderRadius: '6px', display: 'flex', alignItems: 'center' }}
+                                onMouseEnter={e => e.currentTarget.style.background = '#f1f5f9'}
+                                onMouseLeave={e => e.currentTarget.style.background = 'none'}
                             >
-                                <X className="w-5 h-5" />
+                                <X size={18} />
                             </button>
                         </div>
 
-                        <form onSubmit={handleSubmit} className="p-5 sm:p-6">
-                            <div className="space-y-4">
+                        <form onSubmit={handleSubmit} style={{ padding: '20px 24px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                                 <div>
-                                    <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
-                                        Subject <span className="text-red-400">*</span>
-                                    </label>
+                                    <label style={labelStyle}>Subject <span style={{ color: '#dc2626' }}>*</span></label>
                                     <input
                                         type="text" name="subject" value={formData.subject}
-                                        onChange={handleInputChange} className={inputCls}
+                                        onChange={handleInputChange} style={inputStyle}
                                         placeholder="Brief description of your issue" required
+                                        onFocus={e => e.target.style.borderColor = '#1a1a2e'}
+                                        onBlur={e => e.target.style.borderColor = '#e2e8f0'}
                                     />
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px' }}>
                                     <div>
-                                        <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
-                                            Category <span className="text-red-400">*</span>
-                                        </label>
-                                        <select name="category" value={formData.category}
-                                            onChange={handleInputChange} className={selectCls} required>
+                                        <label style={labelStyle}>Category <span style={{ color: '#dc2626' }}>*</span></label>
+                                        <select name="category" value={formData.category} onChange={handleInputChange} style={{ ...inputStyle, cursor: 'pointer' }} required
+                                            onFocus={e => e.target.style.borderColor = '#1a1a2e'}
+                                            onBlur={e => e.target.style.borderColor = '#e2e8f0'}>
                                             <option value="">Select category</option>
                                             <option value="Technical Issue">Technical Issue</option>
                                             <option value="Account Related">Account Related</option>
@@ -409,11 +484,10 @@ const HelpSupport = () => {
                                         </select>
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
-                                            Priority <span className="text-red-400">*</span>
-                                        </label>
-                                        <select name="priority" value={formData.priority}
-                                            onChange={handleInputChange} className={selectCls} required>
+                                        <label style={labelStyle}>Priority <span style={{ color: '#dc2626' }}>*</span></label>
+                                        <select name="priority" value={formData.priority} onChange={handleInputChange} style={{ ...inputStyle, cursor: 'pointer' }} required
+                                            onFocus={e => e.target.style.borderColor = '#1a1a2e'}
+                                            onBlur={e => e.target.style.borderColor = '#e2e8f0'}>
                                             <option value="">Select priority</option>
                                             <option value="low">Low</option>
                                             <option value="medium">Medium</option>
@@ -424,45 +498,43 @@ const HelpSupport = () => {
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
-                                        Description <span className="text-red-400">*</span>
-                                    </label>
+                                    <label style={labelStyle}>Description <span style={{ color: '#dc2626' }}>*</span></label>
                                     <textarea
                                         name="description" value={formData.description}
                                         onChange={handleInputChange} rows={5}
-                                        className={`${inputCls} resize-none`}
+                                        style={{ ...inputStyle, resize: 'none' }}
                                         placeholder="Provide detailed information about your issue or query…"
                                         required
+                                        onFocus={e => e.target.style.borderColor = '#1a1a2e'}
+                                        onBlur={e => e.target.style.borderColor = '#e2e8f0'}
                                     />
-                                    <p className="text-xs text-gray-400 mt-1.5">
+                                    <p style={{ fontSize: '12px', color: '#94a3b8', margin: '4px 0 0' }}>
                                         The more detail you provide, the faster we can help you.
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="flex flex-col sm:flex-row justify-end gap-3 mt-6 pt-4 border-t border-[#f0f4f8]">
-                                <button
-                                    type="button" onClick={() => setIsModalOpen(false)}
-                                    disabled={isCreating}
-                                    className="w-full sm:w-auto px-5 py-2.5 border border-[#e2e8f0] text-gray-600 font-medium rounded-lg hover:bg-[#f0f9ff] transition-colors disabled:opacity-50 text-sm"
+                            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', gap: '10px', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #f1f5f9' }}>
+                                <button type="button" onClick={() => setIsModalOpen(false)} disabled={isCreating}
+                                    style={{ ...ghostBtnStyle, opacity: isCreating ? 0.5 : 1 }}
+                                    onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
+                                    onMouseLeave={e => e.currentTarget.style.background = '#fff'}
                                 >
                                     Cancel
                                 </button>
-                                <button
-                                    type="submit" disabled={isCreating}
-                                    className="w-full sm:w-auto px-5 py-2.5 text-white font-medium rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
-                                    style={{ background: '#0098cc' }}
-                                    onMouseEnter={e => e.currentTarget.style.background = '#007daa'}
-                                    onMouseLeave={e => e.currentTarget.style.background = '#0098cc'}
+                                <button type="submit" disabled={isCreating}
+                                    style={{ ...primaryBtnStyle, opacity: isCreating ? 0.6 : 1 }}
+                                    onMouseEnter={e => { if (!isCreating) e.currentTarget.style.opacity = '0.85'; }}
+                                    onMouseLeave={e => e.currentTarget.style.opacity = isCreating ? '0.6' : '1'}
                                 >
                                     {isCreating ? (
                                         <>
-                                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                                            <div style={{ width: '14px', height: '14px', border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
                                             Submitting…
                                         </>
                                     ) : (
                                         <>
-                                            <Plus className="w-4 h-4" />
+                                            <Plus size={15} />
                                             Submit Query
                                         </>
                                     )}
@@ -475,97 +547,100 @@ const HelpSupport = () => {
 
             {/* Feedback Modal */}
             {feedbackModal.isOpen && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-                        <div className="flex items-center justify-between px-5 py-4 border-b border-[#f0f4f8] sticky top-0 bg-white rounded-t-xl">
-                            <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
-                                <MessageSquare className="w-5 h-5" style={{ color: '#0098cc' }} />
+                <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+                    <div style={{ background: '#fff', borderRadius: '12px', width: '100%', maxWidth: '480px', maxHeight: '90vh', overflowY: 'auto' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', borderBottom: '1px solid #f1f5f9', position: 'sticky', top: 0, background: '#fff', borderRadius: '12px 12px 0 0' }}>
+                            <h2 style={{ fontSize: '15px', fontWeight: 700, color: '#1a1a2e', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <MessageSquare size={16} style={{ color: '#0091c3' }} />
                                 Provide Feedback
                             </h2>
-                            <button
-                                onClick={closeFeedbackModal} disabled={isUpdating}
-                                className="text-gray-400 hover:text-gray-600 hover:bg-[#f0f9ff] transition-colors disabled:opacity-50 p-1.5 rounded-lg"
+                            <button onClick={closeFeedbackModal} disabled={isUpdating}
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: '6px', borderRadius: '6px', display: 'flex', alignItems: 'center' }}
+                                onMouseEnter={e => e.currentTarget.style.background = '#f1f5f9'}
+                                onMouseLeave={e => e.currentTarget.style.background = 'none'}
                             >
-                                <X className="w-5 h-5" />
+                                <X size={18} />
                             </button>
                         </div>
 
-                        <form onSubmit={handleFeedbackSubmit} className="p-5 sm:p-6">
-                            <div className="mb-5 p-3.5 rounded-lg border border-[#bae6fd]" style={{ background: '#f0f9ff' }}>
-                                <p className="text-sm text-gray-500 mb-0.5">
-                                    Ticket: <span className="font-bold" style={{ color: '#0098cc' }}>{feedbackModal.ticket?.ticketId}</span>
+                        <form onSubmit={handleFeedbackSubmit} style={{ padding: '20px 24px' }}>
+                            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '8px', padding: '12px 14px', marginBottom: '20px' }}>
+                                <p style={{ fontSize: '12px', color: '#475569', margin: '0 0 2px' }}>
+                                    Ticket: <span style={{ fontWeight: 700, color: '#0091c3' }}>{feedbackModal.ticket?.ticketId}</span>
                                 </p>
-                                <p className="text-sm text-gray-500">
-                                    Subject: <span className="font-semibold text-gray-900">{feedbackModal.ticket?.subject}</span>
+                                <p style={{ fontSize: '12px', color: '#475569', margin: 0 }}>
+                                    Subject: <span style={{ fontWeight: 600, color: '#1a1a2e' }}>{feedbackModal.ticket?.subject}</span>
                                 </p>
                             </div>
 
-                            <div className="space-y-5">
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                                 <div>
-                                    <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-3">
-                                        Was your issue resolved? <span className="text-red-400">*</span>
-                                    </label>
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <button
-                                            type="button"
+                                    <label style={labelStyle}>Was your issue resolved? <span style={{ color: '#dc2626' }}>*</span></label>
+                                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                                        <button type="button"
                                             onClick={() => setFeedbackForm(prev => ({ ...prev, status: 'resolved' }))}
-                                            className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 font-semibold transition-all text-sm"
                                             style={{
-                                                borderColor: feedbackForm.status === 'resolved' ? '#0098cc' : '#e2e8f0',
-                                                background: feedbackForm.status === 'resolved' ? '#f0f9ff' : '#fff',
-                                                color: feedbackForm.status === 'resolved' ? '#0098cc' : '#64748b',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                                                padding: '12px', borderRadius: '8px', fontWeight: 700, fontSize: '13px',
+                                                cursor: 'pointer', transition: 'all 0.15s',
+                                                border: feedbackForm.status === 'resolved' ? '2px solid #1a1a2e' : '1px solid #e2e8f0',
+                                                background: feedbackForm.status === 'resolved' ? '#1a1a2e' : '#fff',
+                                                color: feedbackForm.status === 'resolved' ? '#fff' : '#475569',
+                                                fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
                                             }}
                                         >
-                                            <ThumbsUp className="w-4 h-4" />
+                                            <ThumbsUp size={15} />
                                             Yes, Solved
                                         </button>
-                                        <button
-                                            type="button"
+                                        <button type="button"
                                             onClick={() => setFeedbackForm(prev => ({ ...prev, status: 'in_progress' }))}
-                                            className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 font-semibold transition-all text-sm"
                                             style={{
-                                                borderColor: feedbackForm.status === 'in_progress' ? '#e24b4a' : '#e2e8f0',
+                                                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                                                padding: '12px', borderRadius: '8px', fontWeight: 700, fontSize: '13px',
+                                                cursor: 'pointer', transition: 'all 0.15s',
+                                                border: feedbackForm.status === 'in_progress' ? '2px solid #dc2626' : '1px solid #e2e8f0',
                                                 background: feedbackForm.status === 'in_progress' ? '#fff8f8' : '#fff',
-                                                color: feedbackForm.status === 'in_progress' ? '#e24b4a' : '#64748b',
+                                                color: feedbackForm.status === 'in_progress' ? '#dc2626' : '#475569',
+                                                fontFamily: "'DM Sans', 'Segoe UI', sans-serif",
                                             }}
                                         >
-                                            <ThumbsDown className="w-4 h-4" />
+                                            <ThumbsDown size={15} />
                                             Not Solved
                                         </button>
                                     </div>
                                 </div>
 
                                 <div>
-                                    <label className="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-1.5">
-                                        Additional Remarks <span className="text-gray-400 font-normal normal-case">(Optional)</span>
+                                    <label style={labelStyle}>
+                                        Additional Remarks <span style={{ color: '#94a3b8', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(Optional)</span>
                                     </label>
                                     <textarea
                                         value={feedbackForm.remarks}
                                         onChange={(e) => setFeedbackForm(prev => ({ ...prev, remarks: e.target.value }))}
-                                        rows={4} className={`${inputCls} resize-none`}
+                                        rows={4} style={{ ...inputStyle, resize: 'none' }}
                                         placeholder="Share any additional feedback or comments…"
+                                        onFocus={e => e.target.style.borderColor = '#1a1a2e'}
+                                        onBlur={e => e.target.style.borderColor = '#e2e8f0'}
                                     />
                                 </div>
                             </div>
 
-                            <div className="flex flex-col sm:flex-row justify-end gap-3 mt-6 pt-4 border-t border-[#f0f4f8]">
-                                <button
-                                    type="button" onClick={closeFeedbackModal} disabled={isUpdating}
-                                    className="w-full sm:w-auto px-5 py-2.5 border border-[#e2e8f0] text-gray-600 font-medium rounded-lg hover:bg-[#f0f9ff] transition-colors disabled:opacity-50 text-sm"
+                            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', gap: '10px', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #f1f5f9' }}>
+                                <button type="button" onClick={closeFeedbackModal} disabled={isUpdating}
+                                    style={{ ...ghostBtnStyle, opacity: isUpdating ? 0.5 : 1 }}
+                                    onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'}
+                                    onMouseLeave={e => e.currentTarget.style.background = '#fff'}
                                 >
                                     Cancel
                                 </button>
-                                <button
-                                    type="submit"
-                                    disabled={isUpdating || !feedbackForm.status}
-                                    className="w-full sm:w-auto px-5 py-2.5 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm"
-                                    style={{ background: '#0098cc' }}
-                                    onMouseEnter={e => { if (!isUpdating && feedbackForm.status) e.currentTarget.style.background = '#007daa'; }}
-                                    onMouseLeave={e => e.currentTarget.style.background = '#0098cc'}
+                                <button type="submit" disabled={isUpdating || !feedbackForm.status}
+                                    style={{ ...primaryBtnStyle, opacity: isUpdating || !feedbackForm.status ? 0.5 : 1, cursor: isUpdating || !feedbackForm.status ? 'not-allowed' : 'pointer' }}
+                                    onMouseEnter={e => { if (!isUpdating && feedbackForm.status) e.currentTarget.style.opacity = '0.85'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.opacity = isUpdating || !feedbackForm.status ? '0.5' : '1'; }}
                                 >
                                     {isUpdating ? (
                                         <>
-                                            <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                                            <div style={{ width: '14px', height: '14px', border: '2px solid rgba(255,255,255,0.4)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
                                             Submitting…
                                         </>
                                     ) : 'Submit Feedback'}
@@ -575,13 +650,25 @@ const HelpSupport = () => {
                     </div>
                 </div>
             )}
+
+            <style>{`
+                .scroll-hide::-webkit-scrollbar { display: none; }
+                .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+                @keyframes spin { to { transform: rotate(360deg); } }
+                table tr:last-child td { border-bottom: none; }
+
+                /* Desktop: show table, hide cards */
+                @media (min-width: 1024px) {
+                    .mobile-cards { display: none !important; }
+                }
+                /* Mobile/tablet: hide table, show cards */
+                @media (max-width: 1023px) {
+                    .scroll-hide { display: none !important; }
+                    .mobile-cards { display: block !important; }
+                }
+            `}</style>
         </div>
     );
 };
 
 export default HelpSupport;
-
-
-
-
-

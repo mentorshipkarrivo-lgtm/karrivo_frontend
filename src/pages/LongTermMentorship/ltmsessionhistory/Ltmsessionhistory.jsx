@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import {
   Trophy, Layers, CheckSquare, Star, Search,
@@ -8,24 +6,108 @@ import {
 } from "lucide-react";
 import { useGetCompletedSessionsQuery } from "./ltmsessionhistoryapislice";
 
+// ── Constants ─────────────────────────────────────────────────────────────────
+const FONT = "'DM Sans', 'Segoe UI', sans-serif";
+
+const C = {
+  dark: "#1a1a2e",
+  blue: "#0091c3",
+  white: "#ffffff",
+  border: "#e2e8f0",
+  muted: "#94a3b8",
+  text: "#1a1a2e",
+  sub: "#475569",
+  rowHov: "#f8fafc",
+  th: "#1a1a2e",
+  thText: "#ffffff",
+};
+
 const fmtDate = (s) =>
   s ? new Date(s).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—";
 
-/* ══════════════════════════════════════════
-   STAR ROW COMPONENT
-══════════════════════════════════════════ */
+// ── Global CSS ────────────────────────────────────────────────────────────────
+const GLOBAL_CSS = `
+  *, *::before, *::after { box-sizing: border-box; font-family: ${FONT} !important; }
+  body { margin: 0; background: ${C.white}; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .scroll-hide::-webkit-scrollbar { display: none; }
+  .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  table tr:last-child td { border-bottom: none; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+`;
+
+// ── Shared styles ─────────────────────────────────────────────────────────────
+const thStyle = {
+  padding: "11px 14px",
+  textAlign: "left",
+  fontSize: 11,
+  fontWeight: 700,
+  color: C.thText,
+  letterSpacing: "0.6px",
+  textTransform: "uppercase",
+  whiteSpace: "nowrap",
+  background: C.th,
+  borderBottom: `1px solid ${C.border}`,
+};
+
+const tdStyle = {
+  padding: "12px 14px",
+  fontSize: 13,
+  color: C.text,
+  verticalAlign: "middle",
+  borderBottom: `1px solid #f1f5f9`,
+  background: C.white,
+};
+
+const selStyle = {
+  background: C.white,
+  border: `1px solid ${C.border}`,
+  color: C.text,
+  borderRadius: 7,
+  padding: "6px 28px 6px 10px",
+  fontSize: 12,
+  fontWeight: 500,
+  outline: "none",
+  cursor: "pointer",
+  WebkitAppearance: "none",
+  appearance: "none",
+  fontFamily: FONT,
+};
+
+// ── Star Row ──────────────────────────────────────────────────────────────────
 const StarRow = ({ value = 0 }) => (
-  <div className="flex items-center gap-0.5">
+  <div style={{ display: "flex", alignItems: "center", gap: 2 }}>
     {Array.from({ length: 5 }, (_, i) => (
-      <Star key={i} size={11} style={{ color: i < value ? "#f59e0b" : "#cbd5e1", fill: i < value ? "#f59e0b" : "none" }} />
+      <Star key={i} size={11} style={{
+        color: i < value ? "#f59e0b" : C.border,
+        fill: i < value ? "#f59e0b" : "none",
+      }} />
     ))}
-    <span className="ml-1 text-xs font-semibold" style={{ color: "#0098cc" }}>{value}/5</span>
+    <span style={{ marginLeft: 4, fontSize: 11, fontWeight: 600, color: C.blue, fontFamily: FONT }}>
+      {value}/5
+    </span>
   </div>
 );
 
-/* ══════════════════════════════════════════
-   MOBILE CARD
-══════════════════════════════════════════ */
+// ── Task Badge ────────────────────────────────────────────────────────────────
+const TaskBadge = ({ done }) => (
+  <span style={{
+    display: "inline-flex", alignItems: "center", gap: 4,
+    fontSize: 11, fontWeight: 700, fontFamily: FONT,
+    padding: "3px 8px", borderRadius: 5,
+    background: done ? "#f0fdf6" : "#fff1f2",
+    color: done ? "#16a34a" : "#e11d48",
+    border: `1px solid ${done ? "#bbf7d0" : "#fecdd3"}`,
+    whiteSpace: "nowrap",
+  }}>
+    {done ? <CheckCircle2 size={10} /> : <XCircle size={10} />}
+    {done ? "Done" : "Pending"}
+  </span>
+);
+
+// ── Mobile Card ───────────────────────────────────────────────────────────────
 const MobileCard = ({ session }) => {
   const [open, setOpen] = useState(false);
   const {
@@ -35,81 +117,88 @@ const MobileCard = ({ session }) => {
   } = session;
 
   return (
-    <div className="bg-white rounded-xl overflow-hidden border border-[#0098cc]/20 active:bg-blue-50 transition-colors">
-      <div className="h-0.5 w-full" style={{ background: "#0098cc" }} />
+    <div style={{
+      background: C.white, borderRadius: 10,
+      overflow: "hidden", border: `1px solid ${C.border}`,
+      boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+      fontFamily: FONT,
+    }}>
+      {/* top accent bar */}
+      <div style={{ height: 3, background: C.dark }} />
 
       <button
         onClick={() => setOpen((v) => !v)}
-        className="w-full text-left px-3 sm:px-4 py-3 flex items-start justify-between gap-2 sm:gap-3 transition-colors"
-        style={{ background: open ? "rgba(0,152,204,0.06)" : "white" }}
+        style={{
+          width: "100%", textAlign: "left",
+          padding: "12px 14px",
+          display: "flex", alignItems: "flex-start",
+          justifyContent: "space-between", gap: 10,
+          background: open ? "#f8fafc" : C.white,
+          border: "none", cursor: "pointer",
+          transition: "background 0.15s",
+        }}
       >
-        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-          <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center flex-shrink-0 border border-[#0098cc]/20"
-            style={{ background: "rgba(0,152,204,0.08)" }}>
-            <span className="font-bold text-xs sm:text-sm font-mono" style={{ color: "#0098cc" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1, minWidth: 0 }}>
+          <div style={{
+            width: 34, height: 34, borderRadius: 8, flexShrink: 0,
+            background: C.dark, color: C.white,
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>
+            <span style={{ fontSize: 12, fontWeight: 700, fontFamily: FONT }}>
               {String(session_number).padStart(2, "0")}
             </span>
           </div>
-          <div className="min-w-0 flex-1">
-            <p className="font-bold text-xs sm:text-sm truncate" style={{ color: "#1a1a2e" }}>{session_title || "Untitled Session"}</p>
-            <p className="text-[10px] sm:text-xs mt-0.5 flex items-center gap-1 text-slate-500">
-              <CalendarDays size={9} style={{ color: "#0098cc" }} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{
+              fontSize: 13, fontWeight: 700, color: C.text,
+              margin: 0, fontFamily: FONT,
+              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+            }}>
+              {session_title || "Untitled Session"}
+            </p>
+            <p style={{
+              fontSize: 11, color: C.muted, margin: "2px 0 0",
+              display: "flex", alignItems: "center", gap: 4, fontFamily: FONT,
+            }}>
+              <CalendarDays size={9} style={{ color: C.blue }} />
               {fmtDate(session_date)}
             </p>
           </div>
         </div>
 
-        <div className="flex flex-col items-end gap-1 sm:gap-1.5 flex-shrink-0">
-          <div className="hidden sm:block">
-            <StarRow value={mentee_rating ?? 0} />
-          </div>
-          <span className="hidden sm:inline-block text-xs font-semibold px-2 py-0.5 rounded-full"
-            style={
-              task_completed
-                ? { background: "rgba(0,152,204,0.08)", color: "#0098cc", border: "1px solid rgba(0,152,204,0.25)" }
-                : { background: "#fff1f2", color: "#e11d48", border: "1px solid #fecdd3" }
-            }
-          >
-            {task_completed ? "Done" : "Pending"}
-          </span>
-          <div className="sm:hidden">
-            {task_completed ? 
-              <CheckCircle2 size={16} style={{ color: "#0098cc" }} /> : 
-              <XCircle size={16} style={{ color: "#e11d48" }} />
-            }
-          </div>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 5, flexShrink: 0 }}>
+          <TaskBadge done={task_completed} />
           {open
-            ? <ChevronUp size={14} style={{ color: "#0098cc" }} />
-            : <ChevronDown size={14} style={{ color: "#0098cc" }} />
-          }
+            ? <ChevronUp size={13} style={{ color: C.blue }} />
+            : <ChevronDown size={13} style={{ color: C.blue }} />}
         </div>
       </button>
 
       {open && (
-        <div className="px-3 sm:px-4 pb-4 space-y-3 border-t border-slate-100 bg-slate-50">
-          <div className="block sm:hidden pt-2">
+        <div style={{
+          padding: "12px 14px 14px",
+          borderTop: `1px solid ${C.border}`,
+          background: "#fafbfc",
+          animation: "fadeIn 0.15s ease",
+        }}>
+          <div style={{ marginBottom: 8 }}>
             <StarRow value={mentee_rating ?? 0} />
           </div>
-          {meeting_description && (
-            <div className="pt-2 sm:pt-3">
-              <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: "#0098cc" }}>Description</p>
-              <p className="text-xs leading-relaxed" style={{ color: "#1a1a2e" }}>{meeting_description}</p>
+          {[
+            ["Description", meeting_description],
+            ["Tasks Given", tasks_given],
+            ["Your Feedback", mentee_feedback],
+          ].map(([label, val]) => val ? (
+            <div key={label} style={{ marginBottom: 10 }}>
+              <p style={{
+                fontSize: 9, fontWeight: 700, textTransform: "uppercase",
+                letterSpacing: "0.1em", color: C.blue, margin: "0 0 3px", fontFamily: FONT,
+              }}>{label}</p>
+              <p style={{ fontSize: 12, color: C.text, margin: 0, lineHeight: 1.6, fontFamily: FONT }}>{val}</p>
             </div>
-          )}
-          {tasks_given && (
-            <div>
-              <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: "#0098cc" }}>Tasks Given</p>
-              <p className="text-xs leading-relaxed" style={{ color: "#1a1a2e" }}>{tasks_given}</p>
-            </div>
-          )}
-          {mentee_feedback && (
-            <div>
-              <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest mb-1" style={{ color: "#0098cc" }}>Your Feedback</p>
-              <p className="text-xs leading-relaxed" style={{ color: "#1a1a2e" }}>{mentee_feedback}</p>
-            </div>
-          )}
+          ) : null)}
           {!meeting_description && !tasks_given && !mentee_feedback && (
-            <p className="pt-2 text-xs text-slate-400">No additional details.</p>
+            <p style={{ fontSize: 12, color: C.muted, margin: 0, fontFamily: FONT }}>No additional details.</p>
           )}
         </div>
       )}
@@ -117,9 +206,23 @@ const MobileCard = ({ session }) => {
   );
 };
 
-/* ══════════════════════════════════════════
-   MAIN COMPONENT
-══════════════════════════════════════════ */
+// ── Skeleton Rows ─────────────────────────────────────────────────────────────
+const SkeletonRows = ({ cols = 8, rows = 4 }) =>
+  Array.from({ length: rows }).map((_, i) => (
+    <tr key={i}>
+      {Array.from({ length: cols }).map((_, j) => (
+        <td key={j} style={{ ...tdStyle }}>
+          <div style={{
+            height: 11, borderRadius: 4, background: "#f1f5f9",
+            animation: "pulse 1.5s ease-in-out infinite",
+            width: j === 0 ? 24 : j === 1 ? "60%" : "45%",
+          }} />
+        </td>
+      ))}
+    </tr>
+  ));
+
+// ── Main Component ────────────────────────────────────────────────────────────
 export default function LtmsessionsCompleted() {
   const userData = JSON.parse(localStorage.getItem("userData") || "{}");
   const menteeId = userData?._id;
@@ -156,383 +259,338 @@ export default function LtmsessionsCompleted() {
 
   const COLS = ["S.No", "Session", "Date", "Description", "Tasks Given", "Task Status", "Rating", "Feedback"];
 
-  const selStyle = {
-    background: "white",
-    border: "1px solid rgba(0,152,204,0.3)",
-    color: "#1a1a2e",
-    borderRadius: 8,
-    padding: "7px 28px 7px 11px",
-    fontSize: 12,
-    fontWeight: 500,
-    outline: "none",
-    cursor: "pointer",
-    WebkitAppearance: "none",
-    appearance: "none",
-  };
-
-  // CSS for hidden scrollbar
-  const scrollableStyle = {
-    scrollBehavior: "smooth",
-    msOverflowStyle: "none",
-    scrollbarWidth: "none",
-  };
-
-  return (
-    <div className="min-h-screen p-3 sm:p-4 md:p-6 bg-gradient-to-br from-slate-50 to-blue-50" style={{ fontFamily: "Cambria, Georgia, serif" }}>
-      <style>{`
-        * {
-          font-family: Cambria, Georgia, serif !important;
-        }
-        /* Hide scrollbar styling but keep functionality */
-        ::-webkit-scrollbar {
-          width: 6px;
-          height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-          background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-          background: rgba(0, 152, 204, 0.3);
-          border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-          background: rgba(0, 152, 204, 0.6);
-        }
-        /* Firefox scrollbar */
-        * {
-          scrollbar-color: rgba(0, 152, 204, 0.3) transparent;
-          scrollbar-width: thin;
-        }
-        .hide-scrollbar {
-          -ms-overflow-style: auto;
-          scrollbar-width: thin;
-        }
-        .hide-scrollbar::-webkit-scrollbar {
-          width: 6px;
-          height: 6px;
-        }
-      `}</style>
-
-      {/* ── Stat Cards ── */}
-      <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-5 sm:mb-6">
-        <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 flex items-center gap-2 sm:gap-3 border border-[#0098cc]/20 hover:shadow-md transition-shadow">
-          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 border border-[#0098cc]/20"
-            style={{ background: "rgba(0,152,204,0.08)" }}>
-            <Layers size={16} className="sm:w-[18px] sm:h-[18px]" style={{ color: "#1a1a2e" }} />
+  // ── Empty / Error states ──────────────────────────────────────────────────
+  const EmptyState = ({ noData }) => (
+    <div style={{
+      display: "flex", flexDirection: "column",
+      alignItems: "center", padding: "48px 20px", gap: 8,
+    }}>
+      {noData
+        ? <>
+          <div style={{
+            width: 44, height: 44, borderRadius: 10,
+            background: "#f1f5f9",
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>
+            <Trophy size={22} style={{ color: C.muted }} />
           </div>
-          <div className="min-w-0">
-            <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wide" style={{ color: "#1a1a2e" }}>Total Sessions</p>
-            <p className="text-xl sm:text-2xl font-bold leading-none mt-0.5" style={{ color: "#1a1a2e" }}>{total}</p>
-          </div>
-        </div>
-        <div className="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 flex items-center gap-2 sm:gap-3 border border-[#0098cc]/20 hover:shadow-md transition-shadow">
-          <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 border border-[#0098cc]/20"
-            style={{ background: "rgba(0,152,204,0.08)" }}>
-            <CheckSquare size={16} className="sm:w-[18px] sm:h-[18px]" style={{ color: "#1a1a2e" }} />
-          </div>
-          <div className="min-w-0">
-            <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wide" style={{ color: "#1a1a2e" }}>Tasks Done</p>
-            <p className="text-xl sm:text-2xl font-bold leading-none mt-0.5" style={{ color: "#1a1a2e" }}>{tasksDone}/{total}</p>
-          </div>
-        </div>
-      </div>
-
-      {/* ── Main Panel ── */}
-      <div className="bg-white rounded-lg sm:rounded-2xl overflow-hidden border border-[#0098cc]/20 shadow-sm">
-
-        {/* Panel Header */}
-        <div className="px-3 sm:px-5 py-3 sm:py-4 border-b border-slate-100">
-          <h2 className="text-sm sm:text-base font-bold" style={{ color: "#1a1a2e" }}>Completed Sessions</h2>
-        </div>
-
-        {/* Toolbar - Responsive Grid */}
-        <div className="px-3 sm:px-5 py-2 sm:py-3 flex flex-col gap-3 sm:flex-wrap sm:flex-row sm:items-center sm:justify-between bg-slate-50 border-b border-slate-100">
-          <div className="relative w-full sm:w-auto">
-            <select value={perPage} onChange={(e) => setPerPage(Number(e.target.value))} style={selStyle} className="w-full sm:w-auto">
-              {[5, 10, 25, 50].map((n) => <option key={n} value={n}>{n} rows</option>)}
-            </select>
-            <ChevronDown size={11} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#0098cc" }} />
-          </div>
-
-          <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2 sm:gap-2">
-            <div className="relative flex-1 sm:flex-none">
-              <select value={filterTask} onChange={(e) => setFilterTask(e.target.value)} style={selStyle} className="w-full sm:w-auto">
-                <option value="all">All Tasks</option>
-                <option value="done">Task Done</option>
-                <option value="pending">Task Pending</option>
-              </select>
-              <ChevronDown size={11} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#0098cc" }} />
-            </div>
-
-            <div className="relative flex-1 sm:flex-none">
-              <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={selStyle} className="w-full sm:w-auto">
-                <option value="date_desc">Newest First</option>
-                <option value="date_asc">Oldest First</option>
-                <option value="rating_desc">Highest Rated</option>
-              </select>
-              <ChevronDown size={11} className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#0098cc" }} />
-            </div>
-
-            <div className="relative flex-1 sm:flex-none sm:w-40 md:w-48">
-              <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: "#0098cc" }} />
-              <input
-                type="text"
-                placeholder="Search..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="w-full rounded-lg pl-8 pr-3 py-2 text-xs outline-none bg-white placeholder:text-slate-400"
-                style={{ border: "1px solid rgba(0,152,204,0.3)", color: "#1a1a2e" }}
-                onFocus={(e) => (e.target.style.borderColor = "#0098cc")}
-                onBlur={(e) => (e.target.style.borderColor = "rgba(0,152,204,0.3)")}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* ── Desktop Table (Hidden on mobile) ── */}
-        <div className="hidden lg:block overflow-x-auto hide-scrollbar" style={scrollableStyle}>
-          {isLoading ? (
-            <table className="w-full">
-              <thead>
-                <tr style={{ background: "#0098cc" }}>
-                  {COLS.map((c) => (
-                    <th key={c} className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-bold text-white tracking-wide whitespace-nowrap">{c}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {[1, 2, 3].map((i) => (
-                  <tr key={i} className="border-b border-slate-100">
-                    {COLS.map((c) => (
-                      <td key={c} className="px-3 sm:px-4 py-2 sm:py-3">
-                        <div className="h-3 sm:h-4 rounded animate-pulse bg-slate-100" />
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : isError ? (
-            <div className="p-8 sm:p-10 flex flex-col items-center gap-3">
-              <AlertCircle size={30} className="text-red-400" />
-              <p className="text-sm font-bold" style={{ color: "#1a1a2e" }}>Failed to load sessions</p>
-              <p className="text-xs text-slate-400">Please refresh and try again.</p>
-            </div>
-          ) : filtered.length === 0 ? (
-            <div className="p-8 sm:p-10 flex flex-col items-center gap-3">
-              {sessions.length === 0 ? (
-                <>
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl flex items-center justify-center border border-[#0098cc]/20"
-                    style={{ background: "rgba(0,152,204,0.08)" }}>
-                    <Trophy size={24} className="sm:w-[26px] sm:h-[26px]" style={{ color: "#0098cc" }} />
-                  </div>
-                  <p className="text-sm font-bold" style={{ color: "#1a1a2e" }}>No completed sessions yet</p>
-                  <p className="text-xs text-slate-400">Your completed LTM sessions will appear here.</p>
-                </>
-              ) : (
-                <>
-                  <Hash size={28} className="text-slate-300" />
-                  <p className="text-xs text-slate-400">No sessions match the current filter.</p>
-                </>
-              )}
-            </div>
-          ) : (
-            <table className="w-full">
-              <thead>
-                <tr style={{ background: "#0098cc" }}>
-                  {COLS.map((c) => (
-                    <th key={c} className="px-3 sm:px-4 py-2 sm:py-3 text-left text-xs font-bold text-white tracking-wide whitespace-nowrap">{c}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((s, i) => (
-                  <tr
-                    key={s._id}
-                    className="border-b border-slate-100 transition-colors bg-white cursor-default hover:bg-blue-50"
-                  >
-                    <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs font-mono font-semibold" style={{ color: "#0098cc" }}>{i + 1}</td>
-                    <td className="px-3 sm:px-4 py-2 sm:py-3">
-                      <span className="text-xs sm:text-sm font-semibold line-clamp-1 sm:max-w-[130px]" style={{ color: "#1a1a2e" }}>
-                        {s.session_title || "Untitled"}
-                      </span>
-                    </td>
-                    <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs font-mono whitespace-nowrap" style={{ color: "#1a1a2e" }}>
-                      {fmtDate(s.session_date)}
-                    </td>
-                    <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs max-w-[120px] sm:max-w-[150px] text-slate-500">
-                      <span className="line-clamp-2 leading-relaxed">
-                        {s.meeting_description || <span className="text-slate-300">—</span>}
-                      </span>
-                    </td>
-                    <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs max-w-[100px] sm:max-w-[130px] text-slate-500">
-                      <span className="line-clamp-2 leading-relaxed">
-                        {s.tasks_given || <span className="text-slate-300">—</span>}
-                      </span>
-                    </td>
-                    <td className="px-3 sm:px-4 py-2 sm:py-3">
-                      <span
-                        className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full whitespace-nowrap"
-                        style={
-                          s.task_completed
-                            ? { background: "rgba(0,152,204,0.08)", color: "#0098cc", border: "1px solid rgba(0,152,204,0.25)" }
-                            : { background: "#fff1f2", color: "#e11d48", border: "1px solid #fecdd3" }
-                        }
-                      >
-                        {s.task_completed ? <CheckCircle2 size={10} /> : <XCircle size={10} />}
-                        {s.task_completed ? "Done" : "Pending"}
-                      </span>
-                    </td>
-                    <td className="px-3 sm:px-4 py-2 sm:py-3"><StarRow value={s.mentee_rating ?? 0} /></td>
-                    <td className="px-3 sm:px-4 py-2 sm:py-3 text-xs max-w-[100px] sm:max-w-[140px] text-slate-500">
-                      <span className="line-clamp-2 leading-relaxed">
-                        {s.mentee_feedback || <span className="text-slate-300 italic">No feedback</span>}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-
-        {/* ── Tablet View (md: table with scroll) ── */}
-        <div className="hidden md:block lg:hidden overflow-x-auto hide-scrollbar" style={scrollableStyle}>
-          {isLoading ? (
-            <table className="w-full min-w-[600px]">
-              <thead>
-                <tr style={{ background: "#0098cc" }}>
-                  {["S.No", "Session", "Date", "Status", "Rating"].map((c) => (
-                    <th key={c} className="px-3 py-3 text-left text-xs font-bold text-white tracking-wide whitespace-nowrap">{c}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {[1, 2, 3].map((i) => (
-                  <tr key={i} className="border-b border-slate-100">
-                    {[1, 2, 3, 4, 5].map((j) => (
-                      <td key={j} className="px-3 py-3">
-                        <div className="h-4 rounded animate-pulse bg-slate-100" />
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : isError ? (
-            <div className="p-8 flex flex-col items-center gap-3">
-              <AlertCircle size={28} className="text-red-400" />
-              <p className="text-sm font-bold" style={{ color: "#1a1a2e" }}>Failed to load sessions</p>
-            </div>
-          ) : filtered.length === 0 ? (
-            <div className="p-8 flex flex-col items-center gap-3">
-              {sessions.length === 0 ? (
-                <>
-                  <Trophy size={24} style={{ color: "#0098cc" }} />
-                  <p className="text-sm font-bold" style={{ color: "#1a1a2e" }}>No completed sessions yet</p>
-                </>
-              ) : (
-                <>
-                  <Hash size={24} className="text-slate-300" />
-                  <p className="text-xs text-slate-400">No sessions match the filter.</p>
-                </>
-              )}
-            </div>
-          ) : (
-            <table className="w-full min-w-[600px]">
-              <thead>
-                <tr style={{ background: "#0098cc" }}>
-                  {["S.No", "Session", "Date", "Status", "Rating"].map((c) => (
-                    <th key={c} className="px-3 py-3 text-left text-xs font-bold text-white tracking-wide whitespace-nowrap">{c}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filtered.map((s, i) => (
-                  <tr key={s._id} className="border-b border-slate-100 hover:bg-blue-50 transition-colors">
-                    <td className="px-3 py-3 text-xs font-mono font-semibold" style={{ color: "#0098cc" }}>{i + 1}</td>
-                    <td className="px-3 py-3">
-                      <div className="text-xs font-semibold" style={{ color: "#1a1a2e" }}>{s.session_title || "Untitled"}</div>
-                      <div className="text-xs text-slate-500 mt-1">{fmtDate(s.session_date)}</div>
-                    </td>
-                    <td className="px-3 py-3 text-xs max-w-[150px]">
-                      <span className="line-clamp-1 text-slate-600">{s.meeting_description || "—"}</span>
-                    </td>
-                    <td className="px-3 py-3">
-                      <span
-                        className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full"
-                        style={
-                          s.task_completed
-                            ? { background: "rgba(0,152,204,0.08)", color: "#0098cc", border: "1px solid rgba(0,152,204,0.25)" }
-                            : { background: "#fff1f2", color: "#e11d48", border: "1px solid #fecdd3" }
-                        }
-                      >
-                        {s.task_completed ? "Done" : "Pending"}
-                      </span>
-                    </td>
-                    <td className="px-3 py-3"><StarRow value={s.mentee_rating ?? 0} /></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          )}
-        </div>
-
-        {/* ── Mobile Cards (sm and below) ── */}
-        <div className="md:hidden p-2 sm:p-4 space-y-2 sm:space-y-3 hide-scrollbar max-h-[calc(100vh-300px)] overflow-y-auto" style={scrollableStyle}>
-          {isLoading ? (
-            <>
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-white rounded-lg p-3 space-y-2 border border-[#0098cc]/20">
-                  <div className="h-4 rounded animate-pulse bg-slate-100 w-3/5" />
-                  <div className="h-3 rounded animate-pulse bg-slate-100 w-2/5" />
-                  <div className="h-3 rounded animate-pulse bg-slate-100 w-4/5" />
-                </div>
-              ))}
-            </>
-          ) : isError ? (
-            <div className="flex flex-col items-center gap-3 py-8">
-              <AlertCircle size={28} className="text-red-400" />
-              <p className="text-sm font-bold" style={{ color: "#1a1a2e" }}>Failed to load sessions</p>
-              <p className="text-xs text-slate-400">Please refresh and try again.</p>
-            </div>
-          ) : filtered.length === 0 ? (
-            sessions.length === 0 ? (
-              <div className="flex flex-col items-center gap-2 py-8">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center border border-[#0098cc]/20"
-                  style={{ background: "rgba(0,152,204,0.08)" }}>
-                  <Trophy size={22} style={{ color: "#0098cc" }} />
-                </div>
-                <p className="text-sm font-bold text-center" style={{ color: "#1a1a2e" }}>No completed sessions yet</p>
-                <p className="text-xs text-slate-400 text-center">Your completed LTM sessions will appear here.</p>
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <Hash size={24} className="mx-auto mb-2 text-slate-300" />
-                <p className="text-xs text-slate-400">No sessions match the filter.</p>
-              </div>
-            )
-          ) : (
-            <>
-              {filtered.map((session) => (
-                <MobileCard key={session._id} session={session} />
-              ))}
-            </>
-          )}
-        </div>
-
-        {/* Footer */}
-        {!isLoading && !isError && filtered.length > 0 && (
-          <div className="px-3 sm:px-5 py-2 sm:py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-t border-slate-100 bg-slate-50 text-xs">
-            <p className="font-mono text-slate-400">
-              Showing {filtered.length} of {sessions.length} session{sessions.length !== 1 ? "s" : ""}
-            </p>
-          </div>
-        )}
-      </div>
+          <p style={{ fontSize: 13, fontWeight: 700, color: C.text, margin: 0, fontFamily: FONT }}>
+            No completed sessions yet
+          </p>
+          <p style={{ fontSize: 12, color: C.muted, margin: 0, fontFamily: FONT }}>
+            Your completed sessions will appear here.
+          </p>
+        </>
+        : <>
+          <Hash size={24} style={{ color: C.border }} />
+          <p style={{ fontSize: 12, color: C.muted, margin: 0, fontFamily: FONT }}>
+            No sessions match the current filter.
+          </p>
+        </>
+      }
     </div>
   );
+
+  const ErrorState = () => (
+    <div style={{
+      display: "flex", alignItems: "center", gap: 8,
+      margin: 14, padding: "10px 14px",
+      background: "#fff5f5", border: "1px solid #fecaca", borderRadius: 8,
+    }}>
+      <AlertCircle size={13} style={{ color: "#dc2626", flexShrink: 0 }} />
+      <p style={{ fontSize: 13, color: "#dc2626", margin: 0, fontFamily: FONT }}>
+        Failed to load sessions. Please refresh.
+      </p>
+    </div>
+  );
+
+  return (
+    <>
+      <style>{GLOBAL_CSS}</style>
+
+      <div style={{
+        minHeight: "100vh",
+        background: C.white,
+        padding: "clamp(14px, 4vw, 24px)",
+        fontFamily: FONT,
+      }}>
+        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+
+          {/* Header */}
+          <div style={{ marginBottom: 18 }}>
+            <h1 style={{
+              fontSize: "clamp(16px, 4vw, 20px)",
+              fontWeight: 700, color: C.text,
+              margin: "0 0 3px", fontFamily: FONT,
+            }}>
+              Session History
+            </h1>
+            <p style={{ fontSize: 13, color: C.muted, margin: 0, fontFamily: FONT }}>
+              {isLoading ? "Loading…" : `${total} total sessions`}
+            </p>
+          </div>
+
+          {/* Stat Cards */}
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(170px, 1fr))",
+            gap: 10, marginBottom: 18,
+          }}>
+            {[
+              { Icon: Layers, label: "Total Sessions", value: total, color: C.text },
+              { Icon: CheckSquare, label: "Tasks Done", value: `${tasksDone}/${total}`, color: "#16a34a" },
+            ].map(({ Icon, label, value, color }) => (
+              <div key={label} style={{
+                display: "flex", alignItems: "center", gap: 12,
+                background: C.white, border: `1px solid ${C.border}`,
+                borderRadius: 10, padding: "12px 16px",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+              }}>
+                <div style={{
+                  width: 36, height: 36, borderRadius: 8,
+                  background: C.dark,
+                  display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+                }}>
+                  <Icon size={16} style={{ color: C.white }} />
+                </div>
+                <div>
+                  <p style={{
+                    fontSize: 9, fontWeight: 700, color: C.muted,
+                    textTransform: "uppercase", letterSpacing: "0.08em",
+                    margin: "0 0 2px", fontFamily: FONT,
+                  }}>{label}</p>
+                  <p style={{ fontSize: 20, fontWeight: 800, color, margin: 0, lineHeight: 1.1, fontFamily: FONT }}>
+                    {value}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Main Panel */}
+          <div style={{
+            background: C.white, border: `1px solid ${C.border}`,
+            borderRadius: 10, overflow: "hidden",
+            boxShadow: "0 1px 6px rgba(0,0,0,0.04)",
+          }}>
+
+            {/* Panel header */}
+            <div style={{
+              padding: "12px 14px",
+              borderBottom: `1px solid ${C.border}`,
+            }}>
+              <h2 style={{ fontSize: 14, fontWeight: 700, color: C.text, margin: 0, fontFamily: FONT }}>
+                Session History
+              </h2>
+            </div>
+
+            {/* Toolbar */}
+            <div style={{
+              padding: "10px 14px",
+              borderBottom: `1px solid ${C.border}`,
+              background: "#fafbfc",
+              display: "flex", flexWrap: "wrap",
+              alignItems: "center", gap: 8,
+            }}>
+              {/* Rows per page */}
+              <div style={{ position: "relative" }}>
+                <select value={perPage} onChange={(e) => setPerPage(Number(e.target.value))} style={selStyle}>
+                  {[5, 10, 25, 50].map((n) => <option key={n} value={n}>{n} rows</option>)}
+                </select>
+                <ChevronDown size={11} style={{
+                  position: "absolute", right: 8, top: "50%",
+                  transform: "translateY(-50%)", pointerEvents: "none", color: C.muted,
+                }} />
+              </div>
+
+              <div style={{ flex: 1 }} />
+
+              {/* Task filter */}
+              <div style={{ position: "relative" }}>
+                <select value={filterTask} onChange={(e) => setFilterTask(e.target.value)} style={selStyle}>
+                  <option value="all">All Tasks</option>
+                  <option value="done">Task Done</option>
+                  <option value="pending">Task Pending</option>
+                </select>
+                <ChevronDown size={11} style={{
+                  position: "absolute", right: 8, top: "50%",
+                  transform: "translateY(-50%)", pointerEvents: "none", color: C.muted,
+                }} />
+              </div>
+
+              {/* Sort */}
+              <div style={{ position: "relative" }}>
+                <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} style={selStyle}>
+                  <option value="date_desc">Newest First</option>
+                  <option value="date_asc">Oldest First</option>
+                  <option value="rating_desc">Highest Rated</option>
+                  <option value="number_asc">By Number</option>
+                </select>
+                <ChevronDown size={11} style={{
+                  position: "absolute", right: 8, top: "50%",
+                  transform: "translateY(-50%)", pointerEvents: "none", color: C.muted,
+                }} />
+              </div>
+
+              {/* Search */}
+              <div style={{ position: "relative" }}>
+                <Search size={12} style={{
+                  position: "absolute", left: 9, top: "50%",
+                  transform: "translateY(-50%)", pointerEvents: "none", color: C.muted,
+                }} />
+                <input
+                  type="text" placeholder="Search…" value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  style={{
+                    width: 160, fontSize: 12, borderRadius: 7,
+                    paddingLeft: 28, paddingRight: 10,
+                    paddingTop: 6, paddingBottom: 6,
+                    border: `1px solid ${C.border}`,
+                    background: C.white, color: C.text,
+                    outline: "none", fontFamily: FONT,
+                    transition: "width 0.2s, border-color 0.15s",
+                  }}
+                  onFocus={(e) => { e.target.style.borderColor = C.blue; e.target.style.width = "190px"; }}
+                  onBlur={(e) => { e.target.style.borderColor = C.border; e.target.style.width = "160px"; }}
+                />
+              </div>
+            </div>
+
+            {/* ── DESKTOP TABLE ── */}
+            <div className="scroll-hide desktop-table" style={{ overflowX: "auto" }}>
+              {isError ? <ErrorState /> : (
+                <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 760 }}>
+                  <thead style={{ background: C.th }}>
+                    <tr>
+                      {COLS.map((c) => <th key={c} style={thStyle}>{c}</th>)}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {isLoading
+                      ? <SkeletonRows cols={8} rows={5} />
+                      : filtered.length === 0
+                        ? <tr><td colSpan={8} style={{ padding: 0 }}>
+                          <EmptyState noData={sessions.length === 0} />
+                        </td></tr>
+                        : filtered.map((s, i) => (
+                          <tr
+                            key={s._id}
+                            style={{ cursor: "default", transition: "background 0.1s" }}
+                            onMouseEnter={(e) => { e.currentTarget.style.background = C.rowHov; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.background = C.white; }}
+                          >
+                            <td style={{ ...tdStyle, color: C.muted, fontSize: 12 }}>{i + 1}</td>
+                            <td style={tdStyle}>
+                              <span style={{
+                                fontSize: 13, fontWeight: 600, color: C.text,
+                                display: "block", maxWidth: 140,
+                                overflow: "hidden", textOverflow: "ellipsis",
+                                whiteSpace: "nowrap", fontFamily: FONT,
+                              }}>
+                                {s.session_title || "Untitled"}
+                              </span>
+                            </td>
+                            <td style={{ ...tdStyle, color: C.sub, whiteSpace: "nowrap" }}>
+                              {fmtDate(s.session_date)}
+                            </td>
+                            <td style={{ ...tdStyle, maxWidth: 150 }}>
+                              <span style={{
+                                display: "block", fontSize: 12, color: C.muted,
+                                overflow: "hidden", textOverflow: "ellipsis",
+                                whiteSpace: "nowrap", fontFamily: FONT,
+                              }}>
+                                {s.meeting_description || "—"}
+                              </span>
+                            </td>
+                            <td style={{ ...tdStyle, maxWidth: 130 }}>
+                              <span style={{
+                                display: "block", fontSize: 12, color: C.muted,
+                                overflow: "hidden", textOverflow: "ellipsis",
+                                whiteSpace: "nowrap", fontFamily: FONT,
+                              }}>
+                                {s.tasks_given || "—"}
+                              </span>
+                            </td>
+                            <td style={tdStyle}>
+                              <TaskBadge done={s.task_completed} />
+                            </td>
+                            <td style={tdStyle}>
+                              <StarRow value={s.mentee_rating ?? 0} />
+                            </td>
+                            <td style={{ ...tdStyle, maxWidth: 140 }}>
+                              <span style={{
+                                display: "block", fontSize: 12,
+                                color: s.mentee_feedback ? C.muted : C.border,
+                                overflow: "hidden", textOverflow: "ellipsis",
+                                whiteSpace: "nowrap", fontStyle: s.mentee_feedback ? "normal" : "italic",
+                                fontFamily: FONT,
+                              }}>
+                                {s.mentee_feedback || "No feedback"}
+                              </span>
+                            </td>
+                          </tr>
+                        ))
+                    }
+                  </tbody>
+                </table>
+              )}
+            </div>
+
+            {/* ── MOBILE CARDS ── */}
+            <div className="scroll-hide mobile-cards" style={{
+              flexDirection: "column", gap: 8, padding: 12,
+              maxHeight: "calc(100vh - 280px)", overflowY: "auto",
+            }}>
+              {isError ? <ErrorState /> : isLoading
+                ? Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} style={{
+                    background: C.white, borderRadius: 10,
+                    padding: 12, border: `1px solid ${C.border}`,
+                  }}>
+                    {[3, 5, 4].map((w, j) => (
+                      <div key={j} style={{
+                        height: j === 0 ? 13 : 11, borderRadius: 4,
+                        background: "#f1f5f9", marginBottom: 8,
+                        width: `${w * 15}%`,
+                        animation: "pulse 1.5s ease-in-out infinite",
+                      }} />
+                    ))}
+                  </div>
+                ))
+                : filtered.length === 0
+                  ? <EmptyState noData={sessions.length === 0} />
+                  : filtered.map((session) => (
+                    <MobileCard key={session._id} session={session} />
+                  ))
+              }
+            </div>
+
+            {/* Footer */}
+            {!isLoading && !isError && filtered.length > 0 && (
+              <div style={{
+                padding: "10px 14px",
+                borderTop: `1px solid ${C.border}`,
+                background: "#fafbfc",
+                display: "flex", alignItems: "center", justifyContent: "space-between",
+              }}>
+                <p style={{ fontSize: 12, color: C.muted, margin: 0, fontFamily: FONT }}>
+                  Showing <b style={{ color: C.text }}>{filtered.length}</b> of{" "}
+                  <b style={{ color: C.text }}>{sessions.length}</b> session{sessions.length !== 1 ? "s" : ""}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <style>{`
+        .desktop-table { display: block; }
+        .mobile-cards  { display: none; }
+        @media (max-width: 768px) {
+          .desktop-table { display: none; }
+          .mobile-cards  { display: flex; }
+        }
+      `}</style>
+    </>
+  );
 }
-
-
-

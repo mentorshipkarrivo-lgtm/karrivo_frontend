@@ -234,7 +234,7 @@ export default function HeroSection() {
           <div className="flex flex-wrap justify-center gap-3">
             <button
               onClick={() => navigate('/top')}
-              className="px-6 py-3 rounded-full bg-[#0098cc] text-white text-sm sm:text-base font-medium hover:opacity-90 transition-opacity"
+              className="px-6 py-3 rounded-full bg-[#0098cc] text-white text-sm sm:text-base font-medium  transition-opacity"
             >
               Explore Top Mentor
             </button>
@@ -299,8 +299,8 @@ export default function HeroSection() {
 
               {/* Create label */}
               <div className="absolute bottom-2 left-2 sm:left-4 flex items-center gap-1">
-                <span className="text-[#0a1a22] font-semibold text-sm sm:text-base">Create</span>
-                <svg className="w-4 h-4 text-[#0a1a22]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <span className="text-[#1a1a2e] font-semibold text-sm sm:text-base">Create</span>
+                <svg className="w-4 h-4 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M17 7l-10 10M7 7h10v10" />
                 </svg>
               </div>
@@ -318,7 +318,7 @@ export default function HeroSection() {
                 {/* top facet - Explore */}
                 <polygon points="80,150 240,150 200,60 120,60" fill="#0098cc" />
                 {/* left facet - Create */}
-                <polygon points="80,150 200,150 150,260 60,230" fill="#0a1a22" />
+                <polygon points="80,150 200,150 150,260 60,230" fill="#1a1a2e" />
                 {/* right facet - Apply */}
                 <polygon points="200,150 240,150 230,250 150,260" fill="#7fd4f0" />
               </svg>

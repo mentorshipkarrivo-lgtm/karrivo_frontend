@@ -84,7 +84,7 @@ export default function StepsSection() {
               <div>
                 <button
                   onClick={() => handleButtonClick(step.action)}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 border border-[#0098cc] rounded-lg bg-transparent text-[#0098cc] text-sm font-semibold transition-all duration-200 hover:bg-[#0098cc] hover:text-white w-full sm:w-auto justify-center sm:justify-start"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 border border-[#0098cc] rounded-lg bg-transparent text-[#ffffff] text-sm font-semibold transition-all duration-200 hover:bg-[#0098cc] hover:text-white w-full sm:w-auto justify-center sm:justify-start"
                 >
                   {step.btnLabel} →
                 </button>

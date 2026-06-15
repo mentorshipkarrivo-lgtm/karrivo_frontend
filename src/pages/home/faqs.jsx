@@ -56,7 +56,7 @@ export default function FAQAccordion() {
             }}
           >
             Frequently{" "}
-            <span style={{ color: "#0090c1" }}>Asked Questions</span>
+            <span style={{ color: "#0098cc" }}>Asked Questions</span>
           </h2>
         </div>
 
@@ -148,7 +148,7 @@ export default function FAQAccordion() {
           <button
             style={{
               background: "#0098cc",
-              color: "#000",
+              color: "#ffffff",
               border: "none",
               borderRadius: "999px",
               padding: "12px 34px",

@@ -854,11 +854,11 @@ const MenteeDashboard = () => {
                         style={{ borderLeft: '1px solid #e5e7eb', borderRight: '1px solid #e5e7eb', fontFamily: 'Cambria, Georgia, serif' }}>
 
                         {/* Mini topbar: page title (desktop only — hamburger is in header for mobile) */}
-                        <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white border-b flex-shrink-0" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
+                        {/* <div className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white border-b flex-shrink-0" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                             <span className="text-sm font-medium text-gray-700" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                                 {getPageLabel(location.pathname)}
                             </span>
-                        </div>
+                        </div> */}
 
                         <main className="flex-1 overflow-y-auto bg-white" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
                             <Outlet context={{ userData, profile }} />

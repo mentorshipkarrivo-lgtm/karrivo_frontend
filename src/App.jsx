@@ -241,7 +241,6 @@ const App = () => {
       {/* ─── Floating Chat Button + Widget (visible on all pages except login/reset) ─── */}
       {showChat && (
         <>
-          {/* Floating button - fixed bottom right */}
           <div
             style={{
               position: "fixed",
@@ -254,7 +253,6 @@ const App = () => {
               gap: "8px",
             }}
           >
-            {/* Tooltip label when closed */}
             {!chatOpen && (
               <div
                 style={{
@@ -265,7 +263,6 @@ const App = () => {
                   fontSize: "12px",
                   fontWeight: 500,
                   whiteSpace: "nowrap",
-                  // boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                   animation: "fadeInUp 0.4s ease",
                   fontFamily: "'Segoe UI', system-ui, sans-serif",
                 }}
@@ -276,16 +273,8 @@ const App = () => {
             <ChatButton isOpen={chatOpen} onClick={toggleChat} />
           </div>
 
-          {/* MenteeSupport widget */}
           {chatOpen && <MenteeSupport onclose={closeChat} />}
 
-          {/* Animation keyframes */}
-          {/* <style>{`
-            @keyframes fadeInUp {
-              from { opacity: 0; transform: translateY(8px); }
-              to { opacity: 1; transform: translateY(0); }
-            }
-          `}</style> */}
         </>
       )}
 

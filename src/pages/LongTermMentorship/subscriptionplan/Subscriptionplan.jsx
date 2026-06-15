@@ -1,6 +1,3 @@
-
-
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetSubscriptionsByMenteeIdQuery } from "./subcriptionsplanapislice";
@@ -10,7 +7,36 @@ import {
     Clock, X, CreditCard, CalendarDays, TrendingUp, AlertCircle,
 } from "lucide-react";
 
-/* ─── Helpers ─────────────────────────────────────────────────── */
+// ── Color tokens ──────────────────────────────────────────────────────────────
+const C = {
+    dark: "#1a1a2e",
+    blue: "#0091c3",
+    white: "#ffffff",
+    border: "#e2e8f0",
+    muted: "#94a3b8",
+    text: "#1a1a2e",
+    sub: "#475569",
+    bg: "#ffffff",
+    rowHov: "#f8fafc",
+};
+
+const FONT = "'DM Sans', 'Segoe UI', sans-serif";
+
+// ── Global CSS ────────────────────────────────────────────────────────────────
+const GLOBAL_CSS = `
+  *, *::before, *::after { box-sizing: border-box; }
+  body { margin: 0; }
+  ::-webkit-scrollbar { width: 0; height: 0; }
+  * { scrollbar-width: none; -ms-overflow-style: none; }
+  @keyframes fadeIn  { from{opacity:0} to{opacity:1} }
+  @keyframes slideUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes pulse   { 0%,100%{opacity:1} 50%{opacity:0.35} }
+  .sub-card { transition: transform 0.18s ease, box-shadow 0.18s ease; }
+  .sub-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
+  .pay-btn:hover  { opacity: 0.88; transform: scale(1.02); }
+`;
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
 const fmt = (iso) =>
     iso
         ? new Date(iso).toLocaleDateString("en-IN", {
@@ -22,162 +48,204 @@ const planLabel = (t) =>
 ({ one_month: "1 Month", three_months: "3 Months", six_months: "6 Months" }[t] ||
     t?.replace(/_/g, " ") || "—");
 
-const statusCls = (s) =>
-({
-    active: "bg-emerald-50 text-emerald-600 border border-emerald-200",
-    expired: "bg-red-50 text-red-500 border border-red-200",
-    onprocess: "bg-blue-50 text-blue-500 border border-blue-200",
-}[s] ?? "bg-amber-50 text-amber-500 border border-amber-200");
+// ── Status badge ──────────────────────────────────────────────────────────────
+const StatusBadge = ({ status }) => {
+    const map = {
+        active: { color: "#16a34a", dot: "#16a34a", label: "Active" },
+        expired: { color: "#dc2626", dot: "#dc2626", label: "Expired" },
+        onprocess: { color: C.blue, dot: C.blue, label: "On Process" },
+        pending: { color: C.text, dot: C.muted, label: "Pending" },
+    };
+    const m = map[status] ?? { color: C.muted, dot: C.muted, label: status || "—" };
+    return (
+        <span style={{
+            display: "inline-flex", alignItems: "center", gap: 5,
+            fontSize: 11, fontWeight: 700, fontFamily: FONT,
+            color: m.color,
+        }}>
+            <span style={{
+                width: 6, height: 6, borderRadius: "50%",
+                background: m.dot, flexShrink: 0,
+            }} />
+            {m.label}
+        </span>
+    );
+};
 
-const statusDot = (s) =>
-({
-    active: "bg-emerald-500",
-    expired: "bg-red-500",
-    onprocess: "bg-blue-400",
-}[s] ?? "bg-amber-400");
+// ── Payment status label ──────────────────────────────────────────────────────
+const PaymentLabel = ({ done, status }) => {
+    if (done) return <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 600, color: "#16a34a", fontFamily: FONT }}><CheckCircle2 size={13} />Paid</span>;
+    if (status === "onprocess") return <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 600, color: C.blue, fontFamily: FONT }}><Clock size={13} />Processing</span>;
+    return <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 600, color: C.muted, fontFamily: FONT }}><Clock size={13} />Pending</span>;
+};
 
-/* ─── Subscription Card ────────────────────────────────────────── */
+// ── Subscription Card ─────────────────────────────────────────────────────────
 const SubscriptionCard = ({ sub, i, onView, onPay }) => {
     const { data: mentor } = useFetchMentorByIdQuery(sub.mentor_id);
 
     return (
         <div
-            className="bg-white rounded-xl border border-slate-100 hover:-translate-y-0.5 transition-transform duration-200 flex flex-col overflow-hidden"
-            style={{ animationDelay: `${i * 70}ms` }}
+            className="sub-card"
+            style={{
+                background: C.white,
+                borderRadius: 12,
+                border: `1px solid ${C.border}`,
+                overflow: "hidden",
+                display: "flex",
+                flexDirection: "column",
+                fontFamily: FONT,
+                animationDelay: `${i * 70}ms`,
+            }}
         >
-            {/* Card top accent bar */}
-            <div className="h-0.5 w-full bg-gradient-to-r from-[#0098cc] to-[#1a1a2e]" />
+            {/* Top accent */}
+            <div style={{ height: 3, background: C.dark }} />
 
-            <div className="p-4 flex flex-col gap-3 flex-1">
+            <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: 14, flex: 1 }}>
 
                 {/* Pending payment banner */}
                 {sub.payment_status === "pending" && (
-                    <div className="flex items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white px-3 py-3 flex-wrap">
-
-                        <span className="flex items-center gap-2 text-[#1a1a2e] text-xs font-semibold">
-                            <AlertCircle size={14} className="text-[#0098cc]" />
+                    <div style={{
+                        display: "flex", alignItems: "center",
+                        justifyContent: "space-between", gap: 10,
+                        flexWrap: "wrap",
+                        border: `1px solid ${C.border}`,
+                        borderRadius: 10, padding: "10px 12px",
+                        background: "#fafbfc",
+                    }}>
+                        <span style={{
+                            display: "flex", alignItems: "center", gap: 6,
+                            fontSize: 12, fontWeight: 600, color: C.text, fontFamily: FONT,
+                        }}>
+                            <AlertCircle size={13} style={{ color: C.blue }} />
                             Payment Incomplete
                         </span>
-
                         <button
+                            className="pay-btn"
                             onClick={() => onPay(sub, mentor)}
-                            className="rounded-xl bg-[#1a1a2e] px-4 py-2 text-xs font-semibold text-white transition-all duration-200 hover:scale-[1.02] hover:opacity-90 whitespace-nowrap"
+                            style={{
+                                background: C.dark, color: C.white,
+                                border: "none", borderRadius: 8,
+                                padding: "7px 14px", fontSize: 12,
+                                fontWeight: 700, cursor: "pointer",
+                                fontFamily: FONT, transition: "all 0.2s",
+                                whiteSpace: "nowrap",
+                            }}
                         >
                             Pay Now
                         </button>
-
                     </div>
                 )}
 
-                {/* Icon + status */}
-                <div className="flex items-center justify-between">
-
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-white">
-                        <CreditCard size={16} className="text-[#0098cc]" />
+                {/* Icon + status row */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <div style={{
+                        width: 36, height: 36, borderRadius: 8,
+                        background: C.dark,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        flexShrink: 0,
+                    }}>
+                        <CreditCard size={16} style={{ color: C.white }} />
                     </div>
-
-                    <span
-                        className={`flex items-center gap-1 rounded-full border px-2.5 py-1 text-[9px] font-semibold ${sub.status === "active"
-                            ? "border-[#0098cc]/20 bg-[#0098cc]/5 text-[#0098cc]"
-                            : sub.status === "pending"
-                                ? "border-gray-200 bg-gray-50 text-[#1a1a2e]"
-                                : "border-red-200 bg-red-50 text-red-600"
-                            }`}
-                    >
-                        <span
-                            className={`h-1.5 w-1.5 rounded-full ${sub.status === "active"
-                                ? "bg-[#0098cc]"
-                                : sub.status === "pending"
-                                    ? "bg-[#1a1a2e]"
-                                    : "bg-red-500"
-                                }`}
-                        />
-
-                        {sub.status?.charAt(0).toUpperCase() +
-                            sub.status?.slice(1)}
-                    </span>
-
+                    <StatusBadge status={sub.status} />
                 </div>
 
                 {/* Amount */}
                 <div>
-                    <p className="text-[9px] font-semibold text-slate-400 uppercase tracking-widest mb-0.5">
+                    <p style={{
+                        fontSize: 9, fontWeight: 700, color: C.muted,
+                        textTransform: "uppercase", letterSpacing: "0.1em",
+                        margin: "0 0 3px", fontFamily: FONT,
+                    }}>
                         Plan Amount
                     </p>
-                    <p className="text-2xl font-extrabold text-[#1a1a2e] tracking-tight">
+                    <p style={{ fontSize: 24, fontWeight: 800, color: C.text, margin: 0, fontFamily: FONT }}>
                         ₹{sub.amount?.toLocaleString("en-IN")}
                     </p>
                 </div>
 
-                {/* Meta row */}
-                <div className="grid grid-cols-3 gap-1.5">
+                {/* Meta chips */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
                     {[
                         ["Plan", planLabel(sub.plan_type)],
                         ["Sessions", sub.total_sessions],
                         ["Expires", fmt(sub.effective_end_date)],
                     ].map(([lbl, val]) => (
-                        <div key={lbl} className="bg-slate-50 rounded-lg p-2 border border-slate-100">
-                            <p className="text-[8px] font-bold text-slate-400 uppercase tracking-wider mb-0.5">{lbl}</p>
-                            <p className="text-[10px] font-bold text-[#1a1a2e] break-words">{val}</p>
+                        <div key={lbl} style={{
+                            background: "#f8fafc", borderRadius: 8,
+                            padding: "8px 10px", border: `1px solid ${C.border}`,
+                        }}>
+                            <p style={{
+                                fontSize: 8, fontWeight: 700, color: C.muted,
+                                textTransform: "uppercase", letterSpacing: "0.08em",
+                                margin: "0 0 2px", fontFamily: FONT,
+                            }}>{lbl}</p>
+                            <p style={{
+                                fontSize: 11, fontWeight: 700, color: C.text,
+                                margin: 0, wordBreak: "break-word", fontFamily: FONT,
+                            }}>{val}</p>
                         </div>
                     ))}
                 </div>
 
                 {/* Extension badge */}
                 {sub.is_extended && (
-                    <div className="flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-xl px-3 py-2">
-                        <CalendarClock size={13} className="text-emerald-600 shrink-0" />
-                        <span className="text-xs font-semibold text-emerald-700">
+                    <div style={{
+                        display: "flex", alignItems: "center", gap: 8,
+                        background: "#f0fdf4", border: "1px solid #bbf7d0",
+                        borderRadius: 8, padding: "8px 12px",
+                    }}>
+                        <CalendarClock size={13} style={{ color: "#16a34a", flexShrink: 0 }} />
+                        <span style={{ fontSize: 12, fontWeight: 600, color: "#15803d", fontFamily: FONT }}>
                             Extended by {sub.extended_days} day{sub.extended_days > 1 ? "s" : ""} (mentor leave)
                         </span>
                     </div>
                 )}
 
-                <div className="border-t border-slate-100 mt-auto" />
+                {/* Divider */}
+                <div style={{ borderTop: `1px solid ${C.border}`, marginTop: "auto" }} />
 
                 {/* Bottom row */}
-                <div className="flex items-center justify-between gap-2 pt-1">
-
-                    <span
-                        className={`flex items-center gap-1.5 text-xs font-semibold ${sub.payment_done
-                            ? "text-[#0098cc]"
-                            : sub.payment_status === "onprocess"
-                                ? "text-blue-600"
-                                : "text-[#1a1a2e]"
-                            }`}
-                    >
-                        {sub.payment_done ? (
-                            <>
-                                <CheckCircle2 size={13} />
-                                Paid
-                            </>
-                        ) : sub.payment_status === "onprocess" ? (
-                            <>
-                                <Clock size={13} />
-                                Processing
-                            </>
-                        ) : (
-                            <>
-                                <Clock size={13} />
-                                Pending
-                            </>
-                        )}
-                    </span>
-
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                    <PaymentLabel done={sub.payment_done} status={sub.payment_status} />
                     <button
+                        className="pay-btn"
                         onClick={() => onView(sub, mentor)}
-                        className="rounded-xl bg-[#1a1a2e] px-4 py-2 text-xs font-semibold text-white transition-all duration-200 hover:scale-[1.02] hover:opacity-90"
+                        style={{
+                            background: C.dark, color: C.white,
+                            border: "none", borderRadius: 8,
+                            padding: "7px 16px", fontSize: 12,
+                            fontWeight: 700, cursor: "pointer",
+                            fontFamily: FONT, transition: "all 0.2s",
+                        }}
                     >
                         View Details
                     </button>
-
                 </div>
             </div>
         </div>
     );
 };
 
-/* ─── Main Page ────────────────────────────────────────────────── */
+// ── Skeleton Card ─────────────────────────────────────────────────────────────
+const SkeletonCard = () => (
+    <div style={{
+        borderRadius: 12, border: `1px solid ${C.border}`,
+        overflow: "hidden", background: C.white,
+    }}>
+        <div style={{ height: 3, background: C.border }} />
+        <div style={{ padding: 16, display: "flex", flexDirection: "column", gap: 14 }}>
+            {[80, 120, 60, 40].map((w, i) => (
+                <div key={i} style={{
+                    height: i === 1 ? 28 : 12, borderRadius: 6,
+                    background: "#f1f5f9", width: `${w}%`,
+                    animation: "pulse 1.5s ease-in-out infinite",
+                }} />
+            ))}
+        </div>
+    </div>
+);
+
+// ── Main Component ────────────────────────────────────────────────────────────
 const Subscriptionplan = () => {
     const menteeId = JSON.parse(localStorage.getItem("userData") || "{}")?._id;
     const { data: subs = [], isLoading, isError, error } =
@@ -215,173 +283,199 @@ const Subscriptionplan = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 px-4 py-8 pb-20">
-            <div className="max-w-5xl mx-auto">
+        <>
+            <style>{GLOBAL_CSS}</style>
 
+            <div style={{
+                minHeight: "100vh",
+                background: C.bg,
+                padding: "clamp(16px, 4vw, 28px)",
+                fontFamily: FONT,
+            }}>
+                <div style={{ maxWidth: 1000, margin: "0 auto" }}>
 
+                    {/* Header */}
+                    <div style={{ marginBottom: 20 }}>
+                        <h1 style={{
+                            fontSize: "clamp(16px, 4vw, 20px)",
+                            fontWeight: 700, color: C.text,
+                            margin: "0 0 3px", fontFamily: FONT,
+                        }}>
+                            Subscription Plan
 
-                {/* Error / not logged in */}
-                {(!menteeId || isError) && (
-                    <div className="bg-red-50 border border-red-200 rounded-2xl p-7 text-center max-w-sm mx-auto">
-                        <AlertTriangle size={28} className="text-red-500 mx-auto mb-3" />
-                        <p className="text-sm text-red-600 font-semibold">
-                            {!menteeId ? "Please log in again." : error?.data?.message || "Failed to load subscriptions."}
+                        </h1>
+                        <p style={{ fontSize: 13, color: C.muted, margin: 0, fontFamily: FONT }}>
+                            {isLoading ? "Loading…" : `${subs.length} subscription${subs.length !== 1 ? "s" : ""}`}
                         </p>
                     </div>
-                )}
 
-                {/* Skeleton */}
-                {menteeId && !isError && isLoading && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                        {[1, 2, 3].map((i) => (
-                            <div
-                                key={i}
-                                className="h-64 rounded-2xl bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 animate-pulse"
-                            />
-                        ))}
-                    </div>
-                )}
+                    {/* Error / not logged in */}
+                    {(!menteeId || isError) && (
+                        <div style={{
+                            background: "#fff5f5", border: "1px solid #fecaca",
+                            borderRadius: 12, padding: "28px 20px",
+                            textAlign: "center", maxWidth: 360, margin: "0 auto",
+                        }}>
+                            <AlertTriangle size={26} style={{ color: "#dc2626", marginBottom: 10 }} />
+                            <p style={{ fontSize: 13, fontWeight: 600, color: "#dc2626", margin: 0, fontFamily: FONT }}>
+                                {!menteeId ? "Please log in again." : error?.data?.message || "Failed to load subscriptions."}
+                            </p>
+                        </div>
+                    )}
 
-                {/* Empty state */}
-                {menteeId && !isError && !isLoading && !subs.length && (
-                    <div className="bg-white border border-dashed border-slate-200 rounded-2xl p-14 text-center max-w-sm mx-auto">
-                        <Inbox size={36} className="text-slate-300 mx-auto mb-4" />
-                        <h3 className="text-base font-extrabold text-[#1a1a2e] mb-2">No Subscriptions Yet</h3>
-                        <p className="text-sm text-slate-400 leading-relaxed">
-                            Browse mentors and pick a plan to get started.
-                        </p>
-                    </div>
-                )}
+                    {/* Skeleton */}
+                    {menteeId && !isError && isLoading && (
+                        <div style={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+                            gap: 16,
+                        }}>
+                            {[1, 2, 3].map((i) => <SkeletonCard key={i} />)}
+                        </div>
+                    )}
 
-                {/* Cards grid */}
-                {menteeId && !isError && !isLoading && subs.length > 0 && (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                        {subs.map((sub, i) => (
-                            <SubscriptionCard
-                                key={sub._id}
-                                sub={sub}
-                                i={i}
-                                onPay={handleCompletePayment}
-                                onView={handleView}
-                            />
-                        ))}
-                    </div>
-                )}
+                    {/* Empty state */}
+                    {menteeId && !isError && !isLoading && !subs.length && (
+                        <div style={{
+                            background: C.white, border: `1px dashed ${C.border}`,
+                            borderRadius: 14, padding: "56px 20px",
+                            textAlign: "center", maxWidth: 360, margin: "0 auto",
+                        }}>
+                            <Inbox size={32} style={{ color: C.border, marginBottom: 14 }} />
+                            <h3 style={{
+                                fontSize: 15, fontWeight: 700, color: C.text,
+                                margin: "0 0 6px", fontFamily: FONT,
+                            }}>
+                                No Subscriptions Yet
+                            </h3>
+                            <p style={{ fontSize: 13, color: C.muted, margin: 0, fontFamily: FONT, lineHeight: 1.6 }}>
+                                Browse mentors and pick a plan to get started.
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Cards grid */}
+                    {menteeId && !isError && !isLoading && subs.length > 0 && (
+                        <div style={{
+                            display: "grid",
+                            gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+                            gap: 16,
+                        }}>
+                            {subs.map((sub, i) => (
+                                <SubscriptionCard
+                                    key={sub._id}
+                                    sub={sub}
+                                    i={i}
+                                    onPay={handleCompletePayment}
+                                    onView={handleView}
+                                />
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
 
-            {/* ─── Modal ──────────────────────────────────────────────── */}
-
-
+            {/* ── Modal ─────────────────────────────────────────────────── */}
             {selected && (
                 <div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4"
                     onClick={() => setSelected(null)}
+                    style={{
+                        position: "fixed", inset: 0, zIndex: 50,
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        background: "rgba(0,0,0,0.4)",
+                        backdropFilter: "blur(4px)",
+                        padding: 16,
+                        animation: "fadeIn 0.15s ease",
+                    }}
                 >
                     <div
                         onClick={(e) => e.stopPropagation()}
-                        className="w-full max-w-[460px] rounded-3xl border border-gray-200 bg-white shadow-[0_20px_60px_rgba(0,0,0,0.18)] overflow-hidden"
+                        style={{
+                            width: "100%", maxWidth: 440,
+                            background: C.white,
+                            borderRadius: 14,
+                            border: `1px solid ${C.border}`,
+                            boxShadow: "0 20px 60px rgba(0,0,0,0.16)",
+                            overflow: "hidden",
+                            animation: "slideUp 0.2s ease",
+                            fontFamily: FONT,
+                        }}
                     >
-
-                        {/* Header */}
-                        <div className="border-b border-gray-100 px-5 py-4 bg-white">
-                            <div className="flex items-start justify-between">
-
+                        {/* Modal header */}
+                        <div style={{ background: C.dark, padding: "16px 18px" }}>
+                            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
                                 <div>
-                                    <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-[#0098cc]">
+                                    <p style={{
+                                        fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.5)",
+                                        textTransform: "uppercase", letterSpacing: "0.2em",
+                                        margin: "0 0 4px", fontFamily: FONT,
+                                    }}>
                                         Subscription Details
                                     </p>
-
-                                    <h2 className="mt-1 text-xl font-bold text-[#1a1a2e]">
+                                    <h2 style={{
+                                        fontSize: 16, fontWeight: 700, color: C.white,
+                                        margin: "0 0 3px", fontFamily: FONT,
+                                    }}>
                                         {planLabel(selected.plan_type)} Plan
                                     </h2>
-
-                                    <p className="mt-1 text-[11px] text-gray-500">
+                                    <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", margin: 0, fontFamily: FONT }}>
                                         ID: {selected._id?.slice(-8).toUpperCase()}
                                     </p>
                                 </div>
-
                                 <button
                                     onClick={() => setSelected(null)}
-                                    className="flex h-9 w-9 items-center justify-center rounded-xl border border-gray-200 bg-white transition hover:bg-gray-50"
+                                    style={{
+                                        width: 30, height: 30, borderRadius: 7,
+                                        background: "rgba(255,255,255,0.1)",
+                                        border: "1px solid rgba(255,255,255,0.15)",
+                                        color: "rgba(255,255,255,0.7)",
+                                        display: "flex", alignItems: "center", justifyContent: "center",
+                                        cursor: "pointer",
+                                    }}
                                 >
-                                    <X size={16} className="text-[#1a1a2e]" />
+                                    <X size={13} />
                                 </button>
                             </div>
                         </div>
 
-                        {/* Body */}
-                        <div className="p-5">
+                        {/* Modal body */}
+                        <div style={{ padding: "16px 18px" }}>
 
-                            {/* Status */}
-                            <div className="mb-4 flex flex-wrap gap-2">
-                                <div
-                                    className="flex items-center gap-1 rounded-full border border-[#0098cc]/20 bg-[#0098cc]/10 px-3 py-1.5 text-[10px] font-semibold text-[#1a1a2e]"
-                                >
-                                    <span className="h-1.5 w-1.5 rounded-full bg-[#0098cc]" />
-
-                                    {selected.status?.charAt(0).toUpperCase() +
-                                        selected.status?.slice(1)}
-                                </div>
-
-                                {/* <div
-                                    className={`flex items-center gap-1 rounded-full border px-3 py-1.5 text-[10px] font-semibold ${selected.payment_done
-                                        ? "border-emerald-200 bg-emerald-50 text-emerald-600"
-                                        : selected.payment_status === "onprocess"
-                                            ? "border-blue-200 bg-blue-50 text-blue-600"
-                                            : "border-amber-200 bg-amber-50 text-amber-600"
-                                        }`}
-                                >
-                                    {selected.payment_done ? (
-                                        <>
-                                            <CheckCircle2 size={11} />
-                                            Paid
-                                        </>
-                                    ) : selected.payment_status === "onprocess" ? (
-                                        <>
-                                            <Clock size={11} />
-                                            Processing
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Clock size={11} />
-                                            Pending
-                                        </>
-                                    )}
-                                </div> */}
+                            {/* Status row */}
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
+                                <StatusBadge status={selected.status} />
+                                <PaymentLabel done={selected.payment_done} status={selected.payment_status} />
                             </div>
 
                             {/* Extension */}
                             {selected.is_extended && (
-                                <div className="mb-4 rounded-2xl border border-[#0098cc]/20 bg-[#0098cc]/5 p-4">
-                                    <div className="flex items-center gap-2">
-                                        <TrendingUp size={14} className="text-[#0098cc]" />
-
-                                        <p className="text-xs font-semibold text-[#1a1a2e]">
-                                            Extended • {selected.extended_days} Days
+                                <div style={{
+                                    marginBottom: 14,
+                                    background: "#f0fdf4", border: "1px solid #bbf7d0",
+                                    borderRadius: 8, padding: "10px 12px",
+                                }}>
+                                    <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 8 }}>
+                                        <TrendingUp size={13} style={{ color: "#16a34a" }} />
+                                        <p style={{ fontSize: 12, fontWeight: 600, color: "#15803d", margin: 0, fontFamily: FONT }}>
+                                            Extended · {selected.extended_days} Days
                                         </p>
                                     </div>
-
-                                    <div className="mt-3 space-y-2">
+                                    <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                                         {selected.extensions?.map((ext, i) => (
-                                            <div
-                                                key={i}
-                                                className="flex items-center gap-2 text-[11px] text-gray-600"
-                                            >
-                                                <CalendarDays size={11} className="text-[#0098cc]" />
-
-                                                <span>
-                                                    +{ext.added_days}d • {fmt(ext.unavailable_from)} –{" "}
-                                                    {fmt(ext.unavailable_to)}
-                                                </span>
+                                            <div key={i} style={{
+                                                display: "flex", alignItems: "center", gap: 6,
+                                                fontSize: 11, color: C.sub, fontFamily: FONT,
+                                            }}>
+                                                <CalendarDays size={10} style={{ color: "#16a34a" }} />
+                                                +{ext.added_days}d · {fmt(ext.unavailable_from)} – {fmt(ext.unavailable_to)}
                                             </div>
                                         ))}
                                     </div>
                                 </div>
                             )}
 
-                            {/* Info Grid */}
-                            <div className="grid grid-cols-2 gap-3">
-
+                            {/* Info grid */}
+                            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
                                 {[
                                     ["Sessions", `${selected.total_sessions}`, false],
                                     ["Amount", `₹${selected.amount?.toLocaleString("en-IN")}`, false],
@@ -390,77 +484,67 @@ const Subscriptionplan = () => {
                                     ["Extra Days", `+${selected.extended_days || 0}`, false],
                                     ["Effective End", fmt(selected.effective_end_date), true],
                                 ].map(([label, value, highlight]) => (
-                                    <div
-                                        key={label}
-                                        className={` border p-3 ${highlight
-                                            ? "border-[#0098cc]/20 bg-[#0098cc]/5"
-                                            : "border-gray-200 bg-white"
-                                            }`}
-                                    >
-                                        <p
-                                            className={`text-[9px] font-semibold uppercase tracking-wide ${highlight ? "text-[#0098cc]" : "text-gray-400"
-                                                }`}
-                                        >
-                                            {label}
-                                        </p>
-
-                                        <p className="mt-1 text-[12px] font-bold text-[#1a1a2e] leading-snug">
-                                            {value}
-                                        </p>
+                                    <div key={label} style={{
+                                        borderRadius: 8, padding: "10px 12px",
+                                        background: highlight ? "#f0f9ff" : "#f8fafc",
+                                        border: `1px solid ${highlight ? "#bae6fd" : C.border}`,
+                                    }}>
+                                        <p style={{
+                                            fontSize: 9, fontWeight: 700,
+                                            color: highlight ? C.blue : C.muted,
+                                            textTransform: "uppercase", letterSpacing: "0.08em",
+                                            margin: "0 0 3px", fontFamily: FONT,
+                                        }}>{label}</p>
+                                        <p style={{
+                                            fontSize: 13, fontWeight: 700, color: C.text,
+                                            margin: 0, fontFamily: FONT, lineHeight: 1.3,
+                                        }}>{value}</p>
                                     </div>
                                 ))}
                             </div>
 
-                            {/* Buttons */}
-                            <div className="mt-5 flex gap-3">
-
+                            {/* Action buttons */}
+                            <div style={{ display: "flex", gap: 8, marginTop: 16 }}>
                                 {selected.payment_status === "pending" && (
                                     <button
-                                        onClick={() =>
-                                            handleCompletePayment(selected, {
-                                                fullName: selected.mentorName,
-                                                currentRole: selected.mentorRole,
-                                            })
-                                        }
-                                        className="flex-1 rounded-2xl bg-[#1a1a2e] py-3 text-sm font-semibold text-white transition hover:scale-[1.02]"
+                                        className="pay-btn"
+                                        onClick={() => handleCompletePayment(selected, {
+                                            fullName: selected.mentorName,
+                                            currentRole: selected.mentorRole,
+                                        })}
+                                        style={{
+                                            flex: 1, background: C.dark, color: C.white,
+                                            border: "none", borderRadius: 8,
+                                            padding: "10px 0", fontSize: 13,
+                                            fontWeight: 700, cursor: "pointer",
+                                            fontFamily: FONT, transition: "all 0.2s",
+                                        }}
                                     >
                                         Pay Now
                                     </button>
                                 )}
-
                                 <button
                                     onClick={() => setSelected(null)}
-                                    className={`${selected.payment_status === "pending"
-                                        ? "flex-1 border border-gray-200 bg-white text-[#1a1a2e]"
-                                        : "w-full bg-[#1a1a2e] text-white"
-                                        } rounded-2xl py-3 text-sm font-semibold transition hover:bg-gray-50`}
+                                    style={{
+                                        flex: 1,
+                                        background: selected.payment_status === "pending" ? C.white : C.dark,
+                                        color: selected.payment_status === "pending" ? C.text : C.white,
+                                        border: `1px solid ${selected.payment_status === "pending" ? C.border : C.dark}`,
+                                        borderRadius: 8, padding: "10px 0",
+                                        fontSize: 13, fontWeight: 700,
+                                        cursor: "pointer", fontFamily: FONT,
+                                        transition: "all 0.15s",
+                                    }}
                                 >
                                     Close
                                 </button>
                             </div>
-
                         </div>
                     </div>
                 </div>
             )}
-
-
-        </div>
+        </>
     );
 };
 
 export default Subscriptionplan;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
