@@ -1045,7 +1045,8 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
                                             background: modalTab === id ? T.btn : "transparent",
                                             color: modalTab === id ? "#fff" : T.textMid,
                                             border: `1px solid ${modalTab === id ? T.btn : "transparent"}`,
-                                            fontFamily: F,
+                                            fontFamily: F, fontSize: "15px",
+
                                         }}
                                     >
                                         <Icon size={14} />
@@ -1065,7 +1066,7 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
                             {/* ── Profile Tab ── */}
                             {modalTab === "overview" && (
                                 <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-                                    <h3 style={{ fontFamily: F, fontSize: 12, fontWeight: 700, color: T.textDark, margin: 0, paddingBottom: 10, borderBottom: `1px solid ${T.border}` }}>Basic Information</h3>
+                                    <h3 style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: T.textDark, margin: 0, paddingBottom: 10, borderBottom: `1px solid ${T.border}` }}>Basic Information</h3>
 
                                     {/* Photo */}
                                     <div>
@@ -1138,7 +1139,7 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
                             {/* ── Experience Tab ── */}
                             {modalTab === "experience" && (
                                 <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-                                    <h3 style={{ fontFamily: F, fontSize: 12, fontWeight: 700, color: T.textDark, margin: 0, paddingBottom: 10, borderBottom: `1px solid ${T.border}` }}>Experience</h3>
+                                    <h3 style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: T.textDark, margin: 0, paddingBottom: 10, borderBottom: `1px solid ${T.border}` }}>Experience</h3>
 
                                     {!showExpForm ? (
                                         <>
@@ -1227,7 +1228,7 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
                             {/* ── Engagement Tab ── */}
                             {modalTab === "engagement" && (
                                 <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-                                    <h3 style={{ fontFamily: F, fontSize: 12, fontWeight: 700, color: T.textDark, margin: 0, paddingBottom: 10, borderBottom: `1px solid ${T.border}` }}>Engagement</h3>
+                                    <h3 style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: T.textDark, margin: 0, paddingBottom: 10, borderBottom: `1px solid ${T.border}` }}>Engagement</h3>
 
                                     {/* Availability section */}
                                     <div>
@@ -1401,7 +1402,7 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
                             {/* ── Mentorship Tab ── */}
                             {modalTab === "mentorship" && (
                                 <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-                                    <h3 style={{ fontFamily: F, fontSize: 12, fontWeight: 700, color: T.textDark, margin: 0, paddingBottom: 10, borderBottom: `1px solid ${T.border}` }}>Mentorship Settings</h3>
+                                    <h3 style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: T.textDark, margin: 0, paddingBottom: 10, borderBottom: `1px solid ${T.border}` }}>Mentorship Settings</h3>
 
                                     <div>
                                         <p style={secHead}><Users size={12} color={T.primary} /> Mentorship Delivery</p>
@@ -1448,7 +1449,7 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
                                         <p style={secHead}><Users size={12} color={T.primary} /> Mentee Preferences</p>
                                         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                                             <div>
-                                                <span style={lbl}>Primary expertise *</span>
+                                                <span style={lbl}>Primary Expertise *</span>
                                                 <select
                                                     value={primaryCustom ? "__custom__" : (EXPERTISE_OPTIONS.some((o) => o.value === primaryExpertise) ? primaryExpertise : "")}
                                                     onChange={(e) => {
@@ -1468,7 +1469,7 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
                                             </div>
 
                                             <div>
-                                                <span style={lbl}>Secondary expertise</span>
+                                                <span style={lbl}>Secondary Expertise</span>
                                                 <p style={{ fontFamily: F, fontSize: 11, color: T.textLight, margin: "0 0 8px" }}>Select multiple domains you can mentor in</p>
                                                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
                                                     {EXPERTISE_OPTIONS.map((o) => {
@@ -1526,7 +1527,7 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
                             {/* ── Achievements Tab ── */}
                             {modalTab === "achievements" && (
                                 <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
-                                    <h3 style={{ fontFamily: F, fontSize: 12, fontWeight: 700, color: T.textDark, margin: 0, paddingBottom: 10, borderBottom: `1px solid ${T.border}` }}>Achievements & Credentials</h3>
+                                    <h3 style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: T.textDark, margin: 0, paddingBottom: 10, borderBottom: `1px solid ${T.border}` }}>Achievements & Credentials</h3>
 
                                     <div>
                                         <p style={secHead}><Trophy size={12} color={T.primary} /> Key Accomplishments</p>

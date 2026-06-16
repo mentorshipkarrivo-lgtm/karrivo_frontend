@@ -504,7 +504,7 @@ function normalizeMentor(data) {
         menteeCount: d.totalMentees ?? 0,
 
         pricing: {
-            hourlyRate: pricing.hourlyRate,
+            hourlyRate:d.hourlyRate,
             weeklySessions: pricing.weeklySessions ?? 0,
             plans: pricing.plans ?? {}
         }
@@ -514,6 +514,7 @@ function normalizeMentor(data) {
 function MentorCard({ mentor, onViewProfile }) {
     const [bioExpanded, setBioExpanded] = useState(false);
 
+    console.log(mentor,"mentor1w2e3r4g5")
     const fullName = toTitleCase(mentor.fullName || "Mentor");
     const currentRole = toTitleCase(mentor.currentRole || "");
     const companyName = toTitleCase(mentor.companyName || "");
@@ -526,7 +527,8 @@ function MentorCard({ mentor, onViewProfile }) {
     const areas = (mentor.areasOfInterest || mentor.currentSkills || "")
         .split(",").map((s) => s.trim()).filter(Boolean);
 
-    const monthlyPrice = mentor.hourlyRate ?? 0;
+    const monthlyPrice = mentor.pricing.hourlyRate ?? 0;
+    console.log(mentor.hourlyRate ,"monthlyPrice12e3r4")
     const placements = mentor.placements ?? 0;
     const menteeCount = mentor.menteeCount ?? 0;
     const yearsExp = mentor.yearsOfExperience
@@ -803,7 +805,6 @@ const MyMentor = () => {
 
     const { data, isLoading, isError } = useGetMyMentorQuery(menteeId, { skip: !menteeId });
 
-    console.log(data, "data1qw2e34r5")
     // ── Normalize: extract mentorDetails from the API response ──
     const mentor = normalizeMentor(data);
 

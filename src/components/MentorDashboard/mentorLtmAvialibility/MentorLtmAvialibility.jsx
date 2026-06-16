@@ -44,8 +44,8 @@ const ALL_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const DAY_IDX = { Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6, Sun: 0 };
 const TIMES = Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, "0")}:00`);
 const REASONS = [
-  "Family Emergency","Health Reason","Personal Reason","Work Reason",
-  "Travel Plans","Public Holiday","Conference / Event","Other",
+  "Family Emergency", "Health Reason", "Personal Reason", "Work Reason",
+  "Travel Plans", "Public Holiday", "Conference / Event", "Other",
 ];
 const MONTH_OPTS = [
   { v: 1, l: "1 mo" },
@@ -101,14 +101,12 @@ const Toggle = ({ on, onChange }) => (
   <button
     type="button"
     onClick={() => onChange(!on)}
-    className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#0098cc]/40 ${
-      on ? "bg-[#0098cc]" : "bg-slate-200"
-    }`}
+    className={`relative w-9 h-5 rounded-full transition-colors flex-shrink-0 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-[#0098cc]/40 ${on ? "bg-[#0098cc]" : "bg-slate-200"
+      }`}
   >
     <span
-      className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-200 ${
-        on ? "left-[18px]" : "left-0.5"
-      }`}
+      className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-200 ${on ? "left-[18px]" : "left-0.5"
+        }`}
     />
   </button>
 );
@@ -116,8 +114,8 @@ const Toggle = ({ on, onChange }) => (
 const Badge = ({ children, variant = "default" }) => {
   const cls = {
     default: "bg-slate-100 border-slate-200 text-slate-500",
-    active:  "bg-red-50 border-red-200 text-red-500",
-    upcoming:"bg-amber-50 border-amber-200 text-amber-600",
+    active: "bg-red-50 border-red-200 text-red-500",
+    upcoming: "bg-amber-50 border-amber-200 text-amber-600",
     success: "bg-sky-50 border-sky-200 text-[#0098cc]",
   }[variant];
   return (
@@ -213,7 +211,7 @@ export default function MentorAvailability() {
   const [toastMsg, setToastMsg] = useState(null);
 
   const [daySlots, setDaySlots] = useState(
-    ALL_DAYS.map((d) => ({ day: d, enabled: !["Sat", "Sun"].includes(d), from: "09:00", to: "10:00" }))
+    ALL_DAYS.map((d) => ({ day: d, enabled: true, from: "09:00", to: "10:00" }))
   );
   const [spw, setSpw] = useState(1);
   const [tz, setTz] = useState("Asia/Kolkata");
@@ -478,11 +476,10 @@ export default function MentorAvailability() {
               <button
                 key={key}
                 onClick={() => setTab(key)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition border ${
-                  tab === key
-                    ? "bg-[#0098cc]/8 border-[#0098cc]/30 text-[#0098cc]"
-                    : "text-slate-500 hover:text-slate-700 border-transparent hover:bg-slate-100"
-                }`}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition border ${tab === key
+                  ? "bg-[#0098cc]/8 border-[#0098cc]/30 text-[#0098cc]"
+                  : "text-slate-500 hover:text-slate-700 border-transparent hover:bg-slate-100"
+                  }`}
               >
                 <Icon size={12} />
                 {label}
@@ -524,22 +521,20 @@ export default function MentorAvailability() {
                         return (
                           <div
                             key={day}
-                            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg border text-xs transition ${
-                              block
-                                ? "border-red-200 bg-red-50"
-                                : slot?.enabled
+                            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg border text-xs transition ${block
+                              ? "border-red-200 bg-red-50"
+                              : slot?.enabled
                                 ? "border-slate-200 bg-white"
                                 : "border-dashed border-slate-200 bg-slate-50/50"
-                            }`}
+                              }`}
                           >
                             <span
-                              className={`font-mono font-bold text-[10px] uppercase w-7 flex-shrink-0 ${
-                                block
-                                  ? "text-red-500"
-                                  : slot?.enabled
+                              className={`font-mono font-bold text-[10px] uppercase w-7 flex-shrink-0 ${block
+                                ? "text-red-500"
+                                : slot?.enabled
                                   ? "text-[#0098cc]"
                                   : "text-slate-300"
-                              }`}
+                                }`}
                             >
                               {day}
                             </span>
@@ -606,16 +601,15 @@ export default function MentorAvailability() {
                     <div>
                       <FormLabel>Sessions / Week</FormLabel>
                       <div className="flex gap-1.5">
-                        {[1, 2, 3, 4, 5].map((n) => (
+                        {[1, 2, 3, 4, 5, 6, 7].map((n) => (
                           <button
                             key={n}
                             type="button"
                             onClick={() => setSpw(n)}
-                            className={`flex-1 py-2 rounded-lg border text-xs font-semibold transition ${
-                              spw === n
-                                ? "bg-[#0098cc]/10 border-[#0098cc]/40 text-[#0098cc]"
-                                : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
-                            }`}
+                            className={`flex-1 py-2 rounded-lg border text-xs font-semibold transition ${spw === n
+                              ? "bg-[#0098cc]/10 border-[#0098cc]/40 text-[#0098cc]"
+                              : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
+                              }`}
                           >
                             {n}
                           </button>
@@ -644,11 +638,10 @@ export default function MentorAvailability() {
                                   return n;
                                 })
                               }
-                              className={`flex-1 py-2 rounded-lg border text-xs font-semibold transition ${
-                                on
-                                  ? "bg-[#0098cc]/10 border-[#0098cc]/40 text-[#0098cc]"
-                                  : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
-                              }`}
+                              className={`flex-1 py-2 rounded-lg border text-xs font-semibold transition ${on
+                                ? "bg-[#0098cc]/10 border-[#0098cc]/40 text-[#0098cc]"
+                                : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
+                                }`}
                             >
                               {l}
                             </button>
@@ -698,11 +691,10 @@ export default function MentorAvailability() {
                               p.map((s) => ({ ...s, enabled: !allEnabled }))
                             )
                           }
-                          className={`text-[10px] font-semibold px-2.5 py-1 rounded-lg border transition ${
-                            allEnabled
-                              ? "bg-[#0098cc]/10 border-[#0098cc]/30 text-[#0098cc]"
-                              : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
-                          }`}
+                          className={`text-[10px] font-semibold px-2.5 py-1 rounded-lg border transition ${allEnabled
+                            ? "bg-[#0098cc]/10 border-[#0098cc]/30 text-[#0098cc]"
+                            : "bg-white border-slate-200 text-slate-500 hover:border-slate-300"
+                            }`}
                         >
                           {allEnabled ? "Deselect all" : "Select all"}
                         </button>
@@ -713,11 +705,10 @@ export default function MentorAvailability() {
                     {daySlots.map((slot, i) => (
                       <div
                         key={`${slot.day}-${i}`}
-                        className={`flex flex-wrap items-center gap-2.5 px-3 py-2.5 rounded-lg border transition ${
-                          slot.enabled
-                            ? "border-slate-200 bg-white"
-                            : "border-dashed border-slate-200 bg-slate-50/60"
-                        }`}
+                        className={`flex flex-wrap items-center gap-2.5 px-3 py-2.5 rounded-lg border transition ${slot.enabled
+                          ? "border-slate-200 bg-white"
+                          : "border-dashed border-slate-200 bg-slate-50/60"
+                          }`}
                       >
                         <Toggle
                           on={slot.enabled}
@@ -730,9 +721,8 @@ export default function MentorAvailability() {
                           }
                         />
                         <span
-                          className={`text-[10px] font-mono font-bold uppercase w-7 ${
-                            slot.enabled ? "text-[#0098cc]" : "text-slate-300"
-                          }`}
+                          className={`text-[10px] font-mono font-bold uppercase w-7 ${slot.enabled ? "text-[#0098cc]" : "text-slate-300"
+                            }`}
                         >
                           {slot.day}
                         </span>
@@ -872,16 +862,14 @@ export default function MentorAvailability() {
                   return (
                     <div
                       key={u._id}
-                      className={`bg-white border rounded-xl overflow-hidden shadow-sm transition ${
-                        isPast ? "opacity-60" : ""
-                      } ${isActive ? "border-red-200" : "border-slate-200"}`}
+                      className={`bg-white border rounded-xl overflow-hidden shadow-sm transition ${isPast ? "opacity-60" : ""
+                        } ${isActive ? "border-red-200" : "border-slate-200"}`}
                     >
                       <div
-                        className={`flex items-center justify-between px-4 py-2.5 border-b ${
-                          isActive
-                            ? "border-red-200 bg-red-50"
-                            : "border-slate-200 bg-slate-50"
-                        }`}
+                        className={`flex items-center justify-between px-4 py-2.5 border-b ${isActive
+                          ? "border-red-200 bg-red-50"
+                          : "border-slate-200 bg-slate-50"
+                          }`}
                       >
                         <div className="flex items-center gap-2.5 flex-wrap">
                           <Badge variant={status}>{statusLbl}</Badge>
@@ -1008,11 +996,10 @@ export default function MentorAvailability() {
                 !dateOrderErr &&
                 !hasOverlap && (
                   <div
-                    className={`rounded-lg p-3 border text-xs ${
-                      affectedDays.length
-                        ? "border-red-200 bg-red-50"
-                        : "border-amber-200 bg-amber-50"
-                    }`}
+                    className={`rounded-lg p-3 border text-xs ${affectedDays.length
+                      ? "border-red-200 bg-red-50"
+                      : "border-amber-200 bg-amber-50"
+                      }`}
                   >
                     {affectedDays.length ? (
                       <>
