@@ -197,8 +197,10 @@ export default function MentorLTMPlans() {
       navigate('/login', { state: { from: location.pathname } });
       return;
     }
-    if (storedUser?.role === 'mentor' || storedUser?.userType === 'mentor') {
-      toast.error('Access Denied', 'Mentors cannot purchase subscriptions.');
+
+    // Only role === 1 (mentee) is allowed to book
+    if (storedUser?.role !== 1) {
+      toast.error('Only mentees can purchase a subscription.');
       return;
     }
     setSelected(plan.key);
@@ -275,9 +277,9 @@ export default function MentorLTMPlans() {
     mentor?.data?.pricing?.plans,
     currentStatus,
     mentor?.data?.pricing?.sessionsByMonth ?? []
-  ); 
-  console.log(PLANS,"PLANSHFBEJEV")
-  
+  );
+  console.log(PLANS, "PLANSHFBEJEV")
+
   const effectiveSelected = selected ?? (PLANS.length === 1 ? PLANS[0].key : null);
   const mentorName = mentor?.data?.mentorDetails?.fullName || mentor?.fullName || '';
   const mentorRole = mentor?.data?.mentorDetails?.currentRole || mentor?.currentRole || '';
