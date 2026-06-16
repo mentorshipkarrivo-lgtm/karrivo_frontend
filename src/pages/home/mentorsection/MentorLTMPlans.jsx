@@ -200,7 +200,7 @@ export default function MentorLTMPlans() {
 
     // Only role === 1 (mentee) is allowed to book
     if (storedUser?.role !== 1) {
-      toast.error('Only mentees can purchase a subscription.');
+      toast.error('Mentor cannot book a session with another mentor');
       return;
     }
     setSelected(plan.key);
