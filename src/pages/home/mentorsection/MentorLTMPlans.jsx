@@ -59,23 +59,37 @@ const MONTHS_TO_KEY = { 1: 'one_month', 3: 'three_months', 6: 'six_months' };
 const UPI_PRIMARY = 'karrivo2024@upi';
 const UPI_SECONDARY = 'example.174327728615@sbi';
 
-// ── Helpers ────────────────────────────────────────────────────────────────
-function normalizePlans(plans, currentStatus = '', sessionsByMonth = []) {
+
+
+function normalizePlans(plans, currentStatus = '', sessionsByMonth = [], weeklySessions = null) {
   if (!plans || !Object.keys(plans).length) return [];
   const priceKey = currentStatus?.toLowerCase() === 'experienced' ? 'experienced' : 'freshers';
+
   return Object.entries(plans)
     .map(([key, value]) => {
       const months = KEY_TO_MONTHS[key];
       const meta = PLAN_META[months];
-      if (!meta || !value) return null;
-      const totalPrice = value[priceKey] ?? 0;
+      const breakdown = value?.breakdown?.[priceKey];
+      if (!meta || !breakdown) return null;
 
-      // ── use sessionsByMonth from API ──
       const sessionEntry = sessionsByMonth.find(s => s.months === months);
-      const totalSessions = sessionEntry?.totalSessions ?? months * 4; // fallback
 
-      const perSession = totalSessions > 0 ? Math.round(totalPrice / totalSessions) : 0;
-      return { ...meta, key: `${months}Month`, months, sessionsPerWeek: 1, totalSessions, perSession, totalPrice };
+      return {
+        ...meta,
+        key: `${months}Month`,
+        months,
+        sessionsPerWeek: weeklySessions,
+        monthlyPrice: value.monthlyPrice?.[priceKey] ?? null,
+        totalPrice: breakdown.totalPrice,
+        platformFee: breakdown.platformFee,
+        platformPct: breakdown.platformPct,
+        cgst: breakdown.cgst,
+        sgst: breakdown.sgst,
+        totalDeducted: breakdown.totalDeducted,
+        mentorReceive: breakdown.mentorReceive,
+        perMonthReceive: breakdown.perMonthReceive,
+        totalSessions: sessionEntry?.totalSessions ?? null,
+      };
     })
     .filter(Boolean)
     .sort((a, b) => a.months - b.months);
@@ -276,7 +290,8 @@ export default function MentorLTMPlans() {
   const PLANS = normalizePlans(
     mentor?.data?.pricing?.plans,
     currentStatus,
-    mentor?.data?.pricing?.sessionsByMonth ?? []
+    mentor?.data?.pricing?.sessionsByMonth ?? [],
+    mentor?.data?.pricing?.weeklySessions ?? null
   );
   console.log(PLANS, "PLANSHFBEJEV")
 
@@ -568,8 +583,7 @@ export default function MentorLTMPlans() {
                     </div>
                   </div>
                   <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                    {[paymentPlan.label, `${paymentPlan.sessionsPerWeek} session/week`, `₹${paymentPlan.perSession.toLocaleString('en-IN')}/session`].map(t => (
-                      <span key={t} style={{ fontSize: 10, fontWeight: 600, padding: '3px 9px', borderRadius: 20, background: '#fff', color: MUTED, border: `1px solid ${BORDER_HI}` }}>{t}</span>
+                    {[paymentPlan.label, `${paymentPlan.sessionsPerWeek} session/week`, `₹${paymentPlan.monthlyPrice?.toLocaleString('en-IN')}/month`].map(t => (<span key={t} style={{ fontSize: 10, fontWeight: 600, padding: '3px 9px', borderRadius: 20, background: '#fff', color: MUTED, border: `1px solid ${BORDER_HI}` }}>{t}</span>
                     ))}
                   </div>
                 </div>

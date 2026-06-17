@@ -219,7 +219,7 @@ const HelpSupport = () => {
     };
 
     return (
-        <div style={{ minHeight: '100vh', background: '#fff', padding: '24px', fontFamily: "'DM Sans', 'Segoe UI', sans-serif" }}>
+        <div style={{ minHeight: '80vh', background: '#fff', padding: '24px', fontFamily: "'DM Sans', 'Segoe UI', sans-serif" }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
 
                 {/* Header */}

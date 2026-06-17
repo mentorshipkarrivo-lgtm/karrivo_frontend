@@ -291,7 +291,12 @@ export default function HeroSection() {
 
               {/* Explore label */}
               <div className="absolute top-0 left-1/2 -translate-x-1/2 flex items-center gap-1">
-                <span className="text-[#0098cc] font-semibold text-sm sm:text-base">Explore</span>
+                <a
+                  href="/explore-mentors"
+                  className="text-[#0098cc] font-semibold text-sm sm:text-base"
+                >
+                  Explore
+                </a>
                 <svg className="w-4 h-4 text-[#0098cc]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
@@ -299,8 +304,12 @@ export default function HeroSection() {
 
               {/* Create label */}
               <div className="absolute bottom-2 left-2 sm:left-4 flex items-center gap-1">
-                <span className="text-[#1a1a2e] font-semibold text-sm sm:text-base">Create</span>
-                <svg className="w-4 h-4 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <a
+                  href="/login"
+                  className="text-[#0098cc] font-semibold text-sm sm:text-base"
+                >
+                  Create
+                </a>                <svg className="w-4 h-4 text-[#1a1a2e]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M17 7l-10 10M7 7h10v10" />
                 </svg>
               </div>
@@ -310,8 +319,12 @@ export default function HeroSection() {
                 <svg className="w-4 h-4 text-[#0098cc] rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
-                <span className="text-[#0098cc] font-semibold text-sm sm:text-base">Apply</span>
-              </div>
+                <a
+                  href="/login"
+                  className="text-[#0098cc] font-semibold text-sm sm:text-base"
+                >
+                  Apply
+                </a>                </div>
 
               {/* Faceted shape */}
               <svg viewBox="0 0 320 320" className="w-full h-full">

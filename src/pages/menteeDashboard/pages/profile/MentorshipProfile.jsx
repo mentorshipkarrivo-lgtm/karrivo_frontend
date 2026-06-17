@@ -44,6 +44,65 @@ const COLORS = {
     white: '#ffffff',
 };
 
+const DI = "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons";
+const SKILL_ICON_MAP = {
+    "react": `${DI}/react/react-original.svg`,
+    "react js": `${DI}/react/react-original.svg`,
+    "react.js": `${DI}/react/react-original.svg`,
+    "reactjs": `${DI}/react/react-original.svg`,
+    "next": `${DI}/nextjs/nextjs-original.svg`,
+    "next.js": `${DI}/nextjs/nextjs-original.svg`,
+    "nextjs": `${DI}/nextjs/nextjs-original.svg`,
+    "vue": `${DI}/vuejs/vuejs-original.svg`,
+    "angular": `${DI}/angularjs/angularjs-original.svg`,
+    "node": `${DI}/nodejs/nodejs-original.svg`,
+    "node.js": `${DI}/nodejs/nodejs-original.svg`,
+    "nodejs": `${DI}/nodejs/nodejs-original.svg`,
+    "javascript": `${DI}/javascript/javascript-original.svg`,
+    "js": `${DI}/javascript/javascript-original.svg`,
+    "typescript": `${DI}/typescript/typescript-original.svg`,
+    "ts": `${DI}/typescript/typescript-original.svg`,
+    "python": `${DI}/python/python-original.svg`,
+    "java": `${DI}/java/java-original.svg`,
+    "c++": `${DI}/cplusplus/cplusplus-original.svg`,
+    "cpp": `${DI}/cplusplus/cplusplus-original.svg`,
+    "go": `${DI}/go/go-original.svg`,
+    "golang": `${DI}/go/go-original.svg`,
+    "php": `${DI}/php/php-original.svg`,
+    "swift": `${DI}/swift/swift-original.svg`,
+    "kotlin": `${DI}/kotlin/kotlin-original.svg`,
+    "dart": `${DI}/dart/dart-original.svg`,
+    "django": `${DI}/django/django-plain.svg`,
+    "flask": `${DI}/flask/flask-original.svg`,
+    "spring": `${DI}/spring/spring-original.svg`,
+    "flutter": `${DI}/flutter/flutter-original.svg`,
+    "mongodb": `${DI}/mongodb/mongodb-original.svg`,
+    "mysql": `${DI}/mysql/mysql-original.svg`,
+    "sql": `${DI}/mysql/mysql-original.svg`,
+    "postgresql": `${DI}/postgresql/postgresql-original.svg`,
+    "postgres": `${DI}/postgresql/postgresql-original.svg`,
+    "redis": `${DI}/redis/redis-original.svg`,
+    "firebase": `${DI}/firebase/firebase-plain.svg`,
+    "docker": `${DI}/docker/docker-original.svg`,
+    "kubernetes": `${DI}/kubernetes/kubernetes-plain.svg`,
+    "aws": `${DI}/amazonwebservices/amazonwebservices-original-wordmark.svg`,
+    "azure": `${DI}/azure/azure-original.svg`,
+    "gcp": `${DI}/googlecloud/googlecloud-original.svg`,
+    "git": `${DI}/git/git-original.svg`,
+    "github": `${DI}/github/github-original.svg`,
+    "html": `${DI}/html5/html5-original.svg`,
+    "css": `${DI}/css3/css3-original.svg`,
+    "tailwind": `${DI}/tailwindcss/tailwindcss-plain.svg`,
+    "figma": `${DI}/figma/figma-original.svg`,
+    "tensorflow": `${DI}/tensorflow/tensorflow-original.svg`,
+    "pytorch": `${DI}/pytorch/pytorch-original.svg`,
+    "pandas": `${DI}/pandas/pandas-original.svg`,
+    "numpy": `${DI}/numpy/numpy-original.svg`,
+    "graphql": `${DI}/graphql/graphql-plain.svg`,
+};
+
+
+const getSkillIcon = (skill) => SKILL_ICON_MAP[skill.toLowerCase().trim()] || null;
 // ── UTILITIES ─────────────────────────────────────────────────────────────────
 const mapEducation = (val = '') => {
     const map = {
@@ -65,27 +124,37 @@ const mapStatus = (val = '') => {
 
 // ── REUSABLE COMPONENTS ───────────────────────────────────────────────────────
 
-const TagPill = ({ label, onRemove, variant = 'blue' }) => {
-    const variants = {
-        blue: { bg: COLORS.accentLight, text: COLORS.accent, border: COLORS.accentBorder },
-        indigo: { bg: '#ede9fe', text: '#6d28d9', border: '#c4b5fd' },
-        green: { bg: '#f0fdf4', text: '#16a34a', border: '#86efac' },
-        navy: { bg: '#f0f0f6', text: COLORS.primary, border: '#c7c7dc' },
-    };
-    const style = variants[variant] || variants.blue;
+const SkillTagPill = ({ label, onRemove }) => {
+    const icon = getSkillIcon(label);
+    const [imgErr, setImgErr] = useState(false);
     return (
         <span style={{
-            display: 'inline-flex', alignItems: 'center', gap: '4px',
-            padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 600,
-            letterSpacing: '0.2px',
-            background: style.bg, color: style.text, border: `1px solid ${style.border}`,
+            display: 'inline-flex', alignItems: 'center', gap: '6px',
+            padding: '4px 10px', fontSize: '12px', fontWeight: 600,
+            color: "#1a1a2e",
+            border: `1px solid ${COLORS.accentBorder}`,
         }}>
+            {icon && !imgErr ? (
+                <img src={icon} alt={label}
+                    style={{ width: '14px', height: '14px', objectFit: 'contain', flexShrink: 0 }}
+                    onError={() => setImgErr(true)} />
+            ) : (
+                <span style={{
+                    width: '14px', height: '14px', borderRadius: '3px',
+                    background: COLORS.primary, color: COLORS.white,
+                    fontSize: '8px', fontWeight: 700,
+                    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0,
+                }}>
+                    {label.slice(0, 2).toUpperCase()}
+                </span>
+            )}
             {label}
             {onRemove && (
                 <button onClick={onRemove} style={{
                     marginLeft: '2px', lineHeight: 1, fontSize: '14px',
                     background: 'none', border: 'none', cursor: 'pointer',
-                    color: style.text, opacity: 0.7, padding: 0,
+                    color: "#1a1a2e", opacity: 0.7, padding: 0,
                 }}>×</button>
             )}
         </span>
@@ -457,7 +526,18 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
         if (currentSection === 'about') {
             return { fullName: formData.fullName, email: formData.email, phone: formData.phone, city: formData.city, country: formData.country, linkedinUrl: formData.linkedinUrl, profilePhotoUrl: formData.profilePhotoUrl };
         } else if (currentSection === 'experience') {
-            return { domain: formData.domain, role: formData.role, yearsOfExperience: formData.yearsOfExperience, currentCompany: formData.currentCompany, previousCompanies: formData.previousCompanies, skills: formData.skills, about: formData.about, availability: formData.availability, highestEducation: formData.highestEducation, schoolCollegeName: formData.schoolCollegeName };
+            return {
+                domain: formData.domain === '__other_pending__' ? '' : formData.domain,
+                role: formData.role,
+                yearsOfExperience: formData.yearsOfExperience,
+                currentCompany: formData.currentCompany,
+                previousCompanies: formData.previousCompanies,
+                skills: formData.skills,
+                about: formData.about,
+                availability: formData.availability,
+                highestEducation: formData.highestEducation,
+                schoolCollegeName: formData.schoolCollegeName
+            };
         } else if (currentSection === 'resume') {
             return { resumeDriveLink: formData.resumeDriveLink };
         } else if (currentSection === 'goals') {
@@ -554,10 +634,9 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
                     <FormField label="Domain" required error={errors.domain}>
                         <select
-                            value={DOMAIN_OPTIONS.includes(formData.domain) || formData.domain === '' ? formData.domain : '__other__'}
-                            onChange={e => {
+                            value={DOMAIN_OPTIONS.includes(formData.domain) ? formData.domain : formData.domain === '' ? '' : '__other__'} onChange={e => {
                                 const v = e.target.value;
-                                if (v === '__other__') setFormData(prev => ({ ...prev, domain: inputValues.customDomain || '' }));
+                                if (v === '__other__') setFormData(prev => ({ ...prev, domain: '__other_pending__' }));
                                 else { setFormData(prev => ({ ...prev, domain: v })); setInputValues(prev => ({ ...prev, customDomain: '' })); }
                                 if (errors.domain) setErrors(prev => ({ ...prev, domain: '' }));
                             }}
@@ -567,11 +646,68 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
                             {DOMAIN_OPTIONS.map(o => <option key={o} value={o}>{o}</option>)}
                             <option value="__other__">Other (specify below)</option>
                         </select>
-                        {!DOMAIN_OPTIONS.includes(formData.domain) && formData.domain !== '' && (
-                            <input value={formData.domain}
-                                onChange={e => { setFormData(prev => ({ ...prev, domain: e.target.value })); if (errors.domain) setErrors(prev => ({ ...prev, domain: '' })); }}
-                                placeholder="Describe your domain..."
-                                style={{ ...inputStyle(), marginTop: '8px', background: COLORS.accentLight }} />
+                        {(formData.domain === '__other_pending__' || (!DOMAIN_OPTIONS.includes(formData.domain) && formData.domain !== '')) && (
+                            <div style={{ marginTop: '8px' }}>
+                                {formData.domain === '__other_pending__' ? (
+                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                        <input
+                                            value={inputValues.customDomain || ''}
+                                            onChange={e => setInputValues(prev => ({ ...prev, customDomain: e.target.value }))}
+                                            onKeyPress={e => {
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    const v = inputValues.customDomain?.trim();
+                                                    if (v) {
+                                                        setFormData(prev => ({ ...prev, domain: v }));
+                                                        setInputValues(prev => ({ ...prev, customDomain: '' }));
+                                                        if (errors.domain) setErrors(prev => ({ ...prev, domain: '' }));
+                                                    }
+                                                }
+                                            }}
+                                            placeholder="Describe your domain..."
+                                            style={{ ...inputStyle(), flex: 1, background: COLORS.accentLight }}
+                                            autoFocus
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const v = inputValues.customDomain?.trim();
+                                                if (v) {
+                                                    setFormData(prev => ({ ...prev, domain: v }));
+                                                    setInputValues(prev => ({ ...prev, customDomain: '' }));
+                                                    if (errors.domain) setErrors(prev => ({ ...prev, domain: '' }));
+                                                }
+                                            }}
+                                            style={{
+                                                padding: '0 16px', background: COLORS.primary, color: COLORS.white,
+                                                border: 'none', borderRadius: '6px', fontSize: '13px', fontWeight: 600,
+                                                cursor: 'pointer', flexShrink: 0,
+                                            }}
+                                        >
+                                            Add
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <div style={{
+                                        display: 'inline-flex', alignItems: 'center', gap: '6px', marginTop: '6px',
+                                        padding: '4px 10px', borderRadius: '20px', fontSize: '12px', fontWeight: 600,
+                                        background: COLORS.accentLight, color: COLORS.accent, border: `1px solid ${COLORS.accentBorder}`,
+                                    }}>
+                                        <span>{formData.domain}</span>
+                                        <button
+                                            onClick={() => {
+                                                setFormData(prev => ({ ...prev, domain: '__other_pending__' }));
+                                                setInputValues(prev => ({ ...prev, customDomain: '' }));
+                                            }}
+                                            style={{
+                                                marginLeft: '2px', lineHeight: 1, fontSize: '14px',
+                                                background: 'none', border: 'none', cursor: 'pointer',
+                                                color: COLORS.accent, opacity: 0.7, padding: 0,
+                                            }}
+                                        >×</button>
+                                    </div>
+                                )}
+                            </div>
                         )}
                     </FormField>
 
@@ -627,8 +763,7 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
                         onChange={v => setInputValues(p => ({ ...p, skill: v }))} onAdd={() => addItem('skill')} />
                     {formData.skills.length > 0 && (
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '8px' }}>
-                            {formData.skills.map((s, i) => <TagPill key={i} label={s} onRemove={() => removeItem('skills', i)} variant="blue" />)}
-                        </div>
+                            {formData.skills.map((s, i) => <SkillTagPill key={i} label={s} onRemove={() => removeItem('skills', i)} />)}                        </div>
                     )}
                 </FormField>
 
@@ -646,8 +781,10 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
 
                 <FormField label="About You">
                     <textarea name="about" value={formData.about}
-                        onChange={e => { if (e.target.value.length <= 500) handleChange(e); }}
-                        rows={3} placeholder="Brief description about yourself..."
+                        onChange={e => {
+                            const val = e.target.value.slice(0, 500);
+                            setFormData(prev => ({ ...prev, about: val }));
+                        }} rows={3} placeholder="Brief description about yourself..."
                         style={{ ...inputStyle(), resize: 'none' }} />
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '4px' }}>
                         <span style={{ fontSize: '11px', color: formData.about.trim().length < 50 && formData.about ? COLORS.error : COLORS.muted }}>
@@ -672,7 +809,7 @@ const EditProfileModal = ({ isOpen, onClose, section, profileData, onSave, isSav
             <div style={{ borderRadius: '8px', border: `1px solid ${COLORS.border}`, overflow: 'hidden' }}>
                 <div style={{ padding: '10px 16px', display: 'flex', alignItems: 'center', gap: '8px', background: COLORS.primary }}>
                     <FileText size={13} color={COLORS.white} />
-                    <span style={{ fontSize: '11px', fontWeight: 700, color: COLORS.white, letterSpacing: '0.6px',  }}>How to get your Drive link</span>
+                    <span style={{ fontSize: '11px', fontWeight: 700, color: COLORS.white, letterSpacing: '0.6px', }}>How to get your Drive link</span>
                 </div>
                 <div style={{ padding: '12px 16px', background: COLORS.accentLight, display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px' }}>
                     {[
@@ -1213,7 +1350,7 @@ const MentorshipProfile = () => {
                                     )}
                                     {profile.targetCompanies?.length > 0 && (
                                         <div style={{ paddingTop: '12px', borderTop: `1px solid ${COLORS.mutedBg}` }}>
-                                            <p style={{ fontSize: '11px', fontWeight: 700, color: COLORS.muted,  letterSpacing: '0.6px', margin: '0 0 8px' }}>Target Companies</p>
+                                            <p style={{ fontSize: '11px', fontWeight: 700, color: COLORS.muted, letterSpacing: '0.6px', margin: '0 0 8px' }}>Target Companies</p>
                                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                                                 {profile.targetCompanies.map((c, i) => <TagPill key={i} label={c} variant="green" />)}
                                             </div>
@@ -1232,7 +1369,7 @@ const MentorshipProfile = () => {
                                         <div className="profile-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '14px' }}>
                                             {detailItems.map((item, i) => (
                                                 <div key={i}>
-                                                    <p style={{ fontSize: '11px', fontWeight: 700, color: COLORS.muted,  letterSpacing: '0.6px', margin: '0 0 4px' }}>{item.label}</p>
+                                                    <p style={{ fontSize: '11px', fontWeight: 700, color: COLORS.muted, letterSpacing: '0.6px', margin: '0 0 4px' }}>{item.label}</p>
                                                     <p style={{ fontSize: '13px', fontWeight: 600, color: COLORS.primary, margin: 0 }}>{item.value}</p>
                                                 </div>
                                             ))}
@@ -1242,8 +1379,7 @@ const MentorshipProfile = () => {
                                         <div>
                                             <p style={{ fontSize: '11px', fontWeight: 700, color: COLORS.muted, letterSpacing: '0.6px', margin: '0 0 8px' }}>Skills</p>
                                             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                                                {profile.skills.map((s, i) => <TagPill key={i} label={s} variant="blue" />)}
-                                            </div>
+                                                {profile.skills.map((s, i) => <SkillTagPill key={i} label={s} />)}                                            </div>
                                         </div>
                                     )}
                                     {profile.about && (

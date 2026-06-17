@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { FaClock } from "react-icons/fa";
 import { useLazySearchMentorsQuery } from "./MentorsecApiSlice";
+import Loader from "../../global/Loader";
 
 // ── Google Font ─────────────────────────────────────────────────────────────
 const _link = document.createElement("link");
@@ -211,8 +212,6 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
           <span>{languages}</span>
         </div>
 
-        {/* BIO */}
-        {/* BIO */}
         <div
           style={{
             border: "1px solid #e5e7eb",
@@ -493,9 +492,7 @@ const SearchResults = () => {
         {/* ── Loading ── */}
         {isLoading && (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "40vh" }}>
-            <div style={{ width: "36px", height: "36px", borderRadius: "50%", border: `3px solid ${BLUE_LIGHT}`, borderTopColor: BLUE, animation: "spin .8s linear infinite" }} />
-            <p style={{ marginTop: "12px", fontSize: "13px", color: "#9ca3af" }}>Searching for mentors…</p>
-            <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+            <Loader/>
           </div>
         )}
 

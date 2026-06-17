@@ -37,8 +37,8 @@ const DOMAIN_CHIPS = [
 ];
 const NAV_LINKS = [
     { label: "Explore Mentors", path: "/explore-mentors" },
-    { label: "Blogs", path: "/blogs" },
-    { label: "Success Stories", path: "/success-stories" },
+    // { label: "Blogs", path: "/blogs" },
+    // { label: "Success Stories", path: "/success-stories" },
 ];
 
 const fmtINR = (n) => `₹${Number(n ?? 0).toLocaleString("en-IN")}`;

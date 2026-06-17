@@ -134,7 +134,7 @@ export default function FAQAccordion() {
         </div>
 
         {/* Bottom Section */}
-        <div className="text-center mt-14">
+        {/* <div className="text-center mt-14">
           <p
             style={{
               color: "#9CA3AF",
@@ -159,7 +159,7 @@ export default function FAQAccordion() {
           >
             Contact Us
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

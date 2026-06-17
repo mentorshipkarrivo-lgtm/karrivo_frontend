@@ -172,7 +172,185 @@ const ProfileDropdown = ({ userData, onProfileClick, onLogoutClick, isOpen, prof
 };
 
 /* ── ProfileCompletionForm ────────────────────────────────────────────────── */
-const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
+// const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
+//     const [currentStep, setCurrentStep] = useState(1);
+//     const [formData, setFormData] = useState({
+//         fullName: '', dateOfBirth: '', address: '',
+//         currentStatus: '', highestEducation: '', menteeType: '',
+//     });
+//     const [clientErrors, setClientErrors] = useState({});
+
+//     const set = (field, value) => {
+//         setFormData(prev => ({ ...prev, [field]: value }));
+//         setClientErrors(prev => ({ ...prev, [field]: '' }));
+//     };
+
+//     const validateStep = (step) => {
+//         const errs = {};
+//         if (step === 1) {
+//             if (!formData.fullName || formData.fullName.trim().length < 2) errs.fullName = 'Full name required (min 2 chars)';
+//             if (!formData.dateOfBirth) errs.dateOfBirth = 'Date of birth is required';
+//             if (!formData.address || formData.address.trim().length < 5) errs.address = 'Address required (min 5 chars)';
+//         }
+//         if (step === 2) {
+//             if (!formData.currentStatus) errs.currentStatus = 'Please select your status';
+//             if (!formData.highestEducation) errs.highestEducation = 'Please select education';
+//         }
+//         if (step === 3) {
+//             if (!formData.menteeType) errs.menteeType = 'Please select a mentor type';
+//         }
+//         setClientErrors(errs);
+//         return Object.keys(errs).length === 0;
+//     };
+
+//     const handleNext = () => { if (validateStep(currentStep)) setCurrentStep(s => s + 1); };
+//     const handleSubmit = () => { if (validateStep(3)) onComplete(formData); };
+//     const errors = { ...serverErrors, ...clientErrors };
+
+//     const FieldError = ({ field }) => errors[field]
+//         ? <p style={{ fontSize: 11, color: '#ef4444', marginTop: 4, fontFamily: 'Cambria, Georgia, serif' }}>{errors[field]}</p> : null;
+
+//     const inputStyle = (field) => ({
+//         width: '100%', padding: '8px 11px',
+//         border: `1.5px solid ${errors[field] ? '#f87171' : '#e2e8f0'}`,
+//         borderRadius: 8, fontSize: 13, color: '#0f172a',
+//         outline: 'none', boxSizing: 'border-box',
+//         background: errors[field] ? '#fff8f8' : '#fff',
+//         fontFamily: 'Cambria, Georgia, serif', transition: 'border-color 0.15s',
+//     });
+
+//     const toggleStyle = (active) => ({
+//         padding: '9px', border: `1.5px solid ${active ? '#0098cc' : '#e2e8f0'}`,
+//         borderRadius: 8, fontSize: 12, fontWeight: 500,
+//         background: active ? '#f0f9ff' : '#fff',
+//         color: active ? '#0098cc' : '#64748b',
+//         cursor: 'pointer', transition: 'all 0.15s', textAlign: 'center',
+//         fontFamily: 'Cambria, Georgia, serif',
+//     });
+
+//     const labelStyle = {
+//         display: 'block', fontSize: 11, fontWeight: 500,
+//         color: '#64748b', letterSpacing: '0.04em',
+//         textTransform: 'uppercase', marginBottom: 5,
+//         fontFamily: 'Cambria, Georgia, serif',
+//     };
+
+//     return (
+//         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '1rem', fontFamily: 'Cambria, Georgia, serif' }}>
+//             <div style={{ background: '#fff', borderRadius: 14, border: '0.5px solid #e2e8f0', width: '100%', maxWidth: 440, overflow: 'hidden', fontFamily: 'Cambria, Georgia, serif' }}>
+//                 <div style={{ padding: '20px 24px 16px', borderBottom: '0.5px solid #f0f4f8', textAlign: 'center' }}>
+//                     <p style={{ fontSize: 15, fontWeight: 500, color: '#0098cc', margin: '0 0 3px', fontFamily: 'Cambria, Georgia, serif' }}>Complete your profile</p>
+//                     <p style={{ fontSize: 11, color: '#94a3b8', margin: '0 0 14px', fontFamily: 'Cambria, Georgia, serif' }}>3 quick steps to get matched with the right mentor</p>
+//                     <div style={{ display: 'flex', gap: 5 }}>
+//                         {[1, 2, 3].map(i => (
+//                             <div key={i} style={{
+//                                 flex: 1, height: 3, borderRadius: 99,
+//                                 background: i <= currentStep ? '#0098cc' : '#e2e8f0',
+//                                 transition: 'background 0.35s',
+//                             }} />
+//                         ))}
+//                     </div>
+//                 </div>
+//                 <div style={{ padding: '18px 24px', fontFamily: 'Cambria, Georgia, serif' }}>
+//                     <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 14 }}>
+//                         <span style={{
+//                             width: 20, height: 20, borderRadius: '50%', background: '#0098cc', color: '#fff',
+//                             fontSize: 11, fontWeight: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+//                             fontFamily: 'Cambria, Georgia, serif',
+//                         }}>{currentStep}</span>
+//                         <span style={{ fontSize: 13, fontWeight: 500, color: '#0098cc', fontFamily: 'Cambria, Georgia, serif' }}>
+//                             {currentStep === 1 ? 'Personal information' : currentStep === 2 ? 'Experience & education' : 'Mentor preference'}
+//                         </span>
+//                     </div>
+//                     {currentStep === 1 && (
+//                         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+//                             <div>
+//                                 <label style={labelStyle}>Full name *</label>
+//                                 <input type="text" value={formData.fullName} onChange={e => set('fullName', e.target.value)} placeholder="Enter your full name" style={inputStyle('fullName')} />
+//                                 <FieldError field="fullName" />
+//                             </div>
+//                             <div>
+//                                 <label style={labelStyle}>Date of birth *</label>
+//                                 <input type="date" value={formData.dateOfBirth} onChange={e => set('dateOfBirth', e.target.value)} style={inputStyle('dateOfBirth')} />
+//                                 <FieldError field="dateOfBirth" />
+//                             </div>
+//                             <div>
+//                                 <label style={labelStyle}>Address *</label>
+//                                 <textarea value={formData.address} onChange={e => set('address', e.target.value)} rows={2} placeholder="City, State, Country" style={{ ...inputStyle('address'), resize: 'none' }} />
+//                                 <FieldError field="address" />
+//                             </div>
+//                         </div>
+//                     )}
+//                     {currentStep === 2 && (
+//                         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+//                             <div>
+//                                 <label style={labelStyle}>Current status *</label>
+//                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+//                                     {['Fresher', 'Experienced'].map(v => (
+//                                         <button key={v} onClick={() => set('currentStatus', v.toLowerCase())} style={toggleStyle(formData.currentStatus === v.toLowerCase())}>{v}</button>
+//                                     ))}
+//                                 </div>
+//                                 <FieldError field="currentStatus" />
+//                             </div>
+//                             <div>
+//                                 <label style={labelStyle}>Highest education *</label>
+//                                 <select value={formData.highestEducation} onChange={e => set('highestEducation', e.target.value)} style={{ ...inputStyle('highestEducation'), cursor: 'pointer' }}>
+//                                     <option value="">Select education level</option>
+//                                     {['High School', 'Diploma', 'Bachelors Degree', 'Masters Degree', 'PhD', 'Others'].map(o => (
+//                                         <option key={o} value={o}>{o}</option>
+//                                     ))}
+//                                 </select>
+//                                 <FieldError field="highestEducation" />
+//                             </div>
+//                         </div>
+//                     )}
+//                     {currentStep === 3 && (
+//                         <div>
+//                             <label style={labelStyle}>What type of mentor do you want? *</label>
+//                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 7 }}>
+//                                 {menteeTypes.map(type => (
+//                                     <button key={type} onClick={() => set('menteeType', type)} style={{ ...toggleStyle(formData.menteeType === type), textAlign: 'left', padding: '8px 10px', lineHeight: 1.3 }}>
+//                                         {type}
+//                                     </button>
+//                                 ))}
+//                             </div>
+//                             <FieldError field="menteeType" />
+//                         </div>
+//                     )}
+//                 </div>
+//                 <div style={{ padding: '12px 24px', background: '#fafbfc', borderTop: '0.5px solid #f0f4f8', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'Cambria, Georgia, serif' }}>
+//                     <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'Cambria, Georgia, serif' }}>Step {currentStep} of 3</span>
+//                     <div style={{ display: 'flex', gap: 8 }}>
+//                         <button onClick={() => setCurrentStep(s => s - 1)} disabled={currentStep === 1} style={{
+//                             padding: '7px 16px', border: '1.5px solid #e2e8f0', borderRadius: 8,
+//                             background: '#fff', color: '#64748b', fontSize: 13, fontWeight: 500,
+//                             cursor: currentStep === 1 ? 'default' : 'pointer', opacity: currentStep === 1 ? 0.35 : 1, fontFamily: 'Cambria, Georgia, serif',
+//                         }}>Back</button>
+//                         {currentStep < 3 ? (
+//                             <button onClick={handleNext} style={{ padding: '7px 18px', border: 'none', borderRadius: 8, background: '#0098cc', color: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'Cambria, Georgia, serif' }}>Continue →</button>
+//                         ) : (
+//                             <button onClick={handleSubmit} disabled={saving} style={{
+//                                 padding: '7px 18px', border: 'none', borderRadius: 8, background: '#0098cc', color: '#fff', fontSize: 13, fontWeight: 500,
+//                                 cursor: saving ? 'default' : 'pointer', opacity: saving ? 0.5 : 1,
+//                                 display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'Cambria, Georgia, serif',
+//                             }}>
+//                                 {saving && <Loader2 size={13} className="animate-spin" />}
+//                                 {saving ? 'Saving...' : 'Complete profile'}
+//                             </button>
+//                         )}
+//                     </div>
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// };
+
+
+
+
+const BUTTON_COLOR = '#1a1a2e';
+
+const ProfileCompletionForm = ({ onComplete = () => { }, saving = false, serverErrors = {} }) => {
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState({
         fullName: '', dateOfBirth: '', address: '',
@@ -220,10 +398,10 @@ const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
     });
 
     const toggleStyle = (active) => ({
-        padding: '9px', border: `1.5px solid ${active ? '#0098cc' : '#e2e8f0'}`,
+        padding: '9px', border: `1.5px solid ${active ? BUTTON_COLOR : '#e2e8f0'}`,
         borderRadius: 8, fontSize: 12, fontWeight: 500,
-        background: active ? '#f0f9ff' : '#fff',
-        color: active ? '#0098cc' : '#64748b',
+        background: active ? BUTTON_COLOR : '#fff',
+        color: active ? '#fff' : '#64748b',
         cursor: 'pointer', transition: 'all 0.15s', textAlign: 'center',
         fontFamily: 'Cambria, Georgia, serif',
     });
@@ -327,10 +505,10 @@ const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
                             cursor: currentStep === 1 ? 'default' : 'pointer', opacity: currentStep === 1 ? 0.35 : 1, fontFamily: 'Cambria, Georgia, serif',
                         }}>Back</button>
                         {currentStep < 3 ? (
-                            <button onClick={handleNext} style={{ padding: '7px 18px', border: 'none', borderRadius: 8, background: '#0098cc', color: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'Cambria, Georgia, serif' }}>Continue →</button>
+                            <button onClick={handleNext} style={{ padding: '7px 18px', border: 'none', borderRadius: 8, background: BUTTON_COLOR, color: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'Cambria, Georgia, serif' }}>Continue →</button>
                         ) : (
                             <button onClick={handleSubmit} disabled={saving} style={{
-                                padding: '7px 18px', border: 'none', borderRadius: 8, background: '#0098cc', color: '#fff', fontSize: 13, fontWeight: 500,
+                                padding: '7px 18px', border: 'none', borderRadius: 8, background: BUTTON_COLOR, color: '#fff', fontSize: 13, fontWeight: 500,
                                 cursor: saving ? 'default' : 'pointer', opacity: saving ? 0.5 : 1,
                                 display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'Cambria, Georgia, serif',
                             }}>
@@ -344,6 +522,8 @@ const ProfileCompletionForm = ({ onComplete, saving, serverErrors }) => {
         </div>
     );
 };
+
+
 
 /* ── Header ───────────────────────────────────────────────────────────────── */
 const Header = ({
@@ -502,30 +682,39 @@ const BottomBar = () => {
 
 /* ── Right Panel ──────────────────────────────────────────────────────────── */
 const RightPanel = ({ navigate }) => (
-    <aside className="hidden xl:flex flex-col flex-shrink-0 bg-white border-l overflow-y-auto"
-        style={{ width: '280px', fontFamily: 'Cambria, Georgia, serif' }}>
+    <aside
+        className="hidden xl:flex flex-col flex-shrink-0 bg-white border-l overflow-y-auto"
+        style={{ width: "280px", fontFamily: "Cambria, Georgia, serif" }}
+    >
 
-        {/* Remaining trials card */}
-        <div className="m-4 p-4 rounded-xl border border-green-200 bg-green-50" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
-            {/* <p className="text-sm font-bold text-gray-800 mb-1">Your remaining trials: 10/10</p> */}
+        {/* Explore Mentors Card */}
+        <div
+            className="m-4 p-4 rounded-xl border border-green-200 bg-green-50"
+            style={{ fontFamily: "Cambria, Georgia, serif" }}
+        >
             <p className="text-xs text-gray-500 leading-relaxed mb-3">
                 Explore from a list of 600+ mentors, book trials and try to find the perfect mentor for you.
             </p>
+
             <button
-                onClick={() => navigate('/explore-mentors')}
+                onClick={() => navigate("/explore-mentors")}
                 className="w-full py-2 text-xs font-semibold border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700"
-                style={{ fontFamily: 'Cambria, Georgia, serif' }}
+                style={{ fontFamily: "Cambria, Georgia, serif" }}
             >
                 Explore All Mentors
             </button>
         </div>
 
-        {/* Relationship Manager card */}
-        <div className="mx-4 mb-4 p-4 rounded-xl border border-gray-200 bg-gray-50" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
+        {/* Relationship Manager Card */}
+        <div
+            className="mx-4 mb-4 p-4 rounded-xl border border-gray-200 bg-gray-50"
+            style={{ fontFamily: "Cambria, Georgia, serif" }}
+        >
             <p className="text-sm font-bold text-gray-800 mb-1 leading-snug">
                 Planning to purchase and confused about which plan is right for you?
             </p>
-            <p className="text-xs text-gray-500 mb-3">Reach out to your Relationship Manager today!</p>
+
+
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                     <div className="w-9 h-9 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
@@ -533,46 +722,64 @@ const RightPanel = ({ navigate }) => (
                             <User size={16} color="#666" />
                         </div>
                     </div>
+
                     <div>
-                        <p className="text-xs font-semibold text-gray-800">Karrivo</p>
-                        <p className="text-[10px] text-gray-500">+91 7702 193 487</p>
+                        <p className="text-xs font-semibold text-gray-800">
+                            Karrivo
+                        </p>
+                        <p className="text-[10px] text-gray-500">
+                            +91 7702 193 487
+                        </p>
                     </div>
                 </div>
+
                 <div className="flex items-center gap-1.5">
-                    <a href="https://wa.me/917702193487" target="_blank" rel="noreferrer"
-                        className="w-7 h-7 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center transition-colors">
+                    <a
+                        href="https://wa.me/917702193487"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="w-7 h-7 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center transition-colors"
+                    >
                         <MessageCircle size={13} color="white" />
                     </a>
-                    <a href="tel:+919311484346"
-                        className="w-7 h-7 rounded-full bg-blue-500 hover:bg-blue-600 flex items-center justify-center transition-colors">
+
+                    <a
+                        href="tel:+919311484346"
+                        className="w-7 h-7 rounded-full bg-blue-500 hover:bg-blue-600 flex items-center justify-center transition-colors"
+                    >
                         <Phone size={13} color="white" />
                     </a>
                 </div>
             </div>
         </div>
 
-        {/* Spacer */}
-        <div className="flex-1" />
-
-        {/* Bottom Banner */}
-        <div className="m-4 rounded-xl overflow-hidden border border-[#0098cc]/20 bg-gradient-to-br from-[#e8f7fc] via-[#f0fbff] to-[#ddf4fc]" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
+        {/* Pro Tip Card */}
+        <div
+            className="mx-4 mb-4 rounded-xl overflow-hidden border border-[#0098cc]/20 bg-gradient-to-br from-[#e8f7fc] via-[#f0fbff] to-[#ddf4fc]"
+            style={{ fontFamily: "Cambria, Georgia, serif" }}
+        >
             <div className="p-4">
                 <div className="flex items-center gap-2 mb-2">
                     <div className="w-7 h-7 rounded-lg bg-[#0098cc]/10 flex items-center justify-center">
                         <Zap size={14} color="#0098cc" />
                     </div>
-                    <span className="text-xs font-bold text-[#0098cc] uppercase tracking-wide">Pro Tip</span>
+
+                    <span className="text-xs font-bold text-[#0098cc] uppercase tracking-wide">
+                        Pro Tip
+                    </span>
                 </div>
-                <p className="text-sm font-semibold text-gray-800 mb-1 leading-snug">
-                    Unlock 1-on-1 long-term mentorship
-                </p>
+
                 <p className="text-xs text-gray-500 leading-relaxed mb-3">
-                    Get personalised guidance, goal setting, and accountability from a dedicated mentor every week.
+                    Personal Guidance
                 </p>
+
                 <button
-                    onClick={() => navigate('/explore-mentors')}
+                    onClick={() => navigate("/explore-mentors")}
                     className="w-full py-2 text-xs font-bold text-white rounded-lg transition-colors"
-                    style={{ background: '#0098cc', fontFamily: 'Cambria, Georgia, serif' }}
+                    style={{
+                        background: "#0098cc",
+                        fontFamily: "Cambria, Georgia, serif",
+                    }}
                 >
                     Explore Plans →
                 </button>
