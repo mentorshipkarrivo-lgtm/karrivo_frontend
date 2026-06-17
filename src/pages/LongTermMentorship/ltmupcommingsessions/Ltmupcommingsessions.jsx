@@ -1500,7 +1500,7 @@ function ModalSection({ icon: Icon, title, children }) {
         {Icon && <Icon size={12} style={{ color: C.blue, flexShrink: 0 }} />}
         <span style={{
           fontSize: 10, fontWeight: 800, color: C.blue,
-          textTransform: "uppercase", letterSpacing: "0.1em", fontFamily: FONT,
+           letterSpacing: "0.1em", fontFamily: FONT,
         }}>{title}</span>
       </div>
       <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
@@ -1612,7 +1612,7 @@ function SessionModal({ session, menteeId, onClose, onSave }) {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <p style={{
                   fontSize: 9, fontWeight: 700, letterSpacing: "0.12em",
-                  textTransform: "uppercase", color: "rgba(255,255,255,0.5)",
+                   color: "rgba(255,255,255,0.5)",
                   margin: "0 0 2px", fontFamily: FONT,
                 }}>
                   Session {session.session_number}
@@ -1998,7 +1998,7 @@ function MobileCard({ session, onClick }) {
           <div key={l}>
             <div style={{
               fontSize: 9, fontWeight: 700, color: C.muted,
-              textTransform: "uppercase", letterSpacing: "0.08em",
+               letterSpacing: "0.08em",
               marginBottom: 2, fontFamily: FONT,
             }}>{l}</div>
             <div style={{ fontSize: 12, color: C.sub, fontWeight: 500, fontFamily: FONT }}>{v}</div>
@@ -2083,7 +2083,7 @@ const thStyle = {
   fontWeight: 700,
   color: C.thText,
   letterSpacing: "0.6px",
-  textTransform: "uppercase",
+
   whiteSpace: "nowrap",
   background: C.th,
   borderBottom: `1px solid ${C.border}`,
@@ -2209,7 +2209,7 @@ export default function Ltmupcommingsessions() {
                 <div>
                   <p style={{
                     fontSize: 9, fontWeight: 700, color: C.muted,
-                    textTransform: "uppercase", letterSpacing: "0.08em",
+                     letterSpacing: "0.08em",
                     margin: "0 0 2px", fontFamily: FONT,
                   }}>{label}</p>
                   <p style={{ fontSize: 20, fontWeight: 800, color, margin: 0, lineHeight: 1.1, fontFamily: FONT }}>

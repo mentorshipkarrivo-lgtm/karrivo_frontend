@@ -2,7 +2,7 @@
 
 
 import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { X, User, Mail, Phone, CalendarDays, CalendarX2 } from "lucide-react";
+import { X, User,Users , Mail, Phone, CalendarDays, CalendarX2 } from "lucide-react";
 import {
   useGetSessionsByMentorQuery,
   useGetSubscribersByMentorQuery,
@@ -74,7 +74,7 @@ function Th({ children }) {
     <th style={{
       padding: "11px 18px", textAlign: "left",
       fontSize: 11, fontWeight: 700, color: "#94a3b8",
-      textTransform: "uppercase", letterSpacing: "0.06em",
+      letterSpacing: "0.06em",
       whiteSpace: "nowrap", background: "#fafbfc",
       borderBottom: "1.5px solid #f1f5f9",
     }}>{children}</th>
@@ -198,7 +198,7 @@ function ModalField({ label, children, span2, isMobile }) {
     <div style={{ gridColumn: span2 && !isMobile ? "span 2" : "span 1", width: "100%", minWidth: 0 }}>
       <label style={{
         display: "block", fontSize: 11, fontWeight: 800, color: "#0c9dce",
-        textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 7,
+        letterSpacing: "0.08em", marginBottom: 7,
       }}>{label}</label>
       {children}
     </div>
@@ -210,7 +210,7 @@ function ModalSection({ title, children, top, isMobile }) {
     <section style={top ? { borderTop: "1px solid #f1f5f9", paddingTop: 22 } : {}}>
       <p style={{
         fontSize: 11, fontWeight: 800, color: "#0c9dce",
-        textTransform: "uppercase", letterSpacing: "0.1em",
+        letterSpacing: "0.1em",
         marginBottom: 14, marginTop: 0,
       }}>{title}</p>
       <div style={{ display: "grid", gap: 14, gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr" }}>
@@ -383,90 +383,7 @@ function SessionModal({ session, onClose, onSave }) {
   );
 }
 
-// ── Subscriber Modal ──────────────────────────────────────────────────────────
 
-// function SubscriberModal({ sub, onClose }) {
-//   useEffect(() => {
-//     document.body.style.overflow = "hidden";
-//     return () => { document.body.style.overflow = ""; };
-//   }, []);
-//   useEffect(() => {
-//     const fn = e => { if (e.key === "Escape") onClose(); };
-//     document.addEventListener("keydown", fn);
-//     return () => document.removeEventListener("keydown", fn);
-//   }, [onClose]);
-
-//   const mentee = sub.mentee || {};
-//   const name = mentee.name || "Unknown";
-//   const initials = name.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2);
-
-//   const iconBox = { width: 28, height: 28, borderRadius: 7, background: "#eff9fd", border: "1px solid #bae6fd", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 };
-
-//   const Row = ({ icon: Icon, label, value, valueStyle }) => (
-//     <div style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 18px", borderBottom: "1px solid #f1f5f9" }}>
-//       <div style={iconBox}><Icon size={14} stroke="#0c9dce" strokeWidth={2} /></div>
-//       <div style={{ flex: 1, minWidth: 0 }}>
-//         <p style={{ margin: 0, fontSize: 10, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</p>
-//         <p style={{ margin: "1px 0 0", fontSize: 13, color: "#1a1a2e", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", ...valueStyle }}>{value || "—"}</p>
-//       </div>
-//     </div>
-//   );
-
-//   return (
-//     <div onClick={e => { if (e.target === e.currentTarget) onClose(); }} style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, background: "rgba(15,23,42,0.4)", backdropFilter: "blur(4px)" }}>
-//       <div style={{ background: "#fff", borderRadius: 16, width: "100%", maxWidth: 400, border: "1.5px solid #e2e8f0", overflow: "hidden", display: "flex", flexDirection: "column" }}>
-//         {/* Header */}
-//         <div style={{ padding: "14px 18px 12px", display: "flex", alignItems: "center", gap: 11, borderBottom: "1px solid #f1f5f9" }}>
-//           <div style={{ width: 38, height: 38, borderRadius: 11, background: "#eff9fd", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, fontWeight: 700, color: "#0c9dce", flexShrink: 0 }}>{initials}</div>
-//           <div style={{ flex: 1, minWidth: 0 }}>
-//             <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color: "#1a1a2e" }}>{name}</p>
-//             <p style={{ margin: "2px 0 0", fontSize: 12, color: "#94a3b8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{mentee.email || "—"}</p>
-//           </div>
-//           <button onClick={onClose} style={{ width: 28, height: 28, borderRadius: 7, border: "1.5px solid #e2e8f0", background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#64748b" }}>
-//             <X size={14} strokeWidth={2} />
-//           </button>
-//         </div>
-
-//         {/* Metrics */}
-//         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", borderBottom: "1px solid #f1f5f9" }}>
-//           {[
-//             { label: "Plan", value: PLAN_LABELS[sub.plan_type] || sub.plan_type, color: "#0c9dce" },
-//             { label: "Sessions", value: sub.total_sessions, color: "#1a1a2e" },
-//             { label: "Amount", value: fmt.amount(sub.amount), color: "#1a1a2e" },
-//           ].map(({ label, value, color }, i) => (
-//             <div key={label} style={{ padding: "10px 14px", borderRight: i < 2 ? "1px solid #f1f5f9" : "none" }}>
-//               <p style={{ margin: "0 0 2px", fontSize: 10, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</p>
-//               <p style={{ margin: 0, fontSize: 14, fontWeight: 700, color }}>{value ?? "—"}</p>
-//             </div>
-//           ))}
-//         </div>
-
-//         <Row icon={User} label="Name" value={name} />
-//         <Row icon={Mail} label="Email" value={mentee.email} valueStyle={{ color: "#0c9dce" }} />
-//         <Row icon={Phone} label="Phone" value={mentee.phone ? `+${mentee.countryCode || ""} ${mentee.phone}` : "—"} />
-
-//         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", borderBottom: "1px solid #f1f5f9" }}>
-//           {[
-//             { icon: CalendarDays, label: "Start date", value: fmt.date(sub.subscribed_at), border: true },
-//             { icon: CalendarX2, label: "End date", value: fmt.date(sub.subscription_end_date), border: false },
-//           ].map(({ icon: Icon, label, value, border }) => (
-//             <div key={label} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 18px", borderRight: border ? "1px solid #f1f5f9" : "none" }}>
-//               <div style={iconBox}><Icon size={14} stroke="#0c9dce" strokeWidth={2} /></div>
-//               <div>
-//                 <p style={{ margin: 0, fontSize: 10, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</p>
-//                 <p style={{ margin: "1px 0 0", fontSize: 13, fontWeight: 600, color: "#1a1a2e" }}>{value}</p>
-//               </div>
-//             </div>
-//           ))}
-//         </div>
-
-//         <div style={{ padding: "11px 18px", borderTop: "1px solid #f1f5f9", display: "flex", justifyContent: "flex-end" }}>
-//           <button onClick={onClose} style={{ padding: "7px 22px", borderRadius: 8, border: "none", background: "#1a1a2e", color: "#fff", fontWeight: 700, fontSize: 12, cursor: "pointer" }}>Close</button>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
 
 function SubscriberModal({ sub, onClose }) {
   useEffect(() => {
@@ -493,7 +410,7 @@ function SubscriberModal({ sub, onClose }) {
     <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 22px", borderBottom: "1px solid #f1f5f9" }}>
       <div style={iconBox}><Icon size={14} stroke="#1a1a2e" strokeWidth={2} /></div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <p style={{ margin: 0, fontSize: 10, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</p>
+        <p style={{ margin: 0, fontSize: 10, color: "#94a3b8", fontWeight: 700, letterSpacing: "0.06em" }}>{label}</p>
         <p style={{ margin: "2px 0 0", fontSize: 13, color: "#1a1a2e", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", ...valueStyle }}>{value || "—"}</p>
       </div>
     </div>
@@ -528,7 +445,7 @@ function SubscriberModal({ sub, onClose }) {
 
         {/* Status strip — no close button here anymore */}
         <div style={{ padding: "12px 22px", display: "flex", alignItems: "center", justifyContent: "space-between", background: "#f8fafc" }}>
-          <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>Status</span>
+          <span style={{ fontSize: 11, color: "#94a3b8", fontWeight: 700, letterSpacing: "0.06em" }}>Status</span>
           <StatusBadge status={sub.status} />
         </div>
 
@@ -540,7 +457,7 @@ function SubscriberModal({ sub, onClose }) {
             { label: "Amount", value: fmt.amount(sub.amount) },
           ].map(({ label, value }, i) => (
             <div key={label} style={{ padding: "14px 18px", borderRight: i < 2 ? "1px solid #e9edf2" : "none" }}>
-              <p style={{ margin: "0 0 4px", fontSize: 10, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</p>
+              <p style={{ margin: "0 0 4px", fontSize: 10, color: "#94a3b8", fontWeight: 700, letterSpacing: "0.06em" }}>{label}</p>
               <p style={{ margin: 0, fontSize: 15, fontWeight: 800, color: "#1a1a2e" }}>{value ?? "—"}</p>
             </div>
           ))}
@@ -559,7 +476,7 @@ function SubscriberModal({ sub, onClose }) {
             <div key={label} style={{ display: "flex", alignItems: "center", gap: 12, padding: "12px 22px", borderRight: border ? "1px solid #f1f5f9" : "none" }}>
               <div style={iconBox}><Icon size={14} stroke="#1a1a2e" strokeWidth={2} /></div>
               <div>
-                <p style={{ margin: 0, fontSize: 10, color: "#94a3b8", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</p>
+                <p style={{ margin: 0, fontSize: 10, color: "#94a3b8", fontWeight: 700, letterSpacing: "0.06em" }}>{label}</p>
                 <p style={{ margin: "2px 0 0", fontSize: 13, fontWeight: 600, color: "#1a1a2e" }}>{value}</p>
               </div>
             </div>
@@ -567,7 +484,7 @@ function SubscriberModal({ sub, onClose }) {
         </div>
 
         {/* Status + Close */}
-     
+
 
       </div>
     </div>
@@ -652,7 +569,7 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
   const [selectedSession, setSelectedSession] = useState(null);
   const [updateSession] = useUpdateByMentorSessionMutation();
 
-  console.log(sub,"sub1w23f4")
+  console.log(sub, "sub1w23f4")
   const { data, isLoading, isFetching, refetch } = useGetSessionsByMentorQuery(
     { mentorId, page, pageSize },
     { skip: !mentorId }
@@ -697,7 +614,7 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
           <React.Fragment key={label}>
             {i > 0 && <div style={{ width: 1, height: 28, background: "#bae6fd" }} />}
             <div>
-              <p style={{ fontSize: 10, color: "#0c9dce", fontWeight: 700, margin: 0, textTransform: "uppercase", letterSpacing: "0.06em" }}>{label}</p>
+              <p style={{ fontSize: 10, color: "#0c9dce", fontWeight: 700, margin: 0, letterSpacing: "0.06em" }}>{label}</p>
               <p style={{ fontSize: 13, color: color || "#1a1a2e", fontWeight: 700, margin: "2px 0 0" }}>{value}</p>
             </div>
           </React.Fragment>
@@ -820,7 +737,7 @@ export default function MentorSessionsDashboard() {
   const subscribers = useMemo(() => subscribersResult?.data ?? subscribersResult?.subscriptions ?? [], [subscribersResult]);
   const totalSessions = sessionsOverview?.pagination?.total ?? 0;
 
-  console.log(totalSessions,"totalSessions")
+  console.log(totalSessions, "totalSessions")
   return (
     <>
       <style>{`
@@ -833,16 +750,41 @@ export default function MentorSessionsDashboard() {
       <div style={{ minHeight: "100vh", padding: "24px 18px", fontFamily: "'DM Sans','Segoe UI',sans-serif", background: "#fff" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
 
-          {/* Header */}
           <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 24 }}>
-            <div style={{ width: 38, height: 38, borderRadius: 11, background: "#0c9dce", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" />
-              </svg>
+            <div
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: 11,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Users size={18} color="#1a1a2e" strokeWidth={2.2} />
             </div>
+
             <div>
-              <h1 style={{ fontSize: 20, fontWeight: 800, color: "#1a1a2e", margin: 0, letterSpacing: "-0.02em" }}>Subscriptions</h1>
-              <p style={{ fontSize: 12, color: "#94a3b8", margin: 0 }}>Manage your mentee sessions and subscriptions</p>
+              <h1
+                style={{
+                  fontSize: 20,
+                  fontWeight: 800,
+                  color: "#1a1a2e",
+                  margin: 0,
+                  letterSpacing: "-0.02em",
+                }}
+              >
+                Subscriptions
+              </h1>
+              <p
+                style={{
+                  fontSize: 12,
+                  color: "#94a3b8",
+                  margin: 0,
+                }}
+              >
+                Manage your mentee sessions and subscriptions
+              </p>
             </div>
           </div>
 

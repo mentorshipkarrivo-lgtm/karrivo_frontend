@@ -92,7 +92,7 @@ function MessageBubble({ msg, showMeta, currentUserId, peerName }) {
                     border: msg.isAutomatic && !isOwn ? "1px solid #a7f3d0" : isOwn ? "none" : "1px solid #e8f4ff",
                 }}>
                     {msg.isAutomatic && !isOwn && (
-                        <div style={{ fontSize: 10, color: "#0098cc", fontWeight: 700, marginBottom: 4, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                        <div style={{ fontSize: 10, color: "#0098cc", fontWeight: 700, marginBottom: 4,  letterSpacing: "0.05em" }}>
                             ✦ Auto Message
                         </div>
                     )}

@@ -3,7 +3,9 @@ import { apiSlice } from "../../../ApiSliceComponent/karrivoApi";
 export const reviewsApiSlice = apiSlice.injectEndpoints({
     endpoints: (builder) => ({
         getReviewsByMentorId: builder.query({
-            query: (mentorId) => `/get-reviews/get-reviews/${mentorId}`,
+            // was: query: (mentorId) => `/reviews/${mentorId}`,
+            query: ({ mentorId, page = 1, limit = 9 }) =>
+                `/get-reviews/get-reviews/${mentorId}?page=${page}&limit=${limit}`,
         }),
     }),
     overrideExisting: false,

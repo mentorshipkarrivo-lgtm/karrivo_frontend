@@ -46,7 +46,6 @@ const thStyle = {
   fontWeight: 700,
   color: C.thText,
   letterSpacing: "0.6px",
-  textTransform: "uppercase",
   whiteSpace: "nowrap",
   background: C.th,
   borderBottom: `1px solid ${C.border}`,
@@ -191,7 +190,7 @@ const MobileCard = ({ session }) => {
           ].map(([label, val]) => val ? (
             <div key={label} style={{ marginBottom: 10 }}>
               <p style={{
-                fontSize: 9, fontWeight: 700, textTransform: "uppercase",
+                fontSize: 9, fontWeight: 700, 
                 letterSpacing: "0.1em", color: C.blue, margin: "0 0 3px", fontFamily: FONT,
               }}>{label}</p>
               <p style={{ fontSize: 12, color: C.text, margin: 0, lineHeight: 1.6, fontFamily: FONT }}>{val}</p>
@@ -356,7 +355,7 @@ export default function LtmsessionsCompleted() {
                 <div>
                   <p style={{
                     fontSize: 9, fontWeight: 700, color: C.muted,
-                    textTransform: "uppercase", letterSpacing: "0.08em",
+                     letterSpacing: "0.08em",
                     margin: "0 0 2px", fontFamily: FONT,
                   }}>{label}</p>
                   <p style={{ fontSize: 20, fontWeight: 800, color, margin: 0, lineHeight: 1.1, fontFamily: FONT }}>

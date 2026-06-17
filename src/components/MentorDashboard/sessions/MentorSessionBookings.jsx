@@ -1,6 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { useGetMentorSessionsQuery } from "./sessionsapislice";
+import { BookOpen } from "lucide-react";
 
 const Badge = ({ color, label }) => (
     <span style={{
@@ -65,7 +66,6 @@ const thStyle = {
     fontWeight: 700,
     color: "#ffffff",
     letterSpacing: "0.6px",
-    textTransform: "uppercase",
     whiteSpace: "nowrap",
     borderBottom: "1px solid #e2e8f0",
     background: "#1a1a2e",
@@ -114,11 +114,28 @@ export default function SessionsTable() {
             minHeight: "100vh",
         }}>
 
-            {/* Header */}
             <div style={{ marginBottom: "20px" }}>
-                <h1 style={{ fontSize: "18px", fontWeight: 700, color: "#1a1a2e", margin: "0 0 4px" }}>
-                    Sessions
-                </h1>
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        marginBottom: "4px",
+                    }}
+                >
+                    <BookOpen size={20} color="#1a1a2e" />
+                    <h1
+                        style={{
+                            fontSize: "18px",
+                            fontWeight: 700,
+                            color: "#1a1a2e",
+                            margin: 0,
+                        }}
+                    >
+                        Sessions
+                    </h1>
+                </div>
+
                 <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0 }}>
                     {isLoading ? "Loading…" : `${totalCount} total sessions`}
                 </p>

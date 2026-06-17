@@ -8,7 +8,7 @@ import {
 import {
   DollarSign, Clock, AlertTriangle, Inbox,
   ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight,
-  CreditCard, Check, Loader2, Gift,
+  CreditCard, Check, Loader2, Gift,Star 
 } from "lucide-react";
 import Loader from "../../../global/Loader";
 
@@ -18,19 +18,19 @@ import Loader from "../../../global/Loader";
 const getPaymentStatusStyle = (status) => {
   switch (status) {
     case "Completed": return "bg-green-50 text-green-700 border border-green-200";
-    case "Pending":   return "bg-yellow-50 text-yellow-700 border border-yellow-200";
-    case "Failed":    return "bg-red-50 text-red-700 border border-red-200";
-    case "Free":      return "bg-purple-50 text-purple-700 border border-purple-200";
-    default:          return "bg-gray-100 text-gray-500 border border-gray-200";
+    case "Pending": return "bg-yellow-50 text-yellow-700 border border-yellow-200";
+    case "Failed": return "bg-red-50 text-red-700 border border-red-200";
+    case "Free": return "bg-purple-50 text-purple-700 border border-purple-200";
+    default: return "bg-gray-100 text-gray-500 border border-gray-200";
   }
 };
 
 const SESSION_BADGES = {
   inprogress: { label: "In Progress", className: "bg-orange-50 text-orange-700 border border-orange-200" },
-  completed:  { label: "Completed",   className: "bg-green-50 text-green-700 border border-green-200" },
-  cancelled:  { label: "Cancelled",   className: "bg-red-50 text-red-700 border border-red-200" },
-  scheduled:  { label: "Scheduled",   className: "bg-blue-50 text-blue-700 border border-blue-200" },
-  confirmed:  { label: "Confirmed",   className: "bg-blue-50 text-blue-700 border border-blue-200" },
+  completed: { label: "Completed", className: "bg-green-50 text-green-700 border border-green-200" },
+  cancelled: { label: "Cancelled", className: "bg-red-50 text-red-700 border border-red-200" },
+  scheduled: { label: "Scheduled", className: "bg-blue-50 text-blue-700 border border-blue-200" },
+  confirmed: { label: "Confirmed", className: "bg-blue-50 text-blue-700 border border-blue-200" },
 };
 const getSessionBadge = (status = "") =>
   SESSION_BADGES[status.toLowerCase()] || { label: status || "—", className: "bg-gray-100 text-gray-500 border border-gray-200" };
@@ -90,10 +90,10 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
   const [savePayoutDetails, { isLoading: saving }] =
     useSavePayoutDetailsMutation();
 
-  const [form, setForm]           = useState(EMPTY_FORM);
-  const [errors, setErrors]       = useState({});
-  const [saved, setSaved]         = useState(false);
-  const [upiEditing, setUpiEditing]   = useState(false);
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [errors, setErrors] = useState({});
+  const [saved, setSaved] = useState(false);
+  const [upiEditing, setUpiEditing] = useState(false);
   const [bankEditing, setBankEditing] = useState(false);
 
   /* Pre-fill from API */
@@ -105,24 +105,24 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
       return;
     }
     setForm({
-      upiId:              pd.upiId || "",
-      confirmUpiId:       pd.upiId || "",
-      accountHolderName:  pd.bankDetails?.accountHolderName || "",
-      accountNumber:      pd.bankDetails?.accountNumber || "",
-      confirmAccountNo:   pd.bankDetails?.accountNumber || "",
-      ifscCode:           pd.bankDetails?.ifscCode || "",
-      bankName:           pd.bankDetails?.bankName || "",
-      branchName:         pd.bankDetails?.branchName || "",
-      accountType:        pd.bankDetails?.accountType || "Savings",
-      nameOnPancard:      pd.panDetails?.nameOnPancard || "",
-      panNumber:          pd.panDetails?.panNumber || "",
+      upiId: pd.upiId || "",
+      confirmUpiId: pd.upiId || "",
+      accountHolderName: pd.bankDetails?.accountHolderName || "",
+      accountNumber: pd.bankDetails?.accountNumber || "",
+      confirmAccountNo: pd.bankDetails?.accountNumber || "",
+      ifscCode: pd.bankDetails?.ifscCode || "",
+      bankName: pd.bankDetails?.bankName || "",
+      branchName: pd.bankDetails?.branchName || "",
+      accountType: pd.bankDetails?.accountType || "Savings",
+      nameOnPancard: pd.panDetails?.nameOnPancard || "",
+      panNumber: pd.panDetails?.panNumber || "",
     });
     setUpiEditing(!pd.upiId);
     setBankEditing(!pd.bankDetails?.accountNumber);
   }, [fetchedData]);
 
   const set = (key) => (e) => {
-    setForm((p)   => ({ ...p, [key]: e.target.value }));
+    setForm((p) => ({ ...p, [key]: e.target.value }));
     setErrors((p) => ({ ...p, [key]: "" }));
     setSaved(false);
   };
@@ -139,12 +139,12 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
     }
     if (bankEditing && (form.accountHolderName.trim() || form.accountNumber.trim() || form.ifscCode.trim() || form.bankName.trim())) {
       if (!form.accountHolderName.trim()) e.accountHolderName = "Account holder name is required";
-      if (!form.accountNumber.trim())     e.accountNumber     = "Account number is required";
-      if (!form.confirmAccountNo.trim())  e.confirmAccountNo  = "Please confirm account number";
+      if (!form.accountNumber.trim()) e.accountNumber = "Account number is required";
+      if (!form.confirmAccountNo.trim()) e.confirmAccountNo = "Please confirm account number";
       else if (form.accountNumber !== form.confirmAccountNo) e.confirmAccountNo = "Account numbers do not match";
-      if (!form.ifscCode.trim())          e.ifscCode = "IFSC code is required";
+      if (!form.ifscCode.trim()) e.ifscCode = "IFSC code is required";
       else if (!/^[A-Z]{4}0[A-Z0-9]{6}$/i.test(form.ifscCode.trim())) e.ifscCode = "Invalid IFSC (e.g. HDFC0001234)";
-      if (!form.bankName.trim())          e.bankName = "Bank name is required";
+      if (!form.bankName.trim()) e.bankName = "Bank name is required";
     }
     if (form.panNumber && !/^[A-Z]{5}[0-9]{4}[A-Z]$/i.test(form.panNumber.trim()))
       e.panNumber = "Invalid PAN (e.g. ABCDE1234F)";
@@ -160,22 +160,22 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
       upiId: form.upiId.trim() || undefined,
       bankDetails: form.accountNumber.trim() ? {
         accountHolderName: form.accountHolderName.trim(),
-        accountNumber:     form.accountNumber.trim(),
-        ifscCode:          form.ifscCode.toUpperCase().trim(),
-        bankName:          form.bankName.trim(),
-        branchName:        form.branchName.trim() || undefined,
-        accountType:       form.accountType,
+        accountNumber: form.accountNumber.trim(),
+        ifscCode: form.ifscCode.toUpperCase().trim(),
+        bankName: form.bankName.trim(),
+        branchName: form.branchName.trim() || undefined,
+        accountType: form.accountType,
       } : undefined,
       panDetails: {
         nameOnPancard: form.nameOnPancard.trim() || undefined,
-        panNumber:     form.panNumber.toUpperCase().trim() || undefined,
+        panNumber: form.panNumber.toUpperCase().trim() || undefined,
       },
     };
 
     try {
       await savePayoutDetails(payload).unwrap();
       setSaved(true);
-      if (form.upiId.trim())        setUpiEditing(false);
+      if (form.upiId.trim()) setUpiEditing(false);
       if (form.accountNumber.trim()) setBankEditing(false);
       setTimeout(() => setSaved(false), 2000);
     } catch (err) {
@@ -251,8 +251,8 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
                       {[
                         { label: "Account Holder", value: form.accountHolderName },
                         { label: "Account Number", value: maskAccount(form.accountNumber) },
-                        { label: "IFSC Code",      value: form.ifscCode },
-                        { label: "Bank Name",      value: form.bankName },
+                        { label: "IFSC Code", value: form.ifscCode },
+                        { label: "Bank Name", value: form.bankName },
                       ].map(({ label, value }) => (
                         <div key={label} className="bg-gray-50 rounded-lg px-3 py-2.5">
                           <p className="text-[10px] text-gray-400 font-medium mb-0.5">{label}</p>
@@ -275,7 +275,7 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
                         <PInput
                           value={form.ifscCode}
                           onChange={(e) => {
-                            setForm((p)   => ({ ...p, ifscCode: e.target.value.toUpperCase() }));
+                            setForm((p) => ({ ...p, ifscCode: e.target.value.toUpperCase() }));
                             setErrors((p) => ({ ...p, ifscCode: "" }));
                             setSaved(false);
                           }}
@@ -312,7 +312,7 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
           >
             {saving ? <><Loader2 size={14} className="animate-spin" />Saving…</>
               : saved ? <><Check size={14} strokeWidth={2.5} />Saved!</>
-              : "Save"}
+                : "Save"}
           </button>
         </div>
 
@@ -330,8 +330,8 @@ const ROWS_OPTIONS = [5, 10, 20, 50];
 const Myearnings = () => {
   const mentor_id = JSON.parse(localStorage.getItem("userData"))?._id;
 
-  const [currentPage, setCurrentPage]       = useState(1);
-  const [rowsPerPage, setRowsPerPage]       = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [showPayoutPage, setShowPayoutPage] = useState(false);
 
   const { data: earningsData, isLoading, isFetching, error } =
@@ -401,9 +401,35 @@ const Myearnings = () => {
 
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
-          <div>
-            <h1 className="text-base font-bold" style={{ color: "#1a1a2e" }}>My Earnings</h1>
-            <p className="text-xs text-gray-400 mt-0.5">Track and manage your mentoring payments</p>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 10,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                flexShrink: 0,
+              }}
+            >
+              <Star size={18} color="#1a1a2e" fill="#fff" strokeWidth={2.2} />
+            </div>
+
+            <div>
+              <h1
+                className="text-base font-bold"
+                style={{ color: "#1a1a2e", margin: 0 }}
+              >
+                Earnings
+              </h1>
+              <p
+                className="text-xs text-gray-400 mt-0.5"
+                style={{ margin: 0 }}
+              >
+                Track and manage your mentoring payments
+              </p>
+            </div>
           </div>
           <button
             onClick={() => setShowPayoutPage(true)}
@@ -419,10 +445,10 @@ const Myearnings = () => {
         <div className="mb-8">
           <h2 className="text-sm font-bold mb-4" style={{ color: "#1a1a2e" }}>Earnings Summary</h2>
           <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
-            <StatCard icon={DollarSign} label="Session Earnings"        value={`₹${totalSessionEarnings.toLocaleString("en-IN")}`} />
-            <StatCard icon={DollarSign} label="Subscription Revenue"    value={`₹${totalSubscriptionRevenue.toLocaleString("en-IN")}`} />
-            <StatCard icon={AlertTriangle} label="Total Discount"        value={`₹${totalSubscriptionDiscount.toLocaleString("en-IN")}`} />
-            <StatCard icon={Clock}      label="Overall Revenue"          value={`₹${totalOverallRevenue.toLocaleString("en-IN")}`} />
+            <StatCard icon={DollarSign} label="Session Earnings" value={`₹${totalSessionEarnings.toLocaleString("en-IN")}`} />
+            <StatCard icon={DollarSign} label="Subscription Revenue" value={`₹${totalSubscriptionRevenue.toLocaleString("en-IN")}`} />
+            <StatCard icon={AlertTriangle} label="Total Discount" value={`₹${totalSubscriptionDiscount.toLocaleString("en-IN")}`} />
+            <StatCard icon={Clock} label="Overall Revenue" value={`₹${totalOverallRevenue.toLocaleString("en-IN")}`} />
           </div>
         </div>
 
@@ -452,13 +478,12 @@ const Myearnings = () => {
                         <td className="px-4 py-2.5 text-gray-700 capitalize">{planType?.replace("_", " ") || "—"}</td>
                         <td className="px-4 py-2.5 text-gray-700 font-medium">{totalSessions || "—"}</td>
                         <td className="px-4 py-2.5 whitespace-nowrap">
-                          <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold ${
-                            subscriptionStatus === "onprocess"
+                          <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold ${subscriptionStatus === "onprocess"
                               ? "bg-blue-50 text-blue-700 border border-blue-200"
                               : subscriptionStatus === "completed"
-                              ? "bg-green-50 text-green-700 border border-green-200"
-                              : "bg-gray-100 text-gray-500 border border-gray-200"
-                          }`}>
+                                ? "bg-green-50 text-green-700 border border-green-200"
+                                : "bg-gray-100 text-gray-500 border border-gray-200"
+                            }`}>
                             {subscriptionStatus === "onprocess" ? "In Process" : subscriptionStatus || "—"}
                           </span>
                         </td>
@@ -521,8 +546,8 @@ const Myearnings = () => {
                 <tbody>
                   {bookings.map((booking, idx) => {
                     const paymentStatus = booking.paymentDetails?.paymentStatus;
-                    const globalIdx     = rowStartIndex + idx;
-                    const isFree        = booking.isFreeSession;
+                    const globalIdx = rowStartIndex + idx;
+                    const isFree = booking.isFreeSession;
 
                     return (
                       <tr key={booking.bookingId || idx} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">

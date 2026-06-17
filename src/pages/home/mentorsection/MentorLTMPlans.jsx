@@ -60,7 +60,6 @@ const UPI_PRIMARY = 'karrivo2024@upi';
 const UPI_SECONDARY = 'example.174327728615@sbi';
 
 
-
 function normalizePlans(plans, currentStatus = '', sessionsByMonth = [], weeklySessions = null) {
   if (!plans || !Object.keys(plans).length) return [];
   const priceKey = currentStatus?.toLowerCase() === 'experienced' ? 'experienced' : 'freshers';
@@ -78,7 +77,7 @@ function normalizePlans(plans, currentStatus = '', sessionsByMonth = [], weeklyS
         ...meta,
         key: `${months}Month`,
         months,
-        sessionsPerWeek: weeklySessions,
+        sessionsPerWeek: sessionEntry?.sessionsPerWeek ?? weeklySessions, // <-- changed
         monthlyPrice: value.monthlyPrice?.[priceKey] ?? null,
         totalPrice: breakdown.totalPrice,
         platformFee: breakdown.platformFee,
@@ -94,6 +93,7 @@ function normalizePlans(plans, currentStatus = '', sessionsByMonth = [], weeklyS
     .filter(Boolean)
     .sort((a, b) => a.months - b.months);
 }
+
 
 // ══════════════════════════════════════════════════════════════════════════
 export default function MentorLTMPlans() {
@@ -205,7 +205,7 @@ export default function MentorLTMPlans() {
   };
 
   const handleGetStarted = async (e, plan) => {
-    console.log(plan, "plan")
+    console.log(plan.totalSessions, "planqqqq")
     e.stopPropagation();
     if (!storedUser?._id || !storedUser?.token) {
       navigate('/login', { state: { from: location.pathname } });
@@ -578,12 +578,12 @@ export default function MentorLTMPlans() {
                         </p>
                       )}
                       <p style={{ color: MUTED2, fontSize: 11, margin: '2px 0 0' }}>
-                        {paymentPlan.months}m · {paymentPlan.totalSessions} sessions
+                        {paymentPlan.months}month Plan · {paymentPlan.totalSessions} sessions
                       </p>
                     </div>
                   </div>
                   <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                    {[paymentPlan.label, `${paymentPlan.sessionsPerWeek} session/week`, `₹${paymentPlan.monthlyPrice?.toLocaleString('en-IN')}/month`].map(t => (<span key={t} style={{ fontSize: 10, fontWeight: 600, padding: '3px 9px', borderRadius: 20, background: '#fff', color: MUTED, border: `1px solid ${BORDER_HI}` }}>{t}</span>
+                    {[paymentPlan.label, `${paymentPlan.sessionsPerWeek} session${paymentPlan.sessionsPerWeek === 1 ? '' : 's'}/week`, `₹${paymentPlan.monthlyPrice?.toLocaleString('en-IN')}/month`].map(t => (<span key={t} style={{ fontSize: 10, fontWeight: 600, padding: '3px 9px', borderRadius: 20, background: '#fff', color: MUTED, border: `1px solid ${BORDER_HI}` }}>{t}</span>
                     ))}
                   </div>
                 </div>

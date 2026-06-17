@@ -1408,7 +1408,7 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
                                         <p style={secHead}><Users size={12} color={T.primary} /> Mentorship Delivery</p>
                                         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                                             <div>
-                                                <span style={lbl}>Active mentee limit *</span>
+                                                <span style={lbl}>Active Mentee Limit *</span>
                                                 <select value={ltmMenteeLimit} onChange={(e) => setLtmMenteeLimit(e.target.value)} style={{ ...inp(), background: T.bg }}>
                                                     <option value="">Select limit</option>
                                                     {[1, 2, 3, 4, 5].map((n) => <option key={n} value={n.toString()}>Max {n} mentees</option>)}
@@ -1417,7 +1417,7 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
                                             </div>
 
                                             <div>
-                                                <span style={lbl}>Sessions frequency *</span>
+                                                <span style={lbl}>Sessions Frequency *</span>
                                                 <select value={sessionsFrequency} onChange={(e) => setSessionsFrequency(e.target.value)} style={{ ...inp(), background: T.bg }}>
                                                     <option value="">Select...</option>
                                                     <option value="weekly">Weekly</option>
@@ -1429,7 +1429,7 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
 
                                             <div>
                                                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 5 }}>
-                                                    <span style={lbl}>Mentorship pitch *</span>
+                                                    <span style={lbl}>Mentorship Pitch *</span>
                                                     <span style={{ fontFamily: F, fontSize: 11, fontWeight: 600, color: T.textLight }}>{mentorshipPitch.length}/1000</span>
                                                 </div>
                                                 <textarea
@@ -1562,7 +1562,7 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
                                         </div>
                                         {[
                                             { label: "Portfolio", field: "portfolioLink", placeholder: "https://drive.google.com/…" },
-                                            { label: "Intro video", field: "videoLink", placeholder: "https://youtube.com/…" },
+                                            { label: "Intro Video", field: "videoLink", placeholder: "https://youtube.com/…" },
                                         ].map(({ label, field, placeholder }) => (
                                             <div key={field} style={{ marginBottom: 12 }}>
                                                 <span style={lbl}>{label}</span>

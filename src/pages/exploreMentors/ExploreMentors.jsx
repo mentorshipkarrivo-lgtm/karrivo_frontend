@@ -12,6 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import KarrivoLogo from "../../assets/KarrivoLogo.png";
 import { useAdvancedFilterMentorsMutation, useSearchMentorMutation, useGetLtmAllMentorsQuery } from "../LongTermMentorship/MentorshipHome/Mentorshiphomeapislice";
+import { Loader } from "@react-three/drei";
 
 const BLUE = "#0098cc";
 const BLUE_LIGHT = "#f0faff";
@@ -118,7 +119,7 @@ function SubscribePanel({ mentor, onClose }) {
             </div>
 
             <div style={{ flex: 1, overflowY: "auto", padding: "22px 26px" }}>
-                <p style={{ fontSize: "13px", fontWeight: 700, color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: "12px", fontFamily: FONT }}>Select Plan</p>
+                <p style={{ fontSize: "13px", fontWeight: 700, color: BLUE, letterSpacing: ".08em", marginBottom: "12px", fontFamily: FONT }}>Select Plan</p>
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "26px" }}>
                     {PLANS.map((p) => {
                         const sel = planKey === p.key;
@@ -142,7 +143,7 @@ function SubscribePanel({ mentor, onClose }) {
                     })}
                 </div>
 
-                <p style={{ fontSize: "13px", fontWeight: 700, color: BLUE, textTransform: "uppercase", letterSpacing: ".08em", marginBottom: "12px", fontFamily: FONT }}>Select Availability</p>
+                <p style={{ fontSize: "13px", fontWeight: 700, color: BLUE, letterSpacing: ".08em", marginBottom: "12px", fontFamily: FONT }}>Select Availability</p>
                 {availability.length > 0 ? (
                     <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
                         {DAY_ORDER.map((day, di) => {
@@ -194,7 +195,7 @@ function SubscribePanel({ mentor, onClose }) {
 
             <div style={{ borderTop: "1px solid #f0f0f0", padding: "18px 26px", background: "white", flexShrink: 0 }}>
                 <div style={{ marginBottom: "14px" }}>
-                    <p style={{ fontSize: "12px", color: "#9ca3af", margin: "0 0 3px", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".08em", fontFamily: FONT }}>Total For {PLANS.find((p) => p.key === planKey)?.label}</p>
+                    <p style={{ fontSize: "12px", color: "#9ca3af", margin: "0 0 3px", fontWeight: 600, letterSpacing: ".08em", fontFamily: FONT }}>Total For {PLANS.find((p) => p.key === planKey)?.label}</p>
                     <p style={{ fontSize: "30px", fontWeight: 800, color: BLUE, margin: 0, fontFamily: FONT }}>{totalPrice > 0 ? fmtINR(totalPrice) : "N/A"}</p>
                     {totalSessions > 0 && <p style={{ fontSize: "13px", color: "#9ca3af", margin: "3px 0 0", fontFamily: FONT }}>{totalSessions} sessions · {selectedCount} slot{selectedCount !== 1 ? "s" : ""}/week</p>}
                 </div>
@@ -845,8 +846,7 @@ export default function ExploreMentors() {
 
                         {isLoading && (
                             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "50vh" }}>
-                                <div style={{ width: "40px", height: "40px", borderRadius: "50%", border: `3px solid ${BLUE_LIGHT}`, borderTopColor: BLUE, animation: "spin .8s linear infinite" }} />
-                                <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+                                <Loader />
                             </div>
                         )}
 

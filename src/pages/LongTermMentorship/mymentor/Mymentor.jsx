@@ -504,7 +504,7 @@ function normalizeMentor(data) {
         menteeCount: d.totalMentees ?? 0,
 
         pricing: {
-            hourlyRate:d.hourlyRate,
+            hourlyRate: d.hourlyRate,
             weeklySessions: pricing.weeklySessions ?? 0,
             plans: pricing.plans ?? {}
         }
@@ -514,7 +514,7 @@ function normalizeMentor(data) {
 function MentorCard({ mentor, onViewProfile }) {
     const [bioExpanded, setBioExpanded] = useState(false);
 
-    console.log(mentor,"mentor1w2e3r4g5")
+    console.log(mentor, "mentor1w2e3r4g5")
     const fullName = toTitleCase(mentor.fullName || "Mentor");
     const currentRole = toTitleCase(mentor.currentRole || "");
     const companyName = toTitleCase(mentor.companyName || "");
@@ -528,7 +528,7 @@ function MentorCard({ mentor, onViewProfile }) {
         .split(",").map((s) => s.trim()).filter(Boolean);
 
     const monthlyPrice = mentor.pricing.hourlyRate ?? 0;
-    console.log(mentor.hourlyRate ,"monthlyPrice12e3r4")
+    console.log(mentor.hourlyRate, "monthlyPrice12e3r4")
     const placements = mentor.placements ?? 0;
     const menteeCount = mentor.menteeCount ?? 0;
     const yearsExp = mentor.yearsOfExperience
@@ -783,6 +783,7 @@ function MentorCard({ mentor, onViewProfile }) {
     );
 }
 
+
 // ── MyMentor (root) ────────────────────────────────────────────────────────
 const MyMentor = () => {
     const navigate = useNavigate();
@@ -839,12 +840,18 @@ const MyMentor = () => {
         </div>
     );
 
+
     return (
         <div style={{ padding: '24px 16px', boxSizing: 'border-box', fontFamily: FONT }}>
-            <p style={{
-                fontSize: 13, fontWeight: 600, color: '#5a6a82',
-                letterSpacing: '0.06em', textTransform: 'uppercase', marginBottom: 16
-            }}>
+            <p
+                style={{
+                    fontSize: "clamp(16px, 4vw, 20px)",
+                    fontWeight: 700,
+                    color: "#1a1a2e",
+                    margin: "0 0 3px",
+                    fontFamily: FONT,
+                }}
+            >
                 My Mentor
             </p>
 

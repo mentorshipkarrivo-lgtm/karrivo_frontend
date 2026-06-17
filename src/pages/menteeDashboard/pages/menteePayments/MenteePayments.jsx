@@ -119,7 +119,7 @@ const thStyle = {
   padding: "11px 14px",
   fontSize: 11, fontWeight: 700,
   color: "#ffffff",
-  textTransform: "uppercase", letterSpacing: "0.6px",
+   letterSpacing: "0.6px",
   background: "#1a1a2e",
   borderBottom: `1px solid ${C.border}`,
   whiteSpace: "nowrap", textAlign: "left",
@@ -182,7 +182,7 @@ const MenteePayments = () => {
                   }}>
                     <div style={{
                       fontSize: 9, fontWeight: 700, color: C.muted,
-                      textTransform: "uppercase", letterSpacing: "0.08em", fontFamily: FONT,
+                       letterSpacing: "0.08em", fontFamily: FONT,
                     }}>{label}</div>
                     <div style={{ fontWeight: 800, fontSize: 16, color: C.text, marginTop: 3, fontFamily: FONT }}>
                       {val}
@@ -385,7 +385,7 @@ const MenteePayments = () => {
                         <div key={label}>
                           <div style={{
                             fontSize: 9, fontWeight: 700, color: C.muted,
-                            textTransform: "uppercase", letterSpacing: "0.08em",
+                             letterSpacing: "0.08em",
                             marginBottom: 3, fontFamily: FONT,
                           }}>{label}</div>
                           <div style={{ fontSize: 12, color: C.sub, fontFamily: FONT }}>{val}</div>
@@ -401,7 +401,7 @@ const MenteePayments = () => {
                       }}>
                         <div style={{
                           fontSize: 9, fontWeight: 700, color: C.muted,
-                          textTransform: "uppercase", letterSpacing: "0.08em",
+                           letterSpacing: "0.08em",
                           fontFamily: FONT,
                         }}>Remarks</div>
                         <p style={{ margin: "3px 0 0", fontSize: 12, color: C.sub, fontFamily: FONT }}>

@@ -163,7 +163,6 @@ const HelpSupport = () => {
         fontWeight: 700,
         color: '#ffffff',
         letterSpacing: '0.6px',
-        textTransform: 'uppercase',
         whiteSpace: 'nowrap',
         borderBottom: '1px solid #e2e8f0',
         background: '#1a1a2e',
@@ -213,7 +212,6 @@ const HelpSupport = () => {
         fontSize: '11px',
         fontWeight: 700,
         color: '#475569',
-        textTransform: 'uppercase',
         letterSpacing: '0.6px',
         marginBottom: '6px',
     };
@@ -389,15 +387,15 @@ const HelpSupport = () => {
                                         { label: 'Status', value: ticket.status.replace('_', ' ') },
                                     ].map(({ label, value, badge }) => (
                                         <div key={label}>
-                                            <p style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, margin: '0 0 3px', textTransform: 'uppercase', letterSpacing: '0.4px' }}>{label}</p>
-                                            {badge || <p style={{ fontSize: '13px', color: '#1a1a2e', fontWeight: 600, margin: 0, textTransform: 'capitalize' }}>{value}</p>}
+                                            <p style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, margin: '0 0 3px', letterSpacing: '0.4px' }}>{label}</p>
+                                            {badge || <p style={{ fontSize: '13px', color: '#1a1a2e', fontWeight: 600, margin: 0, }}>{value}</p>}
                                         </div>
                                     ))}
                                 </div>
 
                                 {ticket.response && (
                                     <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '12px', marginBottom: '12px' }}>
-                                        <p style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, margin: '0 0 4px', textTransform: 'uppercase', letterSpacing: '0.4px' }}>Response</p>
+                                        <p style={{ fontSize: '11px', color: '#94a3b8', fontWeight: 600, margin: '0 0 4px', letterSpacing: '0.4px' }}>Response</p>
                                         <p style={{ fontSize: '13px', color: '#1a1a2e', margin: 0, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{ticket.response}</p>
                                         {ticket.respondedAt && (
                                             <p style={{ fontSize: '11px', color: '#94a3b8', margin: '4px 0 0' }}>
@@ -612,7 +610,7 @@ const HelpSupport = () => {
 
                                 <div>
                                     <label style={labelStyle}>
-                                        Additional Remarks <span style={{ color: '#94a3b8', fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>(Optional)</span>
+                                        Additional Remarks <span style={{ color: '#94a3b8', fontWeight: 400, letterSpacing: 0 }}>(Optional)</span>
                                     </label>
                                     <textarea
                                         value={feedbackForm.remarks}

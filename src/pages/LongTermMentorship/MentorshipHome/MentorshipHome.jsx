@@ -151,7 +151,7 @@ function SubscribePanel({ mentor, onClose }) {
               })}
             </div>
 
-            <p style={{ fontSize: "12px", fontWeight: 700, color: "#6b7280", textTransform: "uppercase", letterSpacing: ".07em", marginBottom: "10px" }}>
+            <p style={{ fontSize: "12px", fontWeight: 700, color: "#6b7280",  letterSpacing: ".07em", marginBottom: "10px" }}>
               Select Availability Slots
             </p>
             <p style={{ fontSize: "12px", color: "#9ca3af", marginBottom: "12px" }}>
@@ -256,7 +256,7 @@ function SubscribePanel({ mentor, onClose }) {
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
             <div>
-              <p style={{ fontSize: "11px", color: "#9ca3af", margin: "0 0 2px", fontWeight: 600, textTransform: "uppercase", letterSpacing: ".07em" }}>
+              <p style={{ fontSize: "11px", color: "#9ca3af", margin: "0 0 2px", fontWeight: 600,  letterSpacing: ".07em" }}>
                 Total for {PLANS.find((p) => p.months === planKey)?.label}
               </p>
               <p style={{ fontSize: "22px", fontWeight: 700, color: "#111827", margin: 0 }}>
@@ -501,7 +501,7 @@ export default function MentorshipHome() {
         >
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
             <span style={{ width: "3px", height: "20px", borderRadius: "4px", background: BLUE, display: "inline-block" }} />
-            <p style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: ".1em", color: BLUE, margin: 0 }}>
+            <p style={{ fontSize: "11px", fontWeight: 700,  letterSpacing: ".1em", color: BLUE, margin: 0 }}>
               Mentor Discovery
             </p>
           </div>

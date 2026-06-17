@@ -3,7 +3,7 @@ import {
   Plus,
   Search,
   TicketCheck,
-  X,
+  X,Headphones 
 } from "lucide-react";
 import {
   useGetMentorSupportTicketsQuery,
@@ -89,15 +89,15 @@ export default function MentorHelpSupport() {
   }
 
   return (
-    <div className="min-h-screen bg-white text-gray-700">
+    <div className="min-h-screen bg-white p-5 text-gray-700">
       <div className="max-w-7xl mx-auto space-y-6">
 
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
-              <TicketCheck size={24} className="text-[#0098cc]" />
-              Help & Support
+              <Headphones size={24} className="text-[#0098cc]" />
+              Help Request
             </h1>
 
             <p className="text-gray-500 mt-2 text-xs">

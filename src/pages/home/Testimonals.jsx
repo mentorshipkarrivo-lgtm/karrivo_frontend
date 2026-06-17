@@ -230,7 +230,6 @@ export default function TestimonialsSection() {
             fontFamily: "'DM Sans', sans-serif",
             fontSize: "12px",
             letterSpacing: "0.18em",
-            textTransform: "uppercase",
             color: "#888",
             marginBottom: "16px",
           }}

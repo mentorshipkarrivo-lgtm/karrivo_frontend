@@ -851,7 +851,7 @@ const MentorDiscoveryUI = () => {
                     {/* Domain selector */}
                     <div style={{ marginBottom: isSmallMobile ? "18px" : isMobile ? "24px" : "30px" }}>
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "14px", flexWrap: "wrap", gap: "8px" }}>
-                            <p style={{ fontSize: "13px", fontWeight: 900, color: colors.textDark, textTransform: "uppercase", letterSpacing: "0.8px", fontFamily: FONT }}>
+                            <p style={{ fontSize: "13px", fontWeight: 900, color: colors.textDark, letterSpacing: "0.8px", fontFamily: FONT }}>
                                 Looking for mentorship in
                             </p>
                             {selectedDomains.length > 0 && (
