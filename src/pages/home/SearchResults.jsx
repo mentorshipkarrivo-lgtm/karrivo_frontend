@@ -1,12 +1,11 @@
-
-
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Star, Loader2, Search, Briefcase, MapPin, X,
   ChevronDown, ChevronUp, CheckCircle, Pencil,
-  Building2, SlidersHorizontal, Trophy, Users, Calendar, Target
+  Building2, SlidersHorizontal, Trophy, Users, Calendar, Target,
+  GraduationCap, Languages, BookOpen
 } from "lucide-react";
 import { FaClock } from "react-icons/fa";
 import { useLazySearchMentorsQuery } from "./MentorsecApiSlice";
@@ -19,18 +18,14 @@ _link.href =
 _link.rel = "stylesheet";
 document.head.appendChild(_link);
 
-// ── Design Tokens (same as ExploreMentors) ──────────────────────────────────
+// ── Design Tokens ────────────────────────────────────────────────────────────
 const BLUE = "#0098cc";
 const BLUE_LIGHT = "#f0faff";
 const BLUE_BORDER = "#cce9f5";
 const PRIMARY = "#1a1a2e";
 const FONT = "'DM Sans', sans-serif";
 
-const CARD_H_DESKTOP = "280px";
-const PHOTO_W = "40%";
-const PHOTO_H_MOBILE = "200px";
-
-// ── Static Data ─────────────────────────────────────────────────────────────
+// ── Static Data ──────────────────────────────────────────────────────────────
 const DAY_ORDER = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const PLANS = [
   { key: "1Month", label: "1 Mo" },
@@ -84,335 +79,442 @@ function useWindowWidth() {
   return w;
 }
 
-// ── MentorCard (identical to ExploreMentors) ─────────────────────────────────
-function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
+// ── MentorCard ───────────────────────────────────────────────────────────────
+function MentorCard({ mentor, index, onViewProfile }) {
   const width = useWindowWidth();
   const isMobile = width < 768;
-
   const [bioExpanded, setBioExpanded] = useState(false);
 
+  const fullName = toTitleCase(mentor.fullName || "Mentor");
+  const currentRole = toTitleCase(mentor.currentRole || "");
+  const companyName = toTitleCase(mentor.companyName || "");
+  const locationText = toTitleCase(mentor.location || "");
+  const languages = Array.isArray(mentor.languages)
+    ? mentor.languages.join(", ")
+    : mentor.languages || "";
+  const bio = mentor.motivationStatement || mentor.bio || mentor.about || "";
   const areas = (mentor.areasOfInterest || mentor.currentSkills || "")
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
 
-  const bio =
-    mentor.motivationStatement ||
-    mentor.bio ||
-    mentor.about ||
-    "";
-
-  const fullName = toTitleCase(mentor.fullName || "Mentor");
-
-  const currentRole = toTitleCase(mentor.currentRole || "");
-  const companyName = toTitleCase(mentor.companyName || "");
-  const locationText = toTitleCase(mentor.location || "");
-
-  const languages = Array.isArray(mentor.languages)
-    ? mentor.languages.join(", ")
-    : mentor.languages || "";
-
-  const hourlyRate =
-    mentor.pricing?.hourlyRate ??
-    mentor.hourlyRate ??
-    0;
-
-  const planData = getPlanData(mentor, "1Month");
-
-  const monthlyPrice =
-    planData?.totalPrice ?? hourlyRate;
-
+  const monthlyPrice = mentor.pricing?.monthlyRate ?? mentor.hourlyRate ?? 0;
   const yearsExp = mentor.yearsOfExperience
-    ? `${mentor.yearsOfExperience}+ Years`
-    : "";
+    ? `${mentor.yearsOfExperience}+ Years of Exp.`
+    : "0+ Years of Exp.";
 
-  const placements = mentor.placements ?? 0;
-  const menteeCount = mentor.menteeCount ?? 0;
+  const mentoringStyle = mentor.mentoringStyle || "";
+  const highestDegree = mentor.highestDegree || "";
+  const fieldOfStudy = mentor.fieldOfStudy || "";
+  const discount = mentor.discount ?? null;
+  const guidanceAreasList = Array.isArray(mentor.guidanceAreas)
+    ? mentor.guidanceAreas
+    : [];
+
+  const prevCompanies = Array.isArray(mentor.previousCompanies)
+    ? mentor.previousCompanies
+    : [];
+
+  const offeringForList = Array.isArray(mentor.offeringFor)
+    ? mentor.offeringFor
+    : mentor.offeringFor
+    ? String(mentor.offeringFor).split(",").map((s) => s.trim())
+    : [];
+
+  const domainsList = Array.isArray(mentor.domains)
+    ? mentor.domains
+    : mentor.domains
+    ? String(mentor.domains).split(",").map((s) => s.trim())
+    : [];
+
+  const BIO_LIMIT = 200;
+  const bioIsTruncatable = bio.length > BIO_LIMIT;
+  const displayedBio =
+    bioIsTruncatable && !bioExpanded ? bio.slice(0, BIO_LIMIT) + "..." : bio;
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.25, delay: index * 0.03 }}
+      transition={{ duration: 0.28, delay: index * 0.04 }}
       style={{
         width: "100%",
-        border: "1px solid #e5e7eb",
+        border: "1px solid #e2e8f0",
         background: "#fff",
         display: "flex",
         flexDirection: isMobile ? "column" : "row",
         overflow: "hidden",
         marginBottom: "16px",
         fontFamily: FONT,
+        borderRadius: "8px",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+        minHeight: isMobile ? "auto" : "340px",
       }}
     >
-      {/* IMAGE */}
+      {/* ── LEFT COLUMN ── */}
       <div
         style={{
-          width: isMobile ? "100%" : "240px",
-          minWidth: isMobile ? "100%" : "240px",
-          height: isMobile ? "260px" : "100%",
-          background: "#f3f4f6",
+          width: isMobile ? "100%" : "200px",
+          minWidth: isMobile ? "100%" : "200px",
           display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "10px",
+          flexDirection: "column",
+          borderRight: isMobile ? "none" : "1px solid #e2e8f0",
+          flexShrink: 0,
+          background: "#fff",
         }}
       >
-        <img
-          src={mentor.profilePhoto}
-          alt={fullName}
+        {/* Photo */}
+        <div
           style={{
+            position: "relative",
             width: "100%",
-            height: "100%",
-            objectFit: "cover",   // 🔥 CHANGE THIS
-            borderRadius: "0px",  // ❌ remove rounding from image
+            flex: isMobile ? "none" : 1,
+            height: isMobile ? "260px" : "auto",
+            minHeight: isMobile ? "260px" : "200px",
+            background: "#f1f5f9",
+            overflow: "hidden",
           }}
-        />
+        >
+          <span style={{ position: "absolute", top: "8px", left: "8px", fontSize: "12px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
+          <span style={{ position: "absolute", top: "8px", right: "8px", fontSize: "8px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
+          <span style={{ position: "absolute", bottom: "8px", left: "6px", fontSize: "7px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
+          <span style={{ position: "absolute", bottom: "8px", right: "6px", fontSize: "10px", color: "#cbd5e1", userSelect: "none", zIndex: 2 }}>✦</span>
+          <img
+            src={mentor.profilePhoto}
+            alt={fullName}
+            style={{
+              display: "block",
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "top center",
+              position: "absolute",
+              top: 0, left: 0, right: 0, bottom: 0,
+            }}
+          />
+        </div>
+
+        {/* Current Company */}
+        <div
+          style={{
+            borderTop: "1px solid #e2e8f0",
+            padding: "12px 14px",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            background: "#fafafa",
+            flexShrink: 0,
+          }}
+        >
+          <div
+            style={{
+              width: "36px", height: "36px", borderRadius: "50%",
+              background: mentor.companyLogoColor || "#1d4ed8",
+              color: "#fff", display: "flex", alignItems: "center",
+              justifyContent: "center", fontWeight: 800, fontSize: "14px",
+              flexShrink: 0, fontFamily: FONT, overflow: "hidden",
+            }}
+          >
+            {mentor.companyLogo
+              ? <img src={mentor.companyLogo} alt={companyName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              : fullName.charAt(0)
+            }
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", fontFamily: FONT, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {currentRole}
+            </div>
+            <div style={{ fontSize: "12px", color: "#64748b", fontFamily: FONT, marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {companyName}
+            </div>
+          </div>
+        </div>
+
+        {/* Experience */}
+        <div
+          style={{
+            borderTop: "1px solid #e2e8f0",
+            padding: "12px 14px",
+            display: "flex",
+            alignItems: "center",
+            gap: "10px",
+            background: "#fafafa",
+            flexShrink: 0,
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
+            {prevCompanies.slice(0, 3).map((c, i) => (
+              <div
+                key={i}
+                style={{
+                  width: "30px", height: "30px", borderRadius: "50%",
+                  border: "2px solid white", background: "#e2e8f0", overflow: "hidden",
+                  marginLeft: i > 0 ? "-8px" : "0", zIndex: 3 - i,
+                  position: "relative", flexShrink: 0,
+                }}
+              >
+                {c.logo
+                  ? <img src={c.logo} alt={c.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: 700, color: "#374151", background: ["#fef3c7", "#dbeafe", "#d1fae5"][i % 3], fontFamily: FONT }}>{c.name?.charAt(0) || "C"}</div>
+                }
+              </div>
+            ))}
+            {prevCompanies.length === 0 && (
+              <div style={{ width: "30px", height: "30px", borderRadius: "50%", background: "#fef3c7", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: 700, color: "#92400e", fontFamily: FONT }}>
+                {companyName?.charAt(0) || "C"}
+              </div>
+            )}
+          </div>
+          <div style={{ minWidth: 0 }}>
+            <div style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>{yearsExp}</div>
+            <div style={{ fontSize: "12px", color: "#64748b", fontFamily: FONT, marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              {prevCompanies.length > 0
+                ? prevCompanies.map((c) => c.name).join(" | ")
+                : companyName}
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* CENTER CONTENT */}
+      {/* ── CENTRE ── */}
       <div
         style={{
           flex: 1,
-          padding: "18px",
           display: "flex",
           flexDirection: "column",
-          gap: "10px",
-          borderRight: isMobile ? "none" : "1px solid #e5e7eb",
+          borderRight: isMobile ? "none" : "1px solid #e2e8f0",
+          minWidth: 0,
         }}
       >
-        {/* NAME */}
-        <h2
-          style={{
-            margin: 0,
-            fontSize: "30px",
-            fontWeight: 500,
-            color: "#111827",
-            lineHeight: 1.1,
-          }}
-        >
-          {fullName}
-        </h2>
-
-        {/* LOCATION */}
         <div
           style={{
+            padding: "20px 22px 16px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "12px",
+            flex: 1,
+          }}
+        >
+          {/* Name */}
+          <h2
+            style={{
+              margin: 0,
+              fontSize: "22px",
+              fontWeight: 700,
+              color: "#0f172a",
+              lineHeight: 1.2,
+              fontFamily: FONT,
+            }}
+          >
+            {fullName}
+          </h2>
+
+          {/* Location + Language */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "16px",
+              flexWrap: "wrap",
+              fontSize: "15px",
+              color: "#64748b",
+              fontFamily: FONT,
+            }}
+          >
+            <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+              <MapPin size={14} color="#64748b" />
+              <strong style={{ color: "#334155" }}>{locationText.split(",")[0]}</strong>
+              {locationText.includes(",") && (
+                <span>, {locationText.split(",").slice(1).join(",").trim()}</span>
+              )}
+            </span>
+            {languages && (
+              <span style={{ display: "flex", alignItems: "center", gap: "5px" }}>
+                <Pencil size={13} color="#64748b" />
+                <strong style={{ color: "#334155" }}>{languages}</strong>
+              </span>
+            )}
+          </div>
+
+          {/* Bio */}
+          <div
+            style={{
+              fontSize: "15px",
+              color: "#475569",
+              lineHeight: "1.65",
+              fontFamily: FONT,
+            }}
+          >
+            {displayedBio}
+            {bioIsTruncatable && (
+              <span
+                onClick={() => setBioExpanded(!bioExpanded)}
+                style={{
+                  color: PRIMARY,
+                  marginLeft: "5px",
+                  cursor: "pointer",
+                  fontWeight: 600,
+                }}
+              >
+                {bioExpanded ? "Show Less" : "Read More"}
+              </span>
+            )}
+          </div>
+
+          {/* Skills */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "7px" }}>
+            {areas.map((skill, i) => (
+              <div
+                key={i}
+                style={{
+                  border: "1px solid #d1d5db",
+                  padding: "4px 12px",
+                  fontSize: "13px",
+                  color: "#374151",
+                  background: "#fff",
+                  borderRadius: "4px",
+                  fontFamily: FONT,
+                }}
+              >
+                {toTitleCase(skill)}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom strip */}
+        <div
+          style={{
+            borderTop: "1px solid #f1f5f9",
+            padding: "10px 22px",
             display: "flex",
             alignItems: "center",
-            gap: "12px",
+            gap: "22px",
             flexWrap: "wrap",
-            fontSize: "13px",
-            color: "#4b5563",
+            background: "#f8fafc",
           }}
         >
-          <span style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-            <MapPin size={13} />
-            {locationText}
-          </span>
-          <span>{languages}</span>
-        </div>
-
-        <div
-          style={{
-            border: "1px solid #e5e7eb",
-            background: "#f9fafb",
-            padding: "14px 16px",
-            borderRadius: "12px",
-            fontSize: "14px",
-            color: "#4b5563",
-            lineHeight: "1.7",
-            boxShadow: "0 1px 2px rgba(0,0,0,0.04)",
-          }}
-        >
-          <div
-            style={{
-              fontSize: "13px",
-              fontWeight: 700,
-              color: "#111827",
-              marginBottom: "8px",
-              letterSpacing: "0.3px",
-            }}
-          >
-            About Mentor
-          </div>
-
-          {bioExpanded ? bio : `${bio.slice(0, 160)}...`}
-
-          {bio.length > 160 && (
-            <span
-              onClick={() => setBioExpanded(!bioExpanded)}
-              style={{
-                color: "#2563eb",
-                marginLeft: "8px",
-                cursor: "pointer",
-                fontWeight: 600,
-              }}
-            >
-              {bioExpanded ? "Show Less" : "Read More"}
-            </span>
-          )}
-        </div>
-
-        {/* SKILLS */}
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "8px",
-          }}
-        >
-          {areas.slice(0, 6).map((skill, i) => (
-            <div
-              key={i}
-              style={{
-                border: "1px solid #d1d5db",
-                padding: "6px 12px",
-                fontSize: "12px",
-                color: "#111827",
-                background: "#fff",
-              }}
-            >
-              {toTitleCase(skill)}
-            </div>
-          ))}
-
-          {areas.length > 6 && (
-            <div
-              style={{
-                border: "1px solid #d1d5db",
-                padding: "6px 12px",
-                fontSize: "12px",
-                color: "#2563eb",
-                background: "#fff",
-              }}
-            >
-              +{areas.length - 6} More
+          {offeringForList.length > 0 && (
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", fontFamily: FONT }}>
+              <Briefcase size={13} color="#64748b" />
+              <span style={{ color: "#64748b" }}>For:</span>
+              <span style={{ fontWeight: 600, color: "#0f172a" }}>{offeringForList.join(" | ")}</span>
             </div>
           )}
-        </div>
-
-        {/* EXPERIENCE */}
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: "10px",
-            flexWrap: "nowrap",
-            overflowX: "auto",
-          }}
-        >
-          {/* ROLE */}
-          <div
-            style={{
-              minWidth: "240px",
-              border: "1px solid #e5e7eb",
-              padding: "12px",
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-            }}
-          >
-            <div
-              style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "50%",
-                background: "#1d4ed8",
-                color: "#fff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: 700,
-                fontSize: "16px",
-              }}
-            >
-              B.
-            </div>
-
-            <div>
-              <div style={{ fontSize: "14px", fontWeight: 700 }}>
-                {currentRole}
-              </div>
-              <div style={{ fontSize: "12px", color: "#6b7280" }}>
-                {companyName}
-              </div>
-            </div>
-          </div>
-
-          {/* EXPERIENCE */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-            }}
-          >
-            {/* LOGO / LETTER */}
-            <div
-              style={{
-                width: "36px",
-                height: "36px",
-                borderRadius: "50%",
-                background: "#10b981",
-                color: "#fff",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: 700,
-                fontSize: "14px",
-                overflow: "hidden",
-              }}
-            >
-              {mentor.companyLogo ? (
-                <img
-                  src={mentor.companyLogo}
-                  alt={companyName}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                  }}
-                />
-              ) : (
-                <span>
-                  {companyName ? companyName.charAt(0).toUpperCase() : "E"}
+          {domainsList.length > 0 && (
+            <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", fontFamily: FONT }}>
+              <div style={{ width: "12px", height: "12px", borderRadius: "50%", border: "2px solid #64748b", flexShrink: 0 }} />
+              <span style={{ color: "#64748b" }}>Domains:</span>
+              <span style={{ fontWeight: 600, color: "#0f172a" }}>{domainsList[0]}</span>
+              {domainsList.length > 1 && (
+                <span style={{ color: "#2563eb", fontWeight: 600, cursor: "pointer" }}>
+                  +{domainsList.length - 1} More
                 </span>
               )}
             </div>
-
-            {/* TEXT */}
-            <div>
-              <div style={{ fontSize: "14px", fontWeight: 700 }}>
-                {yearsExp || "0+ Years"}
-              </div>
-              <div style={{ fontSize: "12px", color: "#6b7280" }}>
-                {companyName || "Experience"}
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
 
-      {/* RIGHT SIDE */}
-      <div style={{ width: isMobile ? "100%" : "320px", padding: "18px", display: "flex", flexDirection: "column", gap: "14px", background: "#ffffff", borderRadius: "18px", }}>  <div style={{ fontSize: "14px", fontWeight: 700, display: "flex", alignItems: "center", gap: "10px", color: "#111827", }}  >    <Star size={18} color="#f59e0b" fill="#f59e0b" />    Star Mentor  </div>  <div style={{ fontSize: "13px", display: "flex", alignItems: "center", gap: "10px", color: "#374151", }}  >    <Trophy size={17} color="#d97706" />    <span>{placements} Placements</span>  </div>  <div style={{ fontSize: "13px", display: "flex", alignItems: "center", gap: "10px", color: "#374151", }}  >    <Users size={17} color="#0ea5e9" />    <span>5.0 ({menteeCount}+ mentees)</span>  </div>  <div style={{ fontSize: "13px", display: "flex", alignItems: "center", gap: "10px", color: "#374151", }}  >    <Calendar size={17} color="#10b981" />    <span>4x Sessions Per Month</span>  </div>  <div style={{ fontSize: "13px", display: "flex", alignItems: "center", gap: "10px", color: "#374151", }}  >    <Target size={17} color="#8b5cf6" />    <span>Referrals in Top Companies</span>  </div>  <div style={{ borderTop: "1px solid #f3f4f6", paddingTop: "16px", marginTop: "4px", }}  >    <div style={{ fontSize: "12px", color: "#6b7280", marginBottom: "4px", }}    >      Starting from    </div>    <div style={{ display: "flex", alignItems: "flex-end", gap: "4px", }}    >      <span style={{ fontSize: "36px", fontWeight: 800, color: "#111827", }}      >        {fmtINR(monthlyPrice)}      </span>      <span style={{ fontSize: "13px", color: "#6b7280", marginBottom: "6px", }}      >        /Session      </span>    </div>  </div>
-
-        <button
-          onClick={() => onViewProfile(mentor)}
+      {/* ── RIGHT: Stats + CTA ── */}
+      <div
+        style={{
+          width: isMobile ? "100%" : "275px",
+          minWidth: isMobile ? "100%" : "275px",
+          display: "flex",
+          flexDirection: "column",
+          background: "#ffffff",
+          flexShrink: 0,
+        }}
+      >
+        {/* Stats */}
+        <div
           style={{
-            width: "100%",
-            height: "50px",
-            border: "1px solid #d1d5db",
-            borderRadius: "12px",
-            background: "#ffffff",
-            color: "#111827",
-            fontSize: "15px",
-            fontWeight: 700,
-            cursor: "pointer",
-            transition: "0.3s ease",
+            padding: "18px 20px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "14px",
+            flex: 1,
           }}
         >
-          View Profile
-        </button>
+          {mentoringStyle && (
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", color: "#374151", fontFamily: FONT }}>
+              <Users size={15} color="#0ea5e9" style={{ flexShrink: 0 }} />
+              <span>Mentoring Style: <strong style={{ color: "#0f172a" }}>{toTitleCase(mentoringStyle)}</strong></span>
+            </div>
+          )}
+
+          {(highestDegree || fieldOfStudy) && (
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", color: "#374151", fontFamily: FONT }}>
+              <GraduationCap size={15} color="#8b5cf6" style={{ flexShrink: 0 }} />
+              <span>
+                {highestDegree}
+                {highestDegree && fieldOfStudy && " in "}
+                {toTitleCase(fieldOfStudy)}
+              </span>
+            </div>
+          )}
+
+          {languages && (
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", color: "#374151", fontFamily: FONT }}>
+              <Languages size={15} color="#f59e0b" style={{ flexShrink: 0 }} />
+              <span>Speaks: <strong style={{ color: "#0f172a" }}>{languages}</strong></span>
+            </div>
+          )}
+
+          {guidanceAreasList.length > 0 && (
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", color: "#374151", fontFamily: FONT }}>
+              <BookOpen size={15} color="#64748b" style={{ flexShrink: 0 }} />
+              <span>
+                Guidance:{" "}
+                <strong style={{ color: "#0f172a" }}>
+                  {guidanceAreasList.slice(0, 3).join(", ")}
+                </strong>
+              </span>
+            </div>
+          )}
+
+          {/* Price */}
+          <div style={{ marginTop: "4px" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "3px" }}>
+              <span style={{ fontSize: "13px", color: "#94a3b8", fontFamily: FONT }}>Starting from</span>
+              {discount && (
+                <div style={{ display: "inline-flex", alignItems: "center", gap: "3px", background: "#dcfce7", color: "#16a34a", borderRadius: "20px", padding: "3px 10px", fontSize: "13px", fontWeight: 700, fontFamily: FONT }}>
+                  ✦ Extra {discount}% OFF
+                </div>
+              )}
+            </div>
+            <div style={{ display: "flex", alignItems: "flex-end", gap: "5px" }}>
+              <span style={{ fontSize: "28px", fontWeight: 800, color: "#0f172a", lineHeight: 1, fontFamily: FONT }}>
+                {fmtINR(monthlyPrice)}
+              </span>
+              <span style={{ fontSize: "13px", color: "#64748b", marginBottom: "3px", fontFamily: FONT }}>/Session</span>
+            </div>
+          </div>
+        </div>
+
+        {/* CTA */}
+        <div style={{ padding: "0 20px 18px", display: "flex", flexDirection: "column", gap: "10px" }}>
+          <button
+            onClick={() => onViewProfile(mentor)}
+            style={{
+              width: "100%",
+              height: "44px",
+              border: "1px solid #d1d5db",
+              borderRadius: "8px",
+              background: "#ffffff",
+              color: "#0f172a",
+              fontSize: "15px",
+              fontWeight: 600,
+              cursor: "pointer",
+              fontFamily: FONT,
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "#f8fafc")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = "#ffffff")}
+          >
+            View Profile
+          </button>
+        </div>
       </div>
     </motion.div>
   );
@@ -453,28 +555,79 @@ const SearchResults = () => {
   const mentorsList =
     response?.data && Array.isArray(response.data) ? response.data : [];
 
-  const gridCols = isMobile ? "1fr" : "repeat(2, 1fr)";
-
   return (
-    <div style={{ minHeight: "100vh", background: "#f6f8fa", paddingTop: isMobile ? "64px" : "80px", fontFamily: FONT }}>
-      <div style={{ maxWidth: "1280px", margin: "0 auto", padding: isMobile ? "12px" : "20px 24px", boxSizing: "border-box" }}>
-
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#f6f8fa",
+        paddingTop: isMobile ? "64px" : "80px",
+        fontFamily: FONT,
+      }}
+    >
+      <div
+        style={{
+          maxWidth: "1280px",
+          margin: "0 auto",
+          padding: isMobile ? "12px" : "20px 24px",
+          boxSizing: "border-box",
+        }}
+      >
         {/* ── Search Bar ── */}
         <form onSubmit={handleSearch} style={{ marginBottom: "14px" }}>
           <div style={{ position: "relative", width: "100%" }}>
-            <Search size={14} color={BLUE} style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
+            <Search
+              size={14}
+              color={BLUE}
+              style={{
+                position: "absolute",
+                left: "14px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                pointerEvents: "none",
+              }}
+            />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={isMobile ? "Search skills, domain…" : "Search for any skill, domain or name…"}
-              style={{ width: "100%", padding: "11px 120px 11px 40px", border: "1px solid #e5e7eb", borderRadius: "10px", fontSize: "13px", color: "#374151", fontFamily: FONT, outline: "none", background: "white", boxSizing: "border-box", boxShadow: "0 1px 3px rgba(0,0,0,.04)" }}
+              placeholder={
+                isMobile
+                  ? "Search skills, domain…"
+                  : "Search for any skill, domain or name…"
+              }
+              style={{
+                width: "100%",
+                padding: "11px 120px 11px 40px",
+                border: "1px solid #e5e7eb",
+                borderRadius: "10px",
+                fontSize: "13px",
+                color: "#374151",
+                fontFamily: FONT,
+                outline: "none",
+                background: "white",
+                boxSizing: "border-box",
+                boxShadow: "0 1px 3px rgba(0,0,0,.04)",
+              }}
               onFocus={(e) => (e.target.style.borderColor = BLUE)}
               onBlur={(e) => (e.target.style.borderColor = "#e5e7eb")}
             />
             <button
               type="submit"
-              style={{ position: "absolute", right: "6px", top: "50%", transform: "translateY(-50%)", background: PRIMARY, color: "white", border: "none", borderRadius: "8px", padding: "7px 16px", fontSize: "13px", fontWeight: 700, cursor: "pointer", fontFamily: FONT }}
+              style={{
+                position: "absolute",
+                right: "6px",
+                top: "50%",
+                transform: "translateY(-50%)",
+                background: PRIMARY,
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                padding: "7px 16px",
+                fontSize: "13px",
+                fontWeight: 700,
+                cursor: "pointer",
+                fontFamily: FONT,
+              }}
             >
               Search
             </button>
@@ -483,27 +636,68 @@ const SearchResults = () => {
 
         {/* ── Result count ── */}
         {searchQuery && !isLoading && mentorsList.length > 0 && (
-          <p style={{ fontSize: "12px", color: "#9ca3af", marginBottom: "14px", fontWeight: 500 }}>
-            {mentorsList.length} mentor{mentorsList.length !== 1 ? "s" : ""} found for{" "}
-            <span style={{ color: BLUE, fontWeight: 700 }}>"{searchQuery}"</span>
+          <p
+            style={{
+              fontSize: "12px",
+              color: "#9ca3af",
+              marginBottom: "14px",
+              fontWeight: 500,
+            }}
+          >
+            {mentorsList.length} mentor{mentorsList.length !== 1 ? "s" : ""}{" "}
+            found for{" "}
+            <span style={{ color: BLUE, fontWeight: 700 }}>
+              "{searchQuery}"
+            </span>
           </p>
         )}
 
         {/* ── Loading ── */}
         {isLoading && (
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", minHeight: "40vh" }}>
-            <Loader/>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              minHeight: "40vh",
+            }}
+          >
+            <Loader />
           </div>
         )}
 
         {/* ── Error ── */}
         {isError && !isLoading && (
-          <div style={{ textAlign: "center", padding: "60px 0", background: "white", borderRadius: "14px", border: "1px solid #e5e7eb" }}>
-            <p style={{ fontWeight: 700, color: "#0f172a" }}>Failed to load mentors</p>
-            <p style={{ fontSize: "13px", color: "#9ca3af", marginTop: "4px" }}>{error?.data?.message || "Please try again later"}</p>
+          <div
+            style={{
+              textAlign: "center",
+              padding: "60px 0",
+              background: "white",
+              borderRadius: "14px",
+              border: "1px solid #e5e7eb",
+            }}
+          >
+            <p style={{ fontWeight: 700, color: "#0f172a" }}>
+              Failed to load mentors
+            </p>
+            <p style={{ fontSize: "13px", color: "#9ca3af", marginTop: "4px" }}>
+              {error?.data?.message || "Please try again later"}
+            </p>
             <button
               onClick={() => triggerSearch(searchQuery)}
-              style={{ marginTop: "16px", padding: "10px 24px", background: PRIMARY, color: "white", border: "none", borderRadius: "10px", fontWeight: 700, fontSize: "13px", cursor: "pointer", fontFamily: FONT }}
+              style={{
+                marginTop: "16px",
+                padding: "10px 24px",
+                background: PRIMARY,
+                color: "white",
+                border: "none",
+                borderRadius: "10px",
+                fontWeight: 700,
+                fontSize: "13px",
+                cursor: "pointer",
+                fontFamily: FONT,
+              }}
             >
               Retry
             </button>
@@ -526,12 +720,8 @@ const SearchResults = () => {
             <Search
               size={42}
               strokeWidth={2.2}
-              style={{
-                color: "#94a3b8",
-                marginBottom: "12px",
-              }}
+              style={{ color: "#94a3b8", marginBottom: "12px" }}
             />
-
             <p
               style={{
                 fontWeight: 700,
@@ -544,24 +734,15 @@ const SearchResults = () => {
                 ? `No mentors found for "${searchQuery}"`
                 : "No mentors available"}
             </p>
-
-
           </div>
         )}
 
-        {/* ── Card Grid (same as ExploreMentors) ── */}
         {/* ── Card Section ── */}
         {!isLoading && !isError && mentorsList.length > 0 && (
-          <div
-            style={{
-              width: "100%",
-              display: "flex",
-              // justifyContent: "center",
-            }}
-          >
+          <div style={{ width: "100%", display: "flex" }}>
             <div
               style={{
-                width: width >= 1024 ? "70%" : "100%", // laptop = 70%, tablet/mobile = 100%
+                width: width >= 1024 ? "70%" : "100%",
                 display: "flex",
                 flexDirection: "column",
                 gap: "16px",
@@ -578,18 +759,9 @@ const SearchResults = () => {
             </div>
           </div>
         )}
-
       </div>
     </div>
   );
 };
 
 export default SearchResults;
-
-
-
-
-
-
-
-
