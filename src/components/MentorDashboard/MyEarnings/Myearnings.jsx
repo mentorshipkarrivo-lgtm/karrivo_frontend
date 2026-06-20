@@ -418,7 +418,7 @@ const Myearnings = () => {
 
             <div>
               <h1
-                className="text-base font-bold"
+                className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2"
                 style={{ color: "#1a1a2e", margin: 0 }}
               >
                 Earnings

@@ -1582,7 +1582,7 @@ export default function MentorAvailability() {
                 <div className="w-8 h-8 rounded-lg bg-[#1a1a2e]/8 flex items-center justify-center">
                   <Calendar size={16} className="text-[#1a1a2e]" />
                 </div>
-                <h1 className="text-lg font-bold text-slate-900">Manage Availability</h1>
+                <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">Manage Availability</h1>
               </div>
               <p className="text-xs text-[#94a3b8] mt-1 ml-10.5">
                 Set your weekly schedule and block dates when you're unavailable
@@ -1627,8 +1627,8 @@ export default function MentorAvailability() {
                 key={key}
                 onClick={() => setTab(key)}
                 className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition border ${tab === key
-                    ? "bg-[#1a1a2e]/8 border-[#1a1a2e]/20 text-[#1a1a2e]"
-                    : "text-[#94a3b8] hover:text-slate-700 border-transparent hover:bg-slate-100"
+                  ? "bg-[#1a1a2e]/8 border-[#1a1a2e]/20 text-[#1a1a2e]"
+                  : "text-[#94a3b8] hover:text-slate-700 border-transparent hover:bg-slate-100"
                   }`}
               >
                 <Icon size={12} />
@@ -1672,18 +1672,18 @@ export default function MentorAvailability() {
                           <div
                             key={day}
                             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg border text-xs transition ${block
-                                ? "border-red-200 bg-red-50"
-                                : slot?.enabled
-                                  ? "border-slate-200 bg-white"
-                                  : "border-dashed border-slate-200 bg-slate-50/50"
+                              ? "border-red-200 bg-red-50"
+                              : slot?.enabled
+                                ? "border-slate-200 bg-white"
+                                : "border-dashed border-slate-200 bg-slate-50/50"
                               }`}
                           >
                             <span
                               className={`font-mono font-bold text-[10px] uppercase w-7 flex-shrink-0 ${block
-                                  ? "text-red-500"
-                                  : slot?.enabled
-                                    ? "text-[#1a1a2e]"
-                                    : "text-slate-300"
+                                ? "text-red-500"
+                                : slot?.enabled
+                                  ? "text-[#1a1a2e]"
+                                  : "text-slate-300"
                                 }`}
                             >
                               {day}
@@ -1757,8 +1757,8 @@ export default function MentorAvailability() {
                             type="button"
                             onClick={() => setSpw(n)}
                             className={`flex-1 py-2 rounded-lg border text-xs font-semibold transition ${spw === n
-                                ? "bg-[#1a1a2e] border-[#1a1a2e] text-white"
-                                : "bg-white border-slate-200 text-[#94a3b8] hover:border-[#1a1a2e]/30 hover:text-[#1a1a2e]"
+                              ? "bg-[#1a1a2e] border-[#1a1a2e] text-white"
+                              : "bg-white border-slate-200 text-[#94a3b8] hover:border-[#1a1a2e]/30 hover:text-[#1a1a2e]"
                               }`}
                           >
                             {n}
@@ -1789,8 +1789,8 @@ export default function MentorAvailability() {
                                 })
                               }
                               className={`flex-1 py-2 rounded-lg border text-xs font-semibold transition ${on
-                                  ? "bg-[#1a1a2e] border-[#1a1a2e] text-white"
-                                  : "bg-white border-slate-200 text-[#94a3b8] hover:border-[#1a1a2e]/30 hover:text-[#1a1a2e]"
+                                ? "bg-[#1a1a2e] border-[#1a1a2e] text-white"
+                                : "bg-white border-slate-200 text-[#94a3b8] hover:border-[#1a1a2e]/30 hover:text-[#1a1a2e]"
                                 }`}
                             >
                               {l}
@@ -1842,8 +1842,8 @@ export default function MentorAvailability() {
                             )
                           }
                           className={`text-[10px] font-semibold px-2.5 py-1 rounded-lg border transition ${allEnabled
-                              ? "bg-[#1a1a2e] border-[#1a1a2e] text-white"
-                              : "bg-white border-slate-200 text-[#94a3b8] hover:border-[#1a1a2e]/30 hover:text-[#1a1a2e]"
+                            ? "bg-[#1a1a2e] border-[#1a1a2e] text-white"
+                            : "bg-white border-slate-200 text-[#94a3b8] hover:border-[#1a1a2e]/30 hover:text-[#1a1a2e]"
                             }`}
                         >
                           {allEnabled ? "Deselect all" : "Select all"}
@@ -1856,8 +1856,8 @@ export default function MentorAvailability() {
                       <div
                         key={`${slot.day}-${i}`}
                         className={`flex flex-wrap items-center gap-2.5 px-3 py-2.5 rounded-lg border transition ${slot.enabled
-                            ? "border-slate-200 bg-white"
-                            : "border-dashed border-slate-200 bg-slate-50/60"
+                          ? "border-slate-200 bg-white"
+                          : "border-dashed border-slate-200 bg-slate-50/60"
                           }`}
                       >
                         <Toggle
@@ -2017,8 +2017,8 @@ export default function MentorAvailability() {
                     >
                       <div
                         className={`flex items-center justify-between px-4 py-2.5 border-b ${isActive
-                            ? "border-red-200 bg-red-50"
-                            : "border-slate-200 bg-slate-50"
+                          ? "border-red-200 bg-red-50"
+                          : "border-slate-200 bg-slate-50"
                           }`}
                       >
                         <div className="flex items-center gap-2.5 flex-wrap">
@@ -2147,8 +2147,8 @@ export default function MentorAvailability() {
                 !hasOverlap && (
                   <div
                     className={`rounded-lg p-3 border text-xs ${affectedDays.length
-                        ? "border-red-200 bg-red-50"
-                        : "border-amber-200 bg-amber-50"
+                      ? "border-red-200 bg-red-50"
+                      : "border-amber-200 bg-amber-50"
                       }`}
                   >
                     {affectedDays.length ? (

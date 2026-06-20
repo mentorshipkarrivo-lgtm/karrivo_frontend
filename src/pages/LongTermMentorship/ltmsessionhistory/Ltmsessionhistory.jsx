@@ -153,7 +153,7 @@ const MobileCard = ({ session }) => {
               margin: 0, fontFamily: FONT,
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
             }}>
-              {session_title || "Untitled Session"}
+              {session_title }
             </p>
             <p style={{
               fontSize: 11, color: C.muted, margin: "2px 0 0",
@@ -486,7 +486,7 @@ export default function LtmsessionsCompleted() {
                                 overflow: "hidden", textOverflow: "ellipsis",
                                 whiteSpace: "nowrap", fontFamily: FONT,
                               }}>
-                                {s.session_title || "Untitled"}
+                                {s.session_title }
                               </span>
                             </td>
                             <td style={{ ...tdStyle, color: C.sub, whiteSpace: "nowrap" }}>

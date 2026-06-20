@@ -23,6 +23,7 @@ export default function MenteePayment() {
     planMonths, totalSessions, basePrice, createdBy,
     paymentType, bookingDetails, bookingNumber,
   } = location.state || {};
+  console.log(mentorName,subscription_id,"mentorNameswdefrt")
 
   const isSessionBooking = paymentType === "bookingsession";
   const total = basePrice;
@@ -39,6 +40,7 @@ export default function MenteePayment() {
   const [submitPayment, { isLoading: isSubmitting, isSuccess, isError, error, data: responseData }] =
     useSubmitPaymentMutation();
 
+    console.log(responseData,"responseData`12")
   const upiId = "karrivo2024@upi";
   const secondUpiId = "example.174327728615@sbi";
 

@@ -332,9 +332,16 @@ const CenterContent = ({ children, isHome, onEditProfileOpen, onSetEditTab, ment
 
             {/* ── Hero banner ── */}
             <div style={{ background: "#fff", border: `1px solid ${T.border}`, borderRadius: 16, padding: "24px 28px", marginBottom: 20 }}>
-                <p style={{ fontFamily: F, fontSize: 22, fontWeight: 700, color: T.textDark, margin: "0 0 8px" }}>
+                {/* <p style={{ fontFamily: F, fontSize: 22, fontWeight: 700, color: T.textDark, margin: "0 0 8px" }}>
                     Hello {mentorName} 👋, welcome to your Mentor Dashboard.
-                </p>
+                </p> */}
+
+
+                <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
+                    Hello {mentorName} 👋, welcome to your Mentor Dashboard.
+
+
+                </h1>
                 <p style={{ fontFamily: F, fontSize: 14, color: T.textLight, margin: 0 }}>
                     Let's refine your mentorship experience.
                 </p>

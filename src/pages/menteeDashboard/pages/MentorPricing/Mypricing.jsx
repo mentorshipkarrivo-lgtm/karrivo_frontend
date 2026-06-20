@@ -939,74 +939,64 @@ const MyPricing = () => {
       `}</style>
 
       {/* Page header */}
-      <div style={{ background: "#fff", borderBottom: "1px solid #e2e8f0", padding: "16px 24px" }}>
-        <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: 10,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
-              <Wallet size={18} color="#1a1a2e" strokeWidth={2.2} />
-            </div>
+      <div style={{ background: "#fff", borderBottom: "1px solid #e2e8f0", padding: "20px" }}>        <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          <div
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 10,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <Wallet size={18} color="#1a1a2e" strokeWidth={2.2} />
+          </div>
 
-            <div>
-              <h1
+          <div>
+            <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
+              Pricing
+            </h1>
+
+            {lastUpdated && isLocked && (
+              <p
                 style={{
                   fontFamily: F,
-                  fontSize: 18,
-                  fontWeight: 700,
-                  color: "#1a1a2e",
-                  margin: "0 0 3px",
+                  fontSize: 11,
+                  color: "#94a3b8",
+                  margin: 0,
                 }}
               >
-                Pricing
-              </h1>
-
-              {lastUpdated && isLocked && (
-                <p
-                  style={{
-                    fontFamily: F,
-                    fontSize: 11,
-                    color: "#94a3b8",
-                    margin: 0,
-                  }}
-                >
-                  Last updated: {fmtDate(lastUpdated)}
-                </p>
-              )}
-            </div>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <button onClick={() => setShowCoupon(true)} style={{ ...btnOutline, fontSize: 12 }}>
-              <IconTag size={13} /> Coupons
-            </button>
-            {isLocked ? (
-              <button onClick={() => setIsEditingNew(true)} style={{ ...btnOutline, fontSize: 12 }}>
-                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                </svg>
-                Edit
-              </button>
-            ) : (
-              <button onClick={handleSave} disabled={savingPricing} style={{ ...btnPrimary, fontSize: 12, opacity: savingPricing ? 0.6 : 1 }}>
-                <IconCheck size={13} />
-                {savingPricing ? "Saving…" : "Save"}
-              </button>
+                Last updated: {fmtDate(lastUpdated)}
+              </p>
             )}
           </div>
         </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <button onClick={() => setShowCoupon(true)} style={{ ...btnOutline, fontSize: 12 }}>
+            <IconTag size={13} /> Coupons
+          </button>
+          {isLocked ? (
+            <button onClick={() => setIsEditingNew(true)} style={{ ...btnOutline, fontSize: 12 }}>
+              <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Edit
+            </button>
+          ) : (
+            <button onClick={handleSave} disabled={savingPricing} style={{ ...btnPrimary, fontSize: 12, opacity: savingPricing ? 0.6 : 1 }}>
+              <IconCheck size={13} />
+              {savingPricing ? "Saving…" : "Save"}
+            </button>
+          )}
+        </div>
+      </div>
       </div>
 
       {/* Content */}
-      <div style={{ maxWidth: 780, margin: "0 auto", padding: "20px 24px" }}>
-
+      <div style={{ maxWidth: 780, margin: "0 auto", padding: "20px" }}>
         {/* TierBanner reads commission rates directly from tierDoc (API) */}
         <TierBanner tierDoc={currentTierDoc} subCount={subCount} isEditing={!isLocked} />
 

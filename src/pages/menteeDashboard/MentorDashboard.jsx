@@ -754,7 +754,7 @@ const RightPanel = ({ navigate }) => (
         </div>
 
         {/* Pro Tip Card */}
-        <div
+        {/* <div
             className="mx-4 mb-4 rounded-xl overflow-hidden border border-[#0098cc]/20 bg-gradient-to-br from-[#e8f7fc] via-[#f0fbff] to-[#ddf4fc]"
             style={{ fontFamily: "Cambria, Georgia, serif" }}
         >
@@ -784,7 +784,7 @@ const RightPanel = ({ navigate }) => (
                     Explore Plans →
                 </button>
             </div>
-        </div>
+        </div> */}
     </aside>
 );
 

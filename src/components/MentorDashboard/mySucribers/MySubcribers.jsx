@@ -2,7 +2,7 @@
 
 
 import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { X, User,Users , Mail, Phone, CalendarDays, CalendarX2 } from "lucide-react";
+import { X, User, Users, Mail, Phone, CalendarDays, CalendarX2 } from "lucide-react";
 import {
   useGetSessionsByMentorQuery,
   useGetSubscribersByMentorQuery,
@@ -353,7 +353,7 @@ function SessionModal({ session, onClose, onSave }) {
           </ModalSection>
 
           <ModalSection title="Ratings" top isMobile={isMobile}>
-            {[["Mentor Rating", session.mentor_rating], ["Mentee Rating", session.mentee_rating]].map(([label, val]) => (
+            {[["Mentee Rating", session.mentee_rating]].map(([label, val]) => (
               <div key={label}>
                 <label style={{ display: "block", fontSize: 11, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 7 }}>{label}</label>
                 <div style={{ padding: "13px 15px", borderRadius: 10, background: "#f8fafc", border: "1px solid #e5e7eb", display: "flex", alignItems: "center", gap: 10 }}>
@@ -619,7 +619,6 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
             </div>
           </React.Fragment>
         ))}
-        <div style={{ marginLeft: "auto" }}><StatusBadge status={sub.status} /></div>
       </div>
 
       {/* Sessions Table */}
@@ -627,7 +626,7 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
-              <tr>{["S no", "Session", "Date", "Duration", "Status", "Action"].map(h => <Th key={h}>{h}</Th>)}</tr>
+              <tr>{["S no", "Session", "Date", "Status", "Action"].map(h => <Th key={h}>{h}</Th>)}</tr>
             </thead>
             <tbody>
               {isLoading || isFetching ? (
@@ -649,7 +648,6 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
                       </div>
                     </Td>
                     <Td><span style={{ fontSize: 12, color: "#64748b" }}>{fmt.date(item.session_date)}</span></Td>
-                    <Td><span style={{ fontSize: 12, color: "#64748b" }}>{item.duration ? `${item.duration} min` : "—"}</span></Td>
                     <Td><StatusBadge status={item.status} /></Td>
                     <Td>
                       <button
@@ -747,66 +745,57 @@ export default function MentorSessionsDashboard() {
         ::-webkit-scrollbar { width: 0; height: 0; }
         * { scrollbar-width: none; }
       `}</style>
-      <div style={{ minHeight: "100vh", padding: "24px 18px", fontFamily: "'DM Sans','Segoe UI',sans-serif", background: "#fff" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
+      <div style={{ minHeight: "100vh", padding: "20px", fontFamily: "'DM Sans','Segoe UI',sans-serif", background: "#fff" }}>        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
 
-          <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 24 }}>
-            <div
+        <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 24 }}>
+          <div
+            style={{
+              width: 38,
+              height: 38,
+              borderRadius: 11,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Users size={18} color="#1a1a2e" strokeWidth={2.2} />
+          </div>
+
+          <div>
+            <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
+              Subscriptions
+            </h1>
+            <p
               style={{
-                width: 38,
-                height: 38,
-                borderRadius: 11,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                fontSize: 12,
+                color: "#94a3b8",
+                margin: 0,
               }}
             >
-              <Users size={18} color="#1a1a2e" strokeWidth={2.2} />
-            </div>
-
-            <div>
-              <h1
-                style={{
-                  fontSize: 20,
-                  fontWeight: 800,
-                  color: "#1a1a2e",
-                  margin: 0,
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                Subscriptions
-              </h1>
-              <p
-                style={{
-                  fontSize: 12,
-                  color: "#94a3b8",
-                  margin: 0,
-                }}
-              >
-                Manage your mentee sessions and subscriptions
-              </p>
-            </div>
+              Manage your mentee sessions and subscriptions
+            </p>
           </div>
-
-          {/* Tabs */}
-          <div style={{ display: "flex", gap: 4, background: "#f8fafc", border: "1.5px solid #e9edf2", borderRadius: 11, padding: 4, width: "fit-content", marginBottom: 20 }}>
-            {["sessions", "subscribers"].map(tab => (
-              <button key={tab} onClick={() => setActiveTab(tab)} style={{
-                padding: "7px 18px", borderRadius: 8, border: "none",
-                background: activeTab === tab ? "#1a1a2e" : "transparent",
-                color: activeTab === tab ? "#fff" : "#64748b",
-                fontWeight: 700, fontSize: 13, cursor: "pointer",
-              }}>
-                {tab === "sessions"
-                  ? `Sessions${totalSessions ? ` (${totalSessions})` : ""}`
-                  : `Subscribers${subscribers.length ? ` (${subscribers.length})` : ""}`}
-              </button>
-            ))}
-          </div>
-
-          {activeTab === "subscribers" && <SubscribersTable subscribers={subscribers} isLoading={subLoading} />}
-          {activeTab === "sessions" && <SessionsTab mentorId={mentorId} subscribers={subscribers} subLoading={subLoading} />}
         </div>
+
+        {/* Tabs */}
+        <div style={{ display: "flex", gap: 4, background: "#f8fafc", border: "1.5px solid #e9edf2", borderRadius: 11, padding: 4, width: "fit-content", marginBottom: 20 }}>
+          {["sessions", "subscribers"].map(tab => (
+            <button key={tab} onClick={() => setActiveTab(tab)} style={{
+              padding: "7px 18px", borderRadius: 8, border: "none",
+              background: activeTab === tab ? "#1a1a2e" : "transparent",
+              color: activeTab === tab ? "#fff" : "#64748b",
+              fontWeight: 700, fontSize: 13, cursor: "pointer",
+            }}>
+              {tab === "sessions"
+                ? `Sessions${totalSessions ? ` (${totalSessions})` : ""}`
+                : `Subscribers${subscribers.length ? ` (${subscribers.length})` : ""}`}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === "subscribers" && <SubscribersTable subscribers={subscribers} isLoading={subLoading} />}
+        {activeTab === "sessions" && <SessionsTab mentorId={mentorId} subscribers={subscribers} subLoading={subLoading} />}
+      </div>
       </div>
     </>
   );

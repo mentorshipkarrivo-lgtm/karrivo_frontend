@@ -6,7 +6,7 @@ import {
     MapPin, X, ChevronDown, ChevronUp, CheckCircle,
     Search, Pencil, Briefcase,
     SlidersHorizontal, Star, Trophy,
-    Users, BookOpen, Video,
+    Users, BookOpen, Video, GraduationCap, Languages
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
@@ -213,6 +213,7 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
     const width = useWindowWidth();
     const isMobile = width < 768;
     const [bioExpanded, setBioExpanded] = useState(false);
+    const [whyMentorExpanded, setWhyMentorExpanded] = useState(false);
 
     const fullName = toTitleCase(mentor.fullName || "Mentor");
     const currentRole = toTitleCase(mentor.currentRole || "");
@@ -226,16 +227,22 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
     const placements = mentor.placements ?? 0;
     const menteeCount = mentor.menteeCount ?? 0;
     const yearsExp = mentor.yearsOfExperience ? `${mentor.yearsOfExperience}+ Years of Exp.` : "0+ Years of Exp.";
-    const starBadge = mentor.starMentorBadge || mentor.badge || "";
-    const referralCount = mentor.referralCount ?? 0;
+    const mentoringStyle = mentor.mentoringStyle || "";
+    const highestDegree = mentor.highestDegree || "";
     const hasCurriculum = mentor.hasCurriculum ?? false;
-    const weeklySessions = mentor.pricing?.weeklySessions ?? 4;
+    const fieldOfStudy = mentor.fieldOfStudy || "";
     const discount = mentor.discount ?? null;
+    const whyMentor = mentor.whyMentor || "";
+    const guidanceAreasList = Array.isArray(mentor.guidanceAreas) ? mentor.guidanceAreas : [];
 
     const BIO_LIMIT = 200;
     const bioIsTruncatable = bio.length > BIO_LIMIT;
     const displayedBio = bioIsTruncatable && !bioExpanded ? bio.slice(0, BIO_LIMIT) + "..." : bio;
-
+    const WHY_MENTOR_LIMIT = 140;
+    const whyMentorIsTruncatable = whyMentor.length > WHY_MENTOR_LIMIT;
+    const displayedWhyMentor = whyMentorIsTruncatable && !whyMentorExpanded
+        ? whyMentor.slice(0, WHY_MENTOR_LIMIT) + "..."
+        : whyMentor;
     const offeringForList = Array.isArray(mentor.offeringFor)
         ? mentor.offeringFor
         : mentor.offeringFor ? String(mentor.offeringFor).split(",").map((s) => s.trim()) : [];
@@ -435,7 +442,7 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
                 {/* Stats */}
                 <div style={{ padding: "18px 20px", display: "flex", flexDirection: "column", gap: "14px", flex: 1 }}>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", fontFamily: FONT }}>
+                    {/* <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", fontFamily: FONT }}>
                         <Star size={15} color="#f59e0b" fill="#f59e0b" style={{ flexShrink: 0 }} />
                         <span style={{ fontWeight: 700, color: "#0f172a" }}>Star Mentor</span>
                         {starBadge && <span style={{ fontSize: "13px", color: "#64748b" }}>- {starBadge}</span>}
@@ -466,17 +473,57 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
                                 +{referralCount} More
                             </span>
                         )}
-                    </div>
+                    </div> */}
 
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "15px", fontFamily: FONT, color: hasCurriculum ? "#374151" : "#cbd5e1" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                            <BookOpen size={15} color={hasCurriculum ? "#64748b" : "#cbd5e1"} style={{ flexShrink: 0 }} />
-                            <span>{hasCurriculum ? "Detailed Curriculum Available" : "No Curriculum Yet"}</span>
+
+                    {mentoringStyle && (
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", color: "#374151", fontFamily: FONT }}>
+                            <Users size={15} color="#0ea5e9" style={{ flexShrink: 0 }} />
+                            <span>Mentoring Style: <strong style={{ color: "#0f172a" }}>{toTitleCase(mentoringStyle)}</strong></span>
                         </div>
-                        {hasCurriculum && (
-                            <span style={{ color: "#2563eb", fontWeight: 600, fontSize: "13px", cursor: "pointer" }}>View ↗</span>
-                        )}
-                    </div>
+                    )}
+
+                    {(highestDegree || fieldOfStudy) && (
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", color: "#374151", fontFamily: FONT }}>
+                            <GraduationCap size={15} color="#8b5cf6" style={{ flexShrink: 0 }} />
+                            <span>
+                                {highestDegree}
+                                {highestDegree && fieldOfStudy && " in "}
+                                {toTitleCase(fieldOfStudy)}
+                            </span>
+                        </div>
+                    )}
+
+                    {languages && (
+                        <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", color: "#374151", fontFamily: FONT }}>
+                            <Languages size={15} color="#f59e0b" style={{ flexShrink: 0 }} />
+                            <span>Speaks: <strong style={{ color: "#0f172a" }}>{languages}</strong></span>
+                        </div>
+                    )}
+                    {guidanceAreasList.length > 0 && (
+                        <div
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "10px",
+                                fontSize: "15px",
+                                color: "#374151",
+                                fontFamily: FONT,
+                            }}
+                        >
+                            <BookOpen
+                                size={15}
+                                color="#64748b"
+                                style={{ flexShrink: 0 }}
+                            />
+                            <span>
+                                Guidance:{" "}
+                                <strong style={{ color: "#0f172a" }}>
+                                    {guidanceAreasList.slice(0, 3).join(", ")}
+                                </strong>
+                            </span>
+                        </div>
+                    )}
 
                     {/* Price */}
                     <div style={{ marginTop: "4px" }}>
@@ -513,7 +560,7 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
                     )}
                 </div>
             </div>
-        </motion.div>
+        </motion.div >
     );
 }
 
@@ -739,7 +786,7 @@ export default function ExploreMentors() {
                     <div onClick={() => navigate("/")} style={{ cursor: "pointer", flexShrink: 0 }}>
                         <img src={KarrivoLogo} className="h-10 w-20 sm:h-12 sm:w-24 md:h-14 md:w-28 object-contain" alt="Karrivo" />
                     </div>
-                    {!isMobile && (
+                    {/* {!isMobile && (
                         <nav style={{ display: "flex", alignItems: "center", gap: "40px" }}>
                             {NAV_LINKS.map((link) => {
                                 const isActive = location.pathname === link.path;
@@ -751,8 +798,8 @@ export default function ExploreMentors() {
                                 );
                             })}
                         </nav>
-                    )}
-                    <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
+                    )} */}
+                    {/* <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
                         {!isMobile && (
                             <button onClick={() => navigate("/login")} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "16px", fontWeight: 600, color: "#0f172a", padding: "8px 18px" }}>
                                 Login
@@ -765,9 +812,9 @@ export default function ExploreMentors() {
                                 ))}
                             </button>
                         )}
-                    </div>
+                    </div> */}
                 </div>
-                <AnimatePresence>
+                {/* <AnimatePresence>
                     {isMobile && mobileNavOpen && (
                         <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} style={{ overflow: "hidden", borderTop: "1px solid #f1f5f9", background: "white" }}>
                             {NAV_LINKS.map((link) => (
@@ -779,7 +826,7 @@ export default function ExploreMentors() {
                             <button onClick={() => navigate("/login")} style={{ display: "block", width: "100%", textAlign: "left", padding: "16px 22px", background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "16px", fontWeight: 600, color: "#0f172a" }}>Login</button>
                         </motion.div>
                     )}
-                </AnimatePresence>
+                </AnimatePresence> */}
             </header>
 
             {/* ── Domain filter pill bar ── */}

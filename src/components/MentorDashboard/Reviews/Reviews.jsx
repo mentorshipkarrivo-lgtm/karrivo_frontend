@@ -206,13 +206,12 @@ export default function MentorReviewsUI() {
 
   if (allReviews.length === 0) {
     return (
-      <section className="bg-white px-4 md:px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10">
-            <h1 className="text-2xl md:text-3xl font-bold text-[#1a1a2e] mb-2">
-              Success Stories & Feedback
+      <section className="min-h-screen bg-white p-5 text-gray-700">
+        <div className="max-w-7xl mx-auto space-y-6">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">              Success Stories & Feedback
             </h1>
-            <p className="text-sm text-gray-600 max-w-xl mx-auto">
+            <p className="text-gray-500 mt-2 text-xs max-w-xl mx-auto">
               Real experiences from professionals who transformed their careers through expert mentorship.
             </p>
           </div>
@@ -228,14 +227,15 @@ export default function MentorReviewsUI() {
 
   return (
     <>
-      <section className="bg-white py-12 md:py-16 px-4 md:px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-10">
+      <section className="min-h-screen bg-white p-5 text-gray-700">
+        <div className="max-w-7xl mx-auto space-y-6">
+
+          {/* Header */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-[#1a1a2e] mb-2">
-                Success Stories & Feedback
+              <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">                Success Stories & Feedback
               </h1>
-              <p className="text-sm text-gray-600 max-w-xl">
+              <p className="text-gray-500 mt-2 text-xs">
                 Real experiences from professionals who transformed their careers through expert mentorship.
               </p>
             </div>
@@ -253,7 +253,8 @@ export default function MentorReviewsUI() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+          {/* Reviews grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {allReviews.map((review) => (
               <ReviewCard key={review._id} review={review} onOpen={setActiveReview} />
             ))}
