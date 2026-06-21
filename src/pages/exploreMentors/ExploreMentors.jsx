@@ -36,11 +36,11 @@ const DOMAIN_CHIPS = [
     "DevOps / SRE / Cloud", "QA / Automation Testing",
     "Data Scientist / AI/ML", "Data Analyst",
 ];
-const NAV_LINKS = [
-    { label: "Explore Mentors", path: "/explore-mentors" },
-    // { label: "Blogs", path: "/blogs" },
-    // { label: "Success Stories", path: "/success-stories" },
-];
+
+
+const DEFAULT_OFFERING_FOR = "Working Professionals";
+const MIN_PRICE = 5000;
+const MAX_PRICE = 40000;
 
 const fmtINR = (n) => `₹${Number(n ?? 0).toLocaleString("en-IN")}`;
 
@@ -226,7 +226,7 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
     const nextAvailable = mentor.nextAvailable ?? "";
     const placements = mentor.placements ?? 0;
     const menteeCount = mentor.menteeCount ?? 0;
-    const yearsExp = mentor.yearsOfExperience ? `${mentor.yearsOfExperience}+ Years of Exp.` : "0+ Years of Exp.";
+    const yearsExp = mentor.yearsOfExperience ? `${mentor.yearsOfExperience}+ Years of Experience` : "0+ Years of Exp.";
     const mentoringStyle = mentor.mentoringStyle || "";
     const highestDegree = mentor.highestDegree || "";
     const hasCurriculum = mentor.hasCurriculum ?? false;
@@ -312,55 +312,89 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
                 </div>
 
                 {/* Current Company */}
-                <div style={{ borderTop: "1px solid #e2e8f0", padding: "12px 14px", display: "flex", alignItems: "center", gap: "10px", background: "#fafafa", flexShrink: 0 }}>
-                    <div style={{
-                        width: "36px", height: "36px", borderRadius: "50%",
-                        background: mentor.companyLogoColor || "#1d4ed8",
-                        color: "#fff", display: "flex", alignItems: "center",
-                        justifyContent: "center", fontWeight: 800, fontSize: "14px",
-                        flexShrink: 0, fontFamily: FONT, overflow: "hidden",
-                    }}>
-                        {mentor.companyLogo
-                            ? <img src={mentor.companyLogo} alt={companyName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                            : fullName.charAt(0)
-                        }
-                    </div>
-                    <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", fontFamily: FONT, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                <div
+                    style={{
+                        borderTop: "1px solid #e2e8f0",
+                        padding: "12px 14px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: "#fafafa",
+                        flexShrink: 0,
+                    }}
+                >
+                    <div
+                        style={{
+                            minWidth: 0,
+                            width: "100%",
+                            textAlign: "center",
+                        }}
+                    >
+                        <div
+                            style={{
+                                fontSize: "13px",
+                                fontWeight: 700,
+                                color: "#0f172a",
+                                fontFamily: FONT,
+                            }}
+                        >
                             {currentRole}
                         </div>
-                        <div style={{ fontSize: "12px", color: "#64748b", fontFamily: FONT, marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+
+                        <div
+                            style={{
+                                fontSize: "12px",
+                                color: "#64748b",
+                                fontFamily: FONT,
+                                marginTop: "2px",
+                            }}
+                        >
                             {companyName}
                         </div>
                     </div>
                 </div>
 
                 {/* Experience */}
-                <div style={{ borderTop: "1px solid #e2e8f0", padding: "12px 14px", display: "flex", alignItems: "center", gap: "10px", background: "#fafafa", flexShrink: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", flexShrink: 0 }}>
-                        {prevCompanies.slice(0, 3).map((c, i) => (
-                            <div key={i} style={{
-                                width: "30px", height: "30px", borderRadius: "50%",
-                                border: "2px solid white", background: "#e2e8f0", overflow: "hidden",
-                                marginLeft: i > 0 ? "-8px" : "0", zIndex: 3 - i,
-                                position: "relative", flexShrink: 0,
-                            }}>
-                                {c.logo
-                                    ? <img src={c.logo} alt={c.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                                    : <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "10px", fontWeight: 700, color: "#374151", background: ["#fef3c7", "#dbeafe", "#d1fae5"][i % 3], fontFamily: FONT }}>{c.name?.charAt(0) || "C"}</div>
-                                }
-                            </div>
-                        ))}
-                        {prevCompanies.length === 0 && (
-                            <div style={{ width: "30px", height: "30px", borderRadius: "50%", background: "#fef3c7", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: 700, color: "#92400e", fontFamily: FONT }}>
-                                {companyName?.charAt(0) || "C"}
-                            </div>
-                        )}
-                    </div>
-                    <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: "13px", fontWeight: 700, color: "#0f172a", fontFamily: FONT }}>{yearsExp}</div>
-                        <div style={{ fontSize: "12px", color: "#64748b", fontFamily: FONT, marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                            {prevCompanies.length > 0 ? prevCompanies.map((c) => c.name).join(" | ") : companyName}
+                <div
+                    style={{
+                        borderTop: "1px solid #e2e8f0",
+                        padding: "12px 14px",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        background: "#fafafa",
+                        flexShrink: 0,
+                    }}
+                >
+                    <div
+                        style={{
+                            minWidth: 0,
+                            width: "100%",
+                            textAlign: "center",
+                        }}
+                    >
+                        <div
+                            style={{
+                                fontSize: "13px",
+                                fontWeight: 700,
+                                color: "#0f172a",
+                                fontFamily: FONT,
+                            }}
+                        >
+                            {yearsExp}
+                        </div>
+
+                        <div
+                            style={{
+                                fontSize: "12px",
+                                color: "#64748b",
+                                fontFamily: FONT,
+                                marginTop: "2px",
+                            }}
+                        >
+                            {prevCompanies.length > 0
+                                ? prevCompanies.map((c) => c.name).join(" | ")
+                                : companyName}
                         </div>
                     </div>
                 </div>
@@ -441,40 +475,6 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
             }}>
                 {/* Stats */}
                 <div style={{ padding: "18px 20px", display: "flex", flexDirection: "column", gap: "14px", flex: 1 }}>
-
-                    {/* <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", fontFamily: FONT }}>
-                        <Star size={15} color="#f59e0b" fill="#f59e0b" style={{ flexShrink: 0 }} />
-                        <span style={{ fontWeight: 700, color: "#0f172a" }}>Star Mentor</span>
-                        {starBadge && <span style={{ fontSize: "13px", color: "#64748b" }}>- {starBadge}</span>}
-                    </div>
-
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", color: "#374151", fontFamily: FONT }}>
-                        <Trophy size={15} color="#d97706" style={{ flexShrink: 0 }} />
-                        <span>{placements} Placements</span>
-                    </div>
-
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", color: "#374151", fontFamily: FONT }}>
-                        <Users size={15} color="#0ea5e9" style={{ flexShrink: 0 }} />
-                        <span>5.0 ({menteeCount}+ mentees)</span>
-                    </div>
-
-                    <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", color: "#374151", fontFamily: FONT }}>
-                        <Video size={15} color="#10b981" style={{ flexShrink: 0 }} />
-                        <span>{weeklySessions * 4}x Sessions Per Month</span>
-                    </div>
-
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "15px", color: "#374151", fontFamily: FONT }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                            <Briefcase size={15} color="#8b5cf6" style={{ flexShrink: 0 }} />
-                            <span>Referrals in Top Companies</span>
-                        </div>
-                        {referralCount > 0 && (
-                            <span style={{ color: "#2563eb", fontWeight: 600, fontSize: "13px", cursor: "pointer", whiteSpace: "nowrap", marginLeft: "4px" }}>
-                                +{referralCount} More
-                            </span>
-                        )}
-                    </div> */}
-
 
                     {mentoringStyle && (
                         <div style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "15px", color: "#374151", fontFamily: FONT }}>
@@ -570,13 +570,30 @@ function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
     const isMobile = width < 1024;
 
     const [selectedDomains, setSelectedDomains] = useState([]);
-    const [offeringFor, setOfferingFor] = useState("Working Professionals");
-    const [priceVal, setPriceVal] = useState(40000);
+    const [offeringFor, setOfferingFor] = useState(DEFAULT_OFFERING_FOR);
+    const [priceVal, setPriceVal] = useState(MAX_PRICE);
+
+    // Filters are only considered "active" when they differ from their defaults.
+    const hasActiveFilters =
+        selectedDomains.length > 0 ||
+        offeringFor !== DEFAULT_OFFERING_FOR ||
+        priceVal !== MAX_PRICE;
 
     const toggleDomain = (d) =>
         setSelectedDomains((prev) => prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]);
 
-    const handleClear = () => { setSelectedDomains([]); setPriceVal(40000); onClear(); };
+    const handleClear = () => {
+        setSelectedDomains([]);
+        setOfferingFor(DEFAULT_OFFERING_FOR);
+        setPriceVal(MAX_PRICE);
+        onClear();
+    };
+
+    const handleApply = () => {
+        if (!hasActiveFilters || isSearching) return;
+        onSearch({ maxPrice: priceVal, offeringFor, domains: selectedDomains });
+        if (isMobile) onClose();
+    };
 
     const sidebarContent = (
         <div style={{
@@ -598,9 +615,11 @@ function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
             {/* Header */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "18px" }}>
                 <h3 style={{ fontWeight: 700, fontSize: "17px", color: "#0f172a", margin: 0, fontFamily: FONT }}>Filter By</h3>
-                <button onClick={handleClear} style={{ background: "none", border: "none", color: "#ef4444", fontSize: "14px", fontWeight: 600, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: "3px" }}>
-                    ✕ Clear Filters
-                </button>
+                {hasActiveFilters && (
+                    <button onClick={handleClear} style={{ background: "none", border: "none", color: "#ef4444", fontSize: "14px", fontWeight: 600, cursor: "pointer", fontFamily: FONT, display: "flex", alignItems: "center", gap: "3px" }}>
+                        ✕ Clear Filters
+                    </button>
+                )}
             </div>
 
             {/* Domain */}
@@ -656,19 +675,20 @@ function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
             {/* Pricing */}
             <p style={{ fontWeight: 700, fontSize: "15px", color: "#0f172a", margin: "0 0 12px", fontFamily: FONT }}>Pricing</p>
             <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", color: "#64748b", marginBottom: "8px", fontFamily: FONT }}>
-                <span>₹5,000</span>
-                <span>₹40,000</span>
+                <span>{fmtINR(MIN_PRICE)}</span>
+                <span>{fmtINR(MAX_PRICE)}</span>
             </div>
-            <input type="range" min={5000} max={40000} step={500} value={priceVal}
+            <input type="range" min={MIN_PRICE} max={MAX_PRICE} step={500} value={priceVal}
                 onChange={(e) => setPriceVal(Number(e.target.value))}
                 style={{ width: "100%", accentColor: BLUE, cursor: "pointer", boxSizing: "border-box" }}
             />
             <p style={{ fontSize: "15px", color: "#374151", fontWeight: 600, margin: "8px 0 0", fontFamily: FONT }}>Up To {fmtINR(priceVal)}/Month</p>
 
             <button
-                onClick={() => { onSearch({ maxPrice: priceVal, offeringFor, domains: selectedDomains }); if (isMobile) onClose(); }}
-                disabled={isSearching}
-                style={{ marginTop: "18px", width: "100%", padding: "13px", background: isSearching ? BLUE_BORDER : PRIMARY, color: "white", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "15px", cursor: isSearching ? "not-allowed" : "pointer", fontFamily: FONT, boxSizing: "border-box" }}>
+                onClick={handleApply}
+                disabled={isSearching || !hasActiveFilters}
+                title={!hasActiveFilters ? "Select at least one filter to apply" : undefined}
+                style={{ marginTop: "18px", width: "100%", padding: "13px", background: isSearching || !hasActiveFilters ? BLUE_BORDER : PRIMARY, color: "white", border: "none", borderRadius: "8px", fontWeight: 700, fontSize: "15px", cursor: isSearching || !hasActiveFilters ? "not-allowed" : "pointer", fontFamily: FONT, boxSizing: "border-box" }}>
                 {isSearching ? "Applying…" : "Apply Filters"}
             </button>
         </div>
@@ -732,7 +752,15 @@ export default function ExploreMentors() {
     }, [domainFromUrl]);
 
     const mentors = isFiltered ? (displayMentors ?? []) : allMentors;
-    const handleClear = () => { setIsFiltered(false); setDisplayMentors(null); setSearchEmpty(false); navigate("/explore-mentors"); };
+
+    const handleClear = () => {
+        setIsFiltered(false);
+        setDisplayMentors(null);
+        setSearchEmpty(false);
+        setSearchQuery("");
+        setSortBy("Recommended");
+        navigate("/explore-mentors");
+    };
 
     const handleSearch = async (body) => {
         try {
@@ -746,6 +774,14 @@ export default function ExploreMentors() {
             setIsFiltered(true);
             setSearchEmpty(true);
         }
+    };
+
+    // Triggered only when the user presses Enter with a non-empty, trimmed query.
+    const handleSearchKeyDown = (e) => {
+        if (e.key !== "Enter") return;
+        const trimmedQuery = searchQuery.trim();
+        if (!trimmedQuery || isSearching) return;
+        handleSearch({ query: trimmedQuery });
     };
 
     const handleSortChange = async (value) => {
@@ -786,47 +822,7 @@ export default function ExploreMentors() {
                     <div onClick={() => navigate("/")} style={{ cursor: "pointer", flexShrink: 0 }}>
                         <img src={KarrivoLogo} className="h-10 w-20 sm:h-12 sm:w-24 md:h-14 md:w-28 object-contain" alt="Karrivo" />
                     </div>
-                    {/* {!isMobile && (
-                        <nav style={{ display: "flex", alignItems: "center", gap: "40px" }}>
-                            {NAV_LINKS.map((link) => {
-                                const isActive = location.pathname === link.path;
-                                return (
-                                    <button key={link.path} onClick={() => navigate(link.path)}
-                                        style={{ background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "16px", fontWeight: 500, color: isActive ? "#0f172a" : "#64748b", padding: "4px 0", borderBottom: `2px solid ${isActive ? "#0f172a" : "transparent"}` }}>
-                                        {link.label}
-                                    </button>
-                                );
-                            })}
-                        </nav>
-                    )} */}
-                    {/* <div style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-                        {!isMobile && (
-                            <button onClick={() => navigate("/login")} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "16px", fontWeight: 600, color: "#0f172a", padding: "8px 18px" }}>
-                                Login
-                            </button>
-                        )}
-                        {isMobile && (
-                            <button onClick={() => setMobileNavOpen(!mobileNavOpen)} style={{ background: "none", border: "none", cursor: "pointer", padding: "8px", display: "flex", flexDirection: "column", gap: "5px" }}>
-                                {[0, 1, 2].map((i) => (
-                                    <span key={i} style={{ display: "block", width: "22px", height: "2px", background: "#0f172a", borderRadius: "2px", ...(i === 0 && mobileNavOpen ? { transform: "rotate(45deg) translateY(7px)" } : i === 1 && mobileNavOpen ? { opacity: 0 } : i === 2 && mobileNavOpen ? { transform: "rotate(-45deg) translateY(-7px)" } : {}) }} />
-                                ))}
-                            </button>
-                        )}
-                    </div> */}
                 </div>
-                {/* <AnimatePresence>
-                    {isMobile && mobileNavOpen && (
-                        <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} style={{ overflow: "hidden", borderTop: "1px solid #f1f5f9", background: "white" }}>
-                            {NAV_LINKS.map((link) => (
-                                <button key={link.path} onClick={() => { navigate(link.path); setMobileNavOpen(false); }}
-                                    style={{ display: "block", width: "100%", textAlign: "left", padding: "16px 22px", background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "16px", color: "#64748b", borderBottom: "1px solid #f8fafc" }}>
-                                    {link.label}
-                                </button>
-                            ))}
-                            <button onClick={() => navigate("/login")} style={{ display: "block", width: "100%", textAlign: "left", padding: "16px 22px", background: "none", border: "none", cursor: "pointer", fontFamily: FONT, fontSize: "16px", fontWeight: 600, color: "#0f172a" }}>Login</button>
-                        </motion.div>
-                    )}
-                </AnimatePresence> */}
             </header>
 
             {/* ── Domain filter pill bar ── */}
@@ -857,7 +853,7 @@ export default function ExploreMentors() {
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     placeholder="Search for any Skill, domain or name..."
-                                    onKeyDown={(e) => { if (e.key === "Enter" && searchQuery) handleSearch({ query: searchQuery }); }}
+                                    onKeyDown={handleSearchKeyDown}
                                     style={{ width: "100%", padding: "11px 16px 11px 40px", border: "1px solid #e2e8f0", borderRadius: "8px", fontSize: "15px", color: "#374151", fontFamily: FONT, outline: "none", background: "white", boxSizing: "border-box" }}
                                     onFocus={(e) => (e.target.style.borderColor = BLUE)}
                                     onBlur={(e) => (e.target.style.borderColor = "#e2e8f0")}
@@ -907,7 +903,6 @@ export default function ExploreMentors() {
                         {!isLoading && !isError && searchEmpty && (
                             <div style={{ textAlign: "center", padding: "60px 0" }}>
                                 <p style={{ fontWeight: 700, fontSize: "17px", color: "#0f172a", fontFamily: FONT }}>No mentors match your filters</p>
-                                <button onClick={handleClear} style={{ marginTop: "14px", background: BLUE, color: "white", border: "none", borderRadius: "8px", padding: "12px 22px", fontWeight: 600, fontSize: "15px", cursor: "pointer", fontFamily: FONT }}>Clear Filters</button>
                             </div>
                         )}
 

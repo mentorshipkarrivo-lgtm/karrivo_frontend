@@ -258,9 +258,12 @@ function SessionModal({ session, onClose, onSave }) {
     setSaving(true); setError(null);
     const ok = await onSave(session._id, form);
     setSaving(false);
-    if (ok) { setSaved(true); setTimeout(() => setSaved(false), 2200); }
-    else setError("Failed to save. Please try again.");
-  }, [form, onSave, session._id]);
+    if (ok) {
+      onClose(); // ← close immediately on success
+    } else {
+      setError("Failed to save. Please try again.");
+    }
+  }, [form, onSave, session._id, onClose]);
 
   const inp = {
     width: "100%", padding: "11px 13px", borderRadius: 10,

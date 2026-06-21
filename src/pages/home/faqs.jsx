@@ -41,22 +41,14 @@ export default function FAQAccordion() {
   };
 
   return (
-    <div
-      className="w-full min-h-screen py-16 px-5 md:px-10"
-      style={{ background: "#0f0f10" }}
-    >
-      <div className="max-w-4xl mx-auto">
+    <div className="w-full bg-[#0f0f10] py-10 sm:py-14 md:py-16 lg:py-20 px-4 sm:px-6 md:px-10 lg:px-16 xl:px-24 2xl:px-32">
+      <div className="w-full max-w-2xl sm:max-w-3xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto">
+
         {/* Heading */}
-        <div className="text-center mb-14">
-          <h2
-            style={{
-              fontSize: "clamp(28px,4vw,42px)",
-              fontWeight: 700,
-              color: "#fff"
-            }}
-          >
+        <div className="text-center mb-8 sm:mb-10 md:mb-14">
+          <h2 className="font-bold text-white" style={{ fontSize: "clamp(22px, 4vw, 42px)" }}>
             Frequently{" "}
-            <span style={{ color: "#0098cc" }}>Asked Questions</span>
+            <span className="text-[#0098cc]">Asked Questions</span>
           </h2>
         </div>
 
@@ -64,67 +56,33 @@ export default function FAQAccordion() {
         <div>
           {faqs.map((faq, index) => {
             const isOpen = openIndex === index;
-
             return (
               <div
                 key={index}
-                style={{
-                  borderBottom: "1px solid rgba(255,255,255,0.08)"
-                }}
+                className="border-b border-white/10"
               >
                 <button
                   onClick={() => toggleFAQ(index)}
-                  style={{
-                    width: "100%",
-                    background: "transparent",
-                    border: "none",
-                    cursor: "pointer",
-                    padding: "22px 0",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between"
-                  }}
+                  className="w-full bg-transparent border-none cursor-pointer py-4 sm:py-5 md:py-6 flex items-center justify-between gap-4 text-left"
                 >
-                  <span
-                    style={{
-                      color: "#fff",
-                      fontSize: "15px",
-                      fontWeight: 600,
-                      textAlign: "left",
-                      lineHeight: "1.5"
-                    }}
-                  >
+                  <span className="text-white font-semibold leading-relaxed text-sm sm:text-base md:text-lg lg:text-xl">
                     {faq.question}
                   </span>
-
                   <ChevronDown
+                    className="shrink-0 text-white transition-transform duration-300"
                     size={18}
-                    color="#fff"
-                    style={{
-                      transition: "0.3s",
-                      transform: isOpen
-                        ? "rotate(180deg)"
-                        : "rotate(0deg)"
-                    }}
+                    style={{ transform: isOpen ? "rotate(180deg)" : "rotate(0deg)" }}
                   />
                 </button>
 
                 <div
                   style={{
-                    maxHeight: isOpen ? "200px" : "0px",
+                    maxHeight: isOpen ? "300px" : "0px",
                     overflow: "hidden",
-                    transition: "all 0.3s ease"
+                    transition: "max-height 0.3s ease"
                   }}
                 >
-                  <p
-                    style={{
-                      color: "#B5B5B5",
-                      fontSize: "14px",
-                      lineHeight: "1.8",
-                      paddingBottom: "20px",
-                      maxWidth: "90%"
-                    }}
-                  >
+                  <p className="text-[#B5B5B5] text-sm sm:text-base md:text-lg leading-relaxed pb-4 sm:pb-5 md:pb-6 max-w-[95%]">
                     {faq.answer}
                   </p>
                 </div>
@@ -133,33 +91,6 @@ export default function FAQAccordion() {
           })}
         </div>
 
-        {/* Bottom Section */}
-        {/* <div className="text-center mt-14">
-          <p
-            style={{
-              color: "#9CA3AF",
-              fontSize: "14px",
-              marginBottom: "22px"
-            }}
-          >
-            Still have questions? We're here to help!
-          </p>
-
-          <button
-            style={{
-              background: "#0098cc",
-              color: "#ffffff",
-              border: "none",
-              borderRadius: "999px",
-              padding: "12px 34px",
-              fontSize: "14px",
-              fontWeight: 600,
-              cursor: "pointer"
-            }}
-          >
-            Contact Us
-          </button>
-        </div> */}
       </div>
     </div>
   );

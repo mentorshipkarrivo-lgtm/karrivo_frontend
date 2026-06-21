@@ -270,7 +270,6 @@ const RightPanel = () => {
 
 const CenterContent = ({ children, isHome, onEditProfileOpen, onSetEditTab, mentorData }) => {
     const navigate = useNavigate();
-
     const [userData, setUserData] = useState(null);
 
     useEffect(() => {
@@ -289,301 +288,164 @@ const CenterContent = ({ children, isHome, onEditProfileOpen, onSetEditTab, ment
     );
 
     const mentorName = userData?.name || "Mentor";
-    // Pull totalMentees from the API response (mentorData) if available, fallback to userData
     const totalMentees = mentorData?.data?.totalMentees ?? userData?.totalMentees ?? 0;
-    const ACCENT = "#0f0f10";
 
     const iconBox = (bg) => ({
-        width: 40, height: 40, borderRadius: "50%",
-        background: bg,
+        width: 38, height: 38, borderRadius: "50%",
+        background: bg, border: `1px solid ${T.border}`,
         display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
     });
 
     const cardStyle = {
         border: `1px solid ${T.border}`,
         borderRadius: 14,
-        padding: "18px 20px",
+        padding: "18px",
         background: "#fff",
         display: "flex",
         flexDirection: "column",
-        gap: 12,
+        gap: 14,
         minWidth: 0,
+        transition: "border-color .15s ease, box-shadow .15s ease",
     };
 
-    const cardTitleRow = {
-        display: "flex", alignItems: "center", gap: 12,
-    };
+    const cardTitleRow = { display: "flex", alignItems: "center", gap: 12 };
 
     const primaryBtn = {
         width: "100%",
-        background: ACCENT,
+        background: T.btn,
         color: "#fff",
         border: "none",
         borderRadius: 8,
-        padding: "8px 0",
+        padding: "9px 0",
         fontFamily: F,
         fontSize: 13,
-        fontWeight: 700,
+        fontWeight: 600,
         cursor: "pointer",
+        marginTop: "auto",
+        transition: "opacity .15s ease, transform .1s ease",
     };
 
+    const statRow = (icon, label, value) => (
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <div style={{ width: 30, height: 30, borderRadius: "50%", background: T.btn, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                {icon}
+            </div>
+            <div style={{ minWidth: 0 }}>
+                <p style={{ margin: 0, fontSize: 10, letterSpacing: "0.04em", color: T.textLight, fontWeight: 600, fontFamily: F, textTransform: "uppercase" }}>{label}</p>
+                <p style={{ margin: "2px 0 0", fontSize: 13.5, color: T.textDark, fontWeight: 700, fontFamily: F, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{value}</p>
+            </div>
+        </div>
+    );
+
     return (
-        <div style={{ flex: 1, padding: "24px", overflowY: "auto", background: "#fff", scrollbarWidth: "none", msOverflowStyle: "none" }}>
+        <div className="mhub-main" style={{ flex: 1, padding: "24px", overflowY: "auto", background: "#fff", scrollbarWidth: "none", msOverflowStyle: "none" }}>
+            <style>{`
+                .mhub-grid{display:grid;grid-template-columns:minmax(0,260px) minmax(0,1fr);gap:16px;align-items:start}
+                .mhub-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;min-width:0}
+                .mhub-card{will-change:transform}
+                .mhub-card:hover{border-color:${T.borderMed};box-shadow:0 2px 10px rgba(15,15,16,0.06)}
+                .mhub-btn:hover{opacity:0.88}
+                .mhub-btn:active{transform:scale(0.98)}
+                .mhub-btn:focus-visible{outline:2px solid ${T.primary};outline-offset:2px}
+                @media (max-width:900px){
+                    .mhub-grid{grid-template-columns:1fr}
+                    .mhub-profile{max-width:380px;margin:0 auto}
+                }
+                @media (max-width:600px){
+                    .mhub-main{padding:16px !important}
+                    .mhub-hero{padding:18px !important}
+                    .mhub-hero h1{font-size:18px !important}
+                    .mhub-cards{grid-template-columns:1fr}
+                }
+            `}</style>
 
-            {/* ── Hero banner ── */}
-            <div style={{ background: "#fff", border: `1px solid ${T.border}`, borderRadius: 16, padding: "24px 28px", marginBottom: 20 }}>
-                {/* <p style={{ fontFamily: F, fontSize: 22, fontWeight: 700, color: T.textDark, margin: "0 0 8px" }}>
-                    Hello {mentorName} 👋, welcome to your Mentor Dashboard.
-                </p> */}
-
-
-                <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
-                    Hello {mentorName} 👋, welcome to your Mentor Dashboard.
-
-
+            {/* Hero banner */}
+            <div className="mhub-hero" style={{ background: "#fff", border: `1px solid ${T.border}`, borderRadius: 16, padding: "22px 26px", marginBottom: 20 }}>
+                <h1 style={{ fontFamily: F, fontSize: 21, fontWeight: 700, color: T.textDark, margin: "0 0 6px", lineHeight: 1.35 }}>
+                    Hello {mentorName} <span style={{ display: "inline-block" }}>👋</span>, welcome to your{" "}
+                    <span style={{ color: T.primary }}>Mentor Dashboard</span>.
                 </h1>
-                <p style={{ fontFamily: F, fontSize: 14, color: T.textLight, margin: 0 }}>
+                <p style={{ fontFamily: F, fontSize: 13.5, color: T.textLight, margin: 0 }}>
                     Let's refine your mentorship experience.
                 </p>
             </div>
 
-            {/* ── Main grid: profile + cards ── */}
-            <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 260px) minmax(0, 1fr)", gap: 16, alignItems: "start" }}>
+            {/* Profile + action cards */}
+            <div className="mhub-grid">
 
-                {/* ── Left: profile card ── */}
-
-                <div
-                    style={{
-                        ...cardStyle,
-                        padding: "18px",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: 16,
-                    }}
-                >
-                    {/* Profile Image */}
-                    <div
-                        style={{
-                            width: "100%",
-                            aspectRatio: "1 / 1",
-                            borderRadius: 12,
-                            background: userData?.profilePhoto
-                                ? `url(${userData.profilePhoto}) center/cover no-repeat`
-                                : T.surface,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            overflow: "hidden",
-                        }}
-                    >
-                        {!userData?.profilePhoto && (
-                            <User size={48} color={T.textLight} />
-                        )}
+                {/* Profile card */}
+                <div className="mhub-profile" style={{ ...cardStyle, padding: 18 }}>
+                    <div style={{
+                        width: "100%", aspectRatio: "1 / 1", borderRadius: 12,
+                        background: userData?.profilePhoto ? `url(${userData.profilePhoto}) center/cover no-repeat` : T.surface,
+                        display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden",
+                    }}>
+                        {!userData?.profilePhoto && <User size={42} color={T.textLight} />}
                     </div>
 
-                    {/* User Info */}
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: 4,
-                        }}
-                    >
-                        <p
-                            style={{
-                                fontFamily: F,
-                                fontSize: 18,
-                                fontWeight: 700,
-                                color: T.textDark,
-                                margin: 0,
-                                textTransform: "capitalize",
-                                lineHeight: 1.3,
-                            }}
-                        >
+                    <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                        <p style={{ fontFamily: F, fontSize: 17, fontWeight: 700, color: T.textDark, margin: 0, textTransform: "capitalize", lineHeight: 1.3 }}>
                             {userData?.name || "-"}
                         </p>
-
-                        <p
-                            style={{
-                                fontFamily: F,
-                                fontSize: 12,
-                                color: "#6B7280",
-                                margin: 0,
-                                wordBreak: "break-word",
-                                lineHeight: 1.4,
-                            }}
-                        >
+                        <p style={{ fontFamily: F, fontSize: 12, color: T.textLight, margin: 0, wordBreak: "break-word", lineHeight: 1.4 }}>
                             {userData?.email || "-"}
                         </p>
                     </div>
 
-                    {/* Divider */}
-                    <div
-                        style={{
-                            borderTop: `1px solid ${T.border}`,
-                            paddingTop: 14,
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: 12,
-                        }}
-                    >
-                        {/* Phone */}
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 12,
-                                minHeight: 40,
-                            }}
-                        >
-                            <div
-                                style={{
-                                    width: 30,
-                                    height: 30,
-                                    borderRadius: "50%",
-                                    background: "#0f0f10",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    flexShrink: 0,
-                                }}
-                            >
-                                <Phone size={14} color="#fff" />
-                            </div>
-
-                            <div>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        fontSize: 10,
-                                        color: "#6B7280",
-                                        fontWeight: 600,
-                                        fontFamily: F,
-                                    }}
-                                >
-                                    PHONE
-                                </p>
-
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        fontSize: 13,
-                                        color: T.textDark,
-                                        fontWeight: 600,
-                                        fontFamily: F,
-                                    }}
-                                >
-                                    {userData?.phone || "-"}
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Total Mentees */}
-                        <div
-                            style={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 12,
-                                minHeight: 40,
-                            }}
-                        >
-                            <div
-                                style={{
-                                    width: 30,
-                                    height: 30,
-                                    borderRadius: "50%",
-                                    background: "#0f0f10",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    flexShrink: 0,
-                                }}
-                            >
-                                <Users size={14} color="#fff" />
-                            </div>
-
-                            <div>
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        fontSize: 10,
-                                        color: "#6B7280",
-                                        fontWeight: 600,
-                                        fontFamily: F,
-                                    }}
-                                >
-                                    TOTAL MENTEES
-                                </p>
-
-                                <p
-                                    style={{
-                                        margin: 0,
-                                        fontSize: 13,
-                                        color: T.textDark,
-                                        fontWeight: 700,
-                                        fontFamily: F,
-                                    }}
-                                >
-                                    {totalMentees}
-                                </p>
-                            </div>
-                        </div>
+                    <div style={{ borderTop: `1px solid ${T.border}`, paddingTop: 14, display: "flex", flexDirection: "column", gap: 14 }}>
+                        {statRow(<Phone size={14} color="#fff" />, "Phone", userData?.phone || "-")}
+                        {statRow(<Users size={14} color="#fff" />, "Total mentees", totalMentees)}
                     </div>
                 </div>
 
-                {/* ── Right: cards grid ── */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: 16, minWidth: 0 }}>
+                {/* Action cards */}
+                <div className="mhub-cards">
 
-                    {/* Profile Setup */}
-                    <div style={cardStyle}>
+                    <div className="mhub-card" style={cardStyle}>
                         <div style={cardTitleRow}>
-                            <div style={iconBox(T.surface)}><User size={20} color={T.textDark} /></div>
-                            <p style={{ fontFamily: F, fontSize: 16, fontWeight: 700, color: T.textDark, margin: 0 }}>Profile Setup</p>
+                            <div style={iconBox(T.surface)}><User size={18} color={T.textDark} /></div>
+                            <p style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: T.textDark, margin: 0 }}>Profile setup</p>
                         </div>
-                        <button onClick={() => { onSetEditTab?.("overview"); onEditProfileOpen?.(); }} style={primaryBtn}>
-                            Edit Profile
+                        <p style={{ fontFamily: F, fontSize: 12.5, color: T.textLight, margin: 0, lineHeight: 1.5 }}>Keep your bio and details up to date.</p>
+                        <button className="mhub-btn" onClick={() => { onSetEditTab?.("overview"); onEditProfileOpen?.(); }} style={primaryBtn}>
+                            Edit profile
                         </button>
                     </div>
 
-                    {/* Pricing Setup */}
-                    <div style={cardStyle}>
+                    <div className="mhub-card" style={cardStyle}>
                         <div style={cardTitleRow}>
-                            <div style={iconBox(T.surface)}>
-                                <span style={{ fontFamily: F, fontSize: 18, fontWeight: 700, color: T.textDark }}>$</span>
-                            </div>
-                            <p style={{ fontFamily: F, fontSize: 16, fontWeight: 700, color: T.textDark, margin: 0 }}>Pricing Setup</p>
+                            <div style={iconBox(T.surface)}><span style={{ fontFamily: F, fontSize: 16, fontWeight: 700, color: T.textDark }}>$</span></div>
+                            <p style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: T.textDark, margin: 0 }}>Pricing setup</p>
                         </div>
-                        <button onClick={() => navigate("/mentor/dashboard/pricing")} style={primaryBtn}>
-                            Set Pricing
+                        <p style={{ fontFamily: F, fontSize: 12.5, color: T.textLight, margin: 0, lineHeight: 1.5 }}>Set your session rates for mentees.</p>
+                        <button className="mhub-btn" onClick={() => navigate("/mentor/dashboard/pricing")} style={primaryBtn}>
+                            Set pricing
                         </button>
                     </div>
 
-                    {/* Availability */}
-                    <div style={cardStyle}>
+                    <div className="mhub-card" style={cardStyle}>
                         <div style={cardTitleRow}>
-                            <div style={iconBox(T.surface)}><Calendar size={20} color={T.textDark} /></div>
-                            <p style={{ fontFamily: F, fontSize: 16, fontWeight: 700, color: T.textDark, margin: 0 }}>Availability</p>
+                            <div style={iconBox(T.surface)}><Calendar size={18} color={T.textDark} /></div>
+                            <p style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: T.textDark, margin: 0 }}>Availability</p>
                         </div>
-                        <button onClick={() => navigate("/mentor/dashboard/Manage_Availability")} style={primaryBtn}>
-                            Manage Slots
+                        <p style={{ fontFamily: F, fontSize: 12.5, color: T.textLight, margin: 0, lineHeight: 1.5 }}>Open up slots mentees can book.</p>
+                        <button className="mhub-btn" onClick={() => navigate("/mentor/dashboard/Manage_Availability")} style={primaryBtn}>
+                            Manage slots
                         </button>
                     </div>
 
-                    {/* Curriculum */}
-                    <div style={cardStyle}>
+                    <div className="mhub-card" style={cardStyle}>
                         <div style={cardTitleRow}>
-                            <div style={iconBox(T.surface)}><BookOpen size={20} color={T.textDark} /></div>
-                            <p style={{ fontFamily: F, fontSize: 16, fontWeight: 700, color: T.textDark, margin: 0 }}>Curriculum</p>
+                            <div style={iconBox(T.surface)}><BookOpen size={18} color={T.textDark} /></div>
+                            <p style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: T.textDark, margin: 0 }}>Curriculum</p>
                         </div>
-                        <button
-                            onClick={() => { onSetEditTab?.("achievements"); onEditProfileOpen?.(); }}
-                            style={{ ...primaryBtn, position: "relative" }}
-                        >
-                            Add Curriculum
+                        <p style={{ fontFamily: F, fontSize: 12.5, color: T.textLight, margin: 0, lineHeight: 1.5 }}>Share the material you'll mentor with.</p>
+                        <button className="mhub-btn" onClick={() => { onSetEditTab?.("achievements"); onEditProfileOpen?.(); }} style={{ ...primaryBtn, position: "relative" }}>
+                            Add curriculum
                             {userData?.curriculumNotifications > 0 && (
                                 <span style={{
                                     position: "absolute", top: -6, right: -6,
-                                    background: "#DC2626", color: "#fff",
+                                    background: T.error, color: "#fff",
                                     borderRadius: "50%", width: 18, height: 18,
                                     display: "flex", alignItems: "center", justifyContent: "center",
                                     fontSize: 10, fontWeight: 700,
@@ -594,40 +456,46 @@ const CenterContent = ({ children, isHome, onEditProfileOpen, onSetEditTab, ment
                         </button>
                     </div>
 
-                    {/* Mentorship Tips */}
-                    <div style={cardStyle}>
+                    {/* <div className="mhub-card" style={cardStyle}>
                         <div style={cardTitleRow}>
-                            <div style={iconBox(T.surface)}><MessageSquare size={18} color={T.textDark} /></div>
-                            <p style={{ fontFamily: F, fontSize: 16, fontWeight: 700, color: T.textDark, margin: 0 }}>Mentorship Tips</p>
+                            <div style={iconBox(T.surface)}><MessageSquare size={17} color={T.textDark} /></div>
+                            <p style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: T.textDark, margin: 0 }}>Mentorship tips</p>
                         </div>
-                        <p style={{ fontFamily: F, fontSize: 13, color: T.textLight, margin: 0, lineHeight: 1.6 }}>
+                        <p style={{ fontFamily: F, fontSize: 12.5, color: T.textLight, margin: 0, lineHeight: 1.6 }}>
                             {userData?.mentorshipTip || "Set clear goals with your mentees for better progress."}
                         </p>
-                    </div>
+                    </div> */}
 
-                    {/* Your Badges */}
-                    <div style={cardStyle}>
-                        <p style={{ fontFamily: F, fontSize: 16, fontWeight: 700, color: T.textDark, margin: 0 }}>Your Badges</p>
+                    {/* <div className="mhub-card" style={cardStyle}>
+                        <div style={cardTitleRow}>
+                            <div style={iconBox(T.surface)}><Star size={17} color={T.textDark} /></div>
+                            <p style={{ fontFamily: F, fontSize: 15, fontWeight: 700, color: T.textDark, margin: 0 }}>Your badges</p>
+                        </div>
                         {(userData?.badges || []).length > 0 ? (
-                            userData.badges.map((badge, i) => (
-                                <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, paddingTop: i > 0 ? 12 : 0, borderTop: i > 0 ? `1px solid ${T.border}` : "none" }}>
-                                    <CheckCircle size={18} color={badge.color || T.success} />
-                                    <p style={{ fontFamily: F, fontSize: 13, fontWeight: 600, color: badge.color || T.success, margin: 0 }}>
-                                        {badge.label}
-                                    </p>
-                                </div>
-                            ))
+                            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                                {userData.badges.map((badge, i) => (
+                                    <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, paddingTop: i > 0 ? 10 : 0, borderTop: i > 0 ? `1px solid ${T.border}` : "none" }}>
+                                        <CheckCircle size={17} color={badge.color || T.success} />
+                                        <p style={{ fontFamily: F, fontSize: 12.5, fontWeight: 600, color: badge.color || T.success, margin: 0 }}>
+                                            {badge.label}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
                         ) : (
-                            <p style={{ fontFamily: F, fontSize: 13, color: T.textLight, margin: 0 }}>No badges yet</p>
+                            <div style={{ textAlign: "center", padding: "10px 4px 2px" }}>
+                                <p style={{ fontFamily: F, fontSize: 12.5, color: T.textLight, margin: 0, lineHeight: 1.5 }}>
+                                    No badges yet — complete mentor milestones to start earning them.
+                                </p>
+                            </div>
                         )}
-                    </div>
+                    </div> */}
+
                 </div>
             </div>
         </div>
     );
 };
-
-
 // ═══════════════════════════════════════════════════════════════════════════════
 // MentorLayout — main export
 // ═══════════════════════════════════════════════════════════════════════════════

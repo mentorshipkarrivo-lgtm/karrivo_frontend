@@ -239,7 +239,7 @@ const App = () => {
       <ToastContainer position="top-right" autoClose={3000} />
 
       {/* ─── Floating Chat Button + Widget (visible on all pages except login/reset) ─── */}
-      {showChat && (
+      {/* {showChat && (
         <>
           <div
             style={{
@@ -276,7 +276,7 @@ const App = () => {
           {chatOpen && <MenteeSupport onclose={closeChat} />}
 
         </>
-      )}
+      )} */}  
 
       {/* ─── Routes ─── */}
       <Routes>

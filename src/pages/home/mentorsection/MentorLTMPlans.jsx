@@ -438,7 +438,7 @@ export default function MentorLTMPlans() {
                       {plan.badge}
                     </span>
                   )}
-                  <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 2, color: isActive ? '#fff' : MUTED }}>{plan.months}m</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 2, color: isActive ? '#fff' : MUTED }}>{plan.months}months</div>
                   <div style={{ fontSize: 12, color: isActive ? 'rgba(255,255,255,0.65)' : MUTED2 }}>{plan.tabSub}</div>
                 </button>
               );
