@@ -750,7 +750,7 @@ export default function MentorSessionsDashboard() {
       `}</style>
       <div style={{ minHeight: "100vh", padding: "20px", fontFamily: "'DM Sans','Segoe UI',sans-serif", background: "#fff" }}>        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
 
-        <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 24 }}>
+        {/* <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 24 }}>
           <div
             style={{
               width: 38,
@@ -778,7 +778,21 @@ export default function MentorSessionsDashboard() {
               Manage your mentee sessions and subscriptions
             </p>
           </div>
+        </div> */}
+
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-[20px]">
+          <div>
+            <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
+              <Users size={24} className="text-[#0098cc]" strokeWidth={2.2} />
+              Subscriptions            </h1>
+
+            <p className="text-gray-500 mt-2 text-xs">
+              Manage your mentee sessions and subscriptions
+            </p>
+          </div>
+
         </div>
+
 
         {/* Tabs */}
         <div style={{ display: "flex", gap: 4, background: "#f8fafc", border: "1.5px solid #e9edf2", borderRadius: 11, padding: 4, width: "fit-content", marginBottom: 20 }}>

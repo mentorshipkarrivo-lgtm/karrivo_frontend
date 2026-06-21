@@ -1577,19 +1577,21 @@ export default function MentorAvailability() {
       <div className="bg-white border-b border-slate-200 px-4 py-4">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center justify-between">
-            <div>
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-[#1a1a2e]/8 flex items-center justify-center">
-                  <Calendar size={16} className="text-[#1a1a2e]" />
-                </div>
-                <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">Manage Availability</h1>
+         
+
+
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-[20px]">
+              <div>
+                <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
+                  <Calendar size={24} className="text-[#0098cc]" />
+                  Subscriptions            </h1>
+                <p className="text-xs text-[#94a3b8] mt-1 ml-10.5">
+                  Set your weekly schedule and block dates when you're unavailable
+                </p>
               </div>
-              <p className="text-xs text-[#94a3b8] mt-1 ml-10.5">
-                Set your weekly schedule and block dates when you're unavailable
-              </p>
+
             </div>
 
-            {/* Header actions */}
             <div className="flex items-center gap-2">
               {tab === "schedule" && showView && (
                 <button onClick={handleEdit} className={btnOutline}>

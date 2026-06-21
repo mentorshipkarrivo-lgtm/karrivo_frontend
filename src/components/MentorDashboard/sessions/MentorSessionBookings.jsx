@@ -114,33 +114,18 @@ export default function SessionsTable() {
             minHeight: "100vh",
         }}>
 
-            <div style={{ marginBottom: "20px" }}>
-                <div
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                        marginBottom: "4px",
-                    }}
-                >
-                    <BookOpen size={20} color="#1a1a2e" />
-                    <h1
-                        style={{
-                            fontSize: "18px",
-                            fontWeight: 700,
-                            color: "#1a1a2e",
-                            margin: 0,
-                        }}
-                    >
+
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-[20px]">
+                <div>
+                    <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
+                        <BookOpen size={18} className="text-[#0098cc]"  strokeWidth={2.2} />
                         Sessions
                     </h1>
+
                 </div>
 
-                <p style={{ color: "#94a3b8", fontSize: "13px", margin: 0 }}>
-                    {isLoading ? "Loading…" : `${totalCount} total sessions`}
-                </p>
-            </div>
 
+            </div>
             {/* Table wrapper */}
             <div className="scroll-hide" style={{
                 width: "100%",

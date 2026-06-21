@@ -952,7 +952,7 @@ const MyPricing = () => {
               flexShrink: 0,
             }}
           >
-            <Wallet size={18} color="#1a1a2e" strokeWidth={2.2} />
+            <Wallet size={18} className="text-[#0098cc]" strokeWidth={2.2} />
           </div>
 
           <div>
@@ -974,6 +974,9 @@ const MyPricing = () => {
             )}
           </div>
         </div>
+
+
+
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <button onClick={() => setShowCoupon(true)} style={{ ...btnOutline, fontSize: 12 }}>
             <IconTag size={13} /> Coupons

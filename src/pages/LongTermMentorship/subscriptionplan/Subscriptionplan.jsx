@@ -80,13 +80,29 @@ const REFUND_STATUS = {
 const REFUND_COLUMNS = [
     { key: "plan_type", label: "Plan", render: (v) => planLabel(v) },
     { key: "status", label: "Status", render: (v) => v },
-   
+    { key: "total_sessions", label: "Total Sessions" },
+    { key: "completed_sessions", label: "Completed" },
+    { key: "remaining_sessions", label: "Remaining" },
     { key: "total_amount", label: "Total Paid", render: (v) => money(v) },
     { key: "per_session_amount", label: "Per Session", render: (v) => money(v) },
-    { key: "used_amount", label: "Used Amount", render: (v) => money(v) },
-    { key: "refund_percentage", label: "Refund %", render: (v) => `${v}%` },
     { key: "refund_amount", label: "Refund Amount", render: (v) => money(v) },
     { key: "cancellation_reason", label: "Reason" },
+    { key: "transaction_id", label: "Transaction ID" },
+    {
+        key: "receipt_url",
+        label: "Receipt",
+        render: (v) =>
+            v ? (
+                <a
+                    href={v}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ color: C.blue, fontWeight: 700, textDecoration: "underline" }}
+                >
+                    View Receipt
+                </a>
+            ) : null,
+    },
     { key: "createdAt", label: "Requested On", render: (v) => fmt(v) },
 ];
 
@@ -140,7 +156,7 @@ const RefundTable = ({ subscriptionId }) => {
                 <span style={{ fontSize: 14, fontWeight: 700, color: C.text, fontFamily: FONT }}>
                     Refund Details
                 </span>
-              
+
             </div>
 
             {/* Dark header bar + single data row, horizontally scrollable */}
@@ -171,11 +187,12 @@ const RefundTable = ({ subscriptionId }) => {
                             {REFUND_COLUMNS.map((col) => {
                                 const raw = refund[col.key];
                                 const value = col.render ? col.render(raw) : displayValue(raw);
+                                const isEmpty = value === null || value === undefined || value === "";
                                 return (
                                     <td key={col.key} style={{
                                         padding: "12px 16px", fontSize: 13, color: C.text,
                                         fontWeight: 700, whiteSpace: "nowrap",
-                                    }}>{value === null || value === undefined || value === "" ? "—" : value}</td>
+                                    }}>{isEmpty ? "—" : value}</td>
                                 );
                             })}
                         </tr>
@@ -209,7 +226,8 @@ const StatusBadge = ({ status }) => {
     );
 };
 
-const PaymentLabel = ({ done, status }) => {
+const PaymentLabel = ({ done, status, subStatus }) => {
+    if (subStatus === "cancelled") return <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 600, color: C.danger, fontFamily: FONT }}><XCircle size={13} />Cancelled</span>;
     if (done) return <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 600, color: "#16a34a", fontFamily: FONT }}><CheckCircle2 size={13} />Paid</span>;
     if (status === "onprocess") return <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 600, color: C.blue, fontFamily: FONT }}><Clock size={13} />Processing</span>;
     return <span style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, fontWeight: 600, color: C.muted, fontFamily: FONT }}><Clock size={13} />Pending</span>;
@@ -224,97 +242,95 @@ const SubscriptionCard = ({ sub, i, onView, onPay, onCancel }) => {
             overflow: "hidden", display: "flex", flexDirection: "column",
             fontFamily: FONT, animationDelay: `${i * 70}ms`,
         }}>
-            <div style={{ height: 3, background: sub.status === "cancelled" ? C.danger : C.dark }} />
-            <div style={{ padding: "16px", display: "flex", flexDirection: "column", gap: 14, flex: 1 }}>
+            <div style={{ height: 3, background: sub.status === "cancelled" ? C.danger : C.dark, flexShrink: 0 }} />
+            <div style={{ padding: "12px", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
 
-                {sub.payment_status === "pending" && (
-                    <div style={{
-                        display: "flex", alignItems: "center", justifyContent: "space-between",
-                        gap: 10, flexWrap: "wrap", border: `1px solid ${C.border}`,
-                        borderRadius: 10, padding: "10px 12px", background: "#fafbfc",
-                    }}>
-                        <span style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 600, color: C.text, fontFamily: FONT }}>
-                            <AlertCircle size={13} style={{ color: C.blue }} />
-                            Payment Incomplete
-                        </span>
-                        <button className="pay-btn" onClick={() => onPay(sub)} style={{
-                            background: C.dark, color: C.white, border: "none", borderRadius: 8,
-                            padding: "7px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer",
-                            fontFamily: FONT, transition: "all 0.2s", whiteSpace: "nowrap",
-                        }}>Pay Now</button>
-                    </div>
-                )}
-
+                {/* Icon + status row */}
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                     <div style={{
-                        width: 36, height: 36, borderRadius: 8, background: C.dark,
+                        width: 28, height: 28, borderRadius: 7, background: C.dark,
                         display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                     }}>
-                        <CreditCard size={16} style={{ color: C.white }} />
+                        <CreditCard size={13} style={{ color: C.white }} />
                     </div>
                     <StatusBadge status={sub.status} />
                 </div>
 
+                {/* Mentor */}
                 {sub.mentor_name && (
-                    <div>
-                        <p style={{ fontSize: 9, fontWeight: 700, color: C.muted, letterSpacing: "0.1em", margin: "0 0 2px", fontFamily: FONT }}>MENTOR</p>
-                        <p style={{ fontSize: 13, fontWeight: 700, color: C.text, margin: 0, fontFamily: FONT }}>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 5 }}>
+                        <span style={{ fontSize: 8, fontWeight: 700, color: C.muted, letterSpacing: "0.08em", fontFamily: FONT, flexShrink: 0 }}>MENTOR</span>
+                        <span style={{ fontSize: 12, fontWeight: 700, color: C.text, fontFamily: FONT, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                             {sub.mentor_name}{sub.mentor_role ? ` · ${sub.mentor_role}` : ""}
-                        </p>
+                        </span>
                     </div>
                 )}
 
+                {/* Amount */}
                 <div>
-                    <p style={{ fontSize: 9, fontWeight: 700, color: C.muted, letterSpacing: "0.1em", margin: "0 0 3px", fontFamily: FONT }}>Plan Amount</p>
-                    <p style={{ fontSize: 24, fontWeight: 800, color: C.text, margin: 0, fontFamily: FONT }}>{money(sub.amount)}</p>
+                    <p style={{ fontSize: 8, fontWeight: 700, color: C.muted, letterSpacing: "0.08em", margin: "0 0 2px", fontFamily: FONT }}>PLAN AMOUNT</p>
+                    <p style={{ fontSize: 20, fontWeight: 800, color: C.text, margin: 0, fontFamily: FONT, lineHeight: 1.1 }}>{money(sub.amount)}</p>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6 }}>
+                {/* Quick facts grid */}
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 5 }}>
                     {[["Plan", planLabel(sub.plan_type)], ["Sessions", sub.total_sessions], ["Expires", fmt(sub.effective_end_date)]].map(([lbl, val]) => (
-                        <div key={lbl} style={{ background: "#f8fafc", borderRadius: 8, padding: "8px 10px", border: `1px solid ${C.border}` }}>
-                            <p style={{ fontSize: 8, fontWeight: 700, color: C.muted, letterSpacing: "0.08em", margin: "0 0 2px", fontFamily: FONT }}>{lbl}</p>
-                            <p style={{ fontSize: 11, fontWeight: 700, color: C.text, margin: 0, wordBreak: "break-word", fontFamily: FONT }}>{val}</p>
+                        <div key={lbl} style={{ background: "#f8fafc", borderRadius: 7, padding: "6px 8px", border: `1px solid ${C.border}` }}>
+                            <p style={{ fontSize: 7, fontWeight: 700, color: C.muted, letterSpacing: "0.06em", margin: "0 0 2px", fontFamily: FONT }}>{lbl}</p>
+                            <p style={{ fontSize: 10, fontWeight: 700, color: C.text, margin: 0, wordBreak: "break-word", fontFamily: FONT, lineHeight: 1.25 }}>{val}</p>
                         </div>
                     ))}
                 </div>
 
+                {/* Extended notice */}
                 {sub.is_extended && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 8, padding: "8px 12px" }}>
-                        <CalendarClock size={13} style={{ color: "#16a34a", flexShrink: 0 }} />
-                        <span style={{ fontSize: 12, fontWeight: 600, color: "#15803d", fontFamily: FONT }}>
-                            Extended by {sub.extended_days} day{sub.extended_days > 1 ? "s" : ""} (mentor leave)
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 7, padding: "6px 10px" }}>
+                        <CalendarClock size={11} style={{ color: "#16a34a", flexShrink: 0 }} />
+                        <span style={{ fontSize: 10, fontWeight: 600, color: "#15803d", fontFamily: FONT, lineHeight: 1.3 }}>
+                            Extended {sub.extended_days} day{sub.extended_days > 1 ? "s" : ""} (mentor leave)
                         </span>
                     </div>
                 )}
 
-                {sub.status === "cancelled" && (
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 8, padding: "8px 12px" }}>
-                        <XCircle size={13} style={{ color: C.danger, flexShrink: 0 }} />
-                        <span style={{ fontSize: 12, fontWeight: 600, color: C.danger, fontFamily: FONT }}>
-                            Cancelled · Refund {money(sub.refund_amount)}
-                        </span>
-                    </div>
-                )}
-
-                <div style={{ borderTop: `1px solid ${C.border}`, marginTop: "auto" }} />
-
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-                    <PaymentLabel done={sub.payment_done} status={sub.payment_status} />
-                    <div style={{ display: "flex", gap: 6 }}>
+                {/* Footer */}
+                <div style={{ marginTop: "auto", paddingTop: 10, borderTop: `1px solid ${C.border}`, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 6 }}>
+                    {sub.status !== "cancelled" ? (
+                        <PaymentLabel done={sub.payment_done} status={sub.payment_status} subStatus={sub.status} />
+                    ) : <span />}
+                    <div style={{ display: "flex", gap: 6, marginLeft: "auto" }}>
                         {canCancel && (
                             <button className="cancel-btn" onClick={() => onCancel(sub)} style={{
                                 background: "#fff", color: C.danger, border: `1px solid #fecaca`,
-                                borderRadius: 8, padding: "7px 12px", fontSize: 12,
+                                borderRadius: 7, padding: "6px 10px", fontSize: 11,
                                 fontWeight: 700, cursor: "pointer", fontFamily: FONT, transition: "all 0.15s",
                             }}>Cancel</button>
                         )}
                         <button className="pay-btn" onClick={() => onView(sub)} style={{
-                            background: C.dark, color: C.white, border: "none", borderRadius: 8,
-                            padding: "7px 16px", fontSize: 12, fontWeight: 700,
+                            background: C.dark, color: C.white, border: "none", borderRadius: 7,
+                            padding: "6px 12px", fontSize: 11, fontWeight: 700,
                             cursor: "pointer", fontFamily: FONT, transition: "all 0.2s",
                         }}>View Details</button>
                     </div>
                 </div>
+
+                {/* Payment incomplete — placed last so the most relevant action stays close to the buttons */}
+                {sub.payment_status === "pending" && (
+                    <div style={{
+                        display: "flex", alignItems: "center", justifyContent: "space-between",
+                        gap: 8, flexWrap: "wrap", border: `1px solid ${C.border}`,
+                        borderRadius: 7, padding: "8px 10px", background: "#fafbfc",
+                    }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 11, fontWeight: 600, color: C.text, fontFamily: FONT }}>
+                            <AlertCircle size={11} style={{ color: C.blue }} />
+                            Payment Incomplete
+                        </span>
+                        <button className="pay-btn" onClick={() => onPay(sub)} style={{
+                            background: C.dark, color: C.white, border: "none", borderRadius: 7,
+                            padding: "6px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer",
+                            fontFamily: FONT, transition: "all 0.2s", whiteSpace: "nowrap",
+                        }}>Pay Now</button>
+                    </div>
+                )}
             </div>
         </div>
     );
@@ -323,9 +339,9 @@ const SubscriptionCard = ({ sub, i, onView, onPay, onCancel }) => {
 const SkeletonCard = () => (
     <div style={{ borderRadius: 12, border: `1px solid ${C.border}`, overflow: "hidden", background: C.white }}>
         <div style={{ height: 3, background: C.border }} />
-        <div style={{ padding: 16, display: "flex", flexDirection: "column", gap: 14 }}>
+        <div style={{ padding: 12, display: "flex", flexDirection: "column", gap: 10 }}>
             {[80, 120, 60, 40].map((w, i) => (
-                <div key={i} style={{ height: i === 1 ? 28 : 12, borderRadius: 6, background: "#f1f5f9", width: `${w}%`, animation: "pulse 1.5s ease-in-out infinite" }} />
+                <div key={i} style={{ height: i === 1 ? 22 : 10, borderRadius: 6, background: "#f1f5f9", width: `${w}%`, animation: "pulse 1.5s ease-in-out infinite" }} />
             ))}
         </div>
     </div>
@@ -606,7 +622,7 @@ const Subscriptionplan = () => {
                     )}
 
                     {menteeId && !isError && isLoading && (
-                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 16 }}>
+                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 14 }}>
                             {[1, 2, 3].map(i => <SkeletonCard key={i} />)}
                         </div>
                     )}
@@ -622,7 +638,7 @@ const Subscriptionplan = () => {
                     {menteeId && !isError && !isLoading && subs.length > 0 && (
                         <>
                             {/* Subscription cards — multi-column grid, card-sized */}
-                            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 16, alignItems: "start" }}>
+                            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: 14, alignItems: "start" }}>
                                 {subs.map((sub, i) => (
                                     <SubscriptionCard key={sub._id} sub={sub} i={i}
                                         onPay={handleCompletePayment} onView={handleView} onCancel={handleCancelClick} />
@@ -650,7 +666,7 @@ const Subscriptionplan = () => {
                 }}>
                     <div onClick={e => e.stopPropagation()} style={{
                         width: "100%", maxWidth: 440, background: C.white,
-                        borderRadius: 14, border: `1px solid ${C.border}`,
+                        borderRadius: 14,
                         boxShadow: "0 20px 60px rgba(0,0,0,0.16)",
                         overflow: "hidden", animation: "slideUp 0.2s ease", fontFamily: FONT,
                         maxHeight: "90vh", overflowY: "auto",
@@ -665,23 +681,18 @@ const Subscriptionplan = () => {
                                     <h2 style={{ fontSize: 16, fontWeight: 700, color: C.white, margin: "0 0 3px", fontFamily: FONT }}>
                                         {planLabel(selected.plan_type)} Plan
                                     </h2>
-                                    <p style={{ fontSize: 11, color: "rgba(255,255,255,0.4)", margin: 0, fontFamily: FONT }}>
-                                        ID: {selected._id?.slice(-8).toUpperCase()}
-                                    </p>
+                                 
                                 </div>
                                 <button onClick={() => setSelected(null)} style={{
                                     width: 30, height: 30, borderRadius: 7,
-                                    background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)",
+
                                     color: "rgba(255,255,255,0.7)", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer",
-                                }}><X size={13} /></button>
+                                }}><X size={24} /></button>
                             </div>
                         </div>
 
                         <div style={{ padding: "16px 18px" }}>
-                            <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 14 }}>
-                                <StatusBadge status={selected.status} />
-                                <PaymentLabel done={selected.payment_done} status={selected.payment_status} />
-                            </div>
+
 
                             {selected.mentor_name && (
                                 <div style={{ marginBottom: 14, fontSize: 12, color: C.sub, fontFamily: FONT }}>

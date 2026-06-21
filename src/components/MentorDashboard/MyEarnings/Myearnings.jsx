@@ -413,7 +413,7 @@ const Myearnings = () => {
                 flexShrink: 0,
               }}
             >
-              <Star size={18} color="#1a1a2e" fill="#fff" strokeWidth={2.2} />
+              <Star size={18} className="text-[#0098cc]" fill="#fff" strokeWidth={2.2} />
             </div>
 
             <div>
