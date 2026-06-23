@@ -416,19 +416,32 @@ function SessionModal({ session, menteeId, onClose, onSave }) {
                         border: `1px solid ${form.task_completed ? "#bbf7d0" : C.border}`,
                         borderRadius: 8,
                         background: form.task_completed ? "#f0fdf4" : "#f8fafc",
-                        cursor: "pointer", transition: "all 0.2s",
+                        cursor: session.task_completed ? "default" : "pointer",
+                        transition: "all 0.2s",
+                        opacity: session.task_completed ? 0.85 : 1,
                       }}>
                         <input
-                          type="checkbox" checked={form.task_completed}
-                          onChange={set("task_completed")}
-                          style={{ width: 14, height: 14, accentColor: "#16a34a", cursor: "pointer" }}
+                          type="checkbox"
+                          checked={form.task_completed}
+                          onChange={session.task_completed ? undefined : set("task_completed")}
+                          disabled={session.task_completed}
+                          style={{
+                            width: 14, height: 14,
+                            accentColor: "#16a34a",
+                            cursor: session.task_completed ? "default" : "pointer",
+                          }}
                         />
                         <span style={{
                           fontSize: 12, fontFamily: FONT, fontWeight: 600,
                           color: form.task_completed ? "#16a34a" : C.sub,
                         }}>
-                          {form.task_completed ? "Task completed ✓" : "Mark task as completed"}
+                          {form.task_completed
+                            ? session.task_completed
+                              ? "Task completed ✓ (verified by mentor)"
+                              : "Task completed ✓"
+                            : "Mark task as completed"}
                         </span>
+                      
                       </label>
                     </Field>
                   </ModalSection>

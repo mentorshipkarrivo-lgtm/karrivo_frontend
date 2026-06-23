@@ -414,7 +414,7 @@ function SubscriberModal({ sub, onClose }) {
       <div style={iconBox}><Icon size={14} stroke="#1a1a2e" strokeWidth={2} /></div>
       <div style={{ flex: 1, minWidth: 0 }}>
         <p style={{ margin: 0, fontSize: 10, color: "#94a3b8", fontWeight: 700, letterSpacing: "0.06em" }}>{label}</p>
-        <p style={{ margin: "2px 0 0", fontSize: 13, color: "#1a1a2e", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", ...valueStyle }}>{value || "—"}</p>
+        <p style={{ margin: "2px 0 0", fontSize: 13, color: "#1a1a2e", fontWeight: 600, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", ...valueStyle }}>{value}</p>
       </div>
     </div>
   );
@@ -439,7 +439,7 @@ function SubscriberModal({ sub, onClose }) {
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <p style={{ margin: 0, fontSize: 15, fontWeight: 800, color: "#1a1a2e" }}>{name}</p>
-            <p style={{ margin: "3px 0 0", fontSize: 12, color: "#94a3b8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{mentee.email || "—"}</p>
+            <p style={{ margin: "3px 0 0", fontSize: 12, color: "#94a3b8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{mentee.email}</p>
           </div>
           <button onClick={onClose} style={{ width: 30, height: 30, background: "#fff", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", color: "#64748b", flexShrink: 0 }}>
             <X size={24} strokeWidth={2} />
@@ -468,7 +468,7 @@ function SubscriberModal({ sub, onClose }) {
 
         <Row icon={User} label="Name" value={name} />
         <Row icon={Mail} label="Email" value={mentee.email} />
-        <Row icon={Phone} label="Phone" value={mentee.phone ? `+${mentee.countryCode || ""} ${mentee.phone}` : "—"} />
+        <Row icon={Phone} label="Phone" value={mentee.phone ? `${mentee.countryCode || ""} ${mentee.phone}` : "—"} />
 
         {/* Dates */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", borderBottom: "1px solid #f1f5f9" }}>
@@ -750,35 +750,6 @@ export default function MentorSessionsDashboard() {
       `}</style>
       <div style={{ minHeight: "100vh", padding: "20px", fontFamily: "'DM Sans','Segoe UI',sans-serif", background: "#fff" }}>        <div style={{ maxWidth: 1100, margin: "0 auto" }}>
 
-        {/* <div style={{ display: "flex", alignItems: "center", gap: 11, marginBottom: 24 }}>
-          <div
-            style={{
-              width: 38,
-              height: 38,
-              borderRadius: 11,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Users size={18} color="#1a1a2e" strokeWidth={2.2} />
-          </div>
-
-          <div>
-            <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
-              Subscriptions
-            </h1>
-            <p
-              style={{
-                fontSize: 12,
-                color: "#94a3b8",
-                margin: 0,
-              }}
-            >
-              Manage your mentee sessions and subscriptions
-            </p>
-          </div>
-        </div> */}
 
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-[20px]">
           <div>

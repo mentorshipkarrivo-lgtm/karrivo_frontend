@@ -419,7 +419,7 @@ const CancelModal = ({ sub, onClose, onConfirmed }) => {
                         <>
                             <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap" }}>
                                 {[["Current Plan", planLabel(p.plan_type)], ["Expiry", fmt(p.subscription_end_date)]].map(([lbl, val]) => (
-                                    <div key={lbl} style={{ flex: 1, background: "#f8fafc", border: `1px solid ${C.border}`, borderRadius: 8, padding: "8px 12px" }}>
+                                    <div key={lbl} style={{ flex: 1, background: "#f8fafc",  borderRadius: 8, padding: "8px 12px" }}>
                                         <p style={{ fontSize: 9, fontWeight: 700, color: C.muted, letterSpacing: "0.08em", margin: "0 0 2px", fontFamily: FONT }}>{lbl}</p>
                                         <p style={{ fontSize: 13, fontWeight: 700, color: C.text, margin: 0, fontFamily: FONT }}>{val}</p>
                                     </div>
@@ -430,9 +430,7 @@ const CancelModal = ({ sub, onClose, onConfirmed }) => {
                             <div style={{ display: "flex", flexDirection: "column", gap: 6, marginBottom: 14 }}>
                                 {[
                                     { tier: "full", label: "Within 3 days", pct: "100% refund", color: "#16a34a", bg: "#f0fdf4", border: "#bbf7d0" },
-                                    { tier: "half", label: "4–15 days", pct: "50% refund", color: "#b45309", bg: "#fffbeb", border: "#fde68a" },
-                                    { tier: "none", label: "After 15 days", pct: "No refund", color: C.danger, bg: "#fef2f2", border: "#fecaca" },
-                                ].map(row => {
+                                    ].map(row => {
                                     const active = p.refund_policy_tier === row.tier;
                                     return (
                                         <div key={row.tier} style={{
@@ -444,11 +442,7 @@ const CancelModal = ({ sub, onClose, onConfirmed }) => {
                                             <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
                                                 <span style={{ width: 7, height: 7, borderRadius: "50%", background: active ? row.color : C.border, flexShrink: 0 }} />
                                                 <span style={{ fontSize: 12, color: active ? row.color : C.muted, fontWeight: active ? 700 : 500, fontFamily: FONT }}>{row.label}</span>
-                                                {active && (
-                                                    <span style={{ fontSize: 9, fontWeight: 700, background: row.color, color: "#fff", borderRadius: 4, padding: "1px 5px", letterSpacing: "0.04em", fontFamily: FONT }}>
-                                                        YOU ARE HERE
-                                                    </span>
-                                                )}
+                                               
                                             </div>
                                             <span style={{ fontSize: 12, fontWeight: 700, color: active ? row.color : C.muted, fontFamily: FONT }}>{row.pct}</span>
                                         </div>
@@ -459,7 +453,6 @@ const CancelModal = ({ sub, onClose, onConfirmed }) => {
                             <div style={{ background: "#fff7ed", border: "1px solid #fed7aa", borderRadius: 10, padding: "12px 14px", marginBottom: 16 }}>
                                 {[
                                     ["Days subscribed", `${p.days_since_subscribed} day${p.days_since_subscribed !== 1 ? "s" : ""}`],
-                                    ["Refund eligible", `${p.refund_percentage}%`],
                                 ].map(([lbl, val]) => (
                                     <div key={lbl} style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
                                         <span style={{ fontSize: 12, color: C.sub, fontFamily: FONT }}>{lbl}</span>
