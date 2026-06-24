@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
 import KarrivoLogo from "../../assets/KarrivoLogo.png";
 import { useAdvancedFilterMentorsMutation, useSearchMentorMutation, useGetLtmAllMentorsQuery } from "../LongTermMentorship/MentorshipHome/Mentorshiphomeapislice";
-import { Loader } from "@react-three/drei";
+import Loader from "../../global/Loader";
 
 const BLUE = "#0098cc";
 const BLUE_LIGHT = "#f0faff";

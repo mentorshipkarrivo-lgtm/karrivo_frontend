@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect } from "react";
 import {
   useGetMentorEarningsQuery, useGetPayoutDetailsQuery,
@@ -8,9 +6,21 @@ import {
 import {
   DollarSign, Clock, AlertTriangle, Inbox,
   ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight,
-  CreditCard, Check, Loader2, Gift,Star 
+  CreditCard, Check, Loader2, Gift, Star, X
 } from "lucide-react";
 import Loader from "../../../global/Loader";
+
+/* ══════════════════════════════════════════════════
+   SHARED CLASS TOKENS (matches MentorHelpSupport)
+══════════════════════════════════════════════════ */
+const inputClass =
+  "w-full border border-gray-300 rounded-xl px-4 py-2.5 text-xs bg-white text-gray-600 outline-none focus:ring-2 focus:ring-[#0098cc]";
+
+const buttonPrimary =
+  "bg-[#1a1a2e] text-white px-4 py-2.5 rounded-xl text-xs font-semibold hover:opacity-90 transition";
+
+const buttonSecondary =
+  "border border-gray-300 text-gray-600 px-4 py-2.5 rounded-xl text-xs font-medium bg-white hover:border-[#0098cc] transition";
 
 /* ══════════════════════════════════════════════════
    SHARED HELPERS
@@ -25,21 +35,11 @@ const getPaymentStatusStyle = (status) => {
   }
 };
 
-const SESSION_BADGES = {
-  inprogress: { label: "In Progress", className: "bg-orange-50 text-orange-700 border border-orange-200" },
-  completed: { label: "Completed", className: "bg-green-50 text-green-700 border border-green-200" },
-  cancelled: { label: "Cancelled", className: "bg-red-50 text-red-700 border border-red-200" },
-  scheduled: { label: "Scheduled", className: "bg-blue-50 text-blue-700 border border-blue-200" },
-  confirmed: { label: "Confirmed", className: "bg-blue-50 text-blue-700 border border-blue-200" },
-};
-const getSessionBadge = (status = "") =>
-  SESSION_BADGES[status.toLowerCase()] || { label: status || "—", className: "bg-gray-100 text-gray-500 border border-gray-200" };
-
 /* ══════════════════════════════════════════════════
    STAT CARD
 ══════════════════════════════════════════════════ */
 const StatCard = ({ icon: Icon, label, value }) => (
-  <div className="bg-white rounded-xl border border-gray-200 p-4 flex items-center gap-4">
+  <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-center gap-4">
     <div className="w-11 h-11 rounded-xl border border-gray-200 flex items-center justify-center flex-shrink-0">
       <Icon size={18} color="#0098cc" strokeWidth={2} />
     </div>
@@ -63,12 +63,7 @@ const Field = ({ label, required, error, children }) => (
   </div>
 );
 
-const PInput = ({ className = "", ...props }) => (
-  <input
-    className={`w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-800 placeholder-gray-300 outline-none focus:border-[#0098cc] focus:ring-2 focus:ring-[#0098cc]/10 transition-all bg-white ${className}`}
-    {...props}
-  />
-);
+const PInput = (props) => <input className={inputClass} {...props} />;
 
 const EMPTY_FORM = {
   upiId: "", confirmUpiId: "",
@@ -81,7 +76,7 @@ const maskAccount = (num) =>
   num ? `${"•".repeat(Math.max(0, num.length - 4))}${num.slice(-4)}` : "—";
 
 /* ══════════════════════════════════════════════════
-   PAYOUT DETAILS MODAL
+   PAYOUT DETAILS MODAL (matches MentorHelpSupport modal shell)
 ══════════════════════════════════════════════════ */
 const PayoutDetailsPage = ({ userId, onClose }) => {
   const { data: fetchedData, isLoading: loadingDetails } =
@@ -96,7 +91,6 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
   const [upiEditing, setUpiEditing] = useState(false);
   const [bankEditing, setBankEditing] = useState(false);
 
-  /* Pre-fill from API */
   useEffect(() => {
     const pd = fetchedData?.payoutDetails;
     if (!pd) {
@@ -186,28 +180,29 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
   const anyEditing = upiEditing || bankEditing;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="w-full max-w-2xl bg-white rounded-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-3xl shadow-xl w-full max-w-2xl border border-gray-200 max-h-[90vh] flex flex-col">
 
         {/* HEADER */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-          <h2 className="text-base font-bold text-[#1a1a2e]">Payout Details</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-black text-sm font-semibold">✕</button>
+        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
+          <h2 className="text-lg font-bold text-[#1a1a2e]">Payout Details</h2>
+          <button onClick={onClose}>
+            <X className="text-gray-500" size={18} />
+          </button>
         </div>
 
         {/* CONTENT */}
-        <div className="p-6 overflow-y-auto">
+        <div className="p-6 space-y-5 overflow-y-auto">
           {loadingDetails ? (
             <div className="flex justify-center py-20">
               <Loader2 className="animate-spin text-[#0098cc]" />
             </div>
           ) : (
-            <div className="space-y-5">
-
+            <>
               {/* ══ UPI SECTION ══ */}
-              <div className="border border-gray-200 overflow-hidden">
-                <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-100">
-                  <p className="text-xs font-bold text-[#1a1a2e]">UPI Details</p>
+              <div className="border border-gray-200 rounded-xl overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200">
+                  <p className="text-[11px] font-semibold text-gray-500 uppercase">UPI Details</p>
                   {!upiEditing && form.upiId && (
                     <button onClick={() => setUpiEditing(true)} className="text-[11px] font-semibold text-[#0098cc] hover:underline">
                       Edit
@@ -216,14 +211,12 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
                 </div>
                 <div className="px-4 py-4">
                   {!upiEditing && form.upiId ? (
-                    <div className="flex items-center gap-3">
-                      <div>
-                        <p className="text-[11px] text-gray-400 font-medium">Saved UPI ID</p>
-                        <p className="text-sm font-semibold text-gray-800">{form.upiId}</p>
-                      </div>
+                    <div>
+                      <p className="text-[11px] text-gray-400 font-medium">Saved UPI ID</p>
+                      <p className="text-sm font-semibold text-gray-800">{form.upiId}</p>
                     </div>
                   ) : (
-                    <div className="space-y-4">
+                    <div className="grid sm:grid-cols-2 gap-4">
                       <Field label="UPI ID" error={errors.upiId}>
                         <PInput value={form.upiId} onChange={set("upiId")} placeholder="e.g. name@upi" />
                       </Field>
@@ -237,8 +230,8 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
 
               {/* ══ BANK SECTION ══ */}
               <div className="border border-gray-200 rounded-xl overflow-hidden">
-                <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-100">
-                  <p className="text-xs font-bold text-[#1a1a2e]">Bank Details</p>
+                <div className="flex items-center justify-between px-4 py-3 bg-gray-50 border-b border-gray-200">
+                  <p className="text-[11px] font-semibold text-gray-500 uppercase">Bank Details</p>
                   {!bankEditing && form.accountNumber && (
                     <button onClick={() => setBankEditing(true)} className="text-[11px] font-semibold text-[#0098cc] hover:underline">
                       Edit
@@ -247,7 +240,7 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
                 </div>
                 <div className="px-4 py-4">
                   {!bankEditing && form.accountNumber ? (
-                    <div className="grid grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       {[
                         { label: "Account Holder", value: form.accountHolderName },
                         { label: "Account Number", value: maskAccount(form.accountNumber) },
@@ -261,7 +254,7 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
                       ))}
                     </div>
                   ) : (
-                    <div className="space-y-4">
+                    <div className="grid sm:grid-cols-2 gap-4">
                       <Field label="Account Holder Name" error={errors.accountHolderName}>
                         <PInput value={form.accountHolderName} onChange={set("accountHolderName")} placeholder="Full name as on bank account" />
                       </Field>
@@ -291,24 +284,23 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
                 </div>
               </div>
 
-              {/* Global error */}
               {errors.global && (
-                <p className="text-xs text-red-500 bg-red-50 border border-red-200 px-4 py-2.5">
+                <p className="text-xs text-red-500 bg-red-50 border border-red-200 px-4 py-2.5 rounded-xl">
                   {errors.global}
                 </p>
               )}
-            </div>
+            </>
           )}
         </div>
 
         {/* FOOTER */}
-        <div className="flex justify-end gap-3 px-5 py-4 border-t bg-gray-50">
-          <button onClick={onClose} className="px-4 py-2 text-sm font-semibold text-gray-600">Cancel</button>
+        <div className="flex justify-end gap-3 px-6 py-5 border-t border-gray-200">
+          <button onClick={onClose} className={buttonSecondary}>Cancel</button>
           <button
             onClick={handleSave}
             disabled={saving || saved || !anyEditing}
-            className="px-5 py-2 text-sm font-bold text-white rounded-lg flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed transition-all"
-            style={{ backgroundColor: saved ? "#16a34a" : "#1a1a2e" }}
+            className={`${buttonPrimary} flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed`}
+            style={saved ? { backgroundColor: "#16a34a" } : undefined}
           >
             {saving ? <><Loader2 size={14} className="animate-spin" />Saving…</>
               : saved ? <><Check size={14} strokeWidth={2.5} />Saved!</>
@@ -320,7 +312,6 @@ const PayoutDetailsPage = ({ userId, onClose }) => {
     </div>
   );
 };
-
 
 /* ══════════════════════════════════════════════════
    MY EARNINGS  (main page)
@@ -397,270 +388,226 @@ const Myearnings = () => {
         <PayoutDetailsPage userId={mentor_id} onClose={() => setShowPayoutPage(false)} />
       )}
 
-      <div className="min-h-screen bg-white p-4 md:p-6 font-sans">
+      <div className="min-h-screen bg-white p-5 text-gray-700">
+        <div className="max-w-7xl mx-auto space-y-6">
 
-        {/* Header */}
-        <div className="flex items-start justify-between mb-6">
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div
-              style={{
-                width: 36,
-                height: 36,
-                borderRadius: 10,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                flexShrink: 0,
-              }}
-            >
-              <Star size={18} className="text-[#0098cc]" fill="#fff" strokeWidth={2.2} />
-            </div>
-
+          {/* Header — same pattern as MentorHelpSupport */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div>
-              <h1
-                className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2"
-                style={{ color: "#1a1a2e", margin: 0 }}
-              >
+              <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
+                <Star size={22} className="text-[#0098cc]" fill="#0098cc" strokeWidth={0} />
                 Earnings
               </h1>
-              <p
-                className="text-xs text-gray-400 mt-0.5"
-                style={{ margin: 0 }}
-              >
+              <p className="text-gray-500 mt-2 text-xs">
                 Track and manage your mentoring payments
               </p>
             </div>
-          </div>
-          <button
-            onClick={() => setShowPayoutPage(true)}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl border text-xs font-semibold transition-all hover:shadow-sm flex-shrink-0"
-            style={{ borderColor: "#1a1a2e", color: "#1a1a2e", backgroundColor: "#fff" }}
-          >
-            <CreditCard size={13} strokeWidth={2} />
-            My Payouts
-          </button>
-        </div>
 
-        {/* ══ EARNINGS SUMMARY ══ */}
-        <div className="mb-8">
-          <h2 className="text-sm font-bold mb-4" style={{ color: "#1a1a2e" }}>Earnings Summary</h2>
-          <div className="grid grid-cols-2 xl:grid-cols-4 gap-3">
-            <StatCard icon={DollarSign} label="Session Earnings" value={`₹${totalSessionEarnings.toLocaleString("en-IN")}`} />
-            <StatCard icon={DollarSign} label="Subscription Revenue" value={`₹${totalSubscriptionRevenue.toLocaleString("en-IN")}`} />
-            <StatCard icon={AlertTriangle} label="Total Discount" value={`₹${totalSubscriptionDiscount.toLocaleString("en-IN")}`} />
-            <StatCard icon={Clock} label="Overall Revenue" value={`₹${totalOverallRevenue.toLocaleString("en-IN")}`} />
-          </div>
-        </div>
-
-        {/* ══ SUBSCRIPTIONS ══ */}
-        {subscriptions.length > 0 && (
-          <div className="mb-8 bg-white rounded-xl border border-gray-200 overflow-hidden">
-            <div className="px-4 py-3 border-b border-gray-200">
-              <h2 className="text-sm font-bold" style={{ color: "#1a1a2e" }}>
-                Active Subscriptions ({subscriptions.length})
-              </h2>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-xs">
-                <thead>
-                  <tr style={{ backgroundColor: "#1a1a2e" }}>
-                    {["Mentee ID", "Plan Type", "Total Sessions", "Status", "Original Amount", "Discount", "You Receive", "Subscribed At"].map((h) => (
-                      <th key={h} className="px-4 py-2.5 text-left text-[11px] font-semibold whitespace-nowrap text-white">{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {subscriptions.map((sub) => {
-                    const { pricing, menteeId, planType, totalSessions, subscriptionStatus, subscribedAt } = sub;
-                    return (
-                      <tr key={sub.subscriptionId} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                        <td className="px-4 py-2.5 text-gray-700 font-medium">{menteeId || "—"}</td>
-                        <td className="px-4 py-2.5 text-gray-700 capitalize">{planType?.replace("_", " ") || "—"}</td>
-                        <td className="px-4 py-2.5 text-gray-700 font-medium">{totalSessions || "—"}</td>
-                        <td className="px-4 py-2.5 whitespace-nowrap">
-                          <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold ${subscriptionStatus === "onprocess"
-                              ? "bg-blue-50 text-blue-700 border border-blue-200"
-                              : subscriptionStatus === "completed"
-                                ? "bg-green-50 text-green-700 border border-green-200"
-                                : "bg-gray-100 text-gray-500 border border-gray-200"
-                            }`}>
-                            {subscriptionStatus === "onprocess" ? "In Process" : subscriptionStatus || "—"}
-                          </span>
-                        </td>
-                        <td className="px-4 py-2.5 text-gray-700 font-medium">₹{pricing?.originalAmount?.toLocaleString("en-IN") ?? "—"}</td>
-                        <td className="px-4 py-2.5 text-red-600 font-medium">-₹{pricing?.totalDiscount?.toLocaleString("en-IN") ?? "—"}</td>
-                        <td className="px-4 py-2.5 whitespace-nowrap">
-                          <span className="font-semibold" style={{ color: "#0098cc" }}>
-                            ₹{pricing?.mentorReceives?.toLocaleString("en-IN") ?? "—"}
-                          </span>
-                        </td>
-                        <td className="px-4 py-2.5 text-gray-500 whitespace-nowrap">
-                          {subscribedAt
-                            ? new Date(subscribedAt).toLocaleDateString("en-IN", { year: "numeric", month: "short", day: "numeric" })
-                            : "—"}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {/* ══ SESSION BOOKINGS ══ */}
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-4 py-3 border-b border-gray-200">
-            <h2 className="text-sm font-bold" style={{ color: "#1a1a2e" }}>My Sessions</h2>
-            <select
-              value={rowsPerPage}
-              onChange={(e) => { setRowsPerPage(Number(e.target.value)); setCurrentPage(1); }}
-              className="border border-gray-200 rounded-lg text-xs px-2 py-1.5 text-gray-600 bg-white focus:outline-none w-fit"
-            >
-              {ROWS_OPTIONS.map((n) => <option key={n} value={n}>{n} / page</option>)}
-            </select>
+            <button onClick={() => setShowPayoutPage(true)} className={buttonPrimary}>
+              <span className="flex items-center gap-2">
+                <CreditCard size={15} />
+                My Payouts
+              </span>
+            </button>
           </div>
 
-          {isFetching && !isLoading && (
-            <div className="flex items-center justify-center gap-2 py-2 bg-blue-50 border-b border-blue-100">
-              <span className="text-[11px] text-blue-500 font-medium">Loading page {currentPage}…</span>
+          {/* ══ EARNINGS SUMMARY ══ */}
+          <div>
+            <h2 className="text-sm font-bold mb-4 text-[#1a1a2e]">Earnings Summary</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+              <StatCard icon={DollarSign} label="Session Earnings" value={`₹${totalSessionEarnings.toLocaleString("en-IN")}`} />
+              <StatCard icon={DollarSign} label="Subscription Revenue" value={`₹${totalSubscriptionRevenue.toLocaleString("en-IN")}`} />
+              <StatCard icon={AlertTriangle} label="Total Discount" value={`₹${totalSubscriptionDiscount.toLocaleString("en-IN")}`} />
+              <StatCard icon={Clock} label="Overall Revenue" value={`₹${totalOverallRevenue.toLocaleString("en-IN")}`} />
             </div>
-          )}
+          </div>
 
-          {bookings.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <Inbox size={36} strokeWidth={1.5} className="text-gray-300 mb-3" />
-              <p className="text-sm font-semibold text-gray-500">No Sessions Found</p>
-              <p className="text-xs text-gray-400 mt-1">No sessions to display</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-xs">
-                <thead>
-                  <tr style={{ backgroundColor: "#1a1a2e" }}>
-                    {["S.No", "Topic", "Mentee", "Date", "Time Slot", "Amount", "Payment Status", "Transaction ID"].map((h) => (
-                      <th key={h} className="px-4 py-2.5 text-left text-[11px] font-semibold whitespace-nowrap text-white">{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {bookings.map((booking, idx) => {
-                    const paymentStatus = booking.paymentDetails?.paymentStatus;
-                    const globalIdx = rowStartIndex + idx;
-                    const isFree = booking.isFreeSession;
-
-                    return (
-                      <tr key={booking.bookingId || idx} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-
-                        {/* S.No */}
-                        <td className="px-4 py-2.5 text-gray-400">{globalIdx}</td>
-
-
-                        {/* Topic */}
-                        <td className="px-4 py-2.5 text-gray-700 font-medium whitespace-nowrap">{booking.topic || "—"}</td>
-
-                        {/* Mentee */}
-                        <td className="px-4 py-2.5 text-gray-600 whitespace-nowrap">{booking.menteeName || "—"}</td>
-
-                        {/* Date */}
-                        <td className="px-4 py-2.5 text-gray-500 whitespace-nowrap">
-                          {booking.sessionDate
-                            ? new Date(booking.sessionDate).toLocaleDateString("en-IN", { year: "numeric", month: "short", day: "numeric" })
-                            : "—"}
-                        </td>
-
-                        {/* Time Slot */}
-                        <td className="px-4 py-2.5 text-gray-500 whitespace-nowrap">
-                          {booking.startTime && booking.endTime ? `${booking.startTime} – ${booking.endTime}` : "—"}
-                        </td>
-
-                        {/* Amount */}
-                        <td className="px-4 py-2.5 whitespace-nowrap">
-                          {isFree ? (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-purple-50 text-purple-700 border border-purple-200">
-                              <Gift size={10} strokeWidth={2.5} />
-                              Free
+          {/* ══ SUBSCRIPTIONS ══ */}
+          {subscriptions.length > 0 && (
+            <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h2 className="text-sm font-bold text-[#1a1a2e]">
+                  Active Subscriptions ({subscriptions.length})
+                </h2>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200 bg-gray-50">
+                      {["Mentee ID", "Plan Type", "Total Sessions", "Status", "Original Amount", "Discount", "You Receive", "Subscribed At"].map((h) => (
+                        <th key={h} className="text-left px-6 py-3 text-[11px] font-semibold text-gray-500 uppercase whitespace-nowrap">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {subscriptions.map((sub) => {
+                      const { pricing, menteeId, planType, totalSessions, subscriptionStatus, subscribedAt } = sub;
+                      return (
+                        <tr key={sub.subscriptionId} className="border-b border-gray-100 hover:bg-gray-50">
+                          <td className="px-6 py-4 text-xs font-medium text-[#1a1a2e]">{menteeId || "—"}</td>
+                          <td className="px-6 py-4 text-xs text-gray-500 capitalize">{planType?.replace("_", " ") || "—"}</td>
+                          <td className="px-6 py-4 text-xs text-gray-700 font-medium">{totalSessions || "—"}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${subscriptionStatus === "onprocess"
+                                ? "bg-blue-50 text-blue-700 border border-blue-200"
+                                : subscriptionStatus === "completed"
+                                  ? "bg-green-50 text-green-700 border border-green-200"
+                                  : "bg-gray-100 text-gray-500 border border-gray-200"
+                              }`}>
+                              {subscriptionStatus === "onprocess" ? "In Process" : subscriptionStatus || "—"}
                             </span>
-                          ) : (
-                            <span className="font-semibold" style={{ color: "#0098cc" }}>
-                              ₹{booking.paymentDetails?.paymentAmount?.toLocaleString("en-IN") ?? "—"}
+                          </td>
+                          <td className="px-6 py-4 text-xs text-gray-700 font-medium">₹{pricing?.originalAmount?.toLocaleString("en-IN") ?? "—"}</td>
+                          <td className="px-6 py-4 text-xs text-red-600 font-medium">-₹{pricing?.totalDiscount?.toLocaleString("en-IN") ?? "—"}</td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="text-xs font-semibold" style={{ color: "#0098cc" }}>
+                              ₹{pricing?.mentorReceives?.toLocaleString("en-IN") ?? "—"}
                             </span>
-                          )}
-                        </td>
-
-                        {/* Payment Status */}
-                        <td className="px-4 py-2.5 whitespace-nowrap">
-                          {isFree ? (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-purple-50 text-purple-700 border border-purple-200">
-                              <Gift size={10} strokeWidth={2.5} />
-                              Free Session
-                            </span>
-                          ) : (
-                            <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold ${getPaymentStatusStyle(paymentStatus)}`}>
-                              {paymentStatus || "—"}
-                            </span>
-                          )}
-                        </td>
-
-                        {/* Transaction ID */}
-                        <td className="px-4 py-2.5 whitespace-nowrap text-gray-400">
-                          {booking.paymentDetails?.transactionId || "—"}
-                        </td>
-
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-4 py-3 border-t border-gray-200">
-              <p className="text-[11px] text-gray-400">
-                Showing{" "}
-                <span className="font-semibold text-gray-600">{rowStartIndex}–{Math.min(currentPage * rowsPerPage, totalBookings)}</span>
-                {" "}of{" "}
-                <span className="font-semibold text-gray-600">{totalBookings}</span> results
-              </p>
-              <div className="flex items-center gap-1">
-                <button onClick={() => goTo(1)} disabled={currentPage === 1 || isFetching}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:border-gray-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                  <ChevronsLeft size={13} strokeWidth={2} />
-                </button>
-                <button onClick={() => goTo(currentPage - 1)} disabled={currentPage === 1 || isFetching}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:border-gray-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                  <ChevronLeft size={13} strokeWidth={2} />
-                </button>
-                {pageNumbers().map((p, i) =>
-                  p === "…" ? (
-                    <span key={`e-${i}`} className="w-7 h-7 flex items-center justify-center text-gray-300 text-xs">…</span>
-                  ) : (
-                    <button
-                      key={p}
-                      onClick={() => goTo(p)}
-                      disabled={isFetching}
-                      className="w-7 h-7 flex items-center justify-center rounded-lg text-xs font-semibold border transition-colors disabled:cursor-not-allowed"
-                      style={p === currentPage
-                        ? { backgroundColor: "#1a1a2e", color: "#ffffff", borderColor: "#1a1a2e" }
-                        : { backgroundColor: "#ffffff", color: "#6b7280", borderColor: "#e5e7eb" }}
-                    >
-                      {p}
-                    </button>
-                  )
-                )}
-                <button onClick={() => goTo(currentPage + 1)} disabled={currentPage === totalPages || isFetching}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:border-gray-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                  <ChevronRight size={13} strokeWidth={2} />
-                </button>
-                <button onClick={() => goTo(totalPages)} disabled={currentPage === totalPages || isFetching}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 hover:border-gray-300 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
-                  <ChevronsRight size={13} strokeWidth={2} />
-                </button>
+                          </td>
+                          <td className="px-6 py-4 text-xs text-gray-500 whitespace-nowrap">
+                            {subscribedAt
+                              ? new Date(subscribedAt).toLocaleDateString("en-IN", { year: "numeric", month: "short", day: "numeric" })
+                              : "—"}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
+
+          {/* ══ SESSION BOOKINGS ══ */}
+          <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-4 border-b border-gray-200">
+              <h2 className="text-sm font-bold text-[#1a1a2e]">My Sessions</h2>
+           
+            </div>
+
+            {isFetching && !isLoading && (
+              <div className="flex items-center justify-center gap-2 py-2 bg-blue-50 border-b border-blue-100">
+                <span className="text-[11px] text-blue-500 font-medium">Loading page {currentPage}…</span>
+              </div>
+            )}
+
+            {bookings.length === 0 ? (
+              <div className="text-center py-16">
+                <Inbox size={38} className="mx-auto text-gray-300 mb-3" />
+                <p className="text-gray-500 text-sm font-medium">No Sessions Found</p>
+                <p className="text-xs text-gray-400 mt-1">No sessions to display</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-gray-200 bg-gray-50">
+                      {["S.No", "Topic", "Mentee", "Date", "Time Slot", "Amount", "Payment Status", "Transaction ID"].map((h) => (
+                        <th key={h} className="text-left px-6 py-3 text-[11px] font-semibold text-gray-500 uppercase whitespace-nowrap">{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {bookings.map((booking, idx) => {
+                      const paymentStatus = booking.paymentDetails?.paymentStatus;
+                      const globalIdx = rowStartIndex + idx;
+                      const isFree = booking.isFreeSession;
+
+                      return (
+                        <tr key={booking.bookingId || idx} className="border-b border-gray-100 hover:bg-gray-50">
+                          <td className="px-6 py-4 text-xs text-gray-400">{globalIdx}</td>
+                          <td className="px-6 py-4 text-xs text-[#1a1a2e] font-medium whitespace-nowrap">{booking.topic || "—"}</td>
+                          <td className="px-6 py-4 text-xs text-gray-600 whitespace-nowrap">{booking.menteeName || "—"}</td>
+                          <td className="px-6 py-4 text-xs text-gray-500 whitespace-nowrap">
+                            {booking.sessionDate
+                              ? new Date(booking.sessionDate).toLocaleDateString("en-IN", { year: "numeric", month: "short", day: "numeric" })
+                              : "—"}
+                          </td>
+                          <td className="px-6 py-4 text-xs text-gray-500 whitespace-nowrap">
+                            {booking.startTime && booking.endTime ? `${booking.startTime} – ${booking.endTime}` : "—"}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {isFree ? (
+                              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+                                <Gift size={10} strokeWidth={2.5} />
+                                Free
+                              </span>
+                            ) : (
+                              <span className="text-xs font-semibold" style={{ color: "#0098cc" }}>
+                                ₹{booking.paymentDetails?.paymentAmount?.toLocaleString("en-IN") ?? "—"}
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {isFree ? (
+                              <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+                                <Gift size={10} strokeWidth={2.5} />
+                                Free Session
+                              </span>
+                            ) : (
+                              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getPaymentStatusStyle(paymentStatus)}`}>
+                                {paymentStatus || "—"}
+                              </span>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-xs text-gray-400">
+                            {booking.paymentDetails?.transactionId || "—"}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-6 py-4 border-t border-gray-200">
+                <p className="text-[11px] text-gray-400">
+                  Showing{" "}
+                  <span className="font-semibold text-gray-600">{rowStartIndex}–{Math.min(currentPage * rowsPerPage, totalBookings)}</span>
+                  {" "}of{" "}
+                  <span className="font-semibold text-gray-600">{totalBookings}</span> results
+                </p>
+                <div className="flex items-center gap-1">
+                  <button onClick={() => goTo(1)} disabled={currentPage === 1 || isFetching}
+                    className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-300 text-gray-400 hover:border-[#0098cc] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                    <ChevronsLeft size={13} strokeWidth={2} />
+                  </button>
+                  <button onClick={() => goTo(currentPage - 1)} disabled={currentPage === 1 || isFetching}
+                    className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-300 text-gray-400 hover:border-[#0098cc] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                    <ChevronLeft size={13} strokeWidth={2} />
+                  </button>
+                  {pageNumbers().map((p, i) =>
+                    p === "…" ? (
+                      <span key={`e-${i}`} className="w-7 h-7 flex items-center justify-center text-gray-300 text-xs">…</span>
+                    ) : (
+                      <button
+                        key={p}
+                        onClick={() => goTo(p)}
+                        disabled={isFetching}
+                        className="w-7 h-7 flex items-center justify-center rounded-lg text-xs font-semibold border transition-colors disabled:cursor-not-allowed"
+                        style={p === currentPage
+                          ? { backgroundColor: "#1a1a2e", color: "#ffffff", borderColor: "#1a1a2e" }
+                          : { backgroundColor: "#ffffff", color: "#6b7280", borderColor: "#d1d5db" }}
+                      >
+                        {p}
+                      </button>
+                    )
+                  )}
+                  <button onClick={() => goTo(currentPage + 1)} disabled={currentPage === totalPages || isFetching}
+                    className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-300 text-gray-400 hover:border-[#0098cc] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                    <ChevronRight size={13} strokeWidth={2} />
+                  </button>
+                  <button onClick={() => goTo(totalPages)} disabled={currentPage === totalPages || isFetching}
+                    className="w-7 h-7 flex items-center justify-center rounded-lg border border-gray-300 text-gray-400 hover:border-[#0098cc] disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                    <ChevronsRight size={13} strokeWidth={2} />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </>
@@ -668,4 +615,3 @@ const Myearnings = () => {
 };
 
 export default Myearnings;
-
