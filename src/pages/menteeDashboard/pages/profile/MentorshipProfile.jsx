@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
     Mail, X, Plus, Phone, Linkedin, Target, Heart, CheckCircle,
     Camera, Trash2, Circle, Edit, Loader2, AlertCircle, ChevronRight,
-    AlertTriangle, FileText, MapPin, Briefcase, GraduationCap, User
+    AlertTriangle, FileText, MapPin, Briefcase, GraduationCap, User,TagPill
 } from 'lucide-react';
 import {
     useManageUserProfileQuery,

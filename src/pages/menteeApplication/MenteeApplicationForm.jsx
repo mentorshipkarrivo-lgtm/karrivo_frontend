@@ -1169,8 +1169,8 @@ const MenteeApplicationForm = () => {
                                             <div className="flex flex-col items-center flex-1">
                                                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center font-bold transition-all
                                                     ${isCompleted ? 'bg-[#0098cc] text-white'
-                                                    : isCurrent ? 'bg-[#0098cc] text-white ring-2 ring-blue-200'
-                                                    : 'bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-white'}`}>
+                                                        : isCurrent ? 'bg-[#0098cc] text-white ring-2 ring-blue-200'
+                                                            : 'bg-gray-100 dark:bg-slate-700 text-gray-400 dark:text-white'}`}>
                                                     {isCompleted ? <Check size={18} strokeWidth={3} /> : <Icon size={18} />}
                                                 </div>
                                                 <div className={`text-xs font-semibold mt-1.5 ${isCurrent || isCompleted ? 'text-[#0098cc]' : 'text-gray-500 dark:text-white'}`}>
@@ -1252,11 +1252,10 @@ const MenteeApplicationForm = () => {
                                         <div className="md:col-span-2">
                                             {renderTextarea('Motivation Statement', 'motivationStatement', true, 'Tell us why you want a mentor and what you hope to achieve... (Min. 50 / Max. 1500 characters)', 4)}
                                             <div className="flex justify-end mt-1">
-                                                <span className={`text-xs font-medium ${
-                                                    formData.motivationStatement.length > 1500 ? 'text-red-500'
+                                                <span className={`text-xs font-medium ${formData.motivationStatement.length > 1500 ? 'text-red-500'
                                                     : formData.motivationStatement.length >= 1400 ? 'text-orange-400'
-                                                    : formData.motivationStatement.length >= 50 ? 'text-green-500'
-                                                    : 'text-gray-400 dark:text-white'}`}>
+                                                        : formData.motivationStatement.length >= 50 ? 'text-green-500'
+                                                            : 'text-gray-400 dark:text-white'}`}>
                                                     {formData.motivationStatement.length} / 1500
                                                 </span>
                                             </div>
