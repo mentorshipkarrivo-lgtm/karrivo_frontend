@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
     Mail, X, Plus, Phone, Linkedin, Target, Heart, CheckCircle,
     Camera, Trash2, Circle, Edit, Loader2, AlertCircle, ChevronRight,
-    AlertTriangle, FileText, MapPin, Briefcase, GraduationCap, User,TagPill
+    AlertTriangle, FileText, MapPin, Briefcase, GraduationCap, User
 } from 'lucide-react';
 import {
     useManageUserProfileQuery,
@@ -155,6 +155,35 @@ const SkillTagPill = ({ label, onRemove }) => {
                     marginLeft: '2px', lineHeight: 1, fontSize: '14px',
                     background: 'none', border: 'none', cursor: 'pointer',
                     color: "#1a1a2e", opacity: 0.7, padding: 0,
+                }}>×</button>
+            )}
+        </span>
+    );
+};
+
+
+const TagPill = ({ label, onRemove, variant = 'default' }) => {
+    const variantStyles = {
+        default: { color: COLORS.primary, background: COLORS.mutedBg, border: `1px solid ${COLORS.border}` },
+        indigo: { color: '#4f46e5', background: '#eef2ff', border: '1px solid #c7d2fe' },
+        green: { color: '#16a34a', background: '#f0fdf4', border: '1px solid #bbf7d0' },
+        cyan: { color: COLORS.accent, background: COLORS.accentLight, border: `1px solid ${COLORS.accentBorder}` },
+    };
+
+    const style = variantStyles[variant] || variantStyles.default;
+
+    return (
+        <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: '6px',
+            padding: '4px 10px', fontSize: '12px', fontWeight: 600,
+            borderRadius: '20px', ...style,
+        }}>
+            {label}
+            {onRemove && (
+                <button onClick={onRemove} style={{
+                    marginLeft: '2px', lineHeight: 1, fontSize: '14px',
+                    background: 'none', border: 'none', cursor: 'pointer',
+                    color: 'inherit', opacity: 0.7, padding: 0,
                 }}>×</button>
             )}
         </span>
