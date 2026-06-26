@@ -306,8 +306,20 @@ const InlineBookingSection = ({ mentor, rawAvailability, onClose, onSlotConfirme
   }, [rawAvailability]);
 
   const availableDatesSet = useMemo(() => new Set(Object.keys(grouped)), [grouped]);
-  const slotsForSelectedDate = useMemo(() => selectedDate ? grouped[selectedDate] || [] : [], [selectedDate, grouped]);
+  const slotsForSelectedDate = useMemo(() => {
+    if (!selectedDate) return [];
+    const slots = grouped[selectedDate] || [];
+    const todayYMD = toYMD(new Date());
+    if (selectedDate !== todayYMD) return slots;
 
+    const now = new Date();
+    return slots.filter(slot => {
+      const [h, m] = slot.startTime.split(":").map(Number);
+      const slotTime = new Date();
+      slotTime.setHours(h, m, 0, 0);
+      return slotTime > now;
+    });
+  }, [selectedDate, grouped])
   useEffect(() => {
     if (availableDatesSet.size > 0 && !selectedDate)
       setSelectedDate(Array.from(availableDatesSet).sort()[0]);
@@ -371,7 +383,9 @@ const InlineBookingSection = ({ mentor, rawAvailability, onClose, onSlotConfirme
             {!selectedDate ? (
               <div className="flex flex-col items-center justify-center h-44 text-center">
                 <Calendar size={36} className="text-gray-200 mb-3" />
-                <p className="text-sm sm:text-base text-gray-400" style={{ fontFamily: "Cambria" }}>Select a date from the calendar</p>
+                <p className="text-sm sm:text-base text-gray-400" style={{ fontFamily: "Cambria" }}>
+                  {availableDatesSet.size === 0 ? "No details available" : "Select a date from the calendar"}
+                </p>
               </div>
             ) : slotsForSelectedDate.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-44 text-center">
@@ -393,13 +407,15 @@ const InlineBookingSection = ({ mentor, rawAvailability, onClose, onSlotConfirme
                     return (
                       <button
                         key={slot._id}
-                        onClick={() => setSelectedSlot(chosen ? null : slot)}
-                        className="py-2.5 sm:py-3 px-2 sm:px-2.5 rounded-lg border text-xs sm:text-sm font-bold transition-all duration-150 relative hover:scale-[1.03] active:scale-95 min-w-0 truncate"
+                        onClick={() => !slot.isBooked && setSelectedSlot(chosen ? null : slot)}
+                        disabled={slot.isBooked}
+                        className="py-2.5 sm:py-3 px-2 sm:px-2.5 rounded-lg border text-xs sm:text-sm font-bold transition-all duration-150 relative min-w-0 truncate disabled:cursor-not-allowed"
                         style={{
                           background: chosen ? PRIMARY : WHITE,
                           color: chosen ? WHITE : slot.isBooked ? "#9ca3af" : ACCENT,
                           borderColor: chosen ? PRIMARY : slot.isBooked ? "#e5e7eb" : ACCENT,
                           fontFamily: "Cambria",
+                          opacity: slot.isBooked ? 0.5 : 1,
                         }}
                       >
                         {slot.startTime}

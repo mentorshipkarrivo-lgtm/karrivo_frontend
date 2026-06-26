@@ -253,7 +253,7 @@ function SessionModal({ session, menteeId, onClose, onSave }) {
         top: "50%", left: "50%",
         transform: "translate(-50%, -50%)",
         zIndex: 101,
-        width: "min(480px, calc(100vw - 20px))",
+        width: "60%",
         maxHeight: "calc(100vh - 48px)",
         background: C.white,
         borderRadius: 14,

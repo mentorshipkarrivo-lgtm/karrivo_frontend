@@ -2,7 +2,7 @@
 
 
 import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { X, User, Users, Mail, Phone, CalendarDays, CalendarX2 } from "lucide-react";
+import { X, User, Users, Mail, Phone, CalendarDays, CalendarX2, BookOpen, ClipboardList, CheckCircle2, CheckCheck, ExternalLink, MessageSquare, Link2 } from "lucide-react";
 import {
   useGetSessionsByMentorQuery,
   useGetSubscribersByMentorQuery,
@@ -220,17 +220,422 @@ function ModalSection({ title, children, top, isMobile }) {
   );
 }
 
-// ── Session Edit Modal ────────────────────────────────────────────────────────
+
+// ── Lock helper ───────────────────────────────────────────────────────────────
+function isSessionLocked(session) {
+  if (session.status !== "completed") return false;
+  const completedAt = session.updatedAt || session.session_date;
+  if (!completedAt) return false;
+  return Date.now() - new Date(completedAt).getTime() > 24 * 60 * 60 * 1000;
+}
+
+
+// ── Session Edit Modal (tabbed) ───────────────────────────────────────────────
+// function SessionModal({ session, onClose, onSave }) {
+//   const [saving, setSaving] = useState(false);
+//   const [error, setError] = useState(null);
+//   const [tab, setTab] = useState("details");
+//   const isMobile = window.innerWidth < 768;
+
+//   const [form, setForm] = useState({
+//     session_title: session.session_title || "",
+//     session_date: session.session_date ? new Date(session.session_date).toISOString().slice(0, 16) : "",
+//     meeting_link: session.meeting_link || "",
+//     meeting_description: session.meeting_description || "",
+//     tasks_given: session.tasks_given || "",
+//     task_completed: session.task_completed || false,
+//     mentor_feedback: session.mentor_feedback || "",
+//     status: session.status || "pending",
+//   });
+
+//   useEffect(() => {
+//     document.body.style.overflow = "hidden";
+//     return () => { document.body.style.overflow = ""; };
+//   }, []);
+
+//   useEffect(() => {
+//     const fn = (e) => { if (e.key === "Escape") onClose(); };
+//     document.addEventListener("keydown", fn);
+//     return () => document.removeEventListener("keydown", fn);
+//   }, [onClose]);
+
+//   const handleChange = useCallback((key) => (e) => {
+//     setForm((prev) => ({
+//       ...prev,
+//       [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value,
+//     }));
+//   }, []);
+
+//   const handleSave = useCallback(async () => {
+//     setSaving(true); setError(null);
+//     const ok = await onSave(session._id, form);
+//     setSaving(false);
+//     if (ok) { onClose(); }
+//     else { setError("Failed to save. Please try again."); }
+//   }, [form, onSave, session._id, onClose]);
+
+//   const FONT = "'DM Sans','Segoe UI',sans-serif";
+//   const C = {
+//     dark: "#1a1a2e", blue: "#0091c3", white: "#ffffff",
+//     border: "#e2e8f0", muted: "#94a3b8", text: "#1a1a2e", sub: "#475569",
+//   };
+
+//   const inp = {
+//     width: "100%", padding: "8px 11px", borderRadius: 8,
+//     border: `1px solid ${C.border}`, background: C.white,
+//     fontSize: 12, color: C.text, outline: "none",
+//     fontFamily: FONT, transition: "border-color 0.15s",
+//   };
+//   const ro = { ...inp, background: "#f8fafc", color: C.muted, cursor: "default" };
+
+//   const TABS = [
+//     { id: "details", label: "Details", Icon: BookOpen },
+//     { id: "tasks", label: "Tasks", Icon: ClipboardList },
+//     { id: "feedback", label: "Feedback", Icon: MessageSquare },
+//   ];
+
+//   return (
+//     <>
+//       {/* Backdrop */}
+//       <div
+//         onClick={onClose}
+//         style={{
+//           position: "fixed", inset: 0, zIndex: 1000,
+//           background: "rgba(15,23,42,0.45)",
+//           backdropFilter: "blur(4px)",
+//           animation: "fadeIn 0.15s ease",
+//         }}
+//       />
+
+//       {/* Modal */}
+//       <div style={{
+//         position: "fixed",
+//         top: "50%", left: "50%",
+//         transform: "translate(-50%,-50%)",
+//         zIndex: 1001,
+//         width: isMobile ? "70%" : "60%",
+//         maxHeight: "calc(100vh - 48px)",
+//         background: C.white,
+//         borderRadius: 14,
+//         border: `1px solid ${C.border}`,
+//         boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
+//         display: "flex", flexDirection: "column",
+//         overflow: "hidden",
+//         animation: "slideUp 0.2s ease",
+//         fontFamily: FONT,
+//       }}>
+
+//         {/* Header + Tabs */}
+//         <div style={{ background: C.dark, padding: "14px 18px 0", flexShrink: 0 }}>
+//           <div style={{
+//             display: "flex", alignItems: "center",
+//             justifyContent: "space-between", marginBottom: 12,
+//           }}>
+//             <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1, minWidth: 0 }}>
+//               <div style={{
+//                 width: 34, height: 34, borderRadius: 8,
+//                 background: "rgba(255,255,255,0.12)", color: C.white,
+//                 fontSize: 12, fontWeight: 700, fontFamily: FONT,
+//                 display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+//               }}>
+//                 {String(session.session_number).padStart(2, "0")}
+//               </div>
+//               <div style={{ flex: 1, minWidth: 0 }}>
+//                 <h2 style={{
+//                   fontSize: 14, fontWeight: 700, color: C.white,
+//                   margin: 0, fontFamily: FONT,
+//                   overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+//                 }}>
+//                   {form.session_title || `Session ${session.session_number}`}
+//                 </h2>
+//               </div>
+//             </div>
+//             <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+//               <span style={{
+//                 fontSize: 11, fontWeight: 600, fontFamily: FONT,
+//                 color: ({ pending: "#60c8e8", completed: "#4ade80", cancelled: "#9ca3af", missed: "#fbbf24" })[form.status] || "#9ca3af",
+//               }}>
+//                 {form.status ? form.status.charAt(0).toUpperCase() + form.status.slice(1) : "—"}
+//               </span>
+//               <button onClick={onClose} style={{
+//                 width: 28, height: 28, borderRadius: 6,
+//                 background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)",
+//                 color: "rgba(255,255,255,0.7)", display: "flex",
+//                 alignItems: "center", justifyContent: "center", cursor: "pointer",
+//               }}><X size={12} /></button>
+//             </div>
+//           </div>
+
+//           {/* Tabs */}
+//           <div style={{ display: "flex" }}>
+//             {TABS.map(({ id, label, Icon }) => (
+//               <button key={id} onClick={() => setTab(id)} style={{
+//                 display: "flex", alignItems: "center", gap: 5,
+//                 padding: "8px 14px", fontSize: 11, fontWeight: 700,
+//                 fontFamily: FONT, letterSpacing: "0.04em",
+//                 border: "none",
+//                 borderBottom: tab === id ? `2px solid ${C.blue}` : "2px solid transparent",
+//                 marginBottom: -1,
+//                 background: "transparent",
+//                 color: tab === id ? C.blue : "rgba(255,255,255,0.45)",
+//                 cursor: "pointer", transition: "color 0.15s",
+//               }}>
+//                 <Icon size={10} />{label}
+//               </button>
+//             ))}
+//           </div>
+//         </div>
+
+//         {/* Body */}
+//         <div style={{ flex: 1, overflowY: "auto", padding: "16px 18px" }}>
+
+//           {/* ── DETAILS ── */}
+//           {tab === "details" && (
+//             <>
+//               {/* Session Info */}
+//               <div style={{ marginBottom: 16 }}>
+//                 <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
+//                   <BookOpen size={12} style={{ color: C.blue }} />
+//                   <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>SESSION INFO</span>
+//                 </div>
+//                 <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+
+//                   <div>
+//                     <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Title</label>
+//                     <input
+//                       style={inp} value={form.session_title}
+//                       onChange={handleChange("session_title")}
+//                       placeholder="Introduction & Goal Setting"
+//                       onFocus={(e) => e.target.style.borderColor = C.blue}
+//                       onBlur={(e) => e.target.style.borderColor = C.border}
+//                     />
+//                   </div>
+
+//                   <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 11 }}>
+//                     <div>
+//                       <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Date & Time</label>
+//                       <input
+//                         type="datetime-local" style={inp}
+//                         value={form.session_date} onChange={handleChange("session_date")}
+//                         onFocus={(e) => e.target.style.borderColor = C.blue}
+//                         onBlur={(e) => e.target.style.borderColor = C.border}
+//                       />
+//                     </div>
+//                     <div>
+//                       <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Status</label>
+//                       <select
+//                         style={inp} value={form.status} onChange={handleChange("status")}
+//                         onFocus={(e) => e.target.style.borderColor = C.blue}
+//                         onBlur={(e) => e.target.style.borderColor = C.border}
+//                       >
+//                         <option value="pending">Pending</option>
+//                         <option value="completed">Completed</option>
+//                         <option value="cancelled">Cancelled</option>
+//                         <option value="missed">Missed</option>
+//                       </select>
+//                     </div>
+//                   </div>
+
+//                   <div>
+//                     <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Meeting Link</label>
+//                     <div style={{ position: "relative" }}>
+//                       <Link2 size={11} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: C.muted, pointerEvents: "none" }} />
+//                       <input
+//                         style={{ ...inp, paddingLeft: 30 }} value={form.meeting_link}
+//                         onChange={handleChange("meeting_link")}
+//                         placeholder="https://meet.google.com/…"
+//                         onFocus={(e) => e.target.style.borderColor = C.blue}
+//                         onBlur={(e) => e.target.style.borderColor = C.border}
+//                       />
+//                     </div>
+//                   </div>
+
+//                   <div>
+//                     <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Agenda / Description</label>
+//                     <textarea
+//                       rows={3} style={{ ...inp, resize: "vertical" }}
+//                       value={form.meeting_description} onChange={handleChange("meeting_description")}
+//                       placeholder="Topics to discuss…"
+//                       onFocus={(e) => e.target.style.borderColor = C.blue}
+//                       onBlur={(e) => e.target.style.borderColor = C.border}
+//                     />
+//                   </div>
+
+//                 </div>
+//               </div>
+//             </>
+//           )}
+
+//           {/* ── TASKS ── */}
+//           {tab === "tasks" && (
+//             <>
+//               {/* Assign Task */}
+//               <div style={{ marginBottom: 16 }}>
+//                 <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
+//                   <ClipboardList size={12} style={{ color: C.blue }} />
+//                   <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>ASSIGN TASK</span>
+//                 </div>
+//                 <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+//                   <div>
+//                     <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Task for Mentee</label>
+//                     <textarea
+//                       rows={4} style={{ ...inp, resize: "vertical" }}
+//                       value={form.tasks_given} onChange={handleChange("tasks_given")}
+//                       placeholder="Describe the task to assign…"
+//                       onFocus={(e) => e.target.style.borderColor = C.blue}
+//                       onBlur={(e) => e.target.style.borderColor = C.border}
+//                     />
+//                   </div>
+//                 </div>
+//               </div>
+
+//               {/* Task Completion */}
+//               <div style={{ marginBottom: 16 }}>
+//                 <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
+//                   <CheckCircle2 size={12} style={{ color: C.blue }} />
+//                   <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>TASK COMPLETION</span>
+//                 </div>
+//                 <label style={{
+//                   display: "flex", alignItems: "center", gap: 10,
+//                   padding: "10px 12px",
+//                   border: `1px solid ${form.task_completed ? "#bbf7d0" : C.border}`,
+//                   borderRadius: 8,
+//                   background: form.task_completed ? "#f0fdf4" : "#f8fafc",
+//                   cursor: "pointer", transition: "all 0.2s",
+//                 }}>
+//                   <input
+//                     type="checkbox" checked={form.task_completed}
+//                     onChange={handleChange("task_completed")}
+//                     style={{ width: 14, height: 14, accentColor: "#16a34a", cursor: "pointer" }}
+//                   />
+//                   <span style={{ fontSize: 12, fontFamily: FONT, fontWeight: 600, color: form.task_completed ? "#16a34a" : C.sub }}>
+//                     {form.task_completed ? "Task marked as completed ✓" : "Mark task as completed"}
+//                   </span>
+//                 </label>
+
+//                 {/* Mentee submission link */}
+//                 {session.task_submission && (
+//                   <div style={{
+//                     display:"flex", alignItems:"center", gap:7, marginTop:10,
+//                     padding:"8px 11px", background:"#f0fdf4",
+//                     border:"1px solid #bbf7d0", borderRadius:8,
+//                   }}>
+//                     <CheckCheck size={12} style={{ color:"#16a34a", flexShrink:0 }} />
+
+//                     <a  href={session.task_submission} target="_blank" rel="noopener noreferrer"
+//                       style={{ fontSize:11, color:"#15803d", flex:1, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", textDecoration:"none", fontFamily:FONT }}
+//                     >{session.task_submission}</a>
+//                     <ExternalLink size={10} style={{ color:"#16a34a", flexShrink:0 }} />
+//                   </div>
+//                 )}
+//             </div>
+//         </>
+//           )}
+
+//         {/* ── FEEDBACK ── */}
+//         {tab === "feedback" && (
+//           <>
+//             {/* Mentor notes */}
+//             <div style={{ marginBottom: 16 }}>
+//               <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
+//                 <MessageSquare size={12} style={{ color: C.blue }} />
+//                 <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>YOUR NOTES</span>
+//               </div>
+//               <div>
+//                 <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Session Summary / Feedback</label>
+//                 <textarea
+//                   rows={4} style={{ ...inp, resize: "vertical" }}
+//                   value={form.mentor_feedback} onChange={handleChange("mentor_feedback")}
+//                   placeholder="Write session summary, guidance, notes…"
+//                   onFocus={(e) => e.target.style.borderColor = C.blue}
+//                   onBlur={(e) => e.target.style.borderColor = C.border}
+//                 />
+//               </div>
+//             </div>
+
+//             {/* Mentee feedback (read-only) */}
+//             {(session.mentee_feedback || session.mentee_rating > 0) && (
+//               <div style={{ marginBottom: 16 }}>
+//                 <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
+//                   <BookOpen size={12} style={{ color: C.blue }} />
+//                   <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>MENTEE FEEDBACK</span>
+//                 </div>
+//                 <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+//                   {session.mentee_feedback && (
+//                     <div>
+//                       <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Mentee Notes</label>
+//                       <textarea rows={3} style={{ ...ro, resize: "vertical" }} readOnly value={session.mentee_feedback} />
+//                     </div>
+//                   )}
+//                   {session.mentee_rating > 0 && (
+//                     <div>
+//                       <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Mentee Rating</label>
+//                       <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "6px 0" }}>
+//                         {[1, 2, 3, 4, 5].map(s => (
+//                           <span key={s} style={{ fontSize: 13, color: s <= session.mentee_rating ? "#f59e0b" : C.border }}>★</span>
+//                         ))}
+//                         <span style={{ fontSize: 11, fontWeight: 600, color: C.muted, marginLeft: 4, fontFamily: FONT }}>
+//                           {session.mentee_rating}/5
+//                         </span>
+//                       </div>
+//                     </div>
+//                   )}
+//                 </div>
+//               </div>
+//             )}
+//           </>
+//         )}
+
+//       </div>
+
+//       {/* Footer */}
+//       <div style={{
+//         display: "flex", justifyContent: "space-between", alignItems: "center",
+//         gap: 8, padding: "12px 18px",
+//         borderTop: `1px solid ${C.border}`,
+//         background: "#fafbfc", flexShrink: 0,
+//       }}>
+//         <div>
+//           {error && <span style={{ fontSize: 12, fontWeight: 600, color: "#dc2626", fontFamily: FONT }}>✕ {error}</span>}
+//         </div>
+//         <div style={{ display: "flex", gap: 7 }}>
+//           <button onClick={onClose} style={{
+//             padding: "7px 16px", borderRadius: 7,
+//             fontSize: 12, fontWeight: 600, fontFamily: FONT,
+//             background: C.white, border: `1px solid ${C.border}`,
+//             color: C.sub, cursor: "pointer",
+//           }}>Cancel</button>
+//           <button onClick={handleSave} disabled={saving} style={{
+//             display: "flex", alignItems: "center", gap: 6,
+//             padding: "7px 18px", borderRadius: 7,
+//             fontSize: 12, fontWeight: 700, fontFamily: FONT,
+//             background: saving ? C.muted : C.dark,
+//             color: C.white, border: "none",
+//             cursor: saving ? "not-allowed" : "pointer",
+//             transition: "background 0.15s",
+//           }}>
+//             {saving ? "Saving…" : "Save Changes"}
+//           </button>
+//         </div>
+//       </div>
+//     </div >
+//     </>
+//   );
+// }
+
 
 function SessionModal({ session, onClose, onSave }) {
+  const locked = isSessionLocked(session);  // ← ADD THIS
   const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
   const [error, setError] = useState(null);
+  const [tab, setTab] = useState("details");
   const isMobile = window.innerWidth < 768;
 
   const [form, setForm] = useState({
     session_title: session.session_title || "",
-    session_date: session.session_date ? new Date(session.session_date).toISOString().slice(0, 16) : "",
+    session_date: session.session_date
+      ? new Date(session.session_date).toISOString().slice(0, 16)
+      : "",
     meeting_link: session.meeting_link || "",
     meeting_description: session.meeting_description || "",
     tasks_given: session.tasks_given || "",
@@ -245,147 +650,331 @@ function SessionModal({ session, onClose, onSave }) {
   }, []);
 
   useEffect(() => {
-    const fn = e => { if (e.key === "Escape") onClose(); };
+    const fn = (e) => { if (e.key === "Escape") onClose(); };
     document.addEventListener("keydown", fn);
     return () => document.removeEventListener("keydown", fn);
   }, [onClose]);
 
   const handleChange = useCallback((key) => (e) => {
-    setForm(prev => ({ ...prev, [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value }));
-  }, []);
+    if (locked) return;  // ← block changes when locked
+    setForm((prev) => ({
+      ...prev,
+      [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value,
+    }));
+  }, [locked]);
 
   const handleSave = useCallback(async () => {
+    if (locked) return;
     setSaving(true); setError(null);
     const ok = await onSave(session._id, form);
     setSaving(false);
-    if (ok) {
-      onClose(); // ← close immediately on success
-    } else {
-      setError("Failed to save. Please try again.");
-    }
-  }, [form, onSave, session._id, onClose]);
+    if (ok) { onClose(); }
+    else { setError("Failed to save. Please try again."); }
+  }, [form, onSave, session._id, onClose, locked]);
 
-  const inp = {
-    width: "100%", padding: "11px 13px", borderRadius: 10,
-    border: "1px solid #dbe3ea", background: "#fff",
-    fontSize: 14, color: "#1a1a2e", outline: "none", boxSizing: "border-box",
+  const FONT = "'DM Sans','Segoe UI',sans-serif";
+  const C = {
+    dark: "#1a1a2e", blue: "#0091c3", white: "#ffffff",
+    border: "#e2e8f0", muted: "#94a3b8", text: "#1a1a2e", sub: "#475569",
   };
-  const ro = { ...inp, background: "#f8fafc", border: "1px solid #e5e7eb", color: "#475569", cursor: "not-allowed" };
+
+  // ← inputs become read-only style when locked
+  const inp = {
+    width: "100%", padding: "8px 11px", borderRadius: 8,
+    border: `1px solid ${locked ? "#f1f5f9" : C.border}`,
+    background: locked ? "#f8fafc" : C.white,
+    fontSize: 12, color: locked ? C.muted : C.text,
+    outline: "none", fontFamily: FONT,
+    cursor: locked ? "default" : "text",
+    pointerEvents: locked ? "none" : "auto",
+  };
+  const ro = { ...inp, background: "#f8fafc", color: C.muted, cursor: "default", pointerEvents: "none" };
+
+  const TABS = [
+    { id: "details", label: "Details", Icon: BookOpen },
+    { id: "tasks", label: "Tasks", Icon: ClipboardList },
+    { id: "feedback", label: "Feedback", Icon: MessageSquare },
+  ];
 
   return (
-    <div
-      style={{ position: "fixed", inset: 0, zIndex: 1000, display: "flex", alignItems: "center", justifyContent: "center", padding: 14, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(4px)" }}
-      onClick={e => { if (e.target === e.currentTarget) onClose(); }}
-    >
+    <>
+      <div
+        onClick={onClose}
+        style={{
+          position: "fixed", inset: 0, zIndex: 1000,
+          background: "rgba(15,23,42,0.45)",
+          backdropFilter: "blur(4px)",
+        }}
+      />
       <div style={{
-        width: "100%", maxWidth: 840, maxHeight: "95vh",
-        background: "#fff", border: "1px solid #e5e7eb",
-        borderRadius: isMobile ? 16 : 22, overflow: "hidden",
+        position: "fixed", top: "50%", left: "50%",
+        transform: "translate(-50%,-50%)",
+        zIndex: 1001,
+        width: isMobile ? "70%" : "60%",
+        maxHeight: "calc(100vh - 48px)",
+        background: C.white,
+        borderRadius: 14,
+        border: `1px solid ${C.border}`,
+        boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
         display: "flex", flexDirection: "column",
-        boxShadow: "0 20px 70px rgba(0,0,0,0.14)",
+        overflow: "hidden",
+        fontFamily: FONT,
       }}>
-        {/* Header */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12, padding: "16px 20px", borderBottom: "1px solid #f1f5f9" }}>
-          <div style={{ width: 40, height: 40, borderRadius: 10, background: "#1a1a2e", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 14, flexShrink: 0 }}>
-            {session.session_number}
+
+        {/* Header + Tabs */}
+        <div style={{ background: C.dark, padding: "14px 18px 0", flexShrink: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1, minWidth: 0 }}>
+              <div style={{
+                width: 34, height: 34, borderRadius: 8,
+                background: "rgba(255,255,255,0.12)", color: C.white,
+                fontSize: 12, fontWeight: 700, fontFamily: FONT,
+                display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+              }}>
+                {String(session.session_number).padStart(2, "0")}
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <h2 style={{
+                  fontSize: 14, fontWeight: 700, color: C.white,
+                  margin: 0, fontFamily: FONT,
+                  overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                }}>
+                  {form.session_title || `Session ${session.session_number}`}
+                </h2>
+              </div>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+              {/* ← lock indicator */}
+              {locked && (
+                <span style={{ fontSize: 11, color: "#fbbf24", fontWeight: 600, display: "flex", alignItems: "center", gap: 4 }}>
+                  🔒 Locked
+                </span>
+              )}
+              <span style={{
+                fontSize: 11, fontWeight: 600, fontFamily: FONT,
+                color: ({ pending: "#60c8e8", completed: "#4ade80", cancelled: "#9ca3af", missed: "#fbbf24" })[form.status] || "#9ca3af",
+              }}>
+                {form.status ? form.status.charAt(0).toUpperCase() + form.status.slice(1) : "—"}
+              </span>
+              <button onClick={onClose} style={{
+                width: 28, height: 28, borderRadius: 6,
+                background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)",
+                color: "rgba(255,255,255,0.7)", display: "flex",
+                alignItems: "center", justifyContent: "center", cursor: "pointer",
+              }}><X size={12} /></button>
+            </div>
           </div>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <p style={{ margin: 0, fontWeight: 700, color: "#0c9dce", fontSize: isMobile ? 14 : 17, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-              {form.session_title || `Session ${session.session_number}`}
-            </p>
-            <p style={{ margin: "3px 0 0", color: "#94a3b8", fontSize: 12 }}>
-              {form.session_date ? new Date(form.session_date).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", year: "numeric" }) : "No date set"}
-            </p>
+
+          {/* Tabs */}
+          <div style={{ display: "flex" }}>
+            {TABS.map(({ id, label, Icon }) => (
+              <button key={id} onClick={() => setTab(id)} style={{
+                display: "flex", alignItems: "center", gap: 5,
+                padding: "8px 14px", fontSize: 11, fontWeight: 700,
+                fontFamily: FONT, letterSpacing: "0.04em",
+                border: "none",
+                borderBottom: tab === id ? `2px solid ${C.blue}` : "2px solid transparent",
+                marginBottom: -1,
+                background: "transparent",
+                color: tab === id ? C.blue : "rgba(255,255,255,0.45)",
+                cursor: "pointer",
+              }}>
+                <Icon size={10} />{label}
+              </button>
+            ))}
           </div>
-          <button onClick={onClose} style={{ width: 34, height: 34, borderRadius: 9, border: "1px solid #e5e7eb", background: "#fff", color: "#64748b", fontSize: 15, cursor: "pointer" }}>✕</button>
         </div>
 
         {/* Body */}
-        <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: 24, padding: isMobile ? 14 : 22 }}>
-          <ModalSection title="Session Details" isMobile={isMobile}>
-            <ModalField label="Session Title" span2 isMobile={isMobile}>
-              <input style={inp} value={form.session_title} onChange={handleChange("session_title")} placeholder="Introduction & Goal Setting" />
-            </ModalField>
-            <ModalField label="Date & Time" isMobile={isMobile}>
-              <input type="datetime-local" style={inp} value={form.session_date} onChange={handleChange("session_date")} />
-            </ModalField>
-            <ModalField label="Status" isMobile={isMobile}>
-              <select style={inp} value={form.status} onChange={handleChange("status")}>
-                <option value="pending">Pending</option>
-                <option value="completed">Completed</option>
-                <option value="cancelled">Cancelled</option>
-                <option value="missed">Missed</option>
-              </select>
-            </ModalField>
-            <ModalField label="Meeting Link" span2 isMobile={isMobile}>
-              <input style={inp} value={form.meeting_link} onChange={handleChange("meeting_link")} placeholder="https://meet.google.com" />
-            </ModalField>
-            <ModalField label="Agenda / Description" span2 isMobile={isMobile}>
-              <textarea rows={4} style={{ ...inp, resize: "vertical", minHeight: 100 }} value={form.meeting_description} onChange={handleChange("meeting_description")} placeholder="Topics to discuss..." />
-            </ModalField>
-          </ModalSection>
+        <div style={{ flex: 1, overflowY: "auto", padding: "16px 18px" }}>
 
-          <ModalSection title="Tasks" top isMobile={isMobile}>
-            <ModalField label="Assign Tasks" span2 isMobile={isMobile}>
-              <textarea rows={4} style={{ ...inp, resize: "vertical", minHeight: 110 }} value={form.tasks_given} onChange={handleChange("tasks_given")} placeholder="Assign tasks for mentee..." />
-            </ModalField>
-            <ModalField label="Task Completion" span2 isMobile={isMobile}>
-              <label style={{ display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap", padding: "11px 13px", border: "1px solid #dbe3ea", borderRadius: 10, background: "#fff", cursor: "pointer" }}>
-                <input type="checkbox" checked={form.task_completed} onChange={handleChange("task_completed")} style={{ width: 17, height: 17, accentColor: "#0c9dce" }} />
-                <span style={{ color: "#475569", fontSize: 14, fontWeight: 500 }}>Mark task as completed</span>
-                {session.task_submission && (
-                  <a href={session.task_submission} target="_blank" rel="noreferrer"
-                    style={{ marginLeft: "auto", fontSize: 11, color: "#0c9dce", fontWeight: 700, textDecoration: "none", padding: "3px 10px", border: "1px solid #0c9dce", borderRadius: 7 }}>
-                    View Submission →
-                  </a>
-                )}
-              </label>
-            </ModalField>
-          </ModalSection>
-
-          <ModalSection title="Feedback" top isMobile={isMobile}>
-            <ModalField label="Mentor Notes / Feedback" span2 isMobile={isMobile}>
-              <textarea rows={5} style={{ ...inp, resize: "vertical", minHeight: 130 }} value={form.mentor_feedback} onChange={handleChange("mentor_feedback")} placeholder="Write session summary, guidance, notes..." />
-            </ModalField>
-            <div style={{ width: "100%", minWidth: 0 }}>
-              <label style={{ display: "block", fontSize: 11, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 7 }}>
-                Mentee Feedback (read-only)
-              </label>
-              <textarea rows={5} readOnly style={{ ...ro, resize: "vertical", minHeight: 130 }} value={session.mentee_feedback || "No mentee feedback submitted yet."} />
-            </div>
-          </ModalSection>
-
-          <ModalSection title="Ratings" top isMobile={isMobile}>
-            {[["Mentee Rating", session.mentee_rating]].map(([label, val]) => (
-              <div key={label}>
-                <label style={{ display: "block", fontSize: 11, fontWeight: 800, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 7 }}>{label}</label>
-                <div style={{ padding: "13px 15px", borderRadius: 10, background: "#f8fafc", border: "1px solid #e5e7eb", display: "flex", alignItems: "center", gap: 10 }}>
-                  <Stars value={val || 0} />
-                  <span style={{ fontSize: 13, fontWeight: 700, color: "#64748b" }}>{val || 0}/5</span>
+          {/* ── DETAILS ── */}
+          {tab === "details" && (
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
+                <BookOpen size={12} style={{ color: C.blue }} />
+                <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>SESSION INFO</span>
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+                <div>
+                  <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Title</label>
+                  <input style={inp} value={form.session_title} onChange={handleChange("session_title")} placeholder="Introduction & Goal Setting" readOnly={locked} />
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 11 }}>
+                  <div>
+                    <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Date & Time</label>
+                    <input type="datetime-local" style={inp} value={form.session_date} onChange={handleChange("session_date")} readOnly={locked} />
+                  </div>
+                  <div>
+                    <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Status</label>
+                    <select style={inp} value={form.status} onChange={handleChange("status")} disabled={locked}>
+                      <option value="pending">Pending</option>
+                      <option value="completed">Completed</option>
+                      <option value="cancelled">Cancelled</option>
+                      <option value="missed">Missed</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Meeting Link</label>
+                  <div style={{ position: "relative" }}>
+                    <Link2 size={11} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: C.muted, pointerEvents: "none" }} />
+                    <input style={{ ...inp, paddingLeft: 30 }} value={form.meeting_link} onChange={handleChange("meeting_link")} placeholder="https://meet.google.com/…" readOnly={locked} />
+                  </div>
+                </div>
+                <div>
+                  <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Agenda / Description</label>
+                  <textarea rows={3} style={{ ...inp, resize: locked ? "none" : "vertical" }} value={form.meeting_description} onChange={handleChange("meeting_description")} placeholder="Topics to discuss…" readOnly={locked} />
                 </div>
               </div>
-            ))}
-          </ModalSection>
+            </div>
+          )}
+
+          {/* ── TASKS ── */}
+          {tab === "tasks" && (
+            <>
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
+                  <ClipboardList size={12} style={{ color: C.blue }} />
+                  <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>ASSIGN TASK</span>
+                </div>
+                <div>
+                  <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Task for Mentee</label>
+                  <textarea rows={4} style={{ ...inp, resize: locked ? "none" : "vertical" }} value={form.tasks_given} onChange={handleChange("tasks_given")} placeholder="Describe the task to assign…" readOnly={locked} />
+                </div>
+              </div>
+
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
+                  <CheckCircle2 size={12} style={{ color: C.blue }} />
+                  <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>TASK COMPLETION</span>
+                </div>
+                <label style={{
+                  display: "flex", alignItems: "center", gap: 10,
+                  padding: "10px 12px",
+                  border: `1px solid ${form.task_completed ? "#bbf7d0" : C.border}`,
+                  borderRadius: 8,
+                  background: form.task_completed ? "#f0fdf4" : "#f8fafc",
+                  cursor: locked ? "default" : "pointer",
+                  opacity: locked ? 0.7 : 1,
+                }}>
+                  <input
+                    type="checkbox" checked={form.task_completed}
+                    onChange={handleChange("task_completed")}
+                    disabled={locked}
+                    style={{ width: 14, height: 14, accentColor: "#16a34a", cursor: locked ? "default" : "pointer" }}
+                  />
+                  <span style={{ fontSize: 12, fontFamily: FONT, fontWeight: 600, color: form.task_completed ? "#16a34a" : C.sub }}>
+                    {form.task_completed ? "Task marked as completed ✓" : "Mark task as completed"}
+                  </span>
+                </label>
+
+                {session.task_submission && (
+                  <div style={{
+                    display: "flex", alignItems: "center", gap: 7, marginTop: 10,
+                    padding: "8px 11px", background: "#f0fdf4",
+                    border: "1px solid #bbf7d0", borderRadius: 8,
+                  }}>
+                    <CheckCheck size={12} style={{ color: "#16a34a", flexShrink: 0 }} />
+                    <a href={session.task_submission} target="_blank" rel="noopener noreferrer"
+                      style={{ fontSize: 11, color: "#15803d", flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textDecoration: "none", fontFamily: FONT }}>
+                      {session.task_submission}
+                    </a>
+                    <ExternalLink size={10} style={{ color: "#16a34a", flexShrink: 0 }} />
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
+          {/* ── FEEDBACK ── */}
+          {tab === "feedback" && (
+            <>
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
+                  <MessageSquare size={12} style={{ color: C.blue }} />
+                  <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>YOUR NOTES</span>
+                </div>
+                <div>
+                  <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Session Summary / Feedback</label>
+                  <textarea rows={4} style={{ ...inp, resize: locked ? "none" : "vertical" }} value={form.mentor_feedback} onChange={handleChange("mentor_feedback")} placeholder="Write session summary, guidance, notes…" readOnly={locked} />
+                </div>
+              </div>
+
+              {(session.mentee_feedback || session.mentee_rating > 0) && (
+                <div style={{ marginBottom: 16 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
+                    <BookOpen size={12} style={{ color: C.blue }} />
+                    <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>MENTEE FEEDBACK</span>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+                    {session.mentee_feedback && (
+                      <div>
+                        <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Mentee Notes</label>
+                        <textarea rows={3} style={{ ...ro, resize: "none" }} readOnly value={session.mentee_feedback} />
+                      </div>
+                    )}
+                    {session.mentee_rating > 0 && (
+                      <div>
+                        <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Mentee Rating</label>
+                        <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "6px 0" }}>
+                          {[1, 2, 3, 4, 5].map(s => (
+                            <span key={s} style={{ fontSize: 13, color: s <= session.mentee_rating ? "#f59e0b" : C.border }}>★</span>
+                          ))}
+                          <span style={{ fontSize: 11, fontWeight: 600, color: C.muted, marginLeft: 4, fontFamily: FONT }}>{session.mentee_rating}/5</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </div>
 
         {/* Footer */}
-        <div style={{ borderTop: "1px solid #f1f5f9", padding: "14px 20px", background: "#fff", display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+        <div style={{
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+          gap: 8, padding: "12px 18px",
+          borderTop: `1px solid ${C.border}`,
+          background: "#fafbfc", flexShrink: 0,
+        }}>
           <div>
-            {saved && <span style={{ fontSize: 13, fontWeight: 600, color: "#16a34a" }}>✓ Saved successfully</span>}
-            {error && <span style={{ fontSize: 13, fontWeight: 600, color: "#dc2626" }}>✕ {error}</span>}
+            {locked
+              ? <span style={{ fontSize: 12, fontWeight: 600, color: "#f59e0b", fontFamily: FONT, display: "flex", alignItems: "center", gap: 5 }}>🔒 This session is locked after 24hrs of completion</span>
+              : error
+                ? <span style={{ fontSize: 12, fontWeight: 600, color: "#dc2626", fontFamily: FONT }}>✕ {error}</span>
+                : null
+            }
           </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <button onClick={onClose} style={{ padding: "10px 18px", borderRadius: 10, border: "1px solid #dbe3ea", background: "#fff", color: "#1a1a2e", fontWeight: 600, cursor: "pointer", fontSize: 13 }}>Cancel</button>
-            <button onClick={handleSave} disabled={saving} style={{ padding: "10px 20px", borderRadius: 10, border: "none", background: "#1a1a2e", color: "#fff", fontWeight: 700, cursor: saving ? "not-allowed" : "pointer", opacity: saving ? 0.7 : 1, fontSize: 13 }}>
-              {saving ? "Saving..." : "Save Changes"}
+          <div style={{ display: "flex", gap: 7 }}>
+            <button onClick={onClose} style={{
+              padding: "7px 16px", borderRadius: 7,
+              fontSize: 12, fontWeight: 600, fontFamily: FONT,
+              background: C.white, border: `1px solid ${C.border}`,
+              color: C.sub, cursor: "pointer",
+            }}>
+              {locked ? "Close" : "Cancel"}
             </button>
+            {/* ← hide Save when locked */}
+            {!locked && (
+              <button onClick={handleSave} disabled={saving} style={{
+                display: "flex", alignItems: "center", gap: 6,
+                padding: "7px 18px", borderRadius: 7,
+                fontSize: 12, fontWeight: 700, fontFamily: FONT,
+                background: saving ? C.muted : C.dark,
+                color: C.white, border: "none",
+                cursor: saving ? "not-allowed" : "pointer",
+              }}>
+                {saving ? "Saving…" : "Save Changes"}
+              </button>
+            )}
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
-
 
 
 function SubscriberModal({ sub, onClose }) {
@@ -637,31 +1226,73 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
               ) : sessions.length === 0 ? (
                 <EmptyState message="No sessions found" cols={6} />
               ) : (
-                sessions.map((item, idx) => (
-                  <tr key={item._id} onClick={() => setSelectedSession(item)} style={{ cursor: "pointer" }}>
-                    <Td><span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>{(page - 1) * pageSize + idx + 1}</span></Td>
-                    <Td>
-                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                        {/* <div style={{ width: 28, height: 28, borderRadius: 7, background: "#1a1a2e", color: "#fff", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                          {item.session_number}
-                        </div> */}
+                // sessions.map((item, idx) => (
+                //   <tr key={item._id} onClick={() => setSelectedSession(item)} style={{ cursor: "pointer" }}>
+                //     <Td><span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>{(page - 1) * pageSize + idx + 1}</span></Td>
+                //     <Td>
+                //       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                //         {/* <div style={{ width: 28, height: 28, borderRadius: 7, background: "#1a1a2e", color: "#fff", fontSize: 11, fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                //           {item.session_number}
+                //         </div> */}
+                //         <span style={{ fontSize: 13, fontWeight: 600, color: "#1a1a2e" }}>
+                //           {item.session_title || `Session ${item.session_number}`}
+                //         </span>
+                //       </div>
+                //     </Td>
+                //     <Td><span style={{ fontSize: 12, color: "#64748b" }}>{fmt.date(item.session_date)}</span></Td>
+                //     <Td><StatusBadge status={item.status} /></Td>
+                //     <Td>
+                //       <button
+                //         onClick={e => { e.stopPropagation(); setSelectedSession(item); }}
+                //         style={{ padding: "5px 13px", borderRadius: 7, border: "1.5px solid #0c9dce", background: "#fff", color: "#0c9dce", fontSize: 11, fontWeight: 700, cursor: "pointer" }}
+                //       >
+                //         View
+                //       </button>
+                //     </Td>
+                //   </tr>
+                // ))
+
+                sessions.map((item, idx) => {
+                  const locked = isSessionLocked(item);  // ← ADD
+                  return (
+                    <tr
+                      key={item._id}
+                      onClick={() => !locked && setSelectedSession(item)}  // ← block click when locked
+                      style={{
+                        cursor: locked ? "not-allowed" : "pointer",
+                        opacity: locked ? 0.5 : 1,
+                        background: locked ? "#fafbfc" : "transparent",
+                        transition: "opacity 0.2s",
+                      }}
+                    >
+                      <Td><span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>{(page - 1) * pageSize + idx + 1}</span></Td>
+                      <Td>
                         <span style={{ fontSize: 13, fontWeight: 600, color: "#1a1a2e" }}>
                           {item.session_title || `Session ${item.session_number}`}
                         </span>
-                      </div>
-                    </Td>
-                    <Td><span style={{ fontSize: 12, color: "#64748b" }}>{fmt.date(item.session_date)}</span></Td>
-                    <Td><StatusBadge status={item.status} /></Td>
-                    <Td>
-                      <button
-                        onClick={e => { e.stopPropagation(); setSelectedSession(item); }}
-                        style={{ padding: "5px 13px", borderRadius: 7, border: "1.5px solid #0c9dce", background: "#fff", color: "#0c9dce", fontSize: 11, fontWeight: 700, cursor: "pointer" }}
-                      >
-                        View
-                      </button>
-                    </Td>
-                  </tr>
-                ))
+                      </Td>
+                      <Td><span style={{ fontSize: 12, color: "#64748b" }}>{fmt.date(item.session_date)}</span></Td>
+                      <Td><StatusBadge status={item.status} /></Td>
+                      <Td>
+                        {locked
+                          ? (
+                            // ← lock icon instead of View button
+                            <span style={{ fontSize: 11, color: "#cbd5e1", display: "flex", alignItems: "center", gap: 4, fontWeight: 600 }}>
+                            Locked
+                            </span>
+                          ) : (
+                            <button
+                              onClick={e => { e.stopPropagation(); setSelectedSession(item); }}
+                              style={{ padding: "5px 13px", borderRadius: 7, border: "1.5px solid #0c9dce", background: "#fff", color: "#0c9dce", fontSize: 11, fontWeight: 700, cursor: "pointer" }}
+                            >
+                              View
+                            </button>
+                          )
+                        }
+                      </Td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

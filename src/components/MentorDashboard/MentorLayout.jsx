@@ -581,7 +581,7 @@ const MentorLayout = ({ children }) => {
             <div style={{ display: "flex", flexDirection: "column", height: "100vh", overflow: "hidden", background: "#fff" }}>
 
                 {/* Top Banner */}
-                <div style={{ background: "#1a1a2e", color: "#e5e7eb", fontSize: 13, textAlign: "center", padding: "8px 16px", flexShrink: 0, fontFamily: F }}>
+                {/* <div style={{ background: "#1a1a2e", color: "#e5e7eb", fontSize: 13, textAlign: "center", padding: "8px 16px", flexShrink: 0, fontFamily: F }}>
                     Your trials are switched off&nbsp;
                     <button
                         onClick={() => { setEditProfileTab("engagement"); setIsEditProfileOpen(true); }}
@@ -589,7 +589,7 @@ const MentorLayout = ({ children }) => {
                     >
                         Go to trial settings
                     </button>
-                </div>
+                </div> */}
 
                 <div style={{ display: "flex", flex: 1, overflow: "hidden" }}>
 
