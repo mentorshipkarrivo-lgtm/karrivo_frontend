@@ -39,11 +39,11 @@ const ProtectedRoute = ({ children }) => {
     return token && token.length > 0;
   };
 
-  console.log("🔐 ProtectedRoute Check:", {
-    path: location.pathname,
-    isAuth: isAuthenticated(),
-    token: getAuthToken() ? "exists" : "missing"
-  });
+  // console.log("🔐 ProtectedRoute Check:", {
+  //   path: location.pathname,
+  //   isAuth: isAuthenticated(),
+  //   token: getAuthToken() ? "exists" : "missing"
+  // });
 
   if (!isAuthenticated()) {
     console.log("❌ Not authenticated, redirecting to login");
