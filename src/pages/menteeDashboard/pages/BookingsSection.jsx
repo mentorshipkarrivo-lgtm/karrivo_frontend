@@ -6,7 +6,7 @@ import {
   MapPin, Briefcase, X, CheckCircle2, ArrowLeft, ArrowRight,
   Star, Calendar, Clock, Video, CheckCircle, XCircle,
   Tag, FileText, Eye, AlertTriangle, User, Check,
-  Loader2, ExternalLink, Zap, BadgeCheck, Phone, MessageCircle, CreditCard
+  Loader2, ExternalLink, Zap, BadgeCheck, Phone, MessageCircle, CreditCard,Building2 
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Cookies from "js-cookie";
@@ -49,6 +49,70 @@ const slotDuration = (s, e) => {
   const [fh, fm] = s.split(":").map(Number);
   const [th, tm] = e.split(":").map(Number);
   return th * 60 + tm - (fh * 60 + fm);
+};
+
+const TopicCell = ({ text }) => {
+  const [expanded, setExpanded] = useState(false);
+  if (!text) return <span className="text-gray-400">—</span>;
+
+  const words = text.split(" ");
+  const isLong = words.length > 20;
+  const preview = words.slice(0, 20).join(" ");
+
+  return (
+    <div style={{ maxWidth: "200px" }}>
+      {!expanded ? (
+        <>
+          <span className="block overflow-hidden text-ellipsis whitespace-nowrap text-[#0098cc] text-xs">
+            {isLong ? preview : text}
+          </span>
+          {isLong && (
+            <button
+              onClick={() => setExpanded(true)}
+              className="text-[10px] text-gray-400 hover:text-[#0098cc] underline underline-offset-2 transition mt-0.5"
+            >
+              Read more
+            </button>
+          )}
+        </>
+      ) : (
+        <>
+          <span className="text-[#0098cc] text-xs leading-relaxed">{text}</span>
+          <button
+            onClick={() => setExpanded(false)}
+            className="block text-[10px] text-gray-400 hover:text-[#0098cc] underline underline-offset-2 transition mt-0.5"
+          >
+            Read less
+          </button>
+        </>
+      )}
+    </div>
+  );
+};
+
+const TopicPanelCell = ({ text }) => {
+  const [expanded, setExpanded] = useState(false);
+  if (!text) return <p className="text-sm font-medium text-[#0a1a22]">—</p>;
+
+  const words = text.split(" ");
+  const isLong = words.length > 60;
+  const preview = words.slice(0, 60).join(" ");
+
+  return (
+    <div>
+      <p className="text-sm font-medium text-[#0a1a22] leading-relaxed break-words">
+        {!expanded && isLong ? preview + "…" : text}
+      </p>
+      {isLong && (
+        <button
+          onClick={() => setExpanded(e => !e)}
+          className="text-[11px] text-gray-400 hover:text-[#0098cc] underline underline-offset-2 transition mt-1"
+        >
+          {expanded ? "Read less" : "Read more"}
+        </button>
+      )}
+    </div>
+  );
 };
 
 const DAY_NAMES_FULL = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -245,42 +309,68 @@ function MentorCard({ mentor, index, onViewProfile }) {
         <div className="space-y-1.5">
           {/* Name */}
           <h3 className="font-semibold text-[#0a1a22] text-sm leading-tight">
-            {mentor.fullName || "Unknown Mentor"}
+            {mentor.fullName}
           </h3>
 
           {/* Role & Company */}
-          {(mentor.currentRole || mentor.companyName) && (
-            <p className="text-[11px] sm:text-xs text-gray-500">
-              {mentor.currentRole}{mentor.companyName ? ` · ${mentor.companyName}` : ""}
-            </p>
+
+          {mentor.companyName && (
+            <span className="flex items-center gap-1">
+              <Building2 size={18} className="text-[#515762]" />
+              {mentor.companyName}
+            </span>
           )}
 
           {/* Experience & Rate */}
           <div className="flex items-center gap-2 flex-wrap">
             {mentor.yearsOfExperience && (
-              <span className="text-[11px] text-gray-400">
-                {mentor.yearsOfExperience}+ yrs exp
+              <span className="text-[11px] text-[#515762]">
+                {mentor.yearsOfExperience} years Experience
               </span>
             )}
             {mentor.hourlyRate && (
-              <span className="text-[11px] text-[#0098cc] font-medium">
-                ₹{mentor.hourlyRate}/hr
+              <span className="text-[11px] text-[#515762] font-medium">
+                ₹{mentor.hourlyRate}/Session
               </span>
             )}
           </div>
 
           {/* Mentoring Style */}
-          {mentor.mentoringStyle && (
-            <span className="inline-block text-[10px] bg-[#0098cc]/10 text-[#0098cc] px-2 py-0.5 rounded-sm font-medium">
+          {/* {mentor.mentoringStyle && (
+            <span className="inline-block text-[10px] text-[#6b7280] px-2 py-0.5 border border-[#6b7280] rounded-sm  font-medium">
               {mentor.mentoringStyle}
             </span>
+          )} */}
+
+
+          {mentor.mentoringStyle && (
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-[11px] font-semibold text-[#515762]">
+                Mentoring Style:
+              </span>
+
+              <span className="inline-block px-2 py-0.5 text-[10px] font-medium text-[#515762] border border-[#6b7280] rounded-sm">
+                {mentor.mentoringStyle}
+              </span>
+            </div>
           )}
 
           {/* Areas of Interest */}
           {mentor.areasOfInterest && (
-            <p className="text-[10px] text-gray-400 leading-relaxed">
-              {mentor.areasOfInterest}
-            </p>
+            <div className="flex flex-wrap gap-1.5 mt-1">
+              {mentor.areasOfInterest
+                .split(",")
+                .map((interest, idx) => (
+                  <span
+                    key={idx}
+                    className="px-2 py-1 text-[10px] font-medium rounded-sm
+                     text-[#515762]
+                     border border-[#515762]"
+                  >
+                    {interest.trim()}
+                  </span>
+                ))}
+            </div>
           )}
         </div>
 
@@ -643,12 +733,9 @@ function BookingCard({
 
 
       {/* Topic */}
-      <td className={`${TD} text-[#0098cc]`} style={{ minWidth: "110px", maxWidth: "160px" }}>
-        <span className="block overflow-hidden text-ellipsis whitespace-nowrap" title={topic}>
-          {topic}
-        </span>
+      <td className={`${TD}`} style={{ minWidth: "110px", maxWidth: "200px", whiteSpace: "normal" }}>
+        <TopicCell text={topic} />
       </td>
-
       {/* Date */}
       <td className={`${TD} text-gray-500`} style={{ whiteSpace: "nowrap", minWidth: "100px" }}>
         {formatCardDate(booking.sessionDate)}
@@ -661,8 +748,8 @@ function BookingCard({
 
       {/* Status */}
       <td className={`${TD}`} style={{ minWidth: "110px" }}>
-        <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${statusCfg.badge}`}>
-          <StatusIcon className="w-2.5 h-2.5" />
+        <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap `}>
+          {/* <StatusIcon className="w-2.5 h-2.5" /> */}
           {statusCfg.label}
         </span>
       </td>
@@ -806,7 +893,7 @@ export default function BookingsDashboard() {
 
 
 
-  const getMentorName = (b) => typeof b.mentorId === "object" ? b.mentorId?.fullName || b.menteeName || "Mentor" : b.menteeName || "Mentor";
+  const getMentorName = (b) => b?.mentorName ?? "";
   const getMentorInitials = (b) => getMentorName(b).slice(0, 2).toUpperCase();
   const getMentorRole = (b) => typeof b.mentorId === "object" ? b.mentorId?.currentRole || "" : "";
   const getMentorCompany = (b) => typeof b.mentorId === "object" ? b.mentorId?.companyName || "" : "";
@@ -1027,7 +1114,7 @@ ${panelOpen ? "translate-x-0" : "translate-x-full"}
                 <div className="flex items-center gap-3 px-4 sm:px-5 py-3.5 sm:py-4 border-b border-gray-100 flex-shrink-0">
 
                   <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-[#0a1a22] pl-10 truncate">{getMentorName(selectedBooking)}</p>
+                    <p className="text-sm font-semibold text-[#0a1a22] pl-10 truncate">Mentor Name :- {getMentorName(selectedBooking)}</p>
                     <p className="text-xs text-gray-400 truncate">{getMentorSubtitle(selectedBooking)}</p>
                   </div>
                 </div>
@@ -1036,8 +1123,9 @@ ${panelOpen ? "translate-x-0" : "translate-x-full"}
                   <DetailRow icon={Calendar} label="Date" value={formatDate(selectedBooking.sessionDate)} />
                   <DetailRow icon={Clock} label="Time" value={`${selectedBooking.startTime} · ${selectedBooking.durationMinutes} min`} />
                   <DetailRow icon={Tag} label="Session Type" value={selectedBooking.sessionType} />
-                  <DetailRow icon={FileText} label="Topic" value={selectedBooking.topic} />
-
+                  <DetailRow icon={FileText} label="Topic">
+                    <TopicPanelCell text={selectedBooking.topic} />
+                  </DetailRow>
                 </div>
 
                 <div className="flex-shrink-0 px-4 sm:px-5 py-3.5 sm:py-4 border-t border-gray-100 space-y-2">

@@ -661,7 +661,7 @@ const MentorLayout = ({ children }) => {
                             >
                                 {children}
                             </CenterContent>
-                            <RightPanel />
+                            {/* <RightPanel /> */}
                         </div>
 
                         {/* Footer */}

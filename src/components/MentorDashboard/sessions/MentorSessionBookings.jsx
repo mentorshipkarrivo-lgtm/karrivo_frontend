@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useGetMentorSessionsQuery } from "./sessionsapislice";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Clock3 } from "lucide-react";
 
 const StatusBadge = ({ status }) => {
     const map = {
@@ -11,11 +11,67 @@ const StatusBadge = ({ status }) => {
     };
     const s = map[status] || { className: "bg-gray-100 text-gray-600", label: status || "—" };
     return (
-        <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${s.className}`}>
+        <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap `}>
             {s.label}
         </span>
     );
 };
+
+const TopicCell = ({ text }) => {
+    const [expanded, setExpanded] = useState(false);
+    if (!text) return <span className="text-gray-400">—</span>;
+
+    const words = text.split(" ");
+    const isLong = words.length > 10;
+    const preview = words.slice(0, 10).join(" ");
+
+    return (
+        <div style={{ maxWidth: "220px" }}>
+            {!expanded ? (
+                <span className="text-[#0098cc] text-xs leading-relaxed">
+                    {isLong ? (
+                        <>
+                            <span className="block overflow-hidden text-ellipsis whitespace-nowrap">
+                                {preview}
+                            </span>
+                            <button
+                                onClick={() => setExpanded(true)}
+                                className="text-[10px] text-gray-400 hover:text-[#0098cc] underline underline-offset-2 transition mt-0.5"
+                            >
+                                Read more
+                            </button>
+                        </>
+                    ) : (
+                        <span className="block overflow-hidden text-ellipsis whitespace-nowrap">
+                            {text}
+                        </span>
+                    )}
+                </span>
+            ) : (
+                <span className="text-[#0098cc] text-xs leading-relaxed">
+                    {text}
+                    <button
+                        onClick={() => setExpanded(false)}
+                        className="block text-[10px] text-gray-400 hover:text-[#0098cc] underline underline-offset-2 transition mt-0.5"
+                    >
+                        Read less
+                    </button>
+                </span>
+            )}
+        </div>
+    );
+};
+
+const getSessionStart = (s) => {
+    if (!s?.sessionDate || !s?.startTime) return null;
+    const datePart = new Date(s.sessionDate).toISOString().split("T")[0];
+    const [h, m] = s.startTime.split(":").map(Number);
+    if (Number.isNaN(h) || Number.isNaN(m)) return null;
+    return new Date(`${datePart}T${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:00`);
+};
+
+const JOIN_WINDOW_MS = 10 * 60 * 1000;
+
 
 const PaymentBadge = ({ status }) => {
     const map = {
@@ -26,7 +82,7 @@ const PaymentBadge = ({ status }) => {
     };
     const s = map[status] || { className: "bg-gray-100 text-gray-600", label: status || "—" };
     return (
-        <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap ${s.className}`}>
+        <span className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap `}>
             {s.label}
         </span>
     );
@@ -55,6 +111,14 @@ const TD = "px-4 py-3 text-xs whitespace-nowrap align-middle";
 export default function SessionsTable() {
     const [mentorId, setMentorId] = useState(null);
     const [page, setPage] = useState(1);
+    const [now, setNow] = useState(Date.now());
+    const [expandedTopics, setExpandedTopics] = useState({});
+
+    const toggleTopic = (id) => {
+        setExpandedTopics((prev) => ({ ...prev, [id]: !prev[id] }));
+    };
+
+
     const limit = 10;
 
     useEffect(() => {
@@ -64,6 +128,10 @@ export default function SessionsTable() {
         if (userData) {
             try { setMentorId(JSON.parse(userData)?._id); } catch { }
         }
+    }, []);
+    useEffect(() => {
+        const t = setInterval(() => setNow(Date.now()), 30000);
+        return () => clearInterval(t);
     }, []);
 
     const { data, isLoading, isError, isFetching } = useGetMentorSessionsQuery(
@@ -81,29 +149,46 @@ export default function SessionsTable() {
         <div className="min-h-screen bg-white p-5 text-gray-700">
             <div className="max-w-7xl mx-auto space-y-6">
 
-                {/* Header */}
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
-                            <BookOpen size={24} className="text-[#0098cc]" strokeWidth={2.2} />
-                            Sessions
-                        </h1>
-                        <p className="text-gray-500 mt-2 text-xs">
+                <div className="flex flex-col gap-4">
+                    {/* Heading */}
+                    <h1 className="text-2xl font-bold text-[#1a1a2e] flex items-center gap-2">
+                        <BookOpen
+                            size={24}
+                            className="text-[#0098cc]"
+                            strokeWidth={2.2}
+                        />
+                        Sessions
+                    </h1>
+
+                    {/* Subtitle + Info */}
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                        <p className="text-xs text-gray-500">
                             View and manage your mentoring sessions
                         </p>
+
+                        <div className="flex items-center gap-2 text-xs text-gray-600">
+                            {/* <Clock3 className="h-4 w-4 text-[#0098cc] shrink-0" /> */}
+                            <span>
+                                <span className="font-medium">Join Button</span> is activates
+                                {" "}
+                                <span className="font-semibold text-[#0098cc]">
+                                    10 minutes before
+                                </span>{" "}
+                                the session starts.
+                            </span>
+                        </div>
                     </div>
                 </div>
-
                 {/* Table */}
                 <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
                     <div className="overflow-x-auto scroll-hide">
                         <table className="w-full" style={{ minWidth: "860px" }}>
                             <thead>
                                 <tr className="border-b border-gray-200 bg-gray-50">
-                                    {["S.No", "Mentee", "Topic", "Date", "Time", "Type", "Amount", "Payment", "Status", "Join"].map((item) => (
+                                    {["S No", "Mentee", "Topic", "Date", "Time", "Amount", "Payment", "Status", "Join"].map((item) => (
                                         <th
                                             key={item}
-                                            className="text-left px-4 py-3 text-[11px] font-semibold text-gray-500 uppercase whitespace-nowrap"
+                                            className="text-left px-4 py-3 text-[11px] font-semibold text-gray-500  whitespace-nowrap"
                                         >
                                             {item}
                                         </th>
@@ -144,6 +229,14 @@ export default function SessionsTable() {
                                             )
                                             : sessions.map((s, idx) => {
                                                 const serial = (page - 1) * limit + idx + 1;
+
+                                                // ── Join eligibility ──  ADD THESE 4 LINES
+                                                const startDT = getSessionStart(s);
+                                                const joinOpensAt = startDT ? startDT.getTime() - JOIN_WINDOW_MS : null;
+                                                const canJoin = !!s.meetingLink && joinOpensAt !== null && now >= joinOpensAt;
+                                                const minutesUntilJoin = joinOpensAt !== null
+                                                    ? Math.max(0, Math.ceil((joinOpensAt - now) / 60000))
+                                                    : null;
                                                 return (
                                                     <tr
                                                         key={s._id}
@@ -161,13 +254,8 @@ export default function SessionsTable() {
                                                         </td>
 
                                                         {/* Topic — truncate at 200px, full text on hover */}
-                                                        <td className={`${TD} text-[#0098cc]`} style={{ maxWidth: "200px" }}>
-                                                            <span
-                                                                className="block overflow-hidden text-ellipsis whitespace-nowrap"
-                                                                title={s.topic}
-                                                            >
-                                                                {s.topic || "—"}
-                                                            </span>
+                                                        <td className={`${TD}`} style={{ maxWidth: "220px", whiteSpace: "normal" }}>
+                                                            <TopicCell text={s.topic} />
                                                         </td>
 
                                                         {/* Date */}
@@ -181,13 +269,17 @@ export default function SessionsTable() {
                                                         </td>
 
                                                         {/* Type */}
-                                                        <td className={`${TD} text-gray-500`}>
+                                                        {/* <td className={`${TD} text-gray-500`}>
                                                             {s.sessionType || "—"}
-                                                        </td>
+                                                        </td> */}
 
                                                         {/* Amount */}
-                                                        <td className={`${TD} font-bold text-[#1a1a2e]`}>
-                                                            ₹{s.price}
+                                                        <td className={`${TD} font-bold`}>
+                                                            {s.isFreeSession ? (
+                                                                <span className="text-green-600">Free Session</span>
+                                                            ) : (
+                                                                <span className="text-[#1a1a2e]">₹{s.price}</span>
+                                                            )}
                                                         </td>
 
                                                         {/* Payment */}
@@ -202,25 +294,29 @@ export default function SessionsTable() {
 
                                                         {/* Join */}
                                                         <td className={`${TD} text-center`}>
-                                                            {s.meetingLink
-                                                                ? s.status === "inprogress"
-                                                                    ? (
-                                                                        <a
-                                                                            href={s.meetingLink}
-                                                                            target="_blank"
-                                                                            rel="noopener noreferrer"
-                                                                            className="inline-block bg-[#1a1a2e] text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:opacity-90 transition whitespace-nowrap"
-                                                                        >
-                                                                            Join
-                                                                        </a>
-                                                                    )
-                                                                    : (
-                                                                        <span className="inline-block border border-gray-200 text-gray-300 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-not-allowed whitespace-nowrap">
-                                                                            Join
-                                                                        </span>
-                                                                    )
-                                                                : <span className="text-gray-300 text-xs">—</span>
-                                                            }
+                                                            {canJoin ? (
+
+                                                                <a href={s.meetingLink}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="inline-block bg-[#1a1a2e] text-white px-3 py-1.5 rounded-lg text-xs font-semibold hover:opacity-90 transition whitespace-nowrap"
+                                                                >
+                                                                    Join
+                                                                </a>
+                                                            ) : (
+                                                                <span
+                                                                    title={
+                                                                        !s.meetingLink
+                                                                            ? "Meeting link not available"
+                                                                            : minutesUntilJoin
+                                                                                ? `Join activates in ${minutesUntilJoin} min`
+                                                                                : "Join activates 10 min before session"
+                                                                    }
+                                                                    className="inline-block border border-gray-200 text-gray-300 px-3 py-1.5 rounded-lg text-xs font-semibold cursor-not-allowed whitespace-nowrap"
+                                                                >
+                                                                    Join
+                                                                </span>
+                                                            )}
                                                         </td>
                                                     </tr>
                                                 );
@@ -270,6 +366,6 @@ export default function SessionsTable() {
                 .scroll-hide::-webkit-scrollbar { display: none; }
                 .scroll-hide { -ms-overflow-style: none; scrollbar-width: none; }
             `}</style>
-        </div>
+        </div >
     );
 }
