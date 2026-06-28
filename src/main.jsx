@@ -20,9 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <ToastProvider>
           <BrowserRouter>
 
-            {/* <HelmetProvider> */}
             <App />
-            {/* </HelmetProvider> */}
 
           </BrowserRouter>
         </ToastProvider>
