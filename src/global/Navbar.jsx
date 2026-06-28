@@ -7,7 +7,8 @@ import {
   User,
   Menu,
   X,
-  ChevronDown,
+  PhoneCall ,
+
 } from "lucide-react";
 
 import KarrivoLogo from "../assets/KarrivoLogo.png";
@@ -120,47 +121,51 @@ const Navbar = () => {
   return (
     <>
       <nav
-        className="fixed top-0 left-0 z-[9999] w-full bg-white border-b border-gray-200 shadow-[0_1px_4px_rgba(0,0,0,0.06)]"
+        className="fixed top-0 left-0 right-0 z-[9999] lg:mx-10 xl:mx-16 bg-white border border-gray-200 rounded-b-2xl shadow-[0_1px_8px_rgba(0,0,0,0.08)]"
         style={navStyle}
       >
 
         {/* ═══ DESKTOP (≥ 1024px) ═══ */}
         <div className="hidden lg:flex items-center h-16 px-8 max-w-[1440px] mx-auto">
 
-          {/* LEFT — Logo */}
-          <div className="w-[180px] flex-shrink-0">
-            <button className="bg-transparent border-none cursor-pointer p-0" onClick={() => go("/")}>
+          {/* LEFT — Logo + nav links grouped together */}
+          <div className="flex items-center gap-8 flex-1">
+            <button className="bg-transparent border-none cursor-pointer p-0 flex-shrink-0" onClick={() => go("/")}>
               <img src={KarrivoLogo} alt="Karrivo" className="h-8 w-auto" />
             </button>
+
+            <div className="flex items-center gap-1">
+              {centerLinks
+                .filter(({ highlight }) => !highlight)
+                .map(({ label, path }) => (
+                  <button
+                    key={label}
+                    onClick={() => go(path)}
+                    style={{ ...navFont, color: PRIMARY_TEXT }}
+                    className="px-4 py-2 text-[14px] font-medium bg-transparent border-none cursor-pointer transition-all duration-150 whitespace-nowrap rounded-md hover:bg-gray-50"
+                  >
+                    {label}
+                  </button>
+                ))}
+            </div>
           </div>
 
-          {/* CENTER — nav links */}
-          <div className="flex-1 flex items-center justify-center gap-1">
-            {centerLinks.map(({ label, path, highlight }) =>
-              highlight ? (
+          {/* RIGHT — CTA pill + auth, grouped together, edge gap preserved */}
+          <div className="flex items-center gap-3 flex-shrink-0 pr-2 lg:pr-4">
+            {centerLinks
+              .filter(({ highlight }) => highlight)
+              .map(({ label, path }) => (
                 <button
                   key={label}
                   onClick={() => go(path)}
                   style={navFont}
-                  className="px-5 py-2 mx-1 bg-[#1a1a2e] text-white text-[14px] font-semibold rounded-full border-none cursor-pointer hover:bg-[#2d2d4e] active:scale-[0.97] transition-all duration-150 whitespace-nowrap"
+                  className="px-5 py-2 bg-[#0a1a22] text-white text-[14px] font-semibold rounded-full border-none cursor-pointer hover:bg-[#2d2d4e] active:scale-[0.97] transition-all duration-150 whitespace-nowrap inline-flex items-center gap-2"
                 >
                   {label}
+                  <PhoneCall  size={16} className="rotate-90" />
                 </button>
-              ) : (
-                <button
-                  key={label}
-                  onClick={() => go(path)}
-                  style={{ ...navFont, color: PRIMARY_TEXT }}
-                  className="px-4 py-2 mx-1 text-[14px] font-medium bg-transparent border-none cursor-pointer transition-all duration-150 whitespace-nowrap rounded-md hover:bg-gray-50"
-                >
-                  {label}
-                </button>
-              )
-            )}
-          </div>
+              ))}
 
-          {/* RIGHT — auth */}
-          <div className="w-[180px] flex-shrink-0 flex items-center justify-end">
             {isLoggedIn ? (
               <div className="relative flex items-center gap-2" ref={dropdownRef}>
                 <button

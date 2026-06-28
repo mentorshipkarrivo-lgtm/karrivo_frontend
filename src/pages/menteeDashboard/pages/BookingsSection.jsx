@@ -192,7 +192,7 @@ function MentorCard({ mentor, index, onViewProfile }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
-      className="group bg-white rounded-xl border border-[#0a1a22] overflow-hidden
+      className="group bg-white rounded-xl border border-gray-200 overflow-hidden
 transition-all duration-200 font-[DM_Sans,sans-serif]
 flex items-stretch"
     >
