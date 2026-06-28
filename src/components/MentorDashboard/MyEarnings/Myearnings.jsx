@@ -6,7 +6,7 @@ import {
 import {
   DollarSign, Clock, AlertTriangle, Inbox,
   ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight,
-  CreditCard, Check, Loader2, Gift, Star, X
+  CreditCard, Check, Loader2, Gift, Star, X,Wallet ,BadgePercent ,TrendingUp 
 } from "lucide-react";
 import Loader from "../../../global/Loader";
 
@@ -41,11 +41,11 @@ const getPaymentStatusStyle = (status) => {
 const StatCard = ({ icon: Icon, label, value }) => (
   <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 flex items-center gap-4">
     <div className="w-11 h-11 rounded-xl border border-gray-200 flex items-center justify-center flex-shrink-0">
-      <Icon size={18} color="#0098cc" strokeWidth={2} />
+      <Icon size={18} color="#1a1a2e" strokeWidth={2} />
     </div>
     <div>
       <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wide">{label}</p>
-      <p className="text-lg font-bold mt-0.5" style={{ color: "#0098cc" }}>{value}</p>
+      <p className="text-lg font-bold mt-0.5" style={{ color: "#1a1a2e" }}>{value}</p>
     </div>
   </div>
 );
@@ -415,10 +415,29 @@ const Myearnings = () => {
           <div>
             <h2 className="text-sm font-bold mb-4 text-[#1a1a2e]">Earnings Summary</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
-              <StatCard icon={DollarSign} label="Session Earnings" value={`₹${totalSessionEarnings.toLocaleString("en-IN")}`} />
-              <StatCard icon={DollarSign} label="Subscription Revenue" value={`₹${totalSubscriptionRevenue.toLocaleString("en-IN")}`} />
-              <StatCard icon={AlertTriangle} label="Total Discount" value={`₹${totalSubscriptionDiscount.toLocaleString("en-IN")}`} />
-              <StatCard icon={Clock} label="Overall Revenue" value={`₹${totalOverallRevenue.toLocaleString("en-IN")}`} />
+              <StatCard
+                icon={Wallet}
+                label="Session Earnings"
+                value={`₹${totalSessionEarnings.toLocaleString("en-IN")}`}
+              />
+
+              <StatCard
+                icon={CreditCard}
+                label="Subscription Revenue"
+                value={`₹${totalSubscriptionRevenue.toLocaleString("en-IN")}`}
+              />
+
+              <StatCard
+                icon={BadgePercent}
+                label="Total Discount"
+                value={`₹${totalSubscriptionDiscount.toLocaleString("en-IN")}`}
+              />
+
+              <StatCard
+                icon={TrendingUp}
+                label="Overall Revenue"
+                value={`₹${totalOverallRevenue.toLocaleString("en-IN")}`}
+              />
             </div>
           </div>
 
@@ -449,10 +468,10 @@ const Myearnings = () => {
                           <td className="px-6 py-4 text-xs text-gray-700 font-medium">{totalSessions || "—"}</td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className={`px-3 py-1 rounded-full text-xs font-semibold ${subscriptionStatus === "onprocess"
-                                ? "bg-blue-50 text-blue-700 border border-blue-200"
-                                : subscriptionStatus === "completed"
-                                  ? "bg-green-50 text-green-700 border border-green-200"
-                                  : "bg-gray-100 text-gray-500 border border-gray-200"
+                              ? "bg-blue-50 text-blue-700 border border-blue-200"
+                              : subscriptionStatus === "completed"
+                                ? "bg-green-50 text-green-700 border border-green-200"
+                                : "bg-gray-100 text-gray-500 border border-gray-200"
                               }`}>
                               {subscriptionStatus === "onprocess" ? "In Process" : subscriptionStatus || "—"}
                             </span>
@@ -482,7 +501,7 @@ const Myearnings = () => {
           <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-4 border-b border-gray-200">
               <h2 className="text-sm font-bold text-[#1a1a2e]">My Sessions</h2>
-           
+
             </div>
 
             {isFetching && !isLoading && (
@@ -545,7 +564,7 @@ const Myearnings = () => {
                                 Free Session
                               </span>
                             ) : (
-                              <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getPaymentStatusStyle(paymentStatus)}`}>
+                              <span className={`px-3 py-1 rounded-full text-xs font-semibold `}>
                                 {paymentStatus || "—"}
                               </span>
                             )}

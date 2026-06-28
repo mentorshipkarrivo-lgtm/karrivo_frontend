@@ -109,19 +109,19 @@ const TierBanner = ({ tierDoc, subCount, isEditing }) => {
   if (!tierDoc || isEditing) return null;
   const meta = TIER_META[tierDoc.tier_name] || { label: tierDoc.tier_name, range: "", color: "text-gray-500 bg-gray-100 border-gray-200" };
   const rates = [
-    { label: "1 mo", pct: tierDoc.commission?.one_month },
-    { label: "3 mo", pct: tierDoc.commission?.three_months },
-    { label: "6 mo", pct: tierDoc.commission?.six_months },
+    { label: "For 1 month", pct: tierDoc.commission?.one_month },
+    { label: "For 3 mmnths", pct: tierDoc.commission?.three_months },
+    { label: "For 6 months", pct: tierDoc.commission?.six_months },
   ];
 
   return (
     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 mb-5">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#0098cc] inline-block" />
+          <span className="w-2 h-2 rounded-full bg-[#1a1a2e] inline-block" />
           <p className="text-xs font-semibold text-[#1a1a2e]">
-            Commission tier:{" "}
-            <span className={`px-2 py-0.5 rounded-full border text-[11px] font-semibold ${meta.color}`}>
+            Commission tier :- {" "}
+            <span className={`px-2 py-0.5 rounded-sm border text-[11px] font-semibold `}>
               {meta.label} · {meta.range}
             </span>
           </p>
@@ -133,7 +133,7 @@ const TierBanner = ({ tierDoc, subCount, isEditing }) => {
       <div className="flex flex-wrap items-center gap-2">
         <p className="text-[11px] text-gray-400 font-medium">Platform fee:</p>
         {rates.map(({ label, pct }) => (
-          <span key={label} className="text-[11px] border border-gray-200 rounded-full px-2.5 py-0.5 text-gray-500">
+          <span key={label} className="text-[11px] border border-gray-200 rounded-sm px-2.5 py-0.5 text-gray-500">
             <b className="text-[#1a1a2e]">{pct}%</b> {label}
           </span>
         ))}
@@ -157,7 +157,7 @@ const DetailsModal = ({ plan, breakdowns, onClose }) => {
   const noData = !exp || !fre;
 
   const rows = [
-    { label: `Mentee pays (${activePlan.months}mo):`, expVal: exp?.totalPrice, freVal: fre?.totalPrice, negative: false },
+    { label: `Mentee pays (${activePlan.months}month):`, expVal: exp?.totalPrice, freVal: fre?.totalPrice, negative: false },
     { label: `Platform fee (${exp?.platformPct ?? "—"}%):`, expVal: exp?.platformFee, freVal: fre?.platformFee, negative: true },
     { label: "CGST (9%):", expVal: exp?.cgst, freVal: fre?.cgst, negative: true },
     { label: "SGST (9%):", expVal: exp?.sgst, freVal: fre?.sgst, negative: true },
@@ -173,8 +173,9 @@ const DetailsModal = ({ plan, breakdowns, onClose }) => {
         <div className="flex items-center justify-between px-6 py-5 border-b border-gray-200">
           <div>
             <h2 className="text-lg font-bold text-[#1a1a2e]">Payout breakdown</h2>
-            <p className="text-[11px] text-gray-400 mt-0.5">Server-calculated figures based on your tier</p>
-          </div>
+            <p className="text-[12px] text-[#1a1a2e]  mt-0.5">
+              Earnings are calculated automatically based on your subscription plan.
+            </p>          </div>
           <button onClick={onClose}>
             <X className="text-gray-500" size={18} />
           </button>
@@ -187,11 +188,10 @@ const DetailsModal = ({ plan, breakdowns, onClose }) => {
               <button
                 key={pl.key}
                 onClick={() => setActiveKey(pl.key)}
-                className={`flex-1 text-xs font-semibold py-2.5 transition ${
-                  activeKey === pl.key
-                    ? "bg-[#1a1a2e] text-white"
-                    : "bg-transparent text-gray-400 hover:text-gray-600"
-                }`}
+                className={`flex-1 text-xs font-semibold py-2.5 transition ${activeKey === pl.key
+                  ? "bg-[#1a1a2e] text-white"
+                  : "bg-transparent text-gray-400 hover:text-gray-600"
+                  }`}
               >
                 {pl.label}
               </button>
@@ -209,14 +209,14 @@ const DetailsModal = ({ plan, breakdowns, onClose }) => {
                 <thead>
                   <tr className="border-b border-gray-200 bg-gray-50">
                     <th className="text-left px-4 py-3 text-[11px] font-semibold text-gray-500 uppercase w-[46%]" />
-                    <th className="text-center px-4 py-3 text-[11px] font-semibold text-[#1a1a2e] uppercase">Experienced</th>
-                    <th className="text-center px-4 py-3 text-[11px] font-semibold text-gray-500 uppercase">Freshers</th>
+                    <th className="text-center px-4 py-3 text-[11px] font-semibold text-[#1a1a2e] ">Experienced</th>
+                    <th className="text-center px-4 py-3 text-[11px] font-semibold text-gray-500 ">Freshers</th>
                   </tr>
                 </thead>
                 <tbody>
                   {rows.map(({ label, expVal, freVal, negative }) => (
                     <tr key={label} className="border-b border-gray-100">
-                      <td className="px-4 py-3 text-xs text-gray-500">{label}</td>
+                      <td className="px-4 py-3 text-xs  text-[#1a1a2e] ">{label}</td>
                       <td className={`px-4 py-3 text-xs text-center font-${negative ? "normal" : "semibold"} ${negative ? "text-red-500" : "text-[#1a1a2e]"}`}>
                         {negative ? "− " : ""}₹{fmtINR(expVal)}
                       </td>
@@ -226,22 +226,22 @@ const DetailsModal = ({ plan, breakdowns, onClose }) => {
                     </tr>
                   ))}
                   <tr className="border-t border-dashed border-gray-200">
-                    <td className="px-4 py-3 text-[11px] text-gray-400 italic">Total deducted:</td>
-                    <td className="px-4 py-3 text-[11px] text-gray-400 text-center">− ₹{fmtINR(exp.totalDeducted)}</td>
-                    <td className="px-4 py-3 text-[11px] text-gray-400 text-center">− ₹{fmtINR(fre.totalDeducted)}</td>
+                    <td className="px-4 py-3 text-[11px] text-[#1a1a2e] italic">Total deducted:</td>
+                    <td className="px-4 py-3 text-[11px] text-[#1a1a2e]text-center">− ₹{fmtINR(exp.totalDeducted)}</td>
+                    <td className="px-4 py-3 text-[11px] text-[#1a1a2e] text-center">− ₹{fmtINR(fre.totalDeducted)}</td>
                   </tr>
                   <tr className="border-t-2 border-gray-200 bg-gray-50">
                     <td className="px-4 py-3 text-sm font-bold text-[#1a1a2e]">You receive:</td>
                     <td className="px-4 py-3 text-center">
                       <p className="text-sm font-bold text-green-600">₹{fmtINR(exp.mentorReceive)}</p>
                       {activePlan.months > 1 && (
-                        <p className="text-[10px] text-gray-400 mt-0.5">₹{fmtINR(exp.perMonthReceive)}/mo</p>
+                        <p className="text-[10px] text-[#1a1a2e] mt-0.5">₹{fmtINR(exp.perMonthReceive)}/ month </p>
                       )}
                     </td>
                     <td className="px-4 py-3 text-center">
                       <p className="text-sm font-bold text-green-600">₹{fmtINR(fre.mentorReceive)}</p>
                       {activePlan.months > 1 && (
-                        <p className="text-[10px] text-gray-400 mt-0.5">₹{fmtINR(fre.perMonthReceive)}/mo</p>
+                        <p className="text-[10px] text-[#1a1a2e] mt-0.5">₹{fmtINR(fre.perMonthReceive)}/ month</p>
                       )}
                     </td>
                   </tr>
@@ -415,7 +415,13 @@ const CouponModal = ({ onClose, mentorId }) => {
           </Field>
 
           <Field label="Start date" required>
-            <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className={inputClass} />
+            <input
+              type="date"
+              value={startDate}
+              min={new Date().toISOString().slice(0, 10)}
+              onChange={(e) => setStartDate(e.target.value)}
+              className={inputClass}
+            />
           </Field>
 
           <div className="flex items-center justify-between">
@@ -424,9 +430,14 @@ const CouponModal = ({ onClose, mentorId }) => {
           </div>
 
           {expiry && (
-            <input type="date" value={expiryDate} onChange={(e) => setExpiryDate(e.target.value)} className={inputClass} />
+            <input
+              type="date"
+              value={expiryDate}
+              min={startDate || new Date().toISOString().slice(0, 10)}
+              onChange={(e) => setExpiryDate(e.target.value)}
+              className={inputClass}
+            />
           )}
-
           <div className="flex gap-2">
             <button onClick={resetForm} className={`${buttonSecondary} flex-1 justify-center`}>Reset</button>
             <button
@@ -452,9 +463,9 @@ const CouponModal = ({ onClose, mentorId }) => {
           <div className="flex-1 flex flex-col overflow-hidden">
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
               <span className="text-sm font-bold text-[#1a1a2e]">Your coupons</span>
-              <span className="text-[11px] text-gray-400 border border-gray-200 rounded-full px-2.5 py-0.5">
+              {/* <span className="text-[11px] text-gray-400 border border-gray-200 rounded-full px-2.5 py-0.5">
                 {coupons.length} / 3
-              </span>
+              </span> */}
             </div>
             <div className="overflow-y-auto flex-1 p-4 flex flex-col gap-3">
               {coupons.length > 0 ? coupons.map((coupon) => (
@@ -470,10 +481,10 @@ const CouponModal = ({ onClose, mentorId }) => {
                   </div>
                   <div className="flex flex-col gap-1 mb-3">
                     <p className="text-[11px] text-gray-400 flex items-center gap-1.5">
-                      <Calendar size={11} /> {coupon.appliesForDuration?.join(", ")} month{coupon.appliesForDuration?.length > 1 ? "s" : ""}
+                      <Calendar size={11} /> Applicable For {coupon.appliesForDuration?.join("and ")} month{coupon.appliesForDuration?.length > 1 ? "s" : ""}
                     </p>
                     <p className="text-[11px] text-gray-400 flex items-center gap-1.5">
-                      <Clock size={11} /> {coupon.expiryDate ? `Expires ${coupon.expiryDate.split("T")[0]}` : "No expiry"}
+                      <Clock size={11} /> {coupon.expiryDate ? `Expires on ${coupon.expiryDate.split("T")[0]}` : "No expiry"}
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -540,11 +551,10 @@ const PriceSelector = ({ tier, value, onChange, disabled }) => {
   return (
     <div className="flex-1 p-4">
       <div className="mb-2">
-        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
-          isExperienced
-            ? "text-pink-700 bg-pink-50 border-pink-200"
-            : "text-purple-700 bg-purple-50 border-purple-200"
-        }`}>
+        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-sm border ${isExperienced
+          ? "text-[#1a1a2e]  border-pink-200"
+          : "text-[#1a1a2e]   border-purple-200"
+          }`}>
           {isExperienced ? "Experienced" : "Freshers"}
         </span>
       </div>
@@ -627,16 +637,16 @@ const PlanCard = ({ plan, selections, breakdowns, isLocked, onChange, onViewDeta
       {hasValues && isLocked && !fresWarn && (
         <div className="mx-4 mb-4 flex items-center justify-between border border-gray-100 rounded-xl px-4 py-3">
           <p className="text-xs text-gray-500">
-            You receive / mo:{" "}
-            <b className="text-[#1a1a2e]">{expReceive != null ? `₹${fmtINR(expReceive)}` : "—"}</b>
-            <span className="text-gray-200 mx-2">·</span>
-            <b className="text-[#1a1a2e]">{freReceive != null ? `₹${fmtINR(freReceive)}` : "—"}</b>
+            You receive / month :{" "}
+            <b className="text-[#1a1a2e]">For Experienced {expReceive != null ? `₹${fmtINR(expReceive)}` : ""}</b>
+            <span className="text-[#1a1a2e] mx-2">/</span>
+            <b className="text-[#1a1a2e]">For Freshers{freReceive != null ? `₹${fmtINR(freReceive)}` : ""}</b>
           </p>
           <button
             onClick={() => onViewDetails(plan.key)}
             className="flex items-center gap-1 text-xs font-semibold text-[#0098cc] hover:underline"
           >
-            Details
+            View  Details
             <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
             </svg>

@@ -363,7 +363,7 @@ const CenterContent = ({ children, isHome, onEditProfileOpen, onSetEditTab, ment
             <div className="mhub-hero" style={{ background: "#fff", border: `1px solid ${T.border}`, borderRadius: 16, padding: "22px 26px", marginBottom: 20 }}>
                 <h1 style={{ fontFamily: F, fontSize: 21, fontWeight: 700, color: T.textDark, margin: "0 0 6px", lineHeight: 1.35 }}>
                     Hello {mentorName} <span style={{ display: "inline-block" }}>👋</span>, welcome to your{" "}
-                    <span style={{ color: T.primary }}>Mentor Dashboard</span>.
+                    <span style={{ color: "#515762" }}>Mentor Dashboard</span>.
                 </h1>
                 <p style={{ fontFamily: F, fontSize: 13.5, color: T.textLight, margin: 0 }}>
                     Let's refine your mentorship experience.

@@ -44,7 +44,7 @@ const PLAN_META = {
     label: 'Professional Plan', badge: null, featured: true,
     tabSub: '3 Months',
     description: 'Ideal for growing professionals looking to build deep skills and get structured guidance.',
-    features: ['All 1-Month Plan features', 'Weekly structured milestones', 'Mock interviews (2 sessions)', 'Priority scheduling', 'Community access'],
+    features: ['All 1-Month Plan features', 'Weekly structured milestones', 'Mock interviews ', 'Priority scheduling', 'Community access'],
   },
   6: {
     label: 'Business Plan', badge: 'Most Popular', featured: false,
@@ -438,8 +438,8 @@ export default function MentorLTMPlans() {
                       {plan.badge}
                     </span>
                   )}
-                  <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 2, color: isActive ? '#fff' : MUTED }}>{plan.months}months</div>
-                  <div style={{ fontSize: 12, color: isActive ? 'rgba(255,255,255,0.65)' : MUTED2 }}>{plan.tabSub}</div>
+                  <div style={{ fontSize: 15, fontWeight: 700, marginBottom: 2, color: isActive ? '#fff' : MUTED }}>{plan.months}  month Plan</div>
+                  {/* <div style={{ fontSize: 12, color: isActive ? 'rgba(255,255,255,0.65)' : MUTED2 }}>{plan.tabSub} Plan</div> */}
                 </button>
               );
             })}
@@ -705,7 +705,7 @@ export default function MentorLTMPlans() {
                                     </p>
                                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2px 6px', alignItems: 'center' }}>
                                       {coupon.appliesForDuration?.length > 0 && (
-                                        <span style={{ fontSize: 10, color: MUTED2, fontWeight: 500 }}>Valid for {coupon.appliesForDuration.join(', ')}m plans</span>
+                                        <span style={{ fontSize: 10, color: MUTED2, fontWeight: 500 }}>Valid for {coupon.appliesForDuration.join(', ')}month plans</span>
                                       )}
                                       {expiryLabel && (
                                         <span style={{ fontSize: 10, fontWeight: 600, color: isExpired ? '#dc3545' : daysLeft <= 3 ? WARN : MUTED2 }}>· {expiryLabel}</span>

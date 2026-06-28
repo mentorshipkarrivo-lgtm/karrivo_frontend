@@ -182,89 +182,6 @@ function DetailRow({ icon: Icon, label, value, children }) {
   );
 }
 
-// function MentorCard({ mentor, index, onViewProfile }) {
-//   const initials = getInitials(mentor.fullName);
-//   const hasImage = mentor.profilePhoto || mentor.profileImage;
-
-//   return (
-//     <motion.article
-//       initial={{ opacity: 0, y: 16 }}
-//       animate={{ opacity: 1, y: 0 }}
-//       transition={{ duration: 0.3, delay: index * 0.05 }}
-//       className="group bg-white rounded-xl border border-gray-200 overflow-hidden
-//                  hover:border-[#0098cc] hover:shadow-md transition-all duration-200 font-[DM_Sans,sans-serif]
-//                  flex items-stretch"
-//       style={{ minHeight: '160px', maxHeight: '200px' }}
-//     >
-//       {/* LEFT: Image Section */}
-//       <div className="relative w-[140px] sm:w-[180px] h-full bg-gray-100 flex-shrink-0 overflow-hidden">
-//         {hasImage ? (
-//           <>
-//             <img
-//               src={mentor.profilePhoto || mentor.profileImage}
-//               alt={mentor.fullName}
-//               className="w-full h-full object-cover object-center"
-//               onError={(e) => {
-//                 e.target.style.display = 'none';
-//                 if (e.target.nextElementSibling) e.target.nextElementSibling.style.display = 'flex';
-//               }}
-//             />
-//             <div className="hidden w-full h-full bg-[#0098cc]/10 items-center justify-center">
-//               <span className="text-3xl sm:text-4xl font-bold text-[#0098cc]">{initials}</span>
-//             </div>
-//           </>
-//         ) : (
-//           <div className="w-full h-full bg-[#0098cc]/10 flex items-center justify-center">
-//             <span className="text-3xl sm:text-4xl font-bold text-[#0098cc]">{initials}</span>
-//           </div>
-//         )}
-
-//         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-all duration-200" />
-//       </div>
-
-//       {/* RIGHT: Content Section */}
-//       <div className="flex-1 flex flex-col justify-between p-3 sm:p-4 min-w-0">
-//         <div className="mb-2">
-//           <h3 className="font-semibold text-[#0a1a22] text-xs sm:text-sm leading-tight truncate">
-//             {mentor.fullName || "Unknown Mentor"}
-//           </h3>
-//           <p className="text-[11px] sm:text-xs text-gray-400 mt-0.5 truncate">
-//             {mentor.currentRole || "Mentor"}
-//             {mentor.yearsOfExperience ? ` · ${mentor.yearsOfExperience}+ yrs` : ""}
-//           </p>
-//           {mentor.companyName && (
-//             <p className="flex items-center gap-1 text-[11px] sm:text-xs text-gray-400 mt-0.5 truncate">
-//               <Briefcase className="w-2.5 h-2.5 sm:w-3 sm:h-3 flex-shrink-0" />
-//               <span className="truncate">{mentor.companyName}</span>
-//             </p>
-//           )}
-//         </div>
-//         {mentor.guidanceAreas?.length > 0 && (
-//           <div className="flex flex-wrap gap-1 mb-2">
-//             {mentor.guidanceAreas.slice(0, 2).map((area, i) => (
-//               <span key={i} className="inline-block text-[8px] bg-[#0098cc]/10 text-[#0098cc] px-1.5 py-0.5 rounded-sm truncate max-w-[80px]">
-//                 {area}
-//               </span>
-//             ))}
-//             {mentor.guidanceAreas.length > 2 && (
-//               <span className="text-[8px] text-gray-400 px-1 py-0.5">+{mentor.guidanceAreas.length - 2}</span>
-//             )}
-//           </div>
-//         )}
-//         <button
-//           onClick={() => onViewProfile(mentor)}
-//           className="w-full py-1.5 rounded-lg font-semibold text-[11px] sm:text-xs text-white bg-[#0a1a22]
-//                      hover:bg-[#0098cc] transition-all duration-150 active:scale-[0.97]"
-//         >
-//           View Profile
-//         </button>
-//       </div>
-//     </motion.article>
-//   );
-// }
-
-// EDIT PREFERENCES MODAL
-
 
 function MentorCard({ mentor, index, onViewProfile }) {
   const initials = getInitials(mentor.fullName);
@@ -275,9 +192,9 @@ function MentorCard({ mentor, index, onViewProfile }) {
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.05 }}
-      className="group bg-white rounded-xl border border-gray-200 overflow-hidden
-                 hover:border-[#0098cc] hover:shadow-md transition-all duration-200 font-[DM_Sans,sans-serif]
-                 flex items-stretch"
+      className="group bg-white rounded-xl border border-[#0a1a22] overflow-hidden
+transition-all duration-200 font-[DM_Sans,sans-serif]
+flex items-stretch"
     >
       {/* LEFT: Image */}
       <div className="relative w-[120px] sm:w-[150px] flex-shrink-0 bg-gray-100 overflow-hidden">
@@ -660,7 +577,7 @@ function RescheduleModal({
                   <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
                     {availableSlots.map((slot, idx) => {
                       const dp = getSlotDateParts(slot.date);
-                      const mins = slotDuration(slot.startTime, slot.endTime);
+                      const mins = slotDuration(slot.startTime);
                       return (
                         <button key={slot._id || idx} onClick={() => { setSelectedSlot(slot); setStep("confirm"); }}
                           className="text-left p-2.5 rounded-xl border border-gray-200 hover:border-[#0098cc] hover:bg-[#0098cc]/5 transition-all duration-150 w-full">
@@ -696,7 +613,7 @@ function RescheduleModal({
                   <div className="p-3 sm:p-3.5 rounded-xl bg-[#0098cc]/10 border border-[#0098cc]/30">
                     <p className="text-[10px] text-[#0098cc] mb-1.5 uppercase font-semibold tracking-wide">New Slot</p>
                     <p className="text-sm font-semibold text-[#0a1a22]">{formatSlotDate(selectedSlot.date)}</p>
-                    <p className="text-xs text-[#0098cc] mt-0.5">{to12h(selectedSlot.startTime)} — {to12h(selectedSlot.endTime)}</p>
+                    <p className="text-xs text-[#0098cc] mt-0.5">{to12h(selectedSlot.startTime)}</p>
                   </div>
                 </div>
                 <p className="text-xs text-gray-500 bg-gray-50 border border-gray-200 rounded-lg p-3">

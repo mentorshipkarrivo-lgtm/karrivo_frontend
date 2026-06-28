@@ -230,398 +230,6 @@ function isSessionLocked(session) {
 }
 
 
-// ── Session Edit Modal (tabbed) ───────────────────────────────────────────────
-// function SessionModal({ session, onClose, onSave }) {
-//   const [saving, setSaving] = useState(false);
-//   const [error, setError] = useState(null);
-//   const [tab, setTab] = useState("details");
-//   const isMobile = window.innerWidth < 768;
-
-//   const [form, setForm] = useState({
-//     session_title: session.session_title || "",
-//     session_date: session.session_date ? new Date(session.session_date).toISOString().slice(0, 16) : "",
-//     meeting_link: session.meeting_link || "",
-//     meeting_description: session.meeting_description || "",
-//     tasks_given: session.tasks_given || "",
-//     task_completed: session.task_completed || false,
-//     mentor_feedback: session.mentor_feedback || "",
-//     status: session.status || "pending",
-//   });
-
-//   useEffect(() => {
-//     document.body.style.overflow = "hidden";
-//     return () => { document.body.style.overflow = ""; };
-//   }, []);
-
-//   useEffect(() => {
-//     const fn = (e) => { if (e.key === "Escape") onClose(); };
-//     document.addEventListener("keydown", fn);
-//     return () => document.removeEventListener("keydown", fn);
-//   }, [onClose]);
-
-//   const handleChange = useCallback((key) => (e) => {
-//     setForm((prev) => ({
-//       ...prev,
-//       [key]: e.target.type === "checkbox" ? e.target.checked : e.target.value,
-//     }));
-//   }, []);
-
-//   const handleSave = useCallback(async () => {
-//     setSaving(true); setError(null);
-//     const ok = await onSave(session._id, form);
-//     setSaving(false);
-//     if (ok) { onClose(); }
-//     else { setError("Failed to save. Please try again."); }
-//   }, [form, onSave, session._id, onClose]);
-
-//   const FONT = "'DM Sans','Segoe UI',sans-serif";
-//   const C = {
-//     dark: "#1a1a2e", blue: "#0091c3", white: "#ffffff",
-//     border: "#e2e8f0", muted: "#94a3b8", text: "#1a1a2e", sub: "#475569",
-//   };
-
-//   const inp = {
-//     width: "100%", padding: "8px 11px", borderRadius: 8,
-//     border: `1px solid ${C.border}`, background: C.white,
-//     fontSize: 12, color: C.text, outline: "none",
-//     fontFamily: FONT, transition: "border-color 0.15s",
-//   };
-//   const ro = { ...inp, background: "#f8fafc", color: C.muted, cursor: "default" };
-
-//   const TABS = [
-//     { id: "details", label: "Details", Icon: BookOpen },
-//     { id: "tasks", label: "Tasks", Icon: ClipboardList },
-//     { id: "feedback", label: "Feedback", Icon: MessageSquare },
-//   ];
-
-//   return (
-//     <>
-//       {/* Backdrop */}
-//       <div
-//         onClick={onClose}
-//         style={{
-//           position: "fixed", inset: 0, zIndex: 1000,
-//           background: "rgba(15,23,42,0.45)",
-//           backdropFilter: "blur(4px)",
-//           animation: "fadeIn 0.15s ease",
-//         }}
-//       />
-
-//       {/* Modal */}
-//       <div style={{
-//         position: "fixed",
-//         top: "50%", left: "50%",
-//         transform: "translate(-50%,-50%)",
-//         zIndex: 1001,
-//         width: isMobile ? "70%" : "60%",
-//         maxHeight: "calc(100vh - 48px)",
-//         background: C.white,
-//         borderRadius: 14,
-//         border: `1px solid ${C.border}`,
-//         boxShadow: "0 20px 60px rgba(0,0,0,0.18)",
-//         display: "flex", flexDirection: "column",
-//         overflow: "hidden",
-//         animation: "slideUp 0.2s ease",
-//         fontFamily: FONT,
-//       }}>
-
-//         {/* Header + Tabs */}
-//         <div style={{ background: C.dark, padding: "14px 18px 0", flexShrink: 0 }}>
-//           <div style={{
-//             display: "flex", alignItems: "center",
-//             justifyContent: "space-between", marginBottom: 12,
-//           }}>
-//             <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1, minWidth: 0 }}>
-//               <div style={{
-//                 width: 34, height: 34, borderRadius: 8,
-//                 background: "rgba(255,255,255,0.12)", color: C.white,
-//                 fontSize: 12, fontWeight: 700, fontFamily: FONT,
-//                 display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
-//               }}>
-//                 {String(session.session_number).padStart(2, "0")}
-//               </div>
-//               <div style={{ flex: 1, minWidth: 0 }}>
-//                 <h2 style={{
-//                   fontSize: 14, fontWeight: 700, color: C.white,
-//                   margin: 0, fontFamily: FONT,
-//                   overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-//                 }}>
-//                   {form.session_title || `Session ${session.session_number}`}
-//                 </h2>
-//               </div>
-//             </div>
-//             <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
-//               <span style={{
-//                 fontSize: 11, fontWeight: 600, fontFamily: FONT,
-//                 color: ({ pending: "#60c8e8", completed: "#4ade80", cancelled: "#9ca3af", missed: "#fbbf24" })[form.status] || "#9ca3af",
-//               }}>
-//                 {form.status ? form.status.charAt(0).toUpperCase() + form.status.slice(1) : "—"}
-//               </span>
-//               <button onClick={onClose} style={{
-//                 width: 28, height: 28, borderRadius: 6,
-//                 background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)",
-//                 color: "rgba(255,255,255,0.7)", display: "flex",
-//                 alignItems: "center", justifyContent: "center", cursor: "pointer",
-//               }}><X size={12} /></button>
-//             </div>
-//           </div>
-
-//           {/* Tabs */}
-//           <div style={{ display: "flex" }}>
-//             {TABS.map(({ id, label, Icon }) => (
-//               <button key={id} onClick={() => setTab(id)} style={{
-//                 display: "flex", alignItems: "center", gap: 5,
-//                 padding: "8px 14px", fontSize: 11, fontWeight: 700,
-//                 fontFamily: FONT, letterSpacing: "0.04em",
-//                 border: "none",
-//                 borderBottom: tab === id ? `2px solid ${C.blue}` : "2px solid transparent",
-//                 marginBottom: -1,
-//                 background: "transparent",
-//                 color: tab === id ? C.blue : "rgba(255,255,255,0.45)",
-//                 cursor: "pointer", transition: "color 0.15s",
-//               }}>
-//                 <Icon size={10} />{label}
-//               </button>
-//             ))}
-//           </div>
-//         </div>
-
-//         {/* Body */}
-//         <div style={{ flex: 1, overflowY: "auto", padding: "16px 18px" }}>
-
-//           {/* ── DETAILS ── */}
-//           {tab === "details" && (
-//             <>
-//               {/* Session Info */}
-//               <div style={{ marginBottom: 16 }}>
-//                 <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
-//                   <BookOpen size={12} style={{ color: C.blue }} />
-//                   <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>SESSION INFO</span>
-//                 </div>
-//                 <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
-
-//                   <div>
-//                     <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Title</label>
-//                     <input
-//                       style={inp} value={form.session_title}
-//                       onChange={handleChange("session_title")}
-//                       placeholder="Introduction & Goal Setting"
-//                       onFocus={(e) => e.target.style.borderColor = C.blue}
-//                       onBlur={(e) => e.target.style.borderColor = C.border}
-//                     />
-//                   </div>
-
-//                   <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 11 }}>
-//                     <div>
-//                       <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Date & Time</label>
-//                       <input
-//                         type="datetime-local" style={inp}
-//                         value={form.session_date} onChange={handleChange("session_date")}
-//                         onFocus={(e) => e.target.style.borderColor = C.blue}
-//                         onBlur={(e) => e.target.style.borderColor = C.border}
-//                       />
-//                     </div>
-//                     <div>
-//                       <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Status</label>
-//                       <select
-//                         style={inp} value={form.status} onChange={handleChange("status")}
-//                         onFocus={(e) => e.target.style.borderColor = C.blue}
-//                         onBlur={(e) => e.target.style.borderColor = C.border}
-//                       >
-//                         <option value="pending">Pending</option>
-//                         <option value="completed">Completed</option>
-//                         <option value="cancelled">Cancelled</option>
-//                         <option value="missed">Missed</option>
-//                       </select>
-//                     </div>
-//                   </div>
-
-//                   <div>
-//                     <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Meeting Link</label>
-//                     <div style={{ position: "relative" }}>
-//                       <Link2 size={11} style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", color: C.muted, pointerEvents: "none" }} />
-//                       <input
-//                         style={{ ...inp, paddingLeft: 30 }} value={form.meeting_link}
-//                         onChange={handleChange("meeting_link")}
-//                         placeholder="https://meet.google.com/…"
-//                         onFocus={(e) => e.target.style.borderColor = C.blue}
-//                         onBlur={(e) => e.target.style.borderColor = C.border}
-//                       />
-//                     </div>
-//                   </div>
-
-//                   <div>
-//                     <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Agenda / Description</label>
-//                     <textarea
-//                       rows={3} style={{ ...inp, resize: "vertical" }}
-//                       value={form.meeting_description} onChange={handleChange("meeting_description")}
-//                       placeholder="Topics to discuss…"
-//                       onFocus={(e) => e.target.style.borderColor = C.blue}
-//                       onBlur={(e) => e.target.style.borderColor = C.border}
-//                     />
-//                   </div>
-
-//                 </div>
-//               </div>
-//             </>
-//           )}
-
-//           {/* ── TASKS ── */}
-//           {tab === "tasks" && (
-//             <>
-//               {/* Assign Task */}
-//               <div style={{ marginBottom: 16 }}>
-//                 <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
-//                   <ClipboardList size={12} style={{ color: C.blue }} />
-//                   <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>ASSIGN TASK</span>
-//                 </div>
-//                 <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
-//                   <div>
-//                     <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Task for Mentee</label>
-//                     <textarea
-//                       rows={4} style={{ ...inp, resize: "vertical" }}
-//                       value={form.tasks_given} onChange={handleChange("tasks_given")}
-//                       placeholder="Describe the task to assign…"
-//                       onFocus={(e) => e.target.style.borderColor = C.blue}
-//                       onBlur={(e) => e.target.style.borderColor = C.border}
-//                     />
-//                   </div>
-//                 </div>
-//               </div>
-
-//               {/* Task Completion */}
-//               <div style={{ marginBottom: 16 }}>
-//                 <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
-//                   <CheckCircle2 size={12} style={{ color: C.blue }} />
-//                   <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>TASK COMPLETION</span>
-//                 </div>
-//                 <label style={{
-//                   display: "flex", alignItems: "center", gap: 10,
-//                   padding: "10px 12px",
-//                   border: `1px solid ${form.task_completed ? "#bbf7d0" : C.border}`,
-//                   borderRadius: 8,
-//                   background: form.task_completed ? "#f0fdf4" : "#f8fafc",
-//                   cursor: "pointer", transition: "all 0.2s",
-//                 }}>
-//                   <input
-//                     type="checkbox" checked={form.task_completed}
-//                     onChange={handleChange("task_completed")}
-//                     style={{ width: 14, height: 14, accentColor: "#16a34a", cursor: "pointer" }}
-//                   />
-//                   <span style={{ fontSize: 12, fontFamily: FONT, fontWeight: 600, color: form.task_completed ? "#16a34a" : C.sub }}>
-//                     {form.task_completed ? "Task marked as completed ✓" : "Mark task as completed"}
-//                   </span>
-//                 </label>
-
-//                 {/* Mentee submission link */}
-//                 {session.task_submission && (
-//                   <div style={{
-//                     display:"flex", alignItems:"center", gap:7, marginTop:10,
-//                     padding:"8px 11px", background:"#f0fdf4",
-//                     border:"1px solid #bbf7d0", borderRadius:8,
-//                   }}>
-//                     <CheckCheck size={12} style={{ color:"#16a34a", flexShrink:0 }} />
-
-//                     <a  href={session.task_submission} target="_blank" rel="noopener noreferrer"
-//                       style={{ fontSize:11, color:"#15803d", flex:1, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap", textDecoration:"none", fontFamily:FONT }}
-//                     >{session.task_submission}</a>
-//                     <ExternalLink size={10} style={{ color:"#16a34a", flexShrink:0 }} />
-//                   </div>
-//                 )}
-//             </div>
-//         </>
-//           )}
-
-//         {/* ── FEEDBACK ── */}
-//         {tab === "feedback" && (
-//           <>
-//             {/* Mentor notes */}
-//             <div style={{ marginBottom: 16 }}>
-//               <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
-//                 <MessageSquare size={12} style={{ color: C.blue }} />
-//                 <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>YOUR NOTES</span>
-//               </div>
-//               <div>
-//                 <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Session Summary / Feedback</label>
-//                 <textarea
-//                   rows={4} style={{ ...inp, resize: "vertical" }}
-//                   value={form.mentor_feedback} onChange={handleChange("mentor_feedback")}
-//                   placeholder="Write session summary, guidance, notes…"
-//                   onFocus={(e) => e.target.style.borderColor = C.blue}
-//                   onBlur={(e) => e.target.style.borderColor = C.border}
-//                 />
-//               </div>
-//             </div>
-
-//             {/* Mentee feedback (read-only) */}
-//             {(session.mentee_feedback || session.mentee_rating > 0) && (
-//               <div style={{ marginBottom: 16 }}>
-//                 <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
-//                   <BookOpen size={12} style={{ color: C.blue }} />
-//                   <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>MENTEE FEEDBACK</span>
-//                 </div>
-//                 <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
-//                   {session.mentee_feedback && (
-//                     <div>
-//                       <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Mentee Notes</label>
-//                       <textarea rows={3} style={{ ...ro, resize: "vertical" }} readOnly value={session.mentee_feedback} />
-//                     </div>
-//                   )}
-//                   {session.mentee_rating > 0 && (
-//                     <div>
-//                       <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Mentee Rating</label>
-//                       <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "6px 0" }}>
-//                         {[1, 2, 3, 4, 5].map(s => (
-//                           <span key={s} style={{ fontSize: 13, color: s <= session.mentee_rating ? "#f59e0b" : C.border }}>★</span>
-//                         ))}
-//                         <span style={{ fontSize: 11, fontWeight: 600, color: C.muted, marginLeft: 4, fontFamily: FONT }}>
-//                           {session.mentee_rating}/5
-//                         </span>
-//                       </div>
-//                     </div>
-//                   )}
-//                 </div>
-//               </div>
-//             )}
-//           </>
-//         )}
-
-//       </div>
-
-//       {/* Footer */}
-//       <div style={{
-//         display: "flex", justifyContent: "space-between", alignItems: "center",
-//         gap: 8, padding: "12px 18px",
-//         borderTop: `1px solid ${C.border}`,
-//         background: "#fafbfc", flexShrink: 0,
-//       }}>
-//         <div>
-//           {error && <span style={{ fontSize: 12, fontWeight: 600, color: "#dc2626", fontFamily: FONT }}>✕ {error}</span>}
-//         </div>
-//         <div style={{ display: "flex", gap: 7 }}>
-//           <button onClick={onClose} style={{
-//             padding: "7px 16px", borderRadius: 7,
-//             fontSize: 12, fontWeight: 600, fontFamily: FONT,
-//             background: C.white, border: `1px solid ${C.border}`,
-//             color: C.sub, cursor: "pointer",
-//           }}>Cancel</button>
-//           <button onClick={handleSave} disabled={saving} style={{
-//             display: "flex", alignItems: "center", gap: 6,
-//             padding: "7px 18px", borderRadius: 7,
-//             fontSize: 12, fontWeight: 700, fontFamily: FONT,
-//             background: saving ? C.muted : C.dark,
-//             color: C.white, border: "none",
-//             cursor: saving ? "not-allowed" : "pointer",
-//             transition: "background 0.15s",
-//           }}>
-//             {saving ? "Saving…" : "Save Changes"}
-//           </button>
-//         </div>
-//       </div>
-//     </div >
-//     </>
-//   );
-// }
 
 
 function SessionModal({ session, onClose, onSave }) {
@@ -640,9 +248,12 @@ function SessionModal({ session, onClose, onSave }) {
     meeting_description: session.meeting_description || "",
     tasks_given: session.tasks_given || "",
     task_completed: session.task_completed || false,
+    task_verified: session.task_verified === true ? true : false,
     mentor_feedback: session.mentor_feedback || "",
     status: session.status || "pending",
   });
+
+
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -803,14 +414,33 @@ function SessionModal({ session, onClose, onSave }) {
                 <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 11 }}>
                   <div>
                     <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Date & Time</label>
-                    <input type="datetime-local" style={inp} value={form.session_date} onChange={handleChange("session_date")} readOnly={locked} />
-                  </div>
+                    <input
+                      type="datetime-local"
+                      style={inp}
+                      value={form.session_date}
+                      onChange={handleChange("session_date")}
+                      readOnly={locked}
+                      min={new Date().toISOString().slice(0, 16)}
+                    />                  </div>
                   <div>
                     <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Status</label>
                     <select style={inp} value={form.status} onChange={handleChange("status")} disabled={locked}>
                       <option value="pending">Pending</option>
-                      <option value="completed">Completed</option>
-                      <option value="cancelled">Cancelled</option>
+                      {(
+                        form.session_title &&
+                        form.session_date &&
+                        form.meeting_link &&
+                        form.meeting_description &&
+                        session.mentee_meeting_description &&
+                        session.mentor_feedback &&
+                        session.mentee_feedback &&
+                        session.task_submission &&
+                        form.tasks_given &&
+                        form.task_verified &&
+                        new Date(form.session_date) <= new Date()
+                      ) && (
+                          <option value="completed">Completed</option>
+                        )}                      <option value="cancelled">Cancelled</option>
                       <option value="missed">Missed</option>
                     </select>
                   </div>
@@ -849,29 +479,32 @@ function SessionModal({ session, onClose, onSave }) {
                   <CheckCircle2 size={12} style={{ color: C.blue }} />
                   <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>TASK COMPLETION</span>
                 </div>
+
+                {/* Mentee completed — always disabled, read-only */}
                 <label style={{
                   display: "flex", alignItems: "center", gap: 10,
-                  padding: "10px 12px",
+                  padding: "10px 12px", marginBottom: 8,
                   border: `1px solid ${form.task_completed ? "#bbf7d0" : C.border}`,
                   borderRadius: 8,
                   background: form.task_completed ? "#f0fdf4" : "#f8fafc",
-                  cursor: locked ? "default" : "pointer",
-                  opacity: locked ? 0.7 : 1,
+                  cursor: "default",
+                  opacity: 0.75,
                 }}>
                   <input
-                    type="checkbox" checked={form.task_completed}
-                    onChange={handleChange("task_completed")}
-                    disabled={locked}
-                    style={{ width: 14, height: 14, accentColor: "#16a34a", cursor: locked ? "default" : "pointer" }}
+                    type="checkbox"
+                    checked={form.task_completed}
+                    disabled
+                    style={{ width: 14, height: 14, accentColor: "#16a34a", cursor: "default" }}
                   />
                   <span style={{ fontSize: 12, fontFamily: FONT, fontWeight: 600, color: form.task_completed ? "#16a34a" : C.sub }}>
-                    {form.task_completed ? "Task marked as completed ✓" : "Mark task as completed"}
+                    {form.task_completed ? "Mentee marked task as completed ✓" : "Mentee has not marked task as completed"}
                   </span>
                 </label>
 
+                {/* Submission link */}
                 {session.task_submission && (
                   <div style={{
-                    display: "flex", alignItems: "center", gap: 7, marginTop: 10,
+                    display: "flex", alignItems: "center", gap: 7, marginBottom: 8,
                     padding: "8px 11px", background: "#f0fdf4",
                     border: "1px solid #bbf7d0", borderRadius: 8,
                   }}>
@@ -883,6 +516,28 @@ function SessionModal({ session, onClose, onSave }) {
                     <ExternalLink size={10} style={{ color: "#16a34a", flexShrink: 0 }} />
                   </div>
                 )}
+
+                {/* Mentor verify checkbox — active */}
+                <label style={{
+                  display: "flex", alignItems: "center", gap: 10,
+                  padding: "10px 12px",
+                  border: `1px solid ${form.task_verified ? "#bfdbfe" : C.border}`,
+                  borderRadius: 8,
+                  background: form.task_verified ? "#eff6ff" : "#f8fafc",
+                  cursor: locked ? "default" : "pointer",
+                  opacity: locked ? 0.7 : 1,
+                }}>
+                  <input
+                    type="checkbox"
+                    checked={form.task_verified}
+                    onChange={handleChange("task_verified")}
+                    disabled={locked}
+                    style={{ width: 14, height: 14, accentColor: "#1a1a2e", cursor: locked ? "default" : "pointer" }}
+                  />
+                  <span style={{ fontSize: 12, fontFamily: FONT, fontWeight: 600, color: form.task_verified ? "#1a1a2e" : C.sub }}>
+                    {form.task_verified ? "Mentor verified task ✓" : "Verify task as mentor"}
+                  </span>
+                </label>
               </div>
             </>
           )}
@@ -901,33 +556,40 @@ function SessionModal({ session, onClose, onSave }) {
                 </div>
               </div>
 
-              {(session.mentee_feedback || session.mentee_rating > 0) && (
-                <div style={{ marginBottom: 16 }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
-                    <BookOpen size={12} style={{ color: C.blue }} />
-                    <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>MENTEE FEEDBACK</span>
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12, paddingBottom: 8, borderBottom: `1px solid ${C.border}` }}>
+                  <BookOpen size={12} style={{ color: C.blue }} />
+                  <span style={{ fontSize: 10, fontWeight: 800, color: C.blue, letterSpacing: "0.1em", fontFamily: FONT }}>MENTEE FEEDBACK</span>
+
+                </div>
+
+                {session.mentee_feedback && (
+                  <div>
+                    {/* <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Mentee Notes</label> */}
+                    <textarea rows={3} style={{ ...ro, resize: "none" }} readOnly value={session.mentee_feedback} />
                   </div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
-                    {session.mentee_feedback && (
-                      <div>
-                        <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Mentee Notes</label>
-                        <textarea rows={3} style={{ ...ro, resize: "none" }} readOnly value={session.mentee_feedback} />
+                )}
+                <div style={{ display: "flex", flexDirection: "column", gap: 11 }}>
+                  <div>
+                    <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Mentee Notes</label>
+                    <textarea rows={3} style={{ ...ro, resize: "none" }} readOnly value={session.mentee_feedback || "No feedback provided yet"} />
+                  </div>
+                  <div>
+                    <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Mentee Rating</label>
+                    {session.mentee_rating > 0 ? (
+                      <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "6px 0" }}>
+                        {[1, 2, 3, 4, 5].map(s => (
+                          <span key={s} style={{ fontSize: 13, color: s <= session.mentee_rating ? "#f59e0b" : C.border }}>★</span>
+                        ))}
+                        <span style={{ fontSize: 11, fontWeight: 600, color: C.muted, marginLeft: 4, fontFamily: FONT }}>{session.mentee_rating}/5</span>
                       </div>
-                    )}
-                    {session.mentee_rating > 0 && (
-                      <div>
-                        <label style={{ display: "block", fontSize: 10, fontWeight: 700, color: C.muted, textTransform: "uppercase", letterSpacing: "0.09em", marginBottom: 5, fontFamily: FONT }}>Mentee Rating</label>
-                        <div style={{ display: "flex", alignItems: "center", gap: 4, padding: "6px 0" }}>
-                          {[1, 2, 3, 4, 5].map(s => (
-                            <span key={s} style={{ fontSize: 13, color: s <= session.mentee_rating ? "#f59e0b" : C.border }}>★</span>
-                          ))}
-                          <span style={{ fontSize: 11, fontWeight: 600, color: C.muted, marginLeft: 4, fontFamily: FONT }}>{session.mentee_rating}/5</span>
-                        </div>
-                      </div>
+                    ) : (
+                      <span style={{ fontSize: 12, color: C.muted, fontFamily: FONT }}>No rating given yet</span>
                     )}
                   </div>
                 </div>
-              )}
+              </div>
+
             </>
           )}
         </div>
@@ -1097,18 +759,18 @@ function SubscribersTable({ subscribers, isLoading }) {
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
-              <tr>{["S NO", "Mentee", "Plan", "Sessions", "Amount", "Start Date", "Status"].map(h => <Th key={h}>{h}</Th>)}</tr>
+              <tr>{["S No", "Mentee", "Plan", "Sessions", "Amount", "Start Date", "Status"].map(h => <Th key={h}>{h}</Th>)}</tr>
             </thead>
             <tbody>
               {isLoading ? <SkeletonRows cols={7} /> : paged.length === 0 ? <EmptyState message="No subscribers found" cols={7} /> : (
                 paged.map((sub, idx) => (
                   <tr key={sub._id} style={{ cursor: "pointer" }} onClick={() => setSelected(sub)}>
-                    <Td><span style={{ fontSize: 12, color: "#94a3b8", fontWeight: 600 }}>{(page - 1) * pageSize + idx + 1}</span></Td>
-                    <Td><span style={{ fontSize: 13, color: "#0c9dce", fontWeight: 700 }}>{sub.mentee?.name || "—"}</span></Td>
-                    <Td><span style={{ fontSize: 12, fontWeight: 700, color: "#0c9dce" }}>{PLAN_LABELS[sub.plan_type] || sub.plan_type || "—"}</span></Td>
+                    <Td><span style={{ fontSize: 12, color: "#1a1a2e", fontWeight: 600 }}>{(page - 1) * pageSize + idx + 1}</span></Td>
+                    <Td><span style={{ fontSize: 13, color: "#1a1a2e", fontWeight: 700 }}>{sub.mentee?.name || "—"}</span></Td>
+                    <Td><span style={{ fontSize: 12, fontWeight: 700, color: "#1a1a2e" }}>{PLAN_LABELS[sub.plan_type] || sub.plan_type || "—"}</span></Td>
                     <Td><span style={{ fontSize: 13, fontWeight: 600, color: "#1a1a2e" }}>{sub.total_sessions ?? "—"}</span></Td>
-                    <Td><span style={{ fontSize: 13, fontWeight: 700, color: "#16a34a" }}>{fmt.amount(sub.amount)}</span></Td>
-                    <Td><span style={{ fontSize: 12, color: "#64748b" }}>{fmt.date(sub.subscribed_at)}</span></Td>
+                    <Td><span style={{ fontSize: 13, fontWeight: 700, color: "#1a1a2e" }}>{fmt.amount(sub.amount)}</span></Td>
+                    <Td><span style={{ fontSize: 12, color: "#1a1a2e" }}>{fmt.date(sub.subscribed_at)}</span></Td>
                     <Td><StatusBadge status={sub.status} /></Td>
                   </tr>
                 ))
@@ -1206,8 +868,8 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
           <React.Fragment key={label}>
             {i > 0 && <div style={{ width: 1, height: 28, background: "#bae6fd" }} />}
             <div>
-              <p style={{ fontSize: 10, color: "#0c9dce", fontWeight: 700, margin: 0, letterSpacing: "0.06em" }}>{label}</p>
-              <p style={{ fontSize: 13, color: color || "#1a1a2e", fontWeight: 700, margin: "2px 0 0" }}>{value}</p>
+              <p style={{ fontSize: 10, color: "#1a1a2e", fontWeight: 700, margin: 0, letterSpacing: "0.06em" }}>{label}</p>
+              <p style={{ fontSize: 13, color: "#1a1a2e", fontWeight: 700, margin: "2px 0 0" }}>{value}</p>
             </div>
           </React.Fragment>
         ))}
@@ -1218,7 +880,7 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
         <div style={{ overflowX: "auto" }}>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
-              <tr>{["S no", "Session", "Date", "Status", "Action"].map(h => <Th key={h}>{h}</Th>)}</tr>
+              <tr>{["S No", "Session", "Date", "Status", "Action"].map(h => <Th key={h}>{h}</Th>)}</tr>
             </thead>
             <tbody>
               {isLoading || isFetching ? (
@@ -1278,7 +940,7 @@ function MenteeSessionsView({ sub, mentorId, onBack }) {
                           ? (
                             // ← lock icon instead of View button
                             <span style={{ fontSize: 11, color: "#cbd5e1", display: "flex", alignItems: "center", gap: 4, fontWeight: 600 }}>
-                            Locked
+                              Locked
                             </span>
                           ) : (
                             <button

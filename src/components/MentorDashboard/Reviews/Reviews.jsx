@@ -240,17 +240,7 @@ export default function MentorReviewsUI() {
               </p>
             </div>
 
-            <div className="inline-flex items-center gap-4 bg-white rounded-lg border border-gray-200 px-6 py-4 shadow-sm flex-shrink-0">
-              <div>
-                <div className="text-2xl font-bold text-[#1a1a2e]">{avgRating}</div>
-                <div className="text-xs text-gray-500 mt-0.5">out of 5</div>
-              </div>
-              <div className="h-10 w-px bg-gray-200" />
-              <div>
-                <div className="flex gap-1 mb-1">{renderStars(Math.round(avgRating))}</div>
-                <div className="text-xs font-medium text-gray-600">{total} reviews</div>
-              </div>
-            </div>
+           
           </div>
 
           {/* Reviews grid */}

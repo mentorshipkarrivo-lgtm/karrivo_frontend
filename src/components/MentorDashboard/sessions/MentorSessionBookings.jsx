@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useGetMentorSessionsQuery } from "./sessionsapislice";
 import { BookOpen, Clock3 } from "lucide-react";
@@ -161,13 +162,12 @@ export default function SessionsTable() {
                     </h1>
 
                     {/* Subtitle + Info */}
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                    <div className="flex flex-col md:flex-row text-[12px]  md:items-center md:justify-between gap-3">
                         <p className="text-xs text-gray-500">
                             View and manage your mentoring sessions
                         </p>
 
-                        <div className="flex items-center gap-2 text-xs text-gray-600">
-                            {/* <Clock3 className="h-4 w-4 text-[#0098cc] shrink-0" /> */}
+                        <div className="flex items-center text-[12px] gap-2 text-xs text-gray-600">
                             <span>
                                 <span className="font-medium">Join Button</span> is activates
                                 {" "}
@@ -233,7 +233,12 @@ export default function SessionsTable() {
                                                 // ── Join eligibility ──  ADD THESE 4 LINES
                                                 const startDT = getSessionStart(s);
                                                 const joinOpensAt = startDT ? startDT.getTime() - JOIN_WINDOW_MS : null;
-                                                const canJoin = !!s.meetingLink && joinOpensAt !== null && now >= joinOpensAt;
+                                                // const canJoin = !!s.meetingLink && joinOpensAt !== null && now >= joinOpensAt;
+
+                                                const canJoin = !!s.meetingLink
+                                                    && joinOpensAt !== null
+                                                    && now >= joinOpensAt
+                                                    && !["expired", "cancelled", "completed"].includes(s.status);
                                                 const minutesUntilJoin = joinOpensAt !== null
                                                     ? Math.max(0, Math.ceil((joinOpensAt - now) / 60000))
                                                     : null;
@@ -265,7 +270,7 @@ export default function SessionsTable() {
 
                                                         {/* Time */}
                                                         <td className={`${TD} font-medium text-[#0098cc]`}>
-                                                            {s.startTime} – {s.endTime}
+                                                            {s.startTime}
                                                         </td>
 
                                                         {/* Type */}
@@ -369,3 +374,4 @@ export default function SessionsTable() {
         </div >
     );
 }
+

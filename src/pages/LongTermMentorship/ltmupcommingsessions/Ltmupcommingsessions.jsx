@@ -436,13 +436,33 @@ function SessionModal({ session, menteeId, onClose, onSave }) {
                           color: form.task_completed ? "#16a34a" : C.sub,
                         }}>
                           {form.task_completed
-                            ? session.task_completed
-                              ? "Task completed ✓ (verified by mentor)"
-                              : "Task completed ✓"
+                            ? session.task_verified
+                              ? "Task completed ✓ (Verified by Mentor ✓)"
+                              : "Task completed ✓ (Not verified yet)"
                             : "Mark task as completed"}
                         </span>
-                      
+
                       </label>
+                      {/* Mentor verification status */}
+                      <div style={{
+                        display: "flex", alignItems: "center", gap: 7, marginTop: 8,
+                        padding: "8px 11px", borderRadius: 8,
+                        background: session.task_verified ? "#eff6ff" : "#f8fafc",
+                        border: `1px solid ${session.task_verified ? "#bfdbfe" : "#e2e8f0"}`,
+                      }}>
+                        {session.task_verified
+                          ? <CheckCircle2 size={12} style={{ color: "#2563eb", flexShrink: 0 }} />
+                          : <Circle size={12} style={{ color: "#94a3b8", flexShrink: 0 }} />
+                        }
+                        <span style={{
+                          fontSize: 12, fontWeight: 600, fontFamily: FONT,
+                          color: session.task_verified ? "#2563eb" : "#94a3b8",
+                        }}>
+                          {session.task_verified
+                            ? "Mentor has verified your task"
+                            : "Awaiting mentor verification"}
+                        </span>
+                      </div>
                     </Field>
                   </ModalSection>
 
