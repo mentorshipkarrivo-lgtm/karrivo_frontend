@@ -6,7 +6,7 @@ import {
   MapPin, Briefcase, X, CheckCircle2, ArrowLeft, ArrowRight,
   Star, Calendar, Clock, Video, CheckCircle, XCircle,
   Tag, FileText, Eye, AlertTriangle, User, Check,
-  Loader2, ExternalLink, Zap, BadgeCheck, Phone, MessageCircle, CreditCard,Building2 
+  Loader2, ExternalLink, Zap, BadgeCheck, Phone, MessageCircle, CreditCard, Building2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Cookies from "js-cookie";
@@ -63,13 +63,13 @@ const TopicCell = ({ text }) => {
     <div style={{ maxWidth: "200px" }}>
       {!expanded ? (
         <>
-          <span className="block overflow-hidden text-ellipsis whitespace-nowrap text-[#0098cc] text-xs">
+          <span className="block overflow-hidden text-ellipsis whitespace-nowrap text-[#515762] text-xs">
             {isLong ? preview : text}
           </span>
           {isLong && (
             <button
               onClick={() => setExpanded(true)}
-              className="text-[10px] text-gray-400 hover:text-[#0098cc] underline underline-offset-2 transition mt-0.5"
+              className="text-[12px] text-[#515762]  hover:text-[#0098cc] underline underline-offset-2 transition mt-0.5"
             >
               Read more
             </button>
@@ -77,7 +77,7 @@ const TopicCell = ({ text }) => {
         </>
       ) : (
         <>
-          <span className="text-[#0098cc] text-xs leading-relaxed">{text}</span>
+          <span className="text=[#515762] text-xs leading-relaxed">{text}</span>
           <button
             onClick={() => setExpanded(false)}
             className="block text-[10px] text-gray-400 hover:text-[#0098cc] underline underline-offset-2 transition mt-0.5"
@@ -308,29 +308,29 @@ function MentorCard({ mentor, index, onViewProfile }) {
       <div className="flex-1 flex flex-col justify-between p-3 sm:p-4 min-w-0">
         <div className="space-y-1.5">
           {/* Name */}
-          <h3 className="font-semibold text-[#0a1a22] text-sm leading-tight">
+          <h3 className="font-semibold  text-[#0a1a22] text-sm leading-tight">
             {mentor.fullName}
           </h3>
 
           {/* Role & Company */}
 
           {mentor.companyName && (
-            <span className="flex items-center gap-1">
+            <span className="flex  items-center gap-1">
               <Building2 size={18} className="text-[#515762]" />
               {mentor.companyName}
             </span>
           )}
 
           {/* Experience & Rate */}
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex text-[12px] items-center gap-2 flex-wrap">
             {mentor.yearsOfExperience && (
-              <span className="text-[11px] text-[#515762]">
+              <span className="text-[12px] text-[#515762]">
                 {mentor.yearsOfExperience} years Experience
               </span>
             )}
             {mentor.hourlyRate && (
-              <span className="text-[11px] text-[#515762] font-medium">
-                ₹{mentor.hourlyRate}/Session
+              <span className="text-[12px] text-[#515762] font-medium">
+                ₹ {mentor.hourlyRate}/Session
               </span>
             )}
           </div>
@@ -345,18 +345,18 @@ function MentorCard({ mentor, index, onViewProfile }) {
 
           {mentor.mentoringStyle && (
             <div className="flex items-center gap-2 mt-1">
-              <span className="text-[11px] font-semibold text-[#515762]">
+              <span className="text-[12px] font-semibold text-[#515762]">
                 Mentoring Style:
               </span>
 
-              <span className="inline-block px-2 py-0.5 text-[10px] font-medium text-[#515762] border border-[#6b7280] rounded-sm">
+              <span className="inline-block px-2 py-0.5 text-[12px] font-medium text-[#515762] border border-[#6b7280] rounded-sm">
                 {mentor.mentoringStyle}
               </span>
             </div>
           )}
 
           {/* Areas of Interest */}
-          {mentor.areasOfInterest && (
+          {/* {mentor.areasOfInterest && (
             <div className="flex flex-wrap gap-1.5 mt-1">
               {mentor.areasOfInterest
                 .split(",")
@@ -370,6 +370,25 @@ function MentorCard({ mentor, index, onViewProfile }) {
                     {interest.trim()}
                   </span>
                 ))}
+            </div>
+          )} */}
+
+          {mentor.areasOfInterest && (
+            <div className="mt-2">
+              <p className="text-[14px] font-semibold text-[#0a1a22] mb-1">
+                Areas of Expertise
+              </p>
+
+              <div className="flex flex-wrap gap-1.5">
+                {mentor.areasOfInterest.split(",").map((interest, idx) => (
+                  <span
+                    key={idx}
+                    className="px-2 py-1 text-[10px] font-medium rounded-sm text-[#515762] border border-[#515762]"
+                  >
+                    {interest.trim()}
+                  </span>
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -654,7 +673,7 @@ function RescheduleModal({
                               <p className="text-xs font-semibold text-[#0a1a22] text-center">{getSlotDayName(slot.date)}</p>
                               <p className="text-[10px] text-gray-500 text-center">{to12h(slot.startTime)}</p>
                               <p className="text-[10px] text-gray-500 text-center">— {to12h(slot.endTime)}</p>
-                              <p className="text-[10px] text-gray-400 mt-0.5 text-center">{mins} min</p>
+                              <p className="text-[10px] text-gray-400 mt-0.5 text-center">{mins} minutes</p>
                             </div>
                           </div>
                         </button>
@@ -726,7 +745,7 @@ function BookingCard({
     <tr className="border-b border-gray-100 last:border-b-0 hover:bg-gray-50 transition-colors duration-150 font-[DM_Sans,sans-serif]">
 
       {/* # */}
-      <td className={`${TD} font-medium text-gray-400 text-center`} style={{ width: "40px" }}>
+      <td className={`${TD} font-medium text-[#515762] text-center`} style={{ width: "40px" }}>
         {serialNo}
       </td>
 
@@ -737,18 +756,18 @@ function BookingCard({
         <TopicCell text={topic} />
       </td>
       {/* Date */}
-      <td className={`${TD} text-gray-500`} style={{ whiteSpace: "nowrap", minWidth: "100px" }}>
+      <td className={`${TD} text-[#515762]`} style={{ whiteSpace: "nowrap", minWidth: "100px" }}>
         {formatCardDate(booking.sessionDate)}
       </td>
 
       {/* Time */}
-      <td className={`${TD} font-medium text-[#0098cc]`} style={{ whiteSpace: "nowrap", minWidth: "100px" }}>
-        {formatCardTime(booking.startTime) || "TBD"} · {booking.durationMinutes || 30}m
+      <td className={`${TD} font-medium text-[#515762]`} style={{ whiteSpace: "nowrap", minWidth: "100px" }}>
+        {formatCardTime(booking.startTime) || "TBD"} / {booking.durationMinutes || 30} minutes
       </td>
 
       {/* Status */}
       <td className={`${TD}`} style={{ minWidth: "110px" }}>
-        <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap `}>
+        <span className={`  text-[#515762] inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap `}>
           {/* <StatusIcon className="w-2.5 h-2.5" /> */}
           {statusCfg.label}
         </span>
@@ -795,9 +814,9 @@ function SidebarWidgets({ navigate }) {
   return (
     <div className="flex flex-col gap-4">
       <div className="bg-white border border-gray-200 rounded-xl p-4">
-        <p className="text-sm font-semibold text-[#0a1a22]">Book trials</p>
-        <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">
-          Explore from a list of 600+ mentors, book trials and find the perfect mentor for you.
+        <p className="text-sm font-semibold text-[#515762]">Book trials</p>
+        <p className="text-xs  text-[12px] text-[#515762] mt-1.5 leading-relaxed">
+          Explore from a list of 100+ mentors, book trials and find the perfect mentor for you.
         </p>
         <button
           onClick={() => navigate("/explore-mentors")}
@@ -1041,12 +1060,24 @@ export default function BookingsDashboard() {
                   <table className="w-full" >
                     <thead>
                       <tr className="border-b border-gray-200 bg-gray-50">
-                        <th className="px-4 py-3 text-center text-[11px] font-semibold text-gray-400 uppercase tracking-wide min-w-[120px]">S No</th>
-                        <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wide min-w-[120px]">Topic</th>
-                        <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wide min-w-[100px]">Date</th>
-                        <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wide min-w-[110px]">Time</th>
-                        <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-400 uppercase tracking-wide min-w-[110px] ">Status</th>
-                        <th className="px-4 py-3 text-right text-[11px] font-semibold text-gray-400 uppercase tracking-wide min-w-[110px]">Actions</th>
+                        <th className="px-4 py-3 text-center text-[12px] font-semibold text-[#515762] tracking-wide min-w-[120px]">
+                          S No
+                        </th>
+                        <th className="px-4 py-3 text-left text-[12px] font-semibold text-[#515762] tracking-wide min-w-[120px]">
+                          Topic
+                        </th>
+                        <th className="px-4 py-3 text-left text-[12px] font-semibold text-[#515762] tracking-wide min-w-[100px]">
+                          Date
+                        </th>
+                        <th className="px-4 py-3 text-left text-[12px] font-semibold text-[#515762] tracking-wide min-w-[110px]">
+                          Time
+                        </th>
+                        <th className="px-4 py-3 text-left text-[12px] font-semibold text-[#515762] tracking-wide min-w-[110px]">
+                          Status
+                        </th>
+                        <th className="px-4 py-3 text-right text-[12px] font-semibold text-[#515762] tracking-wide min-w-[110px]">
+                          Actions
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1121,7 +1152,7 @@ ${panelOpen ? "translate-x-0" : "translate-x-full"}
 
                 <div className="flex-1 overflow-y-auto px-4 sm:px-5 py-4 h-0 min-h-0">
                   <DetailRow icon={Calendar} label="Date" value={formatDate(selectedBooking.sessionDate)} />
-                  <DetailRow icon={Clock} label="Time" value={`${selectedBooking.startTime} · ${selectedBooking.durationMinutes} min`} />
+                  <DetailRow icon={Clock} label="Time" value={`${selectedBooking.startTime} · ${selectedBooking.durationMinutes} minutes`} />
                   <DetailRow icon={Tag} label="Session Type" value={selectedBooking.sessionType} />
                   <DetailRow icon={FileText} label="Topic">
                     <TopicPanelCell text={selectedBooking.topic} />
@@ -1189,7 +1220,7 @@ ${panelOpen ? "translate-x-0" : "translate-x-full"}
                   <div className="p-3 sm:p-3.5 rounded-xl bg-gray-50 border border-gray-200 mb-4">
                     <p className="text-sm font-semibold text-[#0a1a22]">{getMentorName(selectedBooking)}</p>
                     <p className="text-xs text-gray-500 mt-1">
-                      {formatCardDate(selectedBooking.sessionDate)} · {formatCardTime(selectedBooking.startTime)} · {selectedBooking.durationMinutes} min
+                      {formatCardDate(selectedBooking.sessionDate)} · {formatCardTime(selectedBooking.startTime)} · {selectedBooking.durationMinutes} minutes
                     </p>
                     {selectedBooking.isFreeSession && (
                       <p className="mt-2 text-xs font-medium text-[#0098cc] flex items-center gap-1">

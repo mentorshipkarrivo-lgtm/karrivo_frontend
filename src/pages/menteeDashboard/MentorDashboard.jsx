@@ -1,809 +1,5 @@
 
 
-// import React, { useState, useEffect } from 'react';
-// import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-// import {
-//     useGetMenteeProfileQuery,
-//     useSaveMenteeProfileMutation,
-// } from './mentedashboardapislice';
-// import { useGetSubscriptionsByMenteeIdQuery } from '../LongTermMentorship/subscriptionplan/subcriptionsplanapislice';
-// import {
-//     Home, Menu, X, Calendar, Clock, MessageCircle,
-//     LogOut, User, MessageSquare, Users, HelpCircle,
-//     BookOpen, CreditCard, Loader2, Lock, Bell, Mail,
-//     Star, Zap, ChevronRight, Phone, Megaphone, Wrench, Bug
-// } from 'lucide-react';
-// import Loader from '../../global/Loader';
-// import Karrivo from "../../assets/KarivoLogo.jpg"
-
-// /* ── Global Styles for Cambria Font ──────────────────────────────────────── */
-// const globalStyles = `
-//     * {
-//         font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-//     }
-// `;
-// /* ── Helpers ──────────────────────────────────────────────────────────────── */
-// const getCookie = (name) => {
-//     const value = `; ${document.cookie}`;
-//     const parts = value.split(`; ${name}=`);
-//     if (parts.length === 2) return parts.pop().split(';').shift();
-//     return null;
-// };
-
-// const clearAllData = () => {
-//     localStorage.clear();
-//     document.cookie.split(';').forEach(cookie => {
-//         const name = cookie.split('=')[0].trim();
-//         document.cookie = `${name}=; path=/; max-age=0`;
-//     });
-//     sessionStorage.clear();
-// };
-
-// /* ── Nav config ───────────────────────────────────────────────────────────── */
-// const topNavigationItems = [
-//     { id: 'bookings', label: 'Trial Bookings', icon: Users, path: '/mentee/bookings' },
-//     { id: 'profile', label: 'My Profile', icon: User, path: '/mentee/profile' },
-//     { id: 'support', label: 'Help Support', icon: HelpCircle, path: '/mentee/support' },
-// ];
-
-// const ltmNavigationItems = [
-//     { id: 'upcoming-sessions', label: 'Upcoming Sessions', icon: Clock, path: '/mentee/upcoming' },
-//     { id: 'completed', label: 'Session History', icon: BookOpen, path: '/mentee/completed_sessions' },
-//     { id: 'subscription', label: 'Subscription Plan', icon: CreditCard, path: '/mentee/subscription' },
-//     { id: 'mentor', label: 'My Mentor', icon: User, path: '/mentee/mentor' },
-//     { id: 'menteePayments', label: 'Mentee Payments', icon: MessageCircle, path: '/mentee/mentee-payments' },
-// ];
-
-// const menteeTypes = [
-//     'All Mentors', 'Engineering Mentors', 'Top Mentors', 'Startup Mentors',
-//     'Product Mentors', 'Marketing Mentors', 'Leadership Mentors', 'AI Mentors',
-// ];
-
-// const getPageLabel = (pathname) => {
-//     const all = [...topNavigationItems, ...ltmNavigationItems];
-//     const match = all.find(item => item.path === pathname);
-//     return match ? match.label : 'Dashboard';
-// };
-
-// /* ── NoSubscriptionPopup ─────────────────────────────────────────────────── */
-// const NoSubscriptionPopup = ({ isOpen, onClose, onSubscribe }) => {
-//     if (!isOpen) return null;
-//     return (
-//         <>
-//             <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 300, background: 'rgba(0,0,0,0.18)', fontFamily: 'Cambria, Georgia, serif' }} />
-//             <div style={{
-//                 position: 'fixed', top: '50%', left: '50%',
-//                 transform: 'translate(-50%,-50%)', zIndex: 301,
-//                 width: '90%', maxWidth: 340, background: '#fff',
-//                 border: '1px solid #e4e8ee', borderRadius: 14,
-//                 padding: '18px 20px', boxSizing: 'border-box',
-//                 fontFamily: 'Cambria, Georgia, serif',
-//             }}>
-//                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-//                     <div style={{
-//                         width: 36, height: 36, borderRadius: 9, flexShrink: 0,
-//                         background: '#f0f4ff', border: '1px solid #dbe4ff',
-//                         display: 'flex', alignItems: 'center', justifyContent: 'center',
-//                     }}>
-//                         <Lock size={16} color="#3b6be0" />
-//                     </div>
-//                     <div style={{ flex: 1 }}>
-//                         <p style={{ fontSize: 13, fontWeight: 700, color: '#212c3d', marginBottom: 3, fontFamily: 'Cambria, Georgia, serif' }}>No active subscription</p>
-//                         <p style={{ fontSize: 12, color: '#5a6a82', lineHeight: 1.5, fontFamily: 'Cambria, Georgia, serif' }}>
-//                             Subscribe to a mentorship plan to unlock long-term mentorship features.
-//                         </p>
-//                     </div>
-//                     <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 2, flexShrink: 0 }}>
-//                         <X size={15} color="#94a3b8" />
-//                     </button>
-//                 </div>
-//                 <div style={{ display: 'flex', gap: 8, marginTop: 14 }}>
-//                     <button onClick={onClose} style={{
-//                         flex: 1, padding: '8px 0', fontSize: 12, fontWeight: 600,
-//                         background: '#f8fafc', border: '1px solid #e4e8ee', borderRadius: 8, cursor: 'pointer', color: '#5a6a82',
-//                         fontFamily: 'Cambria, Georgia, serif',
-//                     }}>Cancel</button>
-//                     <button onClick={onSubscribe} style={{
-//                         flex: 1, padding: '8px 0', fontSize: 12, fontWeight: 700,
-//                         background: '#212c3d', border: 'none', borderRadius: 8, cursor: 'pointer', color: '#fff',
-//                         fontFamily: 'Cambria, Georgia, serif',
-//                     }}>View Plans →</button>
-//                 </div>
-//             </div>
-//         </>
-//     );
-// };
-
-// /* ── LogoutModal ──────────────────────────────────────────────────────────── */
-// const LogoutModal = ({ isOpen, onClose, onConfirm }) => {
-//     if (!isOpen) return null;
-//     return (
-//         <div className="fixed inset-0 z-[200] flex items-center justify-center" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
-//             <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-//             <div className="relative bg-white rounded-lg p-6 w-80 shadow-xl mx-4" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
-//                 <h2 className="text-lg font-bold mb-2">Confirm Logout</h2>
-//                 <p className="text-gray-600 mb-6 text-sm">Are you sure you want to logout?</p>
-//                 <div className="flex gap-3 justify-end">
-//                     <button onClick={onClose} className="px-4 py-2 border rounded-lg hover:bg-gray-50 text-sm" style={{ fontFamily: 'Cambria, Georgia, serif' }}>Cancel</button>
-//                     <button onClick={onConfirm} className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm" style={{ fontFamily: 'Cambria, Georgia, serif' }}>Logout</button>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// /* ── ProfileDropdown ──────────────────────────────────────────────────────── */
-// const ProfileDropdown = ({ userData, onProfileClick, onLogoutClick, isOpen, profilePhotoUrl }) => {
-//     if (!isOpen) return null;
-//     const initials = userData?.name?.split(' ').slice(0, 2).map(n => n?.[0]?.toUpperCase()).join('') || 'U';
-//     return (
-//         <div className="absolute right-0 top-12 w-64 bg-white rounded-lg shadow-lg border py-2 z-50" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
-//             <div className="px-4 py-3 border-b">
-//                 <div className="flex items-center gap-3">
-//                     {profilePhotoUrl ? (
-//                         <img src={profilePhotoUrl} alt={userData?.name}
-//                             className="w-10 h-10 rounded-full flex-shrink-0 object-cover bg-gray-100"
-//                             onError={e => { e.target.style.display = 'none'; if (e.target.nextSibling) e.target.nextSibling.style.display = 'flex'; }}
-//                         />
-//                     ) : null}
-//                     <div className="w-10 h-10 bg-[#0098cc] rounded-full flex items-center justify-center text-white flex-shrink-0 font-semibold text-sm"
-//                         style={{ display: profilePhotoUrl ? 'none' : 'flex', fontFamily: 'Cambria, Georgia, serif' }}>{initials}</div>
-//                     <div className="min-w-0">
-//                         <div className="font-medium text-sm truncate" style={{ fontFamily: 'Cambria, Georgia, serif' }}>{userData?.name}</div>
-//                         <div className="text-xs text-gray-500 truncate" style={{ fontFamily: 'Cambria, Georgia, serif' }}>{userData?.email}</div>
-//                     </div>
-//                 </div>
-//             </div>
-//             <button onClick={onProfileClick} className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
-//                 <User size={16} /> View Profile
-//             </button>
-//             <button onClick={onLogoutClick} className="w-full px-4 py-2 text-left text-sm hover:bg-gray-50 flex items-center gap-2 text-red-600" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
-//                 <LogOut size={16} /> Logout
-//             </button>
-//         </div>
-//     );
-// };
-
-// const BUTTON_COLOR = '#1a1a2e';
-
-// const ProfileCompletionForm = ({ onComplete = () => { }, saving = false, serverErrors = {} }) => {
-//     const [currentStep, setCurrentStep] = useState(1);
-//     const [formData, setFormData] = useState({
-//         fullName: '', dateOfBirth: '', address: '',
-//         currentStatus: '', highestEducation: '', menteeType: '',
-//     });
-//     const [clientErrors, setClientErrors] = useState({});
-
-//     const set = (field, value) => {
-//         setFormData(prev => ({ ...prev, [field]: value }));
-//         setClientErrors(prev => ({ ...prev, [field]: '' }));
-//     };
-
-//     const validateStep = (step) => {
-//         const errs = {};
-//         if (step === 1) {
-//             if (!formData.fullName || formData.fullName.trim().length < 2) errs.fullName = 'Full name required (min 2 chars)';
-//             if (!formData.dateOfBirth) errs.dateOfBirth = 'Date of birth is required';
-//             if (!formData.address || formData.address.trim().length < 5) errs.address = 'Address required (min 5 chars)';
-//         }
-//         if (step === 2) {
-//             if (!formData.currentStatus) errs.currentStatus = 'Please select your status';
-//             if (!formData.highestEducation) errs.highestEducation = 'Please select education';
-//         }
-//         if (step === 3) {
-//             if (!formData.menteeType) errs.menteeType = 'Please select a mentor type';
-//         }
-//         setClientErrors(errs);
-//         return Object.keys(errs).length === 0;
-//     };
-
-//     const handleNext = () => { if (validateStep(currentStep)) setCurrentStep(s => s + 1); };
-//     const handleSubmit = () => { if (validateStep(3)) onComplete(formData); };
-//     const errors = { ...serverErrors, ...clientErrors };
-
-//     const FieldError = ({ field }) => errors[field]
-//         ? <p style={{ fontSize: 11, color: '#ef4444', marginTop: 4, fontFamily: 'Cambria, Georgia, serif' }}>{errors[field]}</p> : null;
-
-//     const inputStyle = (field) => ({
-//         width: '100%', padding: '8px 11px',
-//         border: `1.5px solid ${errors[field] ? '#f87171' : '#e2e8f0'}`,
-//         borderRadius: 8, fontSize: 13, color: '#0f172a',
-//         outline: 'none', boxSizing: 'border-box',
-//         background: errors[field] ? '#fff8f8' : '#fff',
-//         fontFamily: 'Cambria, Georgia, serif', transition: 'border-color 0.15s',
-//     });
-
-//     const toggleStyle = (active) => ({
-//         padding: '9px', border: `1.5px solid ${active ? BUTTON_COLOR : '#e2e8f0'}`,
-//         borderRadius: 8, fontSize: 12, fontWeight: 500,
-//         background: active ? BUTTON_COLOR : '#fff',
-//         color: active ? '#fff' : '#64748b',
-//         cursor: 'pointer', transition: 'all 0.15s', textAlign: 'center',
-//         fontFamily: 'Cambria, Georgia, serif',
-//     });
-
-//     const labelStyle = {
-//         display: 'block', fontSize: 11, fontWeight: 500,
-//         color: '#64748b', letterSpacing: '0.04em',
-//         textTransform: 'uppercase', marginBottom: 5,
-//         fontFamily: 'Cambria, Georgia, serif',
-//     };
-
-//     return (
-//         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '1rem', fontFamily: 'Cambria, Georgia, serif' }}>
-//             <div style={{ background: '#fff', borderRadius: 14, border: '0.5px solid #e2e8f0', width: '100%', maxWidth: 440, overflow: 'hidden', fontFamily: 'Cambria, Georgia, serif' }}>
-//                 <div style={{ padding: '20px 24px 16px', borderBottom: '0.5px solid #f0f4f8', textAlign: 'center' }}>
-//                     <p style={{ fontSize: 15, fontWeight: 500, color: '#0098cc', margin: '0 0 3px', fontFamily: 'Cambria, Georgia, serif' }}>Complete your profile</p>
-//                     <p style={{ fontSize: 11, color: '#94a3b8', margin: '0 0 14px', fontFamily: 'Cambria, Georgia, serif' }}>3 quick steps to get matched with the right mentor</p>
-//                     <div style={{ display: 'flex', gap: 5 }}>
-//                         {[1, 2, 3].map(i => (
-//                             <div key={i} style={{
-//                                 flex: 1, height: 3, borderRadius: 99,
-//                                 background: i <= currentStep ? '#0098cc' : '#e2e8f0',
-//                                 transition: 'background 0.35s',
-//                             }} />
-//                         ))}
-//                     </div>
-//                 </div>
-//                 <div style={{ padding: '18px 24px', fontFamily: 'Cambria, Georgia, serif' }}>
-//                     <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 14 }}>
-//                         <span style={{
-//                             width: 20, height: 20, borderRadius: '50%', background: '#0098cc', color: '#fff',
-//                             fontSize: 11, fontWeight: 500, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-//                             fontFamily: 'Cambria, Georgia, serif',
-//                         }}>{currentStep}</span>
-//                         <span style={{ fontSize: 13, fontWeight: 500, color: '#0098cc', fontFamily: 'Cambria, Georgia, serif' }}>
-//                             {currentStep === 1 ? 'Personal information' : currentStep === 2 ? 'Experience & education' : 'Mentor preference'}
-//                         </span>
-//                     </div>
-//                     {currentStep === 1 && (
-//                         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-//                             <div>
-//                                 <label style={labelStyle}>Full name *</label>
-//                                 <input type="text" value={formData.fullName} onChange={e => set('fullName', e.target.value)} placeholder="Enter your full name" style={inputStyle('fullName')} />
-//                                 <FieldError field="fullName" />
-//                             </div>
-//                             <div>
-//                                 <label style={labelStyle}>Date of birth *</label>
-//                                 <input type="date" value={formData.dateOfBirth} onChange={e => set('dateOfBirth', e.target.value)} style={inputStyle('dateOfBirth')} />
-//                                 <FieldError field="dateOfBirth" />
-//                             </div>
-//                             <div>
-//                                 <label style={labelStyle}>Address *</label>
-//                                 <textarea value={formData.address} onChange={e => set('address', e.target.value)} rows={2} placeholder="City, State, Country" style={{ ...inputStyle('address'), resize: 'none' }} />
-//                                 <FieldError field="address" />
-//                             </div>
-//                         </div>
-//                     )}
-//                     {currentStep === 2 && (
-//                         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-//                             <div>
-//                                 <label style={labelStyle}>Current status *</label>
-//                                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
-//                                     {['Fresher', 'Experienced'].map(v => (
-//                                         <button key={v} onClick={() => set('currentStatus', v.toLowerCase())} style={toggleStyle(formData.currentStatus === v.toLowerCase())}>{v}</button>
-//                                     ))}
-//                                 </div>
-//                                 <FieldError field="currentStatus" />
-//                             </div>
-//                             <div>
-//                                 <label style={labelStyle}>Highest education *</label>
-//                                 <select value={formData.highestEducation} onChange={e => set('highestEducation', e.target.value)} style={{ ...inputStyle('highestEducation'), cursor: 'pointer' }}>
-//                                     <option value="">Select education level</option>
-//                                     {['High School', 'Diploma', 'Bachelors Degree', 'Masters Degree', 'PhD', 'Others'].map(o => (
-//                                         <option key={o} value={o}>{o}</option>
-//                                     ))}
-//                                 </select>
-//                                 <FieldError field="highestEducation" />
-//                             </div>
-//                         </div>
-//                     )}
-//                     {currentStep === 3 && (
-//                         <div>
-//                             <label style={labelStyle}>What type of mentor do you want? *</label>
-//                             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 7 }}>
-//                                 {menteeTypes.map(type => (
-//                                     <button key={type} onClick={() => set('menteeType', type)} style={{ ...toggleStyle(formData.menteeType === type), textAlign: 'left', padding: '8px 10px', lineHeight: 1.3 }}>
-//                                         {type}
-//                                     </button>
-//                                 ))}
-//                             </div>
-//                             <FieldError field="menteeType" />
-//                         </div>
-//                     )}
-//                 </div>
-//                 <div style={{ padding: '12px 24px', background: '#fafbfc', borderTop: '0.5px solid #f0f4f8', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'Cambria, Georgia, serif' }}>
-//                     <span style={{ fontSize: 11, color: '#94a3b8', fontFamily: 'Cambria, Georgia, serif' }}>Step {currentStep} of 3</span>
-//                     <div style={{ display: 'flex', gap: 8 }}>
-//                         <button onClick={() => setCurrentStep(s => s - 1)} disabled={currentStep === 1} style={{
-//                             padding: '7px 16px', border: '1.5px solid #e2e8f0', borderRadius: 8,
-//                             background: '#fff', color: '#64748b', fontSize: 13, fontWeight: 500,
-//                             cursor: currentStep === 1 ? 'default' : 'pointer', opacity: currentStep === 1 ? 0.35 : 1, fontFamily: 'Cambria, Georgia, serif',
-//                         }}>Back</button>
-//                         {currentStep < 3 ? (
-//                             <button onClick={handleNext} style={{ padding: '7px 18px', border: 'none', borderRadius: 8, background: BUTTON_COLOR, color: '#fff', fontSize: 13, fontWeight: 500, cursor: 'pointer', fontFamily: 'Cambria, Georgia, serif' }}>Continue →</button>
-//                         ) : (
-//                             <button onClick={handleSubmit} disabled={saving} style={{
-//                                 padding: '7px 18px', border: 'none', borderRadius: 8, background: BUTTON_COLOR, color: '#fff', fontSize: 13, fontWeight: 500,
-//                                 cursor: saving ? 'default' : 'pointer', opacity: saving ? 0.5 : 1,
-//                                 display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'Cambria, Georgia, serif',
-//                             }}>
-//                                 {saving && <Loader2 size={13} className="animate-spin" />}
-//                                 {saving ? 'Saving...' : 'Complete profile'}
-//                             </button>
-//                         )}
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// };
-
-// const Header = ({
-//     userData, isProfileDropdownOpen, setIsProfileDropdownOpen,
-//     onProfileClick, onLogoutClick, profilePhotoUrl,
-//     isSidebarOpen, setIsSidebarOpen,
-// }) => {
-//     const initials = userData?.name?.split(' ').slice(0, 2).map(n => n?.[0]?.toUpperCase()).join('') || 'U';
-
-//     return (
-//         <header style={{
-//             height: 56, borderBottom: "1px solid #e8eaed",
-//             display: "flex", alignItems: "center", justifyContent: "space-between",
-//             padding: "0 20px", background: "#fff", flexShrink: 0,
-//             position: "sticky", top: 0, zIndex: 40,
-//             fontFamily: `"Inter", sans-serif`,
-//         }}>
-//             {/* Hamburger — left side, same as mentor */}
-//             <button
-//                 onClick={() => setIsSidebarOpen(v => !v)}
-//                 style={{ background: "none", border: "none", cursor: "pointer", color: "rgb(81,87,98)", display: "flex", alignItems: "center" }}
-//                 aria-label="Toggle sidebar"
-//             >
-//                 <Menu size={20} />
-//             </button>
-
-//             {/* Right controls */}
-//             <div style={{ display: "flex", alignItems: "center", gap: 12, position: "relative" }}>
-//                 <button style={{ background: "none", border: "none", cursor: "pointer", color: "#9ca3af", display: "flex" }} aria-label="Help">
-//                     <HelpCircle size={20} />
-//                 </button>
-//                 <button
-//                     onClick={() => setIsProfileDropdownOpen(v => !v)}
-//                     style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}
-//                 >
-//                     <div style={{
-//                         width: 32, height: 32, borderRadius: "50%",
-//                         background: "#1a1a2e", display: "flex", alignItems: "center",
-//                         justifyContent: "center", color: "#fff", fontSize: 12,
-//                         fontWeight: 600, overflow: "hidden",
-//                     }}>
-//                         {profilePhotoUrl
-//                             ? <img src={profilePhotoUrl} alt={userData?.name} style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "50%" }} onError={e => e.target.style.display = 'none'} />
-//                             : initials}
-//                     </div>
-//                     <ChevronRight size={14} style={{ color: "#9ca3af", transform: "rotate(90deg)" }} />
-//                 </button>
-//                 <ProfileDropdown
-//                     userData={userData}
-//                     isOpen={isProfileDropdownOpen}
-//                     onProfileClick={onProfileClick}
-//                     onLogoutClick={onLogoutClick}
-//                     profilePhotoUrl={profilePhotoUrl}
-//                 />
-//             </div>
-//         </header>
-//     );
-// };
-// /* ── Right Panel ──────────────────────────────────────────────────────────── */
-// const RightPanel = ({ navigate }) => (
-//     <aside
-//         className="hidden xl:flex flex-col flex-shrink-0 bg-white border-l overflow-y-auto"
-//         style={{ width: "280px", fontFamily: "Cambria, Georgia, serif" }}
-//     >
-//         <div
-//             className="m-4 p-4 rounded-xl border border-green-200 bg-green-50"
-//             style={{ fontFamily: "Cambria, Georgia, serif" }}
-//         >
-//             <p className="text-xs text-gray-500 leading-relaxed mb-3">
-//                 Explore from a list of 600+ mentors, book trials and try to find the perfect mentor for you.
-//             </p>
-//             <button
-//                 onClick={() => navigate("/explore-mentors")}
-//                 className="w-full py-2 text-xs font-semibold border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-gray-700"
-//                 style={{ fontFamily: "Cambria, Georgia, serif" }}
-//             >
-//                 Explore All Mentors
-//             </button>
-//         </div>
-
-//         <div
-//             className="mx-4 mb-4 p-4 rounded-xl border border-gray-200 bg-gray-50"
-//             style={{ fontFamily: "Cambria, Georgia, serif" }}
-//         >
-//             <p className="text-sm font-bold text-gray-800 mb-1 leading-snug">
-//                 Planning to purchase and confused about which plan is right for you?
-//             </p>
-//             <div className="flex items-center justify-between">
-//                 <div className="flex items-center gap-2">
-//                     <div className="w-9 h-9 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
-//                         <div className="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
-//                             <User size={16} color="#666" />
-//                         </div>
-//                     </div>
-//                     <div>
-//                         <p className="text-xs font-semibold text-gray-800">Karrivo</p>
-//                         <p className="text-[10px] text-gray-500">+91 7702 193 487</p>
-//                     </div>
-//                 </div>
-//                 <div className="flex items-center gap-1.5">
-//                     <a href="https://wa.me/917702193487" target="_blank" rel="noreferrer"
-//                         className="w-7 h-7 rounded-full bg-green-500 hover:bg-green-600 flex items-center justify-center transition-colors">
-//                         <MessageCircle size={13} color="white" />
-//                     </a>
-//                     <a href="tel:+919311484346"
-//                         className="w-7 h-7 rounded-full bg-blue-500 hover:bg-blue-600 flex items-center justify-center transition-colors">
-//                         <Phone size={13} color="white" />
-//                     </a>
-//                 </div>
-//             </div>
-//         </div>
-//     </aside>
-// );
-
-// const Sidebar = ({ isSidebarOpen, setIsSidebarOpen, currentPath, onLogout, hasSubscription, onLtmLocked }) => {
-//     const navigate = useNavigate();
-
-//     const go = (path) => {
-//         navigate(path);
-//         if (window.innerWidth < 1001) setIsSidebarOpen(false);
-//     };
-
-//     const NavItem = ({ item, locked }) => {
-//         const Icon = item.icon;
-//         const isActive = currentPath === item.path;
-//         const handleClick = () => {
-//             if (locked) { onLtmLocked(); return; }
-//             go(item.path);
-//         };
-//         return (
-//             <button
-//                 onClick={handleClick}
-//                 style={{
-//                     display: "flex", alignItems: "center",
-//                     gap: isSidebarOpen ? 10 : 0,
-//                     padding: "9px 12px", borderRadius: 8, border: "none",
-//                     background: isActive ? "#eff6ff" : "transparent",
-//                     color: locked ? "#9ca3af" : isActive ? "#2563eb" : "rgb(81,87,98)",
-//                     cursor: "pointer", fontSize: 14,
-//                     fontWeight: isActive ? 600 : 400,
-//                     justifyContent: isSidebarOpen ? "flex-start" : "center",
-//                     width: "100%", transition: "all .12s ease",
-//                     fontFamily: `"Inter", sans-serif`,
-//                 }}
-//             >
-//                 <Icon size={16} style={{ flexShrink: 0 }} />
-//                 {isSidebarOpen && (
-//                     <span style={{ flex: 1, textAlign: "left" }}>{item.label}</span>
-//                 )}
-//                 {isSidebarOpen && locked && <Lock size={11} color="#cbd5e1" style={{ flexShrink: 0 }} />}
-//             </button>
-//         );
-//     };
-
-//     const SidebarInner = ({ onClose }) => (
-//         <>
-//             {/* Logo — matches Mentor Hub */}
-//             <div style={{
-//                 height: 56, display: "flex", alignItems: "center",
-//                 borderBottom: "1px solid #e8eaed",
-//                 padding: isSidebarOpen ? "0 16px" : "0 12px",
-//                 flexShrink: 0, gap: 10,
-//             }}>
-//                 {isSidebarOpen ? (
-//                     <>
-//                         <img src={Karrivo} alt="Logo" style={{ width: 36, height: 36, objectFit: "contain", borderRadius: 8 }} />
-//                         <span style={{ fontSize: 14, fontWeight: 700, color: "rgb(81,87,98)", fontFamily: `"Inter", sans-serif` }}>
-//                             Mentee Hub
-//                         </span>
-//                     </>
-//                 ) : (
-//                     <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
-//                         <img src={Karrivo} alt="Logo" style={{ width: 36, height: 36, objectFit: "contain", borderRadius: 8 }} />
-//                     </div>
-//                 )}
-//             </div>
-
-//             {/* Nav */}
-//             <nav style={{ flex: 1, padding: "10px 8px", overflowY: "auto", display: "flex", flexDirection: "column", gap: 2, scrollbarWidth: "none" }}>
-//                 {topNavigationItems.map(item => (
-//                     <NavItem key={item.id} item={item} locked={false} />
-//                 ))}
-
-//                 {isSidebarOpen && (
-//                     <p style={{ fontSize: 10, fontWeight: 600, color: "#9ca3af", textTransform: "uppercase", letterSpacing: "0.06em", padding: "12px 12px 4px", fontFamily: `"Inter", sans-serif` }}>
-//                         Long Term Mentorship
-//                     </p>
-//                 )}
-
-//                 {ltmNavigationItems.map(item => (
-//                     <NavItem key={item.id} item={item} locked={!hasSubscription} />
-//                 ))}
-//             </nav>
-
-//             {/* Logout */}
-//             <div style={{ borderTop: "1px solid #e8eaed", padding: "10px 8px", flexShrink: 0 }}>
-//                 <button
-//                     onClick={onLogout}
-//                     style={{
-//                         display: "flex", alignItems: "center",
-//                         gap: isSidebarOpen ? 10 : 0,
-//                         padding: "9px 12px", borderRadius: 8, border: "none",
-//                         background: "transparent", color: "#dc2626",
-//                         cursor: "pointer", fontSize: 14, width: "100%",
-//                         justifyContent: isSidebarOpen ? "flex-start" : "center",
-//                         fontFamily: `"Inter", sans-serif`,
-//                     }}
-//                 >
-//                     <LogOut size={16} style={{ flexShrink: 0 }} />
-//                     {isSidebarOpen && <span>Logout</span>}
-//                 </button>
-//             </div>
-//         </>
-//     );
-
-//     return (
-//         <>
-//             {/* Desktop sidebar */}
-//             <aside style={{
-//                 width: isSidebarOpen ? 220 : 56,
-//                 flexShrink: 0, borderRight: "1px solid #e8eaed",
-//                 background: "#fff", height: "100%",
-//                 display: "none", flexDirection: "column",
-//                 transition: "width .2s ease", overflow: "hidden",
-//             }}
-//                 className="desktop-sidebar"
-//             >
-//                 <SidebarInner />
-//             </aside>
-
-//             {/* Mobile drawer */}
-//             <aside style={{
-//                 position: "fixed", top: 0, left: 0, height: "100vh",
-//                 background: "#fff", borderRight: "1px solid #e8eaed",
-//                 zIndex: 100, width: 220,
-//                 display: "flex", flexDirection: "column",
-//                 transition: "transform .25s ease",
-//                 transform: isSidebarOpen ? "translateX(0)" : "translateX(-100%)",
-//             }}
-//                 className="mobile-sidebar"
-//             >
-//                 <SidebarInner onClose={() => setIsSidebarOpen(false)} />
-//             </aside>
-
-//             {isSidebarOpen && (
-//                 <div
-//                     onClick={() => setIsSidebarOpen(false)}
-//                     style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 99 }}
-//                     className="mobile-overlay"
-//                 />
-//             )}
-
-//             <style>{`
-//                 @media (min-width: 1001px) {
-//                     .desktop-sidebar { display: flex !important; }
-//                     .mobile-sidebar { display: none !important; }
-//                     .mobile-overlay { display: none !important; }
-//                 }
-//             `}</style>
-//         </>
-//     );
-// };
-
-// /* ── MenteeDashboard ──────────────────────────────────────────────────────── */
-// const MenteeDashboard = () => {
-//     const navigate = useNavigate();
-//     const location = useLocation();
-//     const [profilePhotoUrl, setProfilePhotoUrl] = useState('');
-
-//     useEffect(() => {
-//         const style = document.createElement('style');
-//         style.textContent = globalStyles;
-//         document.head.appendChild(style);
-//         return () => { if (style.parentNode) document.head.removeChild(style); };
-//     }, []);
-
-//     const getUserId = () => {
-//         try {
-//             const localUser = localStorage.getItem('userData');
-//             if (localUser) return JSON.parse(localUser).username;
-//             const cookieUser = getCookie('userData');
-//             if (cookieUser) return JSON.parse(decodeURIComponent(cookieUser))._id;
-//         } catch { }
-//         return null;
-//     };
-
-//     const getMenteeId = () => {
-//         try {
-//             const localUser = localStorage.getItem('userData');
-//             if (localUser) return JSON.parse(localUser)._id;
-//         } catch { }
-//         return null;
-//     };
-
-//     const getUserEmail = () => {
-//         try {
-//             const localUser = localStorage.getItem('userData');
-//             if (!localUser) return null;
-//             const parsed = JSON.parse(localUser);
-//             return parsed.email || parsed.username || null;
-//         } catch { return null; }
-//     };
-
-//     const userId = getUserId();
-//     const menteeId = getMenteeId();
-//     const email = getUserEmail();
-
-//     const { data: profileData, isLoading, isSuccess, isError } =
-//         useGetMenteeProfileQuery(userId, { skip: !userId });
-
-//     const { data: subscriptions = [] } =
-//         useGetSubscriptionsByMenteeIdQuery(menteeId, { skip: !menteeId });
-
-//     const hasSubscription = subscriptions.length > 0;
-
-//     const [saveMenteeProfile, { isLoading: saving }] = useSaveMenteeProfileMutation();
-
-//     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-//     const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-//     const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-//     const [userData, setUserData] = useState(null);
-//     const [serverErrors, setServerErrors] = useState({});
-//     const [showLtmPopup, setShowLtmPopup] = useState(false);
-
-//     useEffect(() => {
-//         if (window.innerWidth < 1000) setIsSidebarOpen(false);
-//     }, []);
-
-//     useEffect(() => {
-//         const localUser = localStorage.getItem('userData');
-//         const cookieUser = getCookie('userData');
-//         if (localUser) {
-//             try { setUserData(JSON.parse(localUser)); } catch { }
-//         } else if (cookieUser) {
-//             try { setUserData(JSON.parse(decodeURIComponent(cookieUser))); } catch { }
-//         }
-//     }, []);
-
-//     useEffect(() => {
-//         if (isSuccess && profileData) {
-//             const encoded = encodeURIComponent(JSON.stringify(profileData));
-//             document.cookie = `profileData=${encoded}; path=/; max-age=${60 * 60 * 24 * 7}`;
-//         }
-//     }, [isSuccess, profileData]);
-
-//     useEffect(() => {
-//         try {
-//             const storedProfileData = JSON.parse(localStorage.getItem('profileData') || '{}');
-//             if (storedProfileData.profilePhotoUrl) setProfilePhotoUrl(storedProfileData.profilePhotoUrl);
-//         } catch (e) { console.error('Failed to load profile photo:', e); }
-//     }, []);
-
-//     useEffect(() => {
-//         if (profileData?.profilePhotoUrl) {
-//             setProfilePhotoUrl(profileData.profilePhotoUrl);
-//             try {
-//                 const storedData = JSON.parse(localStorage.getItem('profileData') || '{}');
-//                 storedData.profilePhotoUrl = profileData.profilePhotoUrl;
-//                 localStorage.setItem('profileData', JSON.stringify(storedData));
-//             } catch (e) { console.error('Failed to store profile photo:', e); }
-//         }
-//     }, [profileData?.profilePhotoUrl]);
-
-//     const handleProfileComplete = async (formData) => {
-//         try {
-//             setServerErrors({});
-//             await saveMenteeProfile({ userId, email, ...formData }).unwrap();
-//         } catch (err) {
-//             if (err?.data?.errors) setServerErrors(err.data.errors);
-//         }
-//     };
-
-//     const handleLogout = () => {
-//         setIsLogoutModalOpen(false);
-//         clearAllData();
-//         setTimeout(() => (window.location.href = '/'), 100);
-//     };
-
-//     const profileCompleted = profileData?.profileCompleted ?? false;
-//     const profile = profileData?.profile ?? null;
-//     const showOnboarding = (isSuccess && !profileCompleted) || isError;
-
-//     if (isLoading) {
-//         return (
-//             <div className="h-screen flex items-center justify-center bg-gray-50" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
-//                 <Loader />
-//             </div>
-//         );
-//     }
-
-//     return (
-//         <>
-//             <div className="flex flex-col overflow-hidden bg-white" style={{ height: '100vh', fontFamily: 'Cambria, Georgia, serif' }}>
-
-//                 {/* Top header */}
-//                 <Header
-//                     userData={userData}
-//                     isProfileDropdownOpen={isProfileDropdownOpen}
-//                     setIsProfileDropdownOpen={setIsProfileDropdownOpen}
-//                     currentPath={location.pathname}
-//                     profilePhotoUrl={profilePhotoUrl}
-//                     isSidebarOpen={isSidebarOpen}
-//                     setIsSidebarOpen={setIsSidebarOpen}
-//                     onProfileClick={() => { navigate('/mentee/profile'); setIsProfileDropdownOpen(false); }}
-//                     onLogoutClick={() => { setIsProfileDropdownOpen(false); setIsLogoutModalOpen(true); }}
-//                 />
-
-//                 {/* Body row — flex-1 so it fills everything below the header */}
-//                 <div className="flex flex-1 overflow-hidden" style={{ background: '#f0f2f5', fontFamily: 'Cambria, Georgia, serif' }}>
-
-//                     {/* Left sidebar */}
-//                     <Sidebar
-//                         isSidebarOpen={isSidebarOpen}
-//                         setIsSidebarOpen={setIsSidebarOpen}
-//                         currentPath={location.pathname}
-//                         onLogout={() => setIsLogoutModalOpen(true)}
-//                         hasSubscription={hasSubscription}
-//                         onLtmLocked={() => setShowLtmPopup(true)}
-//                     />
-
-//                     {/* Center content column */}
-//                     {/* Center content column — unchanged, just add padding wrapper */}
-//                     <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0, overflow: "hidden" }}>
-//                         <main style={{ flex: 1, overflowY: "auto", padding: "12px", background: "#fff", scrollbarWidth: "none" }}>
-//                             <Outlet context={{ userData, profile }} />
-//                         </main>
-//                     </div>
-
-//                     {/* Right panel — xl+ only */}
-//                     <RightPanel navigate={navigate} />
-//                 </div>
-//             </div>
-
-//             {isProfileDropdownOpen && (
-//                 <div className="fixed inset-0 z-30" onClick={() => setIsProfileDropdownOpen(false)} />
-//             )}
-
-//             <LogoutModal
-//                 isOpen={isLogoutModalOpen}
-//                 onClose={() => setIsLogoutModalOpen(false)}
-//                 onConfirm={handleLogout}
-//             />
-
-//             <NoSubscriptionPopup
-//                 isOpen={showLtmPopup}
-//                 onClose={() => setShowLtmPopup(false)}
-//                 onSubscribe={() => { setShowLtmPopup(false); navigate('/explore-mentors'); }}
-//             />
-
-//             {showOnboarding && (
-//                 <div className="fixed inset-0 z-[100]" style={{ fontFamily: 'Cambria, Georgia, serif' }}>
-//                     <div className="absolute inset-0 backdrop-blur-md bg-black/50" />
-//                     <div className="relative z-10">
-//                         <ProfileCompletionForm
-//                             onComplete={handleProfileComplete}
-//                             saving={saving}
-//                             serverErrors={serverErrors}
-//                         />
-//                     </div>
-//                 </div>
-//             )}
-//         </>
-//     );
-// };
-
-// export default MenteeDashboard;
-
 import React, { useState, useEffect } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
@@ -815,7 +11,7 @@ import {
     Home, Menu, X, Calendar, Clock, MessageCircle,
     LogOut, User, MessageSquare, Users, HelpCircle,
     BookOpen, CreditCard, Loader2, Lock, Bell, Mail,
-    Star, Zap, ChevronRight, Phone, Megaphone, Wrench, Bug, ChevronDown
+    Star, Zap, ChevronRight, Phone, Megaphone, Wrench, Bug, ChevronDown, ArrowRight, Map
 } from 'lucide-react';
 import Loader from '../../global/Loader';
 import Karrivo from "../../assets/karrivoSymbol.png";
@@ -1190,55 +386,107 @@ const Header = ({
     );
 };
 
-/* ── Right Panel ──────────────────────────────────────────────────────────── */
+
+
 const RightPanel = ({ navigate }) => (
     <aside style={{
         width: 280, flexShrink: 0, borderLeft: `1px solid ${T.border}`,
         background: '#fff', display: 'flex', flexDirection: 'column',
         overflowY: 'auto', scrollbarWidth: 'none',
-    }}
-        className="right-panel"
-    >
-        <div style={{ margin: 16, padding: 16, borderRadius: 12, border: '1px solid #bbf7d0', background: '#f0fdf4' }}>
-            <p style={{ fontSize: 12, color: T.textLight, lineHeight: 1.6, marginBottom: 12, fontFamily: F }}>
-                Explore from a list of 600+ mentors, book trials and find the perfect mentor for you.
-            </p>
-            <button
-                onClick={() => navigate('/explore-mentors')}
-                style={{ width: '100%', padding: '8px 0', fontSize: 12, fontWeight: 600, border: `1px solid ${T.border}`, borderRadius: 8, background: '#fff', color: T.textDark, cursor: 'pointer', fontFamily: F }}
-            >
-                Explore All Mentors
-            </button>
-        </div>
+    }} className="right-panel">
 
-        <div style={{ height: 1, background: T.border }} />
-
-        <div style={{ margin: 16, padding: 16, borderRadius: 12, border: `1px solid ${T.border}`, background: T.surface }}>
-            <p style={{ fontSize: 13, fontWeight: 700, color: T.textDark, marginBottom: 6, fontFamily: F }}>
-                Planning to purchase and confused about which plan is right for you?
-            </p>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', background: '#e5e7eb', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <User size={16} color="#666" />
-                    </div>
-                    <div>
-                        <p style={{ fontSize: 12, fontWeight: 600, color: T.textDark, margin: 0, fontFamily: F }}>Karrivo</p>
-                        <p style={{ fontSize: 11, color: T.textLight, margin: 0, fontFamily: F }}>+91 7702 193 487</p>
-                    </div>
+        {/* Hero — book a trial */}
+        <div style={{ margin: 14, borderRadius: 12, overflow: 'hidden', border: '1px solid #1e3a4a' }}>
+            <div style={{ background: '#0a1a22', padding: '14px 16px 12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10 }}>
+                    <span style={{ fontSize: 10, fontWeight: 500, color: '#ffffff', letterSpacing: '0.06em', textTransform: 'uppercase', fontFamily: F }}>
+                        Find your mentor
+                    </span>
+                    <span style={{ fontSize: 10, color: '#ffffff', background: '#0098cc18', border: '0.5px solid #0098cc44', borderRadius: 20, padding: '2px 8px', fontWeight: 500, fontFamily: F }}>
+                        100+ mentors
+                    </span>
                 </div>
-                <div style={{ display: 'flex', gap: 8 }}>
-                    <a href="https://wa.me/917702193487" target="_blank" rel="noreferrer"
-                        style={{ width: 28, height: 28, borderRadius: '50%', background: '#22c55e', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <MessageCircle size={13} color="white" />
-                    </a>
-                    <a href="tel:+919311484346"
-                        style={{ width: 28, height: 28, borderRadius: '50%', background: '#3b82f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Phone size={13} color="white" />
-                    </a>
+                <p style={{ fontSize: 18, fontWeight: 500, color: '#f1f5f9', margin: '0 0 5px', lineHeight: 1.3, fontFamily: F }}>
+                    Book a free trial session
+                </p>
+                <p style={{ fontSize: 11.5, color: '#ffffff', margin: 0, lineHeight: 1.6, fontFamily: F }}>
+                    Browse by domain, skills, and availability.
+                </p>
+            </div>
+            <div style={{ background: '#0a1a22', borderTop: '0.5px solid #ffffff10', padding: '10px 16px 14px' }}>
+                <p style={{ fontSize: 10, color: '#ffffff', letterSpacing: '0.05em', textTransform: 'uppercase', margin: '0 0 8px', fontFamily: F }}>
+                    Popular domains
+                </p>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
+                    {['Product', 'Engineering', 'Startup', 'LeaderShip', 'Ai Mentors'].map(tag => (
+                        <span key={tag} style={{
+                            fontSize: 11, color: '#ffffff', background: '#ffffff0d',
+                            border: '0.5px solid #ffffff14', borderRadius: 5,
+                            padding: '3px 10px', fontFamily: F
+                        }}>
+                            {tag}
+                        </span>
+                    ))}
                 </div>
+                <button
+                    onClick={() => navigate('/explore-mentors')}
+                    style={{ width: '100%', padding: '9px 0', borderRadius: 8, background: '#0098cc', color: '#fff', fontSize: 12, fontWeight: 500, border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, fontFamily: F }}
+                >
+                    Explore all mentors <ArrowRight size={13} />
+                </button>
             </div>
         </div>
+
+        {/* Plan finder nudge */}
+        {/* <div style={{ margin: '0 14px', borderRadius: 12, border: `1px solid ${T.border}`, background: T.surface, padding: '13px 14px 14px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 7, marginBottom: 10 }}>
+                <div style={{ width: 28, height: 28, borderRadius: 7, background: '#0a1a2214', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Map size={15} color="#0a1a22" />
+                </div>
+                <div>
+                    <p style={{ fontSize: 12.5, fontWeight: 500, color: T.textDark, margin: 0, fontFamily: F }}>Not sure which plan fits?</p>
+                    <p style={{ fontSize: 11, color: T.textLight, margin: 0, fontFamily: F }}>Take a quick quiz to find out.</p>
+                </div>
+            </div>
+            <button
+                onClick={() => navigate('/plan-quiz')}
+                style={{ width: '100%', padding: '7px 0', borderRadius: 8, background: '#fff', color: T.textDark, fontSize: 12, fontWeight: 500, border: `1px solid ${T.border}`, cursor: 'pointer', fontFamily: F }}
+            >
+                Find my plan →
+            </button>
+        </div> */}
+
+        {/* RM card */}
+        <div style={{ margin: '10px 14px 14px', borderRadius: 12, border: `1px solid ${T.border}`, background: '#fff', padding: '13px 14px' }}>
+            <p style={{ fontSize: 10, fontWeight: 500, color: T.textLight, letterSpacing: '0.05em', textTransform: 'uppercase', margin: '0 0 11px', fontFamily: F }}>
+                Relationship manager
+            </p>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 13 }}>
+                <div style={{ width: 38, height: 38, borderRadius: '50%', background: '#0a1a22', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <span style={{ fontSize: 13, fontWeight: 500, color: '#0098cc', fontFamily: F }}>KR</span>
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 13, fontWeight: 500, color: T.textDark, margin: 0, fontFamily: F }}>Karrivo Team</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 5, marginTop: 2 }}>
+                        <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c55e', display: 'inline-block' }} />
+                        <p style={{ fontSize: 11, color: T.textLight, margin: 0, fontFamily: F }}>Available now</p>
+                    </div>
+                </div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 7 }}>
+                <a href="https://wa.me/917702193487" target="_blank" rel="noreferrer"
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '7px 0', borderRadius: 8, background: '#f0fdf4', border: '0.5px solid #bbf7d0', textDecoration: 'none' }}>
+                    <MessageCircle size={14} color="#16a34a" />
+                    <span style={{ fontSize: 11.5, fontWeight: 500, color: '#16a34a', fontFamily: F }}>WhatsApp</span>
+                </a>
+                <a href="tel:+917702193487"
+                    style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, padding: '7px 0', borderRadius: 8, background: '#eff6ff', border: '0.5px solid #bfdbfe', textDecoration: 'none' }}>
+                    <Phone size={14} color="#0098cc" />
+                    <span style={{ fontSize: 11.5, fontWeight: 500, color: '#0098cc', fontFamily: F }}>Call us</span>
+                </a>
+            </div>
+        </div>
+
     </aside>
 );
 
