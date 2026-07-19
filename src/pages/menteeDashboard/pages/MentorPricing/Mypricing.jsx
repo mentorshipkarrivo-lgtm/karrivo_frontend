@@ -516,7 +516,7 @@ const CouponModal = ({ onClose, mentorId }) => {
    PRICING EMPTY STATE
 ══════════════════════════════════════════════════ */
 const PricingEmptyState = ({ onStart }) => (
-  <div className="min-h-screen bg-white flex items-center justify-center p-6">
+  <div className="h-[80vh] bg-white flex items-center justify-center p-6">
     <div className="max-w-sm w-full text-center">
       <div className="w-14 h-14 rounded-2xl bg-gray-50 border border-gray-200 flex items-center justify-center mx-auto mb-5">
         <Wallet size={22} className="text-[#1a1a2e]" strokeWidth={1.5} />

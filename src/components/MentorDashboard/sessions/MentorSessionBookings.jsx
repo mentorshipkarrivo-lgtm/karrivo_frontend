@@ -18,6 +18,8 @@ const StatusBadge = ({ status }) => {
     );
 };
 
+
+
 const TopicCell = ({ text }) => {
     const [expanded, setExpanded] = useState(false);
     if (!text) return <span className="text-gray-400">—</span>;
@@ -109,6 +111,21 @@ const PBtn = ({ onClick, disabled, children, active }) => (
 // Base td style — single line, no wrap
 const TD = "px-4 py-3 text-xs whitespace-nowrap align-middle";
 
+const COLUMNS = [
+    { label: "S No", align: "left" },
+    { label: "Mentee", align: "left" },
+    { label: "Topic", align: "left" },
+    { label: "Date", align: "left" },
+    { label: "Time", align: "left" },
+    { label: "Amount", align: "left" },
+    { label: "Status", align: "left" },
+    { label: "Join", align: "center" },
+];
+
+const alignClass = (align) =>
+    align === "center" ? "text-center" : align === "right" ? "text-right" : "text-left";
+
+
 export default function SessionsTable() {
     const [mentorId, setMentorId] = useState(null);
     const [page, setPage] = useState(1);
@@ -169,7 +186,7 @@ export default function SessionsTable() {
 
                         <div className="flex items-center text-[12px] gap-2 text-xs text-gray-600">
                             <span>
-                                <span className="font-medium">Join Button</span> is activates
+                                <span className="font-medium">Join Button</span>  activates
                                 {" "}
                                 <span className="font-semibold text-[#0098cc]">
                                     10 minutes before
@@ -180,17 +197,29 @@ export default function SessionsTable() {
                     </div>
                 </div>
                 {/* Table */}
+
                 <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden">
                     <div className="overflow-x-auto scroll-hide">
-                        <table className="w-full" style={{ minWidth: "860px" }}>
+                        <table className="w-full" style={{ minWidth: "860px", tableLayout: "fixed" }}>
+                            <colgroup>
+                                <col style={{ width: "6%" }} />   {/* S No */}
+                                <col style={{ width: "14%" }} />  {/* Mentee */}
+                                <col style={{ width: "20%" }} />  {/* Topic */}
+                                <col style={{ width: "12%" }} />  {/* Date */}
+                                <col style={{ width: "10%" }} />  {/* Time */}
+                                <col style={{ width: "12%" }} />  {/* Amount */}
+                                <col style={{ width: "13%" }} />  {/* Status */}
+                                <col style={{ width: "13%" }} />  {/* Join */}
+                            </colgroup>
+
                             <thead>
                                 <tr className="border-b border-gray-200 bg-gray-50">
-                                    {["S No", "Mentee", "Topic", "Date", "Time", "Amount", "Payment", "Status", "Join"].map((item) => (
+                                    {COLUMNS.map((col) => (
                                         <th
-                                            key={item}
-                                            className="text-left px-4 py-3 text-[11px] font-semibold text-gray-500  whitespace-nowrap"
+                                            key={col.label}
+                                            className={`px-4 py-3 text-[11px] font-semibold text-gray-500 whitespace-nowrap ${alignClass(col.align)}`}
                                         >
-                                            {item}
+                                            {col.label}
                                         </th>
                                     ))}
                                 </tr>
@@ -200,10 +229,10 @@ export default function SessionsTable() {
                                 {isLoading
                                     ? Array.from({ length: 5 }).map((_, i) => (
                                         <tr key={i} className="border-b border-gray-100">
-                                            {Array.from({ length: 10 }).map((_, j) => (
-                                                <td key={j} className="px-4 py-3">
+                                            {COLUMNS.map((col, j) => (
+                                                <td key={j} className={`px-4 py-3 ${alignClass(col.align)}`}>
                                                     <div
-                                                        className="h-3 bg-gray-100 rounded animate-pulse"
+                                                        className="h-3 bg-gray-100 rounded animate-pulse inline-block"
                                                         style={{ width: j === 0 ? "24px" : "70%" }}
                                                     />
                                                 </td>
@@ -213,7 +242,7 @@ export default function SessionsTable() {
                                     : isError
                                         ? (
                                             <tr>
-                                                <td colSpan={10} className="text-center py-16 text-red-500 text-sm font-medium">
+                                                <td colSpan={COLUMNS.length} className="text-center py-16 text-red-500 text-sm font-medium">
                                                     Failed to load sessions.
                                                 </td>
                                             </tr>
@@ -221,7 +250,7 @@ export default function SessionsTable() {
                                         : sessions.length === 0
                                             ? (
                                                 <tr>
-                                                    <td colSpan={10} className="text-center py-16">
+                                                    <td colSpan={COLUMNS.length} className="text-center py-16">
                                                         <BookOpen size={38} className="mx-auto text-gray-300 mb-3" />
                                                         <p className="text-gray-500 text-sm font-medium">No sessions found</p>
                                                     </td>
@@ -230,10 +259,8 @@ export default function SessionsTable() {
                                             : sessions.map((s, idx) => {
                                                 const serial = (page - 1) * limit + idx + 1;
 
-                                                // ── Join eligibility ──  ADD THESE 4 LINES
                                                 const startDT = getSessionStart(s);
                                                 const joinOpensAt = startDT ? startDT.getTime() - JOIN_WINDOW_MS : null;
-                                                // const canJoin = !!s.meetingLink && joinOpensAt !== null && now >= joinOpensAt;
 
                                                 const canJoin = !!s.meetingLink
                                                     && joinOpensAt !== null
@@ -242,44 +269,40 @@ export default function SessionsTable() {
                                                 const minutesUntilJoin = joinOpensAt !== null
                                                     ? Math.max(0, Math.ceil((joinOpensAt - now) / 60000))
                                                     : null;
+
                                                 return (
                                                     <tr
                                                         key={s._id}
                                                         className="border-b border-gray-100 hover:bg-gray-50"
                                                         style={{ opacity: isFetching ? 0.6 : 1, transition: "opacity 0.2s" }}
                                                     >
-                                                        {/* S.No */}
-                                                        <td className={`${TD} text-gray-400 font-medium`}>
+                                                        {/* S No */}
+                                                        <td className={`${TD} text-gray-400 font-medium ${alignClass(COLUMNS[0].align)}`}>
                                                             {serial}
                                                         </td>
 
                                                         {/* Mentee */}
-                                                        <td className={`${TD} font-semibold text-[#1a1a2e]`}>
+                                                        <td className={`${TD} font-semibold text-[#1a1a2e] truncate ${alignClass(COLUMNS[1].align)}`}>
                                                             {s.menteeName || "—"}
                                                         </td>
 
-                                                        {/* Topic — truncate at 200px, full text on hover */}
-                                                        <td className={`${TD}`} style={{ maxWidth: "220px", whiteSpace: "normal" }}>
+                                                        {/* Topic */}
+                                                        <td className={`${TD} overflow-hidden ${alignClass(COLUMNS[2].align)}`}>
                                                             <TopicCell text={s.topic} />
                                                         </td>
 
                                                         {/* Date */}
-                                                        <td className={`${TD} text-gray-500`}>
+                                                        <td className={`${TD} text-gray-500 whitespace-nowrap ${alignClass(COLUMNS[3].align)}`}>
                                                             {formatDate(s.sessionDate)}
                                                         </td>
 
                                                         {/* Time */}
-                                                        <td className={`${TD} font-medium text-[#0098cc]`}>
+                                                        <td className={`${TD} font-medium text-[#0098cc] whitespace-nowrap ${alignClass(COLUMNS[4].align)}`}>
                                                             {s.startTime}
                                                         </td>
 
-                                                        {/* Type */}
-                                                        {/* <td className={`${TD} text-gray-500`}>
-                                                            {s.sessionType || "—"}
-                                                        </td> */}
-
                                                         {/* Amount */}
-                                                        <td className={`${TD} font-bold`}>
+                                                        <td className={`${TD} font-bold whitespace-nowrap ${alignClass(COLUMNS[5].align)}`}>
                                                             {s.isFreeSession ? (
                                                                 <span className="text-green-600">Free Session</span>
                                                             ) : (
@@ -287,20 +310,14 @@ export default function SessionsTable() {
                                                             )}
                                                         </td>
 
-                                                        {/* Payment */}
-                                                        <td className={TD}>
-                                                            <PaymentBadge status={s.paymentStatus} />
-                                                        </td>
-
                                                         {/* Status */}
-                                                        <td className={TD}>
+                                                        <td className={`${TD} ${alignClass(COLUMNS[6].align)}`}>
                                                             <StatusBadge status={s.status} />
                                                         </td>
 
                                                         {/* Join */}
-                                                        <td className={`${TD} text-center`}>
+                                                        <td className={`${TD} ${alignClass(COLUMNS[7].align)}`}>
                                                             {canJoin ? (
-
                                                                 <a href={s.meetingLink}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"

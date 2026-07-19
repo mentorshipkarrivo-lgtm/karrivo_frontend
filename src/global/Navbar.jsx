@@ -7,8 +7,8 @@ import {
   User,
   Menu,
   X,
-  PhoneCall ,
-
+  PhoneCall,
+  ChevronDown
 } from "lucide-react";
 
 import KarrivoLogo from "../assets/KarrivoLogo.png";
@@ -114,7 +114,7 @@ const Navbar = () => {
 
   const centerLinks = [
     { label: "Explore Mentors", path: "/explore-mentors" },
-    { label: "Book a FREE Trial", path: "/login", highlight: true },
+    { label: "Book a Free Trial", path: "/login", highlight: true },
     { label: "Find your mentor", path: "/get-Mentors" },
   ];
 
@@ -162,7 +162,7 @@ const Navbar = () => {
                   className="px-5 py-2 bg-[#0a1a22] text-white text-[14px] font-semibold rounded-full border-none cursor-pointer hover:bg-[#2d2d4e] active:scale-[0.97] transition-all duration-150 whitespace-nowrap inline-flex items-center gap-2"
                 >
                   {label}
-                  <PhoneCall  size={16} className="rotate-90" />
+                  <PhoneCall size={16} className="rotate-90" />
                 </button>
               ))}
 

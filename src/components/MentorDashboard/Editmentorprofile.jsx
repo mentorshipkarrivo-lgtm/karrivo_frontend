@@ -14,6 +14,7 @@ const MAX_MB = 5;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const NAV_ORDER = ["overview", "experience", "engagement", "mentorship", "achievements"];
 
+
 const EXPERTISE_OPTIONS = [
     { value: "frontend", label: "Frontend Developer" },
     { value: "backend", label: "Backend Developer" },
@@ -22,6 +23,33 @@ const EXPERTISE_OPTIONS = [
     { value: "datascience", label: "Data Science" },
     { value: "ui-ux", label: "UI/UX Designer" },
     { value: "product", label: "Product Manager" },
+];
+
+// Naukri-style role suggestions — broader than the preset dropdown options
+const ROLE_SUGGESTIONS = [
+    ...EXPERTISE_OPTIONS.map((o) => o.label),
+    "Software Engineer", "Engineering Manager", "Data Scientist", "Data Analyst",
+    "Mobile App Developer", "QA Engineer", "Solutions Architect", "Project Manager",
+    "Business Analyst", "Marketing Manager", "Digital Marketing Specialist",
+    "Content Strategist", "Sales Manager", "HR Manager", "Financial Analyst",
+    "Consultant", "Founder / Entrepreneur", "Machine Learning Engineer",
+    "Cloud Architect", "Site Reliability Engineer", "Growth Manager",
+];
+
+
+const suggestedRoles = [
+    'Mentor', 'Technical Trainer', 'Full Stack Developer', 'Frontend Developer',
+    'Backend Developer', 'Software Engineer', 'Senior Software Engineer',
+    'Engineering Manager', 'Solutions Architect', 'Data Scientist', 'Data Analyst',
+    'Machine Learning Engineer', 'DevOps Engineer', 'Site Reliability Engineer',
+    'Cloud Architect', 'Mobile App Developer', 'QA Engineer', 'UI/UX Designer',
+    'Product Manager', 'Product Designer', 'Project Manager', 'Program Manager',
+    'Business Analyst', 'Marketing Manager', 'Digital Marketing Specialist',
+    'Growth Manager', 'Content Strategist', 'Graphic Designer', 'Sales Manager',
+    'HR Manager', 'Talent Acquisition Specialist', 'Financial Analyst',
+    'Investment Banker', 'Management Consultant', 'Founder / Entrepreneur',
+    'Startup Advisor', 'Career Coach', 'Leadership Coach', 'Public Speaker',
+    'Recent Graduate', 'Career Changer'
 ];
 
 const EMPLOYMENT_TYPES = ["Full-time", "Part-time", "Contract", "Freelance", "Internship", "Self-employed"];
@@ -614,7 +642,7 @@ const AvailCalendar = ({ availability, onRemoveSlot }) => {
 // ── Main Component ─────────────────────────────────────────────────────────────
 function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails, updateMentorDetails, data, isLoading, isSaving, email }) {
     const [formData, setFormData] = useState({ availability: [] });
-    const [modalTab, setModalTab] = useState(initialTab);
+const [modalTab, setModalTab] = useState(initialTab || "overview");
     const [modalErrors, setModalErrors] = useState({});
     const [tagInputs, setTagInputs] = useState({ skill: "", lang: "", guid: "", cert: "", accomp: "" });
 
@@ -633,6 +661,16 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
     const [availTimeBlocks, setAvailTimeBlocks] = useState([]);
     const [availErr, setAvailErr] = useState("");
     const [showAvailForm, setShowAvailForm] = useState(false);
+
+    const [isPrimaryRoleOpen, setIsPrimaryRoleOpen] = useState(false);
+    const [primaryRoleSearch, setPrimaryRoleSearch] = useState("");
+    const primaryRoleRef = useRef(null);
+
+    const [isSecondaryRoleOpen, setIsSecondaryRoleOpen] = useState(false);
+    const secondaryRoleRef = useRef(null);
+
+
+
 
     // Photo states
     const [photoProgress, setPhotoProgress] = useState(0);
@@ -665,10 +703,13 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
             setLtmMenteeLimit(data.data.ltmMenteeLimit || "3");
             setSessionsFrequency(data.data.sessionsFrequency || "");
             setMentorshipPitch(data.data.mentorshipPitch || "");
-            const savedPrimary = data.data.primaryExpertise || "";
-            const isPreset = EXPERTISE_OPTIONS.some((o) => o.value === savedPrimary);
-            setPrimaryExpertise(savedPrimary);
-            setPrimaryCustom(savedPrimary !== "" && !isPreset);
+            // const savedPrimary = data.data.primaryExpertise || "";
+            // const presetMatch = EXPERTISE_OPTIONS.find((o) => o.value === savedPrimary);
+            // // setPrimaryExpertise(presetMatch ? presetMatch.label : savedPrimary);
+            // setPrimaryExpertise(data.data.primaryExpertise || "");
+            // setPrimaryCustom(savedPrimary !== "" && !isPreset);
+
+            setPrimaryExpertise(data.data.primaryExpertise || "");
             setSecondaryExpertise(Array.isArray(data.data.secondaryExpertise) ? data.data.secondaryExpertise : data.data.secondaryExpertise ? [data.data.secondaryExpertise] : []);
             setPersonaFreshers(data.data.personaFreshers || false);
             setPersonaExperienced(data.data.personaExperienced || false);
@@ -681,10 +722,17 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
     useEffect(() => {
         if (formData.profilePhoto && photoStatus === "idle") setPhotoPreview(formData.profilePhoto);
     }, [formData.profilePhoto]);
-
     useEffect(() => {
-        if (initialTab) { setModalTab(initialTab); setModalErrors({}); }
-    }, [initialTab]);
+        const handleClickOutside = (e) => {
+            if (primaryRoleRef.current && !primaryRoleRef.current.contains(e.target)) setIsPrimaryRoleOpen(false);
+            if (secondaryRoleRef.current && !secondaryRoleRef.current.contains(e.target)) setIsSecondaryRoleOpen(false);
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+    // useEffect(() => {
+    //     if (initialTab) { setModalTab(initialTab); setModalErrors({}); }
+    // }, [initialTab]);
 
     const completion = calcCompletion(formData);
     const skills = splitCSV(formData.currentSkills);
@@ -1451,19 +1499,58 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
                                         <p style={secHead}><Users size={12} color={T.primary} /> Mentee Preferences</p>
                                         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                                             <div>
-                                                <span style={lbl}>Primary Expertise *</span>
-                                                <select
-                                                    value={primaryCustom ? "__custom__" : (EXPERTISE_OPTIONS.some((o) => o.value === primaryExpertise) ? primaryExpertise : "")}
-                                                    onChange={(e) => {
-                                                        if (e.target.value === "__custom__") { setPrimaryCustom(true); setPrimaryExpertise(""); }
-                                                        else { setPrimaryCustom(false); setPrimaryExpertise(e.target.value); }
-                                                    }}
-                                                    style={{ ...inp(), background: T.bg }}
-                                                >
-                                                    <option value="">Select...</option>
-                                                    {EXPERTISE_OPTIONS.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
-                                                    <option value="__custom__">Other (custom)…</option>
-                                                </select>
+                                                <div ref={primaryRoleRef} style={{ position: "relative" }}>
+                                                    <span style={lbl}>Primary Expertise *</span>
+                                                    <input
+                                                        style={inp()}
+                                                        value={primaryExpertise}
+                                                        onChange={(e) => {
+                                                            setPrimaryExpertise(e.target.value);
+                                                            setPrimaryRoleSearch(e.target.value);
+                                                            setIsPrimaryRoleOpen(true);
+                                                        }}
+                                                        onFocus={() => { setPrimaryRoleSearch(primaryExpertise); setIsPrimaryRoleOpen(true); }}
+                                                        placeholder="Type or select your primary domain…"
+                                                    />
+                                                    {isPrimaryRoleOpen && (
+                                                        <div style={{
+                                                            position: "absolute", top: "calc(100% + 4px)", left: 0, right: 0,
+                                                            maxHeight: 220, overflowY: "auto", background: T.bg,
+                                                            border: `1px solid ${T.border}`, borderRadius: 8,
+                                                            boxShadow: "0 8px 24px rgba(0,0,0,0.12)", zIndex: 20,
+                                                        }}>
+                                                            {suggestedRoles
+                                                                .filter((r) => r.toLowerCase().includes((primaryRoleSearch || "").toLowerCase()))
+                                                                .map((role) => (
+                                                                    <button
+                                                                        key={role}
+                                                                        type="button"
+                                                                        onClick={() => { setPrimaryExpertise(role); setIsPrimaryRoleOpen(false); }}
+                                                                        style={{
+                                                                            display: "block", width: "100%", textAlign: "left",
+                                                                            padding: "8px 12px", fontFamily: F, fontSize: 13,
+                                                                            background: role === primaryExpertise ? T.primaryBg : "transparent",
+                                                                            color: role === primaryExpertise ? T.primary : T.textDark,
+                                                                            border: "none", cursor: "pointer",
+                                                                        }}
+                                                                    >{role}</button>
+                                                                ))}
+                                                            {primaryRoleSearch && !suggestedRoles.some((r) => r.toLowerCase() === primaryRoleSearch.toLowerCase()) && (
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => { setPrimaryExpertise(primaryRoleSearch); setIsPrimaryRoleOpen(false); }}
+                                                                    style={{
+                                                                        display: "block", width: "100%", textAlign: "left",
+                                                                        padding: "8px 12px", fontFamily: F, fontSize: 13, fontWeight: 600,
+                                                                        color: T.primary, borderTop: `1px solid ${T.border}`,
+                                                                        background: "transparent", border: "none", cursor: "pointer",
+                                                                    }}
+                                                                >Use "{primaryRoleSearch}"</button>
+                                                            )}
+                                                        </div>
+                                                    )}
+
+                                                </div>
                                                 {primaryCustom && (
                                                     <input style={{ ...inp(), marginTop: 8 }} value={primaryExpertise} onChange={(e) => setPrimaryExpertise(e.target.value)} placeholder="e.g. Blockchain Developer…" autoFocus />
                                                 )}
@@ -1473,35 +1560,53 @@ function EditMentorProfile({ onClose, initialTab = "overview", getMentorDetails,
                                             <div>
                                                 <span style={lbl}>Secondary Expertise</span>
                                                 <p style={{ fontFamily: F, fontSize: 11, color: T.textLight, margin: "0 0 8px" }}>Select multiple domains you can mentor in</p>
-                                                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
-                                                    {EXPERTISE_OPTIONS.map((o) => {
-                                                        const sel = secondaryExpertise.includes(o.value);
-                                                        return (
-                                                            <button key={o.value} type="button"
-                                                                onClick={() => setSecondaryExpertise(sel ? secondaryExpertise.filter((x) => x !== o.value) : [...secondaryExpertise, o.value])}
-                                                                style={{ fontFamily: F, fontSize: 13, fontWeight: 500, padding: "7px 13px", borderRadius: 8, cursor: "pointer", border: `1.5px solid ${sel ? T.primary : T.borderMed}`, background: sel ? T.primaryBg : T.bg, color: sel ? T.primary : T.textMid, display: "flex", alignItems: "center", gap: 6 }}>
-                                                                <div style={{ width: 7, height: 7, borderRadius: "50%", background: sel ? T.primary : T.borderMed, flexShrink: 0 }} />
-                                                                {o.label}
-                                                                {sel && <span onClick={(e) => { e.stopPropagation(); setSecondaryExpertise(secondaryExpertise.filter((x) => x !== o.value)); }} style={{ marginLeft: 2, opacity: 0.6, fontSize: 14, lineHeight: 1 }}>×</span>}
-                                                            </button>
-                                                        );
-                                                    })}
-                                                </div>
-                                                <div style={{ display: "flex", gap: 8 }}>
-                                                    <input
-                                                        style={{ flex: 1, fontFamily: F, fontSize: 13, padding: "8px 11px", border: `1.5px solid ${T.borderMed}`, borderRadius: 7, color: T.textDark, background: T.bg, outline: "none", boxSizing: "border-box" }}
-                                                        value={secondaryCustomInput}
-                                                        onChange={(e) => setSecondaryCustomInput(e.target.value)}
-                                                        onKeyPress={(e) => { if (e.key === "Enter") { e.preventDefault(); const v = secondaryCustomInput.trim(); if (v && !secondaryExpertise.includes(v)) setSecondaryExpertise([...secondaryExpertise, v]); setSecondaryCustomInput(""); } }}
-                                                        placeholder="Add  domain…"
-                                                    />
-                                                    <button type="button" onClick={() => { const v = secondaryCustomInput.trim(); if (v && !secondaryExpertise.includes(v)) setSecondaryExpertise([...secondaryExpertise, v]); setSecondaryCustomInput(""); }} style={{ padding: "8px 14px", background: T.btn, color: "#fff", borderRadius: 7, border: "none", fontSize: 12, fontWeight: 600, cursor: "pointer", fontFamily: F, flexShrink: 0 }}>Add</button>
-                                                </div>
-                                                {secondaryExpertise.filter((v) => !EXPERTISE_OPTIONS.some((o) => o.value === v)).length > 0 && (
-                                                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
-                                                        {secondaryExpertise.filter((v) => !EXPERTISE_OPTIONS.some((o) => o.value === v)).map((v, i) => <Pill key={i} label={v} onRemove={() => setSecondaryExpertise(secondaryExpertise.filter((x) => x !== v))} />)}
+
+                                                {secondaryExpertise.length > 0 && (
+                                                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 10 }}>
+                                                        {secondaryExpertise.map((v, i) => (
+                                                            <Pill key={i} label={v} onRemove={() => setSecondaryExpertise(secondaryExpertise.filter((x) => x !== v))} />
+                                                        ))}
                                                     </div>
                                                 )}
+
+                                                <div ref={secondaryRoleRef} style={{ position: "relative" }}>
+                                                    <input
+                                                        style={inp()}
+                                                        value={secondaryCustomInput}
+                                                        onChange={(e) => { setSecondaryCustomInput(e.target.value); setIsSecondaryRoleOpen(true); }}
+                                                        onFocus={() => setIsSecondaryRoleOpen(true)}
+                                                        onKeyPress={(e) => {
+                                                            if (e.key === "Enter") {
+                                                                e.preventDefault();
+                                                                const v = secondaryCustomInput.trim();
+                                                                if (v && !secondaryExpertise.includes(v)) setSecondaryExpertise([...secondaryExpertise, v]);
+                                                                setSecondaryCustomInput("");
+                                                                setIsSecondaryRoleOpen(false);
+                                                            }
+                                                        }}
+                                                        placeholder="Type a domain and press Enter…"
+                                                    />
+                                                    {isSecondaryRoleOpen && secondaryCustomInput && (
+                                                        <div style={{
+                                                            position: "absolute", top: "calc(100% + 4px)", left: 0, right: 0,
+                                                            maxHeight: 180, overflowY: "auto", background: T.bg,
+                                                            border: `1px solid ${T.border}`, borderRadius: 8,
+                                                            boxShadow: "0 8px 24px rgba(0,0,0,0.12)", zIndex: 20,
+                                                        }}>
+                                                            {suggestedRoles
+                                                                .filter((r) => r.toLowerCase().includes(secondaryCustomInput.toLowerCase()) && !secondaryExpertise.includes(r))
+                                                                .slice(0, 8)
+                                                                .map((role) => (
+                                                                    <button
+                                                                        key={role}
+                                                                        type="button"
+                                                                        onClick={() => { setSecondaryExpertise([...secondaryExpertise, role]); setSecondaryCustomInput(""); setIsSecondaryRoleOpen(false); }}
+                                                                        style={{ display: "block", width: "100%", textAlign: "left", padding: "8px 12px", fontFamily: F, fontSize: 13, color: T.textDark, background: "transparent", border: "none", cursor: "pointer" }}
+                                                                    >{role}</button>
+                                                                ))}
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
 
                                             <div>

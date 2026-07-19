@@ -38,7 +38,7 @@ const DOMAIN_CHIPS = [
 ];
 
 
-const DEFAULT_OFFERING_FOR = "Working Professionals";
+// const DEFAULT_OFFERING_FOR = "Working Professionals";
 const MIN_PRICE = 5000;
 const MAX_PRICE = 40000;
 
@@ -243,9 +243,9 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
     const displayedWhyMentor = whyMentorIsTruncatable && !whyMentorExpanded
         ? whyMentor.slice(0, WHY_MENTOR_LIMIT) + "..."
         : whyMentor;
-    const offeringForList = Array.isArray(mentor.offeringFor)
-        ? mentor.offeringFor
-        : mentor.offeringFor ? String(mentor.offeringFor).split(",").map((s) => s.trim()) : [];
+    // const offeringForList = Array.isArray(mentor.offeringFor)
+    //     ? mentor.offeringFor
+    //     : mentor.offeringFor ? String(mentor.offeringFor).split(",").map((s) => s.trim()) : [];
 
     const domainsList = Array.isArray(mentor.domains)
         ? mentor.domains
@@ -443,7 +443,7 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
                 </div>
 
                 {/* Bottom strip */}
-                <div style={{ borderTop: "1px solid #f1f5f9", padding: "10px 22px", display: "flex", alignItems: "center", gap: "22px", flexWrap: "wrap", background: "#f8fafc" }}>
+                {/* <div style={{ borderTop: "1px solid #f1f5f9", padding: "10px 22px", display: "flex", alignItems: "center", gap: "22px", flexWrap: "wrap", background: "#f8fafc" }}>
                     {offeringForList.length > 0 && (
                         <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", fontFamily: FONT }}>
                             <Briefcase size={13} color="#64748b" />
@@ -461,7 +461,7 @@ function MentorCard({ mentor, index, onSubscribe, onViewProfile }) {
                             )}
                         </div>
                     )}
-                </div>
+                </div> */}
             </div>
 
             {/* ── RIGHT: Stats + CTA ── */}
@@ -570,13 +570,12 @@ function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
     const isMobile = width < 1024;
 
     const [selectedDomains, setSelectedDomains] = useState([]);
-    const [offeringFor, setOfferingFor] = useState(DEFAULT_OFFERING_FOR);
+    // const [offeringFor, setOfferingFor] = useState(DEFAULT_OFFERING_FOR);
     const [priceVal, setPriceVal] = useState(MAX_PRICE);
 
     // Filters are only considered "active" when they differ from their defaults.
     const hasActiveFilters =
         selectedDomains.length > 0 ||
-        offeringFor !== DEFAULT_OFFERING_FOR ||
         priceVal !== MAX_PRICE;
 
     const toggleDomain = (d) =>
@@ -591,7 +590,7 @@ function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
 
     const handleApply = () => {
         if (!hasActiveFilters || isSearching) return;
-        onSearch({ maxPrice: priceVal, offeringFor, domains: selectedDomains });
+        onSearch({ maxPrice: priceVal, domains: selectedDomains });
         if (isMobile) onClose();
     };
 
@@ -658,7 +657,7 @@ function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
             <div style={{ borderTop: "1px solid #f1f5f9", marginBottom: "18px" }} />
 
             {/* Offering For */}
-            <p style={{ fontWeight: 700, fontSize: "15px", color: "#0f172a", margin: "0 0 12px", fontFamily: FONT }}>Offering Mentorship For</p>
+            {/* <p style={{ fontWeight: 700, fontSize: "15px", color: "#0f172a", margin: "0 0 12px", fontFamily: FONT }}>Offering Mentorship For</p>
             <div style={{ position: "relative", marginBottom: "22px" }}>
                 <select value={offeringFor} onChange={(e) => setOfferingFor(e.target.value)}
                     style={{ width: "100%", border: "1px solid #e2e8f0", borderRadius: "8px", padding: "11px 36px 11px 16px", fontSize: "15px", color: "#374151", background: "white", cursor: "pointer", outline: "none", appearance: "none", fontFamily: FONT, boxSizing: "border-box" }}>
@@ -668,7 +667,7 @@ function FilterSidebar({ onSearch, isSearching, onClear, isOpen, onClose }) {
                     <option>Entrepreneurs</option>
                 </select>
                 <ChevronDown size={15} color="#64748b" style={{ position: "absolute", right: "13px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
-            </div>
+            </div> */}
 
             <div style={{ borderTop: "1px solid #f1f5f9", marginBottom: "18px" }} />
 
@@ -846,7 +845,7 @@ export default function ExploreMentors() {
                     <div style={{ flex: 1, minWidth: 0 }}>
 
                         {/* Search + Sort bar */}
-                        <div style={{ background: "white", border: "1px solid #e2e8f0", borderRadius: "8px", padding: "16px 18px", marginBottom: "14px", display: "flex", gap: "14px", alignItems: "center", flexWrap: isMobile ? "wrap" : "nowrap", boxShadow: "0 1px 3px rgba(0,0,0,.04)" }}>
+                        {/* <div style={{ background: "white", border: "1px solid #e2e8f0", borderRadius: "8px", padding: "16px 18px", marginBottom: "14px", display: "flex", gap: "14px", alignItems: "center", flexWrap: isMobile ? "wrap" : "nowrap", boxShadow: "0 1px 3px rgba(0,0,0,.04)" }}>
                             <div style={{ flex: 1, minWidth: isMobile ? "100%" : "auto", position: "relative" }}>
                                 <Search size={15} color="#94a3b8" style={{ position: "absolute", left: "13px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
                                 <input
@@ -859,27 +858,179 @@ export default function ExploreMentors() {
                                     onBlur={(e) => (e.target.style.borderColor = "#e2e8f0")}
                                 />
                             </div>
-                            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
-                                <span style={{ fontSize: "15px", color: "#64748b", fontWeight: 600, whiteSpace: "nowrap", fontFamily: FONT }}>Sort by:</span>
-                                <div style={{ position: "relative" }}>
-                                    <select value={sortBy} onChange={(e) => handleSortChange(e.target.value)}
-                                        style={{ border: "1px solid #e2e8f0", borderRadius: "8px", padding: "10px 34px 10px 14px", fontSize: "15px", color: "#374151", background: "white", cursor: "pointer", outline: "none", appearance: "none", fontFamily: FONT, minWidth: "175px" }}>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "10px",
+                                    flexWrap: "wrap",
+                                    width: "100%",
+                                    justifyContent: "flex-end",
+                                }}
+                            >
+                                <span
+                                    style={{
+                                        fontSize: "15px",
+                                        color: "#64748b",
+                                        fontWeight: 600,
+                                        whiteSpace: "nowrap",
+                                        fontFamily: FONT,
+                                    }}
+                                >
+                                    Sort by:
+                                </span>
+
+                                <div
+                                    style={{
+                                        position: "relative",
+                                        flex: "1 1 220px",
+                                        minWidth: "160px",
+                                        maxWidth: isTablet ? "100%" : "260px",
+                                    }}
+                                >
+                                    <select
+                                        value={sortBy}
+                                        onChange={(e) => handleSortChange(e.target.value)}
+                                        style={{
+                                            width: "100%",
+                                            border: "1px solid #e2e8f0",
+                                            borderRadius: "8px",
+                                            padding: "10px 34px 10px 14px",
+                                            fontSize: "15px",
+                                            color: "#374151",
+                                            background: "white",
+                                            cursor: "pointer",
+                                            outline: "none",
+                                            appearance: "none",
+                                            fontFamily: FONT,
+                                            height: "44px",
+                                        }}
+                                    >
                                         <option>Recommended</option>
                                         <option>Price: Low To High</option>
                                         <option>Price: High To Low</option>
                                         <option>Most Experienced</option>
                                     </select>
-                                    <ChevronDown size={13} color="#64748b" style={{ position: "absolute", right: "11px", top: "50%", transform: "translateY(-50%)", pointerEvents: "none" }} />
+
+                                    <ChevronDown
+                                        size={13}
+                                        color="#64748b"
+                                        style={{
+                                            position: "absolute",
+                                            right: "12px",
+                                            top: "50%",
+                                            transform: "translateY(-50%)",
+                                            pointerEvents: "none",
+                                        }}
+                                    />
                                 </div>
+
                                 {isTablet && (
-                                    <button onClick={() => setFilterDrawerOpen(true)}
-                                        style={{ display: "flex", alignItems: "center", gap: "6px", padding: "10px 16px", border: `1.5px solid ${BLUE_BORDER}`, borderRadius: "8px", background: "white", cursor: "pointer", fontFamily: FONT, fontSize: "15px", fontWeight: 700, color: BLUE, whiteSpace: "nowrap" }}>
-                                        <SlidersHorizontal size={14} color={BLUE} /> Filters
+                                    <button
+                                        onClick={() => setFilterDrawerOpen(true)}
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            gap: "6px",
+                                            padding: "10px 16px",
+                                            border: `1.5px solid ${BLUE_BORDER}`,
+                                            borderRadius: "8px",
+                                            background: "white",
+                                            cursor: "pointer",
+                                            fontFamily: FONT,
+                                            fontSize: "15px",
+                                            fontWeight: 700,
+                                            color: BLUE,
+                                            whiteSpace: "nowrap",
+                                            minHeight: "44px",
+                                            flexShrink: 0,
+                                        }}
+                                    >
+                                        <SlidersHorizontal size={14} color={BLUE} />
+                                        Filters
                                     </button>
                                 )}
                             </div>
-                        </div>
+                        </div> */}
 
+                        <div style={{
+                            background: "white", border: "1px solid #e2e8f0", borderRadius: "8px",
+                            padding: "16px 18px", marginBottom: "14px",
+                            display: "flex", gap: "14px", alignItems: "center",
+                            flexWrap: isMobile ? "wrap" : "nowrap",
+                            boxShadow: "0 1px 3px rgba(0,0,0,.04)"
+                        }}>
+                            {/* Search — takes remaining space */}
+                            <div style={{ flex: 1, minWidth: isMobile ? "100%" : "220px", position: "relative" }}>
+                                <Search size={15} color="#94a3b8" style={{
+                                    position: "absolute", left: "13px", top: "50%",
+                                    transform: "translateY(-50%)", pointerEvents: "none"
+                                }} />
+                                <input
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    placeholder="Search for any Skill, domain or name..."
+                                    onKeyDown={handleSearchKeyDown}
+                                    style={{
+                                        width: "100%", padding: "11px 16px 11px 40px",
+                                        border: "1px solid #e2e8f0", borderRadius: "8px",
+                                        fontSize: "15px", color: "#374151", fontFamily: FONT,
+                                        outline: "none", background: "white", boxSizing: "border-box"
+                                    }}
+                                    onFocus={(e) => (e.target.style.borderColor = BLUE)}
+                                    onBlur={(e) => (e.target.style.borderColor = "#e2e8f0")}
+                                />
+                            </div>
+
+                            {/* Sort by — fixed width, doesn't grow */}
+                            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 }}>
+                                <span style={{
+                                    fontSize: "15px", color: "#64748b", fontWeight: 600,
+                                    whiteSpace: "nowrap", fontFamily: FONT
+                                }}>
+                                    Sort by:
+                                </span>
+                                <div style={{ position: "relative", width: "200px" }}>
+                                    <select
+                                        value={sortBy}
+                                        onChange={(e) => handleSortChange(e.target.value)}
+                                        style={{
+                                            width: "100%", border: "1px solid #e2e8f0", borderRadius: "8px",
+                                            padding: "10px 34px 10px 14px", fontSize: "15px",
+                                            color: "#374151", background: "white", cursor: "pointer",
+                                            outline: "none", appearance: "none", fontFamily: FONT, height: "44px"
+                                        }}
+                                    >
+                                        <option>Recommended</option>
+                                        <option>Price: Low To High</option>
+                                        <option>Price: High To Low</option>
+                                        <option>Most Experienced</option>
+                                    </select>
+                                    <ChevronDown size={13} color="#64748b" style={{
+                                        position: "absolute", right: "12px", top: "50%",
+                                        transform: "translateY(-50%)", pointerEvents: "none"
+                                    }} />
+                                </div>
+                            </div>
+
+                            {/* Filters button — tablet only */}
+                            {isTablet && (
+                                <button
+                                    onClick={() => setFilterDrawerOpen(true)}
+                                    style={{
+                                        display: "flex", alignItems: "center", gap: "6px",
+                                        padding: "10px 16px", border: `1.5px solid ${BLUE_BORDER}`,
+                                        borderRadius: "8px", background: "white", cursor: "pointer",
+                                        fontFamily: FONT, fontSize: "15px", fontWeight: 700,
+                                        color: BLUE, whiteSpace: "nowrap", minHeight: "44px", flexShrink: 0
+                                    }}
+                                >
+                                    <SlidersHorizontal size={14} color={BLUE} />
+                                    Filters
+                                </button>
+                            )}
+                        </div>
                         {/* Result count */}
                         {!isLoading && !isError && mentors.length > 0 && (
                             <p style={{ fontSize: "14px", color: "#94a3b8", marginBottom: "14px", fontWeight: 500, fontFamily: FONT }}>

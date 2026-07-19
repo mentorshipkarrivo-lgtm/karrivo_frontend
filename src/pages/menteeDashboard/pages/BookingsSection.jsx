@@ -135,20 +135,14 @@ const menteeTypes = [
 ];
 
 const STATUS_CONFIG = {
-  Approved: { badge: "bg-green-50 text-green-600", label: "Confirmed", icon: CheckCircle },
   pending: { badge: "bg-amber-50 text-amber-600", label: "Pending", icon: Clock },
+  confirmed: { badge: "bg-green-50 text-green-600", label: "Confirmed", icon: CheckCircle },
   cancelled: { badge: "bg-red-50 text-red-500", label: "Cancelled", icon: XCircle },
-  completed: { badge: "bg-[#0098cc]/10 text-[#0098cc]", label: "Completed", icon: BadgeCheck },
-  unattended: { badge: "bg-orange-50 text-orange-500", label: "Unattended", icon: AlertTriangle },
-  expired: { badge: "bg-gray-100 text-gray-500", label: "Expired", icon: AlertTriangle }, // ← new
-
+  Rejected: { badge: "bg-red-50 text-red-500", label: "Rejected", icon: XCircle },
+  expired: { badge: "bg-gray-100 text-gray-500", label: "Expired", icon: AlertTriangle },
 };
 
-const getBookingStatusKey = (booking) => {
-  if (booking.isExpired || booking.status === "expired") return "expired";
-  if (booking.status === "cancelled") return "cancelled";
-  return booking.paymentStatus || "pending";
-};
+
 
 const parseSessionStart = (booking) => {
   const date = new Date(booking.sessionDate);
@@ -577,7 +571,7 @@ function RescheduleModal({
                   <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
                     {availableSlots.map((slot, idx) => {
                       const dp = getSlotDateParts(slot.date);
-                      const mins = slotDuration(slot.startTime);
+                      const mins = slotDuration(slot.startTime, slot.endTime);
                       return (
                         <button key={slot._id || idx} onClick={() => { setSelectedSlot(slot); setStep("confirm"); }}
                           className="text-left p-2.5 rounded-xl border border-gray-200 hover:border-[#0098cc] hover:bg-[#0098cc]/5 transition-all duration-150 w-full">
@@ -649,7 +643,7 @@ function BookingCard({
   const mentorName = getMentorName(booking);
   const mentorSubtitle = getMentorSubtitle(booking);
   const topic = booking.topic || booking.sessionType || "Mentorship Session";
-  const statusCfg = STATUS_CONFIG[getBookingStatusKey(booking)] || STATUS_CONFIG.pending;
+  const statusCfg = STATUS_CONFIG[booking.status] || STATUS_CONFIG.pending;
   const StatusIcon = statusCfg.icon;
   const TD = "px-4 py-3.5 text-xs align-middle";
 
@@ -679,8 +673,7 @@ function BookingCard({
 
       {/* Time */}
       <td className={`${TD} font-medium text-[#515762]`} style={{ whiteSpace: "nowrap", minWidth: "100px" }}>
-        {formatCardTime(booking.startTime) || "TBD"} / {booking.durationMinutes || 30} minutes
-      </td>
+        {formatCardTime(booking.startTime) || "TBD"} ({booking.durationMinutes || 30} minutes)      </td>
 
       {/* Status */}
       <td className={`${TD}`} style={{ minWidth: "110px" }}>
@@ -792,7 +785,7 @@ export default function BookingsDashboard() {
   const [rescheduleTarget, setRescheduleTarget] = useState(null);
   const [rescheduleOpen, setRescheduleOpen] = useState(false);
   const [cancelReason, setCancelReason] = useState("");
-
+  console.log(selectedBooking, "selectedBooking")
   useEffect(() => {
     const pc = Cookies.get("profileData");
     let menteeType = "All Mentors";
@@ -1069,16 +1062,18 @@ ${panelOpen ? "translate-x-0" : "translate-x-full"}
 
                 <div className="flex-1 overflow-y-auto px-4 sm:px-5 py-4 h-0 min-h-0">
                   <DetailRow icon={Calendar} label="Date" value={formatDate(selectedBooking.sessionDate)} />
-                  <DetailRow icon={Clock} label="Time" value={`${selectedBooking.startTime} · ${selectedBooking.durationMinutes} minutes`} />
-                  <DetailRow icon={Tag} label="Session Type" value={selectedBooking.sessionType} />
+                  <DetailRow
+                    icon={Clock}
+                    label="Time"
+                    value={`${selectedBooking.startTime} (${selectedBooking.durationMinutes} minutes)`}
+                  />                  <DetailRow icon={Tag} label="Session Type" value={selectedBooking.sessionType} />
                   <DetailRow icon={FileText} label="Topic">
                     <TopicPanelCell text={selectedBooking.topic} />
                   </DetailRow>
                 </div>
 
                 <div className="flex-shrink-0 px-4 sm:px-5 py-3.5 sm:py-4 border-t border-gray-100 space-y-2">
-                  {selectedBooking.paymentStatus === "unpaid" && !selectedBooking.isExpired && selectedBooking.status !== "cancelled" && (
-
+                  {selectedBooking.status === "pending" && !selectedBooking.paymentSubmitted && (
                     <button onClick={() => handleCompletePayment(selectedBooking)}
                       className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg font-semibold text-sm text-white bg-[#0a1a22] hover:bg-[#0098cc] transition-colors">
                       <CreditCard className="w-4 h-4" /> Complete Payment

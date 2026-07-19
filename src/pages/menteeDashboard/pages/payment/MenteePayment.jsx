@@ -23,8 +23,8 @@ export default function MenteePayment() {
     planMonths, totalSessions, basePrice, createdBy,
     paymentType, bookingDetails, bookingNumber,
   } = location.state || {};
-  console.log(mentorName,subscription_id,"mentorNameswdefrt")
-
+  console.log(mentorName, subscription_id, session_id, "mentorNameswdefrt")
+  
   const isSessionBooking = paymentType === "bookingsession";
   const total = basePrice;
 
@@ -40,7 +40,7 @@ export default function MenteePayment() {
   const [submitPayment, { isLoading: isSubmitting, isSuccess, isError, error, data: responseData }] =
     useSubmitPaymentMutation();
 
-    console.log(responseData,"responseData`12")
+  console.log(responseData, "responseData`12")
   const upiId = "karrivo2024@upi";
   const secondUpiId = "example.174327728615@sbi";
 
@@ -270,8 +270,8 @@ export default function MenteePayment() {
                   key={id}
                   onClick={() => setActiveTab(id)}
                   className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[11px] font-bold transition-all ${activeTab === id
-                      ? "bg-[#1a1a2e] text-white"
-                      : "text-slate-500 hover:text-[#1a1a2e]"
+                    ? "bg-[#1a1a2e] text-white"
+                    : "text-slate-500 hover:text-[#1a1a2e]"
                     }`}
                 >
                   <Icon size={11} />
@@ -300,7 +300,7 @@ export default function MenteePayment() {
                     </span>
                   ))}
                 </div>
-             
+
               </div>
             )}
 
@@ -318,8 +318,8 @@ export default function MenteePayment() {
                       <button
                         onClick={() => copy(row.val, row.setter)}
                         className={`flex items-center gap-1 text-[9px] font-bold px-2 py-1 rounded-lg shrink-0 transition-all ${row.copied
-                            ? "bg-[#1a1a2e] text-white"
-                            : "bg-white text-[#0098cc] border border-[#0098cc]/30 hover:bg-[#0098cc]/5"
+                          ? "bg-[#1a1a2e] text-white"
+                          : "bg-white text-[#0098cc] border border-[#0098cc]/30 hover:bg-[#0098cc]/5"
                           }`}
                       >
                         {row.copied ? <Check size={9} /> : <Copy size={9} />}
@@ -350,10 +350,10 @@ export default function MenteePayment() {
                 Payment Screenshot <span className="text-[#0098cc]">*</span>
               </p>
               <label className={`flex flex-col items-center justify-center gap-1.5 border-2 border-dashed rounded-xl py-3 cursor-pointer transition-all ${screenshotUrl
-                  ? "border-[#0098cc] bg-[#0098cc]/5"
-                  : uploading
-                    ? "border-slate-200 bg-slate-50"
-                    : "border-slate-200 hover:border-[#0098cc]/40 hover:bg-[#0098cc]/5"
+                ? "border-[#0098cc] bg-[#0098cc]/5"
+                : uploading
+                  ? "border-slate-200 bg-slate-50"
+                  : "border-slate-200 hover:border-[#0098cc]/40 hover:bg-[#0098cc]/5"
                 }`}>
                 <input
                   type="file"
@@ -439,8 +439,8 @@ export default function MenteePayment() {
               onClick={handleConfirm}
               disabled={uploading || isSubmitting}
               className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold transition-all ${uploading || isSubmitting
-                  ? "bg-slate-200 text-slate-400 cursor-not-allowed"
-                  : "bg-[#1a1a2e] text-white hover:opacity-80"
+                ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                : "bg-[#1a1a2e] text-white hover:opacity-80"
                 }`}
             >
               {isSubmitting ? (

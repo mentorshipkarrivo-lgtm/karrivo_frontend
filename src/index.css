@@ -45,6 +45,44 @@ p {
   height: 12px;
 }
 
+
+.phone-input-custom {
+    @apply flex items-center w-full rounded-lg border border-gray-300 dark:border-slate-500
+           bg-white dark:bg-[#1e2a3a] transition-all
+           hover:border-gray-400 px-1;
+}
+
+.phone-input-custom:focus-within {
+    @apply ring-1 ring-[#0098cc] border-[#0098cc];
+}
+
+.phone-input-error {
+    @apply border-red-400 dark:border-red-500 bg-red-50 dark:bg-red-900/20;
+}
+
+.phone-input-custom input {
+    @apply w-full py-2 px-2 text-sm bg-transparent border-0 outline-none
+           text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-300
+           disabled:opacity-60 disabled:cursor-not-allowed;
+}
+
+.phone-input-custom .PhoneInputCountry {
+    @apply flex items-center gap-1.5 mr-2 pr-2 border-r border-gray-300 dark:border-slate-500;
+}
+
+.phone-input-custom .PhoneInputCountrySelect {
+    @apply text-sm bg-transparent outline-none cursor-pointer text-gray-900 dark:text-white;
+}
+
+.phone-input-custom .PhoneInputCountryIcon {
+    @apply w-5 h-[15px] rounded-sm overflow-hidden shadow-none;
+}
+
+.phone-input-custom .PhoneInputCountrySelectArrow {
+    @apply ml-1 opacity-60;
+}
+
+
 .regfrom-feild{
   margin-top: 12px !important;
 }
